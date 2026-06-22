@@ -38,6 +38,7 @@
   figure.hero img { border:none; max-width: 220px; display:block; margin: 0 auto 8px; }
   figcaption { color: var(--muted); font-size: 0.85rem; text-align: center;
     margin-top: 10px; line-height: 1.5; }
+  figcaption a { color: var(--accent); }
   footer { margin-top: 64px; padding-top: 20px; border-top:1px solid var(--line);
     color: var(--muted); font-size: 0.82rem; }
 </style>
@@ -104,7 +105,7 @@ paths:
 <div class="callout"><strong>모범 사례</strong>: 메인 대화를 어지럽힐 만한 깊은 검색, 로그 분석, 의존성 감사 같은 격리된 곁가지 작업에는 서브에이전트를 쓰세요. 절차가 메인 스레드에서 눈에 보이게 진행되어야 한다면 스킬을 쓰세요.</div>
 <figure>
   <img src="assets/subagents.png" alt="컨텍스트 윈도 로딩 타임라인">
-  <figcaption>Claude Code의 컨텍스트 윈도에는 Claude가 세션에 대해 아는 모든 것이 담깁니다. (원문에는 무엇이 언제 로드되는지 짚어 주는 인터랙티브 타임라인이 있습니다.)</figcaption>
+  <figcaption>Claude Code의 컨텍스트 윈도에는 Claude가 세션에 대해 아는 모든 것이 담깁니다. <a href="https://code.claude.com/docs/en/context-window">여기 인터랙티브 타임라인</a>에서 무엇이 언제 로드되는지 단계별로 볼 수 있습니다.</figcaption>
 </figure>
 
 <h3>훅(Hooks)</h3>
