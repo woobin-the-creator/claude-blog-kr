@@ -1,6 +1,7 @@
 /* Shared sidebar nav. Add a post = add one entry below (newest first). */
 (function () {
   var POSTS = [
+    { file: "the-full-claude-desktop-experience-on-aws-google-cloud-and-microsoft-foundry.html", title: "완전한 Claude Desktop 경험", date: "2026-06-22" },
     { file: "steering-claude-code.html",          title: "Claude Code 길들이기",          date: "2026-06-18" },
     { file: "build-day-hackathon-winners.html",   title: "Opus 4.8 빌드 데이 해커톤",       date: "2026-06-17" },
     { file: "opus-4-7-hackathon-winners.html",    title: "Built with Opus 4.7 해커톤",     date: "2026-06-15" },
