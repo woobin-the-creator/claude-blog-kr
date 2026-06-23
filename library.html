@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>내 보관함 · Claude 블로그 한글 번역</title>
+<style>
+  :root { --fg:#1a1a1a; --muted:#666; --line:#e5e5e5; --accent:#c96442; --soft:#faf8f6; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo",
+      "Malgun Gothic", sans-serif;
+    color: var(--fg); line-height: 1.7; max-width: 820px; margin: 0 auto;
+    padding: 48px 24px 96px; background:#fff;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  .top-back { font-size:0.88rem; }
+  h1 { font-size:1.7rem; margin:14px 0 6px; }
+  .sub { color: var(--muted); font-size:0.92rem; margin:0 0 28px; }
+
+  .toolbar { display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin:0 0 16px; }
+  .search { flex:1 1 220px; min-width:180px; }
+  .search input { width:100%; font:inherit; padding:9px 13px; border:1px solid var(--line);
+    border-radius:999px; background:#fff; color:var(--fg); }
+  .search input:focus { outline:none; border-color:var(--accent);
+    box-shadow:0 0 0 3px rgba(201,100,66,.12); }
+  .chips { display:flex; gap:6px; }
+  .chip { font:inherit; font-size:0.86rem; cursor:pointer; border:1px solid var(--line);
+    background:#fff; color:var(--fg); border-radius:999px; padding:7px 13px; }
+  .chip:hover { border-color:var(--accent); color:var(--accent); }
+  .chip.on { background:var(--accent); border-color:var(--accent); color:#fff; }
+  .data-tools { display:flex; gap:8px; margin-left:auto; }
+  .data-tools button, .data-tools label { font:inherit; font-size:0.84rem; cursor:pointer;
+    border:1px solid var(--line); background:#fff; color:var(--muted); border-radius:8px;
+    padding:7px 11px; }
+  .data-tools button:hover, .data-tools label:hover { border-color:var(--accent); color:var(--accent); }
+
+  .summary { color:var(--muted); font-size:0.82rem; margin:0 0 18px; }
+
+  .card { border:1px solid var(--line); border-radius:12px; padding:16px 18px;
+    margin:0 0 14px; background:var(--soft); }
+  .card-head { display:flex; align-items:flex-start; gap:10px; }
+  .card-title { flex:1; }
+  .card-title a { font-size:1.06rem; font-weight:600; color:var(--fg); line-height:1.4; }
+  .card-title a:hover { color:var(--accent); }
+  .card-meta { display:block; color:var(--muted); font-size:0.78rem; margin-top:4px; }
+  .card-fav { font:inherit; cursor:pointer; border:1px solid var(--line); background:#fff;
+    color:var(--muted); border-radius:999px; padding:5px 12px; line-height:1; white-space:nowrap; }
+  .card-fav:hover { border-color:var(--accent); color:var(--accent); }
+  .card-fav.on { background:var(--accent); border-color:var(--accent); color:#fff; }
+
+  .card-note { width:100%; margin-top:12px; min-height:64px; resize:none; overflow:hidden;
+    font:inherit; font-size:0.94rem; line-height:1.6; padding:11px 13px; border:1px solid var(--line);
+    border-radius:10px; background:#fff; color:var(--fg); }
+  .card-note:focus { outline:none; border-color:var(--accent);
+    box-shadow:0 0 0 3px rgba(201,100,66,.12); }
+  .card-note.empty { color:var(--muted); }
+  .card-foot { display:flex; align-items:center; gap:10px; margin-top:8px; min-height:18px; }
+  .card-status { font-size:0.78rem; color:var(--muted); opacity:0; transition:opacity .2s; }
+  .card-status.show { opacity:1; }
+  .card-status.saved { color:#2e8b57; }
+  .card-del { margin-left:auto; font:inherit; font-size:0.8rem; cursor:pointer; border:none;
+    background:none; color:var(--muted); text-decoration:underline; padding:0; }
+  .card-del:hover { color:#c0392b; }
+
+  .empty { text-align:center; color:var(--muted); padding:56px 20px; border:1px dashed var(--line);
+    border-radius:12px; }
+  .empty a { font-weight:600; }
+  footer { margin-top:40px; color:var(--muted); font-size:0.8rem; }
+</style>
+</head>
+<body>
+  <a class="top-back" href="index.html">← 글 목록으로</a>
+  <h1>📑 내 보관함</h1>
+  <p class="sub">즐겨찾기한 글과 작성한 메모를 한곳에서 보고 편집합니다. 이 브라우저에 저장됩니다.</p>
+
+  <div class="toolbar">
+    <div class="search"><input type="search" id="q" placeholder="제목·메모 검색…"></div>
+    <div class="chips">
+      <button type="button" class="chip on" data-filter="all">전체</button>
+      <button type="button" class="chip" data-filter="fav">★ 즐겨찾기</button>
+      <button type="button" class="chip" data-filter="note">📝 메모</button>
+    </div>
+    <div class="data-tools">
+      <button type="button" id="export">내보내기</button>
+      <label class="import">가져오기<input type="file" id="import-input" accept="application/json" hidden></label>
+    </div>
+  </div>
+  <p class="summary" id="summary"></p>
+
+  <div id="list"></div>
+
+  <footer>비공식 번역본 · 데이터는 이 브라우저에만 저장됩니다. 다른 기기로 옮기려면 내보내기/가져오기를 쓰세요.</footer>
+
+  <script src="posts/assets/store.js"></script>
+  <script>
+  (function () {
+    var CBK = window.CBK;
+    /* Canonical post list — keep in sync with posts/assets/nav.js when adding a post. */
+    var POSTS = [
+      { file: "the-full-claude-desktop-experience-on-aws-google-cloud-and-microsoft-foundry.html", title: "AWS, Google Cloud, Microsoft Foundry에서 누리는 완전한 Claude Desktop 경험", date: "2026-06-22", cat: "Enterprise AI" },
+      { file: "artifacts-in-claude-code.html", title: "Claude Code가 이제 아티팩트(artifacts)를 지원합니다", date: "2026-06-18", cat: "Product announcements" },
+      { file: "enterprise-managed-auth.html", title: "MCP 커넥터 권한을 중앙에서 관리하기", date: "2026-06-18", cat: "Enterprise AI" },
+      { file: "steering-claude-code.html", title: "Claude Code 길들이기: CLAUDE.md, 스킬, 훅, 룰, 서브에이전트 그 외", date: "2026-06-18", cat: "Claude Code" },
+      { file: "claude-design-stays-on-brand-for-daily-work.html", title: "이제 Claude Design은 일상 업무에서도 브랜드를 일관되게 유지합니다", date: "2026-06-17", cat: "Product announcements" },
+      { file: "workload-identity-federation.html", title: "워크로드 아이덴티티 페더레이션(WIF)으로 Claude 플랫폼에 안전하게 접근하기", date: "2026-06-17", cat: "Product announcements" },
+      { file: "build-day-hackathon-winners.html", title: "Claude Opus 4.8 빌드 데이 해커톤 우승팀을 소개합니다", date: "2026-06-17", cat: "Claude Code · 해커톤" },
+      { file: "opus-4-7-hackathon-winners.html", title: "Built with Opus 4.7 Claude Code 해커톤 우승팀을 소개합니다", date: "2026-06-15", cat: "Claude Code · 해커톤" },
+      { file: "building-with-claude-managed-agents.html", title: "에이전트 표면의 진화: Claude Managed Agents로 만들기", date: "2026-06-10", cat: "Agents" },
+      { file: "whats-new-in-claude-managed-agents.html", title: "Claude Managed Agents 새 기능: 일정 실행과 환경 변수 볼트", date: "2026-06-09", cat: "Product announcements" },
+      { file: "opus-4-6-hackathon-winners.html", title: "Built with Opus 4.6 Claude Code 해커톤 우승팀을 소개합니다", date: "2026-04-20", cat: "Claude Code · 해커톤" }
+    ];
+
+    var listEl = document.getElementById("list");
+    var summaryEl = document.getElementById("summary");
+    var qEl = document.getElementById("q");
+    var filter = "all";
+    var query = "";
+
+    function rows() {
+      return POSTS.map(function (p) {
+        var slug = CBK.slugOf(p.file);
+        return { post: p, slug: slug, fav: CBK.isBookmarked(slug), note: CBK.getNote(slug) };
+      });
+    }
+
+    function visible(r) {
+      if (filter === "fav" && !r.fav) return false;
+      if (filter === "note" && !r.note) return false;
+      if (filter === "all" && !r.fav && !r.note) return false;
+      if (query) {
+        var hay = (r.post.title + " " + r.note).toLowerCase();
+        if (hay.indexOf(query) === -1) return false;
+      }
+      return true;
+    }
+
+    function autosize(ta) {
+      ta.style.height = "auto";
+      ta.style.height = Math.max(ta.scrollHeight, 64) + "px";
+    }
+
+    function render() {
+      var all = rows();
+      var shown = all.filter(visible);
+      var favN = all.filter(function (r) { return r.fav; }).length;
+      var noteN = all.filter(function (r) { return r.note; }).length;
+      summaryEl.textContent = "즐겨찾기 " + favN + " · 메모 " + noteN;
+
+      if (!shown.length) {
+        var msg = (favN || noteN)
+          ? "조건에 맞는 항목이 없습니다."
+          : "아직 즐겨찾기하거나 메모한 글이 없습니다.";
+        listEl.innerHTML = '<div class="empty">' + msg +
+          '<br><br><a href="index.html">글 목록에서 시작하기 →</a></div>';
+        return;
+      }
+
+      listEl.innerHTML = "";
+      shown.forEach(function (r) {
+        var card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML =
+          '<div class="card-head">' +
+            '<div class="card-title">' +
+              '<a href="posts/' + r.post.file + '">' + esc(r.post.title) + "</a>" +
+              '<span class="card-meta">' + r.post.date + " · " + esc(r.post.cat) + "</span>" +
+            "</div>" +
+            '<button type="button" class="card-fav' + (r.fav ? " on" : "") + '">' +
+              (r.fav ? "★ 즐겨찾기됨" : "☆ 즐겨찾기") + "</button>" +
+          "</div>" +
+          '<textarea class="card-note' + (r.note ? "" : " empty") +
+            '" placeholder="메모 추가…">' + "</textarea>" +
+          '<div class="card-foot">' +
+            '<span class="card-status"></span>' +
+            '<button type="button" class="card-del">삭제</button>' +
+          "</div>";
+
+        var favBtn = card.querySelector(".card-fav");
+        favBtn.addEventListener("click", function () {
+          var on = CBK.toggleBookmark(r.slug);
+          favBtn.classList.toggle("on", on);
+          favBtn.textContent = on ? "★ 즐겨찾기됨" : "☆ 즐겨찾기";
+          summaryRefresh();
+        });
+
+        var ta = card.querySelector(".card-note");
+        ta.value = r.note;
+        autosize(ta);
+        var status = card.querySelector(".card-status");
+        var t = null;
+        ta.addEventListener("input", function () {
+          autosize(ta);
+          ta.classList.toggle("empty", !ta.value.trim());
+          status.textContent = "저장 중…"; status.classList.add("show"); status.classList.remove("saved");
+          if (t) clearTimeout(t);
+          t = setTimeout(function () {
+            CBK.setNote(r.slug, ta.value);
+            status.textContent = "저장됨 ✓"; status.classList.add("saved");
+            setTimeout(function () { status.classList.remove("show"); }, 1500);
+            summaryRefresh();
+          }, 450);
+        });
+
+        var del = card.querySelector(".card-del");
+        del.addEventListener("click", function () {
+          if (r.note && !confirm("이 글의 즐겨찾기와 메모를 모두 지울까요?")) return;
+          if (CBK.isBookmarked(r.slug)) CBK.toggleBookmark(r.slug);
+          CBK.setNote(r.slug, "");
+          render();
+        });
+
+        listEl.appendChild(card);
+      });
+    }
+
+    function summaryRefresh() {
+      var all = rows();
+      summaryEl.textContent = "즐겨찾기 " +
+        all.filter(function (r) { return r.fav; }).length + " · 메모 " +
+        all.filter(function (r) { return r.note; }).length;
+    }
+
+    function esc(s) {
+      return String(s).replace(/[&<>"]/g, function (c) {
+        return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
+      });
+    }
+
+    document.querySelectorAll(".chip").forEach(function (chip) {
+      chip.addEventListener("click", function () {
+        document.querySelectorAll(".chip").forEach(function (c) { c.classList.remove("on"); });
+        chip.classList.add("on");
+        filter = chip.getAttribute("data-filter");
+        render();
+      });
+    });
+    qEl.addEventListener("input", function () { query = qEl.value.trim().toLowerCase(); render(); });
+
+    document.getElementById("export").addEventListener("click", function () { CBK.exportData(); });
+    var imp = document.getElementById("import-input");
+    imp.addEventListener("change", function () {
+      if (!imp.files || !imp.files[0]) return;
+      CBK.importData(imp.files[0], function (err) {
+        if (err) { alert("가져오기 실패: 파일 형식을 확인하세요."); return; }
+        imp.value = "";
+        render();
+      });
+    });
+
+    if (!CBK) {
+      listEl.innerHTML = '<div class="empty">저장소를 불러오지 못했습니다.</div>';
+      return;
+    }
+    render();
+  })();
+  </script>
+</body>
+</html>

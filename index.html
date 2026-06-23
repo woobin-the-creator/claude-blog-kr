@@ -24,7 +24,13 @@
     background:#fff; color:#1a1a1a; border-radius:8px; padding:6px 12px; }
   .toolbar button:hover, .toolbar label:hover { border-color:#c96442; color:#c96442; }
   .toolbar #fav-filter.on { background:#c96442; color:#fff; border-color:#c96442; }
+  .toolbar .library-link { display:inline-flex; align-items:center; gap:6px; }
+  .toolbar .library-link .count { background:#c96442; color:#fff; font-size:0.74rem;
+    min-width:18px; text-align:center; padding:1px 6px; border-radius:999px; }
   li .star { color:#c96442; }
+  li .note-preview { display:block; color:#888; font-size:0.84rem; margin-top:6px;
+    padding-left:11px; border-left:2px solid #e7ddd7; line-height:1.5;
+    overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
   body.fav-only li:not(.is-fav) { display:none; }
   footer { margin-top:48px; color:#888; font-size:0.8rem; }
 </style>
@@ -36,10 +42,13 @@
   </p>
   <div class="toolbar">
     <button type="button" id="fav-filter">★ 즐겨찾기만 보기</button>
-    <button type="button" id="export">메모 내보내기</button>
-    <label class="import">메모 가져오기<input type="file" id="import-input" accept="application/json" hidden></label>
+    <a class="library-link" href="library.html">📑 내 보관함<span id="lib-count" class="count" hidden></span></a>
   </div>
   <ul>
+    <li>
+      <a href="posts/agent-identity-access-model.html">Claude Tag의 에이전트 아이덴티티: 자율적이고 팀 전체가 함께 쓰는 AI를 위한 새로운 접근 모델</a>
+      <span class="date">2026-06-24 · Claude Code</span>
+    </li>
     <li>
       <a href="posts/the-full-claude-desktop-experience-on-aws-google-cloud-and-microsoft-foundry.html">AWS, Google Cloud, Microsoft Foundry에서 누리는 완전한 Claude Desktop 경험</a>
       <span class="date">2026-06-22 · Enterprise AI</span>
@@ -90,27 +99,31 @@
   <script>
   (function () {
     var CBK = window.CBK; if (!CBK) return;
+    var marked = 0;
     document.querySelectorAll("ul li").forEach(function (li) {
       var a = li.querySelector("a[href]"); if (!a) return;
-      if (CBK.isBookmarked(CBK.slugOf(a.getAttribute("href")))) {
+      var slug = CBK.slugOf(a.getAttribute("href"));
+      var fav = CBK.isBookmarked(slug);
+      var note = CBK.getNote(slug);
+      if (fav) {
         li.classList.add("is-fav");
         var s = document.createElement("span");
         s.className = "star"; s.textContent = "★ ";
         a.insertBefore(s, a.firstChild);
       }
+      if (note) {
+        var p = document.createElement("span");
+        p.className = "note-preview";
+        p.textContent = "📝 " + note.replace(/\s+/g, " ").trim();
+        li.appendChild(p);
+      }
+      if (fav || note) marked++;
     });
+    var libCount = document.getElementById("lib-count");
+    if (marked && libCount) { libCount.textContent = marked; libCount.hidden = false; }
     var filter = document.getElementById("fav-filter");
     filter.addEventListener("click", function () {
       filter.classList.toggle("on", document.body.classList.toggle("fav-only"));
-    });
-    document.getElementById("export").addEventListener("click", function () { CBK.exportData(); });
-    var imp = document.getElementById("import-input");
-    imp.addEventListener("change", function () {
-      if (!imp.files || !imp.files[0]) return;
-      CBK.importData(imp.files[0], function (err) {
-        alert(err ? "가져오기 실패: 파일 형식을 확인하세요." : "메모를 가져왔습니다. 새로고침합니다.");
-        if (!err) location.reload();
-      });
     });
   })();
   </script>

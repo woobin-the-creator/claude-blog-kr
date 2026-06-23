@@ -1,0 +1,3 @@
+.pipeline/.env
+.pipeline/log/
+.DS_Store

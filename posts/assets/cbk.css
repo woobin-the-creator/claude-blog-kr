@@ -1,0 +1,127 @@
+/* Bookmark + per-post note UI. Loaded by nav.js on every post page.
+ * Uses the post's own design tokens (--fg/--muted/--line/--accent) with fallbacks,
+ * so it stays in sync with each article's palette. */
+
+.cbk-bar {
+  --cbk-soft: #faf8f6;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 30px;
+  padding: 10px 12px;
+  border: 1px solid var(--line, #e5e5e5);
+  border-radius: 12px;
+  background: var(--cbk-soft);
+}
+
+/* shared pill button */
+.cbk-bar button {
+  font: inherit;
+  font-size: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  border: 1px solid var(--line, #e5e5e5);
+  background: #fff;
+  color: var(--fg, #1a1a1a);
+  border-radius: 999px;
+  padding: 7px 14px;
+  line-height: 1;
+  transition: border-color .15s, background .15s, color .15s;
+}
+.cbk-bar button:hover {
+  border-color: var(--accent, #c96442);
+  color: var(--accent, #c96442);
+}
+.cbk-bar button:focus-visible {
+  outline: 2px solid var(--accent, #c96442);
+  outline-offset: 2px;
+}
+
+/* bookmark toggle */
+.cbk-fav .cbk-star { font-size: 1rem; line-height: 1; }
+.cbk-fav.on {
+  background: var(--accent, #c96442);
+  border-color: var(--accent, #c96442);
+  color: #fff;
+}
+.cbk-fav.on:hover { color: #fff; opacity: .92; }
+
+/* note toggle, with a presence dot when a note exists */
+.cbk-note-toggle .cbk-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--accent, #c96442);
+  display: none;
+}
+.cbk-note-toggle.has-note .cbk-dot { display: inline-block; }
+.cbk-note-toggle.open {
+  border-color: var(--accent, #c96442);
+  color: var(--accent, #c96442);
+}
+
+/* link to the library / 보관함 */
+.cbk-bar .cbk-library {
+  font-size: 0.84rem;
+  color: var(--muted, #666);
+  text-decoration: none;
+  margin-left: auto;
+  white-space: nowrap;
+}
+.cbk-bar .cbk-library:hover { color: var(--accent, #c96442); }
+
+/* save status — sits next to the library link */
+.cbk-status {
+  color: var(--muted, #888);
+  font-size: 0.8rem;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity .2s;
+}
+.cbk-status.show { opacity: 1; }
+.cbk-status.saved { color: #2e8b57; }
+
+/* note editor */
+.cbk-note-wrap {
+  flex-basis: 100%;
+  margin-top: 2px;
+  overflow: hidden;
+}
+.cbk-note-wrap[hidden] { display: none; }
+.cbk-note {
+  width: 100%;
+  min-height: 96px;
+  resize: none;            /* auto-grows via JS instead */
+  overflow: hidden;
+  font: inherit;
+  line-height: 1.65;
+  padding: 12px 14px;
+  border: 1px solid var(--line, #e5e5e5);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--fg, #1a1a1a);
+}
+.cbk-note:focus {
+  outline: none;
+  border-color: var(--accent, #c96442);
+  box-shadow: 0 0 0 3px rgba(201, 100, 66, 0.12);
+}
+.cbk-note-hint {
+  margin: 6px 2px 0;
+  font-size: 0.76rem;
+  color: var(--muted, #888);
+}
+.cbk-note-hint kbd {
+  font: inherit;
+  font-size: 0.72rem;
+  background: #fff;
+  border: 1px solid var(--line, #e5e5e5);
+  border-radius: 4px;
+  padding: 1px 5px;
+}
+
+@media (max-width: 1079px) {
+  .cbk-bar .cbk-library { margin-left: 0; }
+  .cbk-status { margin-left: auto; }
+}

@@ -18,6 +18,13 @@
   margin-top:2px; }
 #site-nav .nav-link.active { background:#f5ede9; border-left-color: var(--nav-accent);
   color: var(--nav-accent); font-weight:600; }
+#site-nav .nav-tools { margin-top: 22px; }
+#site-nav .nav-library { display:inline-flex; align-items:center; gap:6px;
+  font-size:0.84rem; color:#333; padding:7px 11px; border:1px solid var(--nav-line);
+  border-radius:999px; }
+#site-nav .nav-library:hover { border-color: var(--nav-accent); color: var(--nav-accent); }
+#site-nav .nav-count { background: var(--nav-accent); color:#fff; font-size:0.72rem;
+  min-width:18px; text-align:center; padding:1px 6px; border-radius:999px; }
 
 /* Wide screens (>=1080px): fixed sidebar in its own reserved left column.
    The article body is shifted right so the two never overlap. */

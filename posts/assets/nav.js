@@ -3,6 +3,7 @@
  * Requires store.js (window.CBK) to be loaded first; degrades gracefully if not. */
 (function () {
   var POSTS = [
+    { file: "agent-identity-access-model.html",   title: "에이전트 아이덴티티 접근 모델",   date: "2026-06-24" },
     { file: "the-full-claude-desktop-experience-on-aws-google-cloud-and-microsoft-foundry.html", title: "완전한 Claude Desktop 경험", date: "2026-06-22" },
     { file: "artifacts-in-claude-code.html",      title: "Claude Code 아티팩트",          date: "2026-06-18" },
     { file: "enterprise-managed-auth.html",       title: "MCP 커넥터 중앙 권한 관리",       date: "2026-06-18" },
@@ -32,12 +33,12 @@
     );
   }).join("");
 
+  var favCount = CBK ? CBK.bookmarkedSlugs().length : 0;
   var tools = CBK
     ? '<div class="nav-tools">' +
-        '<button type="button" id="cbk-export">메모 내보내기</button>' +
-        '<label class="cbk-import">메모 가져오기' +
-          '<input type="file" id="cbk-import-input" accept="application/json" hidden>' +
-        '</label>' +
+        '<a class="nav-library" href="../library.html">📑 보관함' +
+          (favCount ? ' <span class="nav-count">' + favCount + "</span>" : "") +
+        "</a>" +
       "</div>"
     : "";
 
@@ -52,50 +53,34 @@
 
   document.body.insertBefore(nav, document.body.firstChild);
 
-  if (CBK) {
-    var exportBtn = document.getElementById("cbk-export");
-    if (exportBtn) exportBtn.addEventListener("click", function () { CBK.exportData(); });
-    var importInput = document.getElementById("cbk-import-input");
-    if (importInput) importInput.addEventListener("change", function () {
-      if (!importInput.files || !importInput.files[0]) return;
-      CBK.importData(importInput.files[0], function (err) {
-        alert(err ? "가져오기 실패: 파일 형식을 확인하세요." : "메모를 가져왔습니다. 새로고침합니다.");
-        if (!err) location.reload();
-      });
-    });
-  }
-
   /* ---------- per-post bookmark + note bar ---------- */
   if (!CBK) return;
 
-  var style = document.createElement("style");
-  style.textContent =
-    "#cbk-bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:0 0 28px;" +
-      "padding:12px 14px;border:1px solid var(--line,#e5e5e5);border-radius:10px;background:#faf9f7;}" +
-    "#cbk-bar button{font:inherit;cursor:pointer;border:1px solid var(--line,#e5e5e5);" +
-      "background:#fff;color:var(--fg,#1a1a1a);border-radius:8px;padding:6px 12px;}" +
-    "#cbk-bar button:hover{border-color:var(--accent,#c96442);color:var(--accent,#c96442);}" +
-    "#cbk-fav.on{background:var(--accent,#c96442);color:#fff;border-color:var(--accent,#c96442);}" +
-    "#cbk-note-status{color:var(--muted,#888);font-size:.82rem;margin-left:auto;}" +
-    "#cbk-note-wrap{flex-basis:100%;margin-top:4px;}" +
-    "#cbk-note{width:100%;min-height:84px;resize:vertical;font:inherit;line-height:1.6;" +
-      "padding:10px 12px;border:1px solid var(--line,#e5e5e5);border-radius:8px;background:#fff;}" +
-    "#cbk-note:focus{outline:none;border-color:var(--accent,#c96442);}";
-  document.head.appendChild(style);
+  var link = document.createElement("link");
+  link.rel = "stylesheet";
+  link.href = "assets/cbk.css";
+  document.head.appendChild(link);
 
   var faved = CBK.isBookmarked(slug);
   var note = CBK.getNote(slug);
 
   var bar = document.createElement("div");
-  bar.id = "cbk-bar";
+  bar.className = "cbk-bar";
   bar.innerHTML =
-    '<button type="button" id="cbk-fav" class="' + (faved ? "on" : "") + '">' +
-      (faved ? "★ 즐겨찾기됨" : "☆ 즐겨찾기") + "</button>" +
-    '<button type="button" id="cbk-note-toggle">📝 메모' + (note ? " (작성됨)" : "") + "</button>" +
-    '<span id="cbk-note-status"></span>' +
-    '<div id="cbk-note-wrap"' + (note ? "" : " hidden") + '>' +
-      '<textarea id="cbk-note" placeholder="이 글에 대한 메모 — 이 브라우저에 저장됩니다.">' +
-      "</textarea></div>";
+    '<button type="button" id="cbk-fav" class="cbk-fav' + (faved ? " on" : "") + '">' +
+      '<span class="cbk-star">' + (faved ? "★" : "☆") + "</span>" +
+      '<span class="cbk-fav-label">' + (faved ? "즐겨찾기됨" : "즐겨찾기") + "</span>" +
+    "</button>" +
+    '<button type="button" id="cbk-note-toggle" class="cbk-note-toggle' +
+      (note ? " has-note" : "") + (note ? " open" : "") + '">' +
+      "메모<span class=\"cbk-dot\"></span>" + "</button>" +
+    '<span id="cbk-note-status" class="cbk-status"></span>' +
+    '<a class="cbk-library" href="../library.html">📑 보관함</a>' +
+    '<div id="cbk-note-wrap" class="cbk-note-wrap"' + (note ? "" : " hidden") + ">" +
+      '<textarea id="cbk-note" class="cbk-note" ' +
+        'placeholder="이 글에 대한 메모 — 이 브라우저에 저장됩니다."></textarea>' +
+      '<div class="cbk-note-hint">자동 저장됨 · <kbd>Esc</kbd> 로 닫기</div>' +
+    "</div>";
 
   var header = document.querySelector("header");
   if (header && header.parentNode) header.parentNode.insertBefore(bar, header.nextSibling);
@@ -105,28 +90,56 @@
   favBtn.addEventListener("click", function () {
     var on = CBK.toggleBookmark(slug);
     favBtn.classList.toggle("on", on);
-    favBtn.textContent = on ? "★ 즐겨찾기됨" : "☆ 즐겨찾기";
+    favBtn.querySelector(".cbk-star").textContent = on ? "★" : "☆";
+    favBtn.querySelector(".cbk-fav-label").textContent = on ? "즐겨찾기됨" : "즐겨찾기";
   });
 
   var noteToggle = document.getElementById("cbk-note-toggle");
   var noteWrap = document.getElementById("cbk-note-wrap");
+  var ta = document.getElementById("cbk-note");
+  var status = document.getElementById("cbk-note-status");
+
+  function autosize() {
+    ta.style.height = "auto";
+    ta.style.height = Math.max(ta.scrollHeight, 96) + "px";
+  }
+  function openNote(focus) {
+    noteWrap.hidden = false;
+    noteToggle.classList.add("open");
+    autosize();
+    if (focus) ta.focus();
+  }
+  function closeNote() {
+    noteWrap.hidden = true;
+    noteToggle.classList.remove("open");
+  }
   noteToggle.addEventListener("click", function () {
-    noteWrap.hidden = !noteWrap.hidden;
-    if (!noteWrap.hidden) document.getElementById("cbk-note").focus();
+    if (noteWrap.hidden) openNote(true);
+    else closeNote();
   });
 
-  var ta = document.getElementById("cbk-note");
   ta.value = note;
-  var status = document.getElementById("cbk-note-status");
+  if (!noteWrap.hidden) autosize();
+
   var t = null;
+  function showStatus(text, saved) {
+    status.textContent = text;
+    status.classList.add("show");
+    status.classList.toggle("saved", !!saved);
+  }
   ta.addEventListener("input", function () {
-    status.textContent = "저장 중…";
+    autosize();
+    showStatus("저장 중…", false);
     if (t) clearTimeout(t);
     t = setTimeout(function () {
       CBK.setNote(slug, ta.value);
-      status.textContent = "저장됨";
-      noteToggle.textContent = "📝 메모" + (ta.value.trim() ? " (작성됨)" : "");
-      setTimeout(function () { status.textContent = ""; }, 1500);
+      var has = !!ta.value.trim();
+      noteToggle.classList.toggle("has-note", has);
+      showStatus("저장됨 ✓", true);
+      setTimeout(function () { status.classList.remove("show"); }, 1600);
     }, 500);
+  });
+  ta.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") { closeNote(); noteToggle.focus(); }
   });
 })();
