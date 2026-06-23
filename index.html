@@ -19,6 +19,13 @@
   li a { color:#1a1a1a; text-decoration:none; font-size:1.1rem; font-weight:600; }
   li a:hover { color:#c96442; }
   .date { display:block; color:#888; font-size:0.82rem; margin-top:4px; }
+  .toolbar { display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin:0 0 24px; }
+  .toolbar button, .toolbar label { font:inherit; cursor:pointer; border:1px solid #e5e5e5;
+    background:#fff; color:#1a1a1a; border-radius:8px; padding:6px 12px; }
+  .toolbar button:hover, .toolbar label:hover { border-color:#c96442; color:#c96442; }
+  .toolbar #fav-filter.on { background:#c96442; color:#fff; border-color:#c96442; }
+  li .star { color:#c96442; }
+  body.fav-only li:not(.is-fav) { display:none; }
   footer { margin-top:48px; color:#888; font-size:0.8rem; }
 </style>
 </head>
@@ -27,6 +34,11 @@
   <p class="sub">
     <a href="https://claude.com/blog">claude.com/blog</a>의 글을 한국어로 옮긴 비공식 번역 모음입니다.
   </p>
+  <div class="toolbar">
+    <button type="button" id="fav-filter">★ 즐겨찾기만 보기</button>
+    <button type="button" id="export">메모 내보내기</button>
+    <label class="import">메모 가져오기<input type="file" id="import-input" accept="application/json" hidden></label>
+  </div>
   <ul>
     <li>
       <a href="posts/the-full-claude-desktop-experience-on-aws-google-cloud-and-microsoft-foundry.html">AWS, Google Cloud, Microsoft Foundry에서 누리는 완전한 Claude Desktop 경험</a>
@@ -74,5 +86,33 @@
     </li>
   </ul>
   <footer>비공식 번역본 · 정확한 의미는 각 글의 원문 링크를 함께 참고하세요.</footer>
+  <script src="posts/assets/store.js"></script>
+  <script>
+  (function () {
+    var CBK = window.CBK; if (!CBK) return;
+    document.querySelectorAll("ul li").forEach(function (li) {
+      var a = li.querySelector("a[href]"); if (!a) return;
+      if (CBK.isBookmarked(CBK.slugOf(a.getAttribute("href")))) {
+        li.classList.add("is-fav");
+        var s = document.createElement("span");
+        s.className = "star"; s.textContent = "★ ";
+        a.insertBefore(s, a.firstChild);
+      }
+    });
+    var filter = document.getElementById("fav-filter");
+    filter.addEventListener("click", function () {
+      filter.classList.toggle("on", document.body.classList.toggle("fav-only"));
+    });
+    document.getElementById("export").addEventListener("click", function () { CBK.exportData(); });
+    var imp = document.getElementById("import-input");
+    imp.addEventListener("change", function () {
+      if (!imp.files || !imp.files[0]) return;
+      CBK.importData(imp.files[0], function (err) {
+        alert(err ? "가져오기 실패: 파일 형식을 확인하세요." : "메모를 가져왔습니다. 새로고침합니다.");
+        if (!err) location.reload();
+      });
+    });
+  })();
+  </script>
 </body>
 </html>
