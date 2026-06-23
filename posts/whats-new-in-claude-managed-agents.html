@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Managed Agents 새 기능: 에이전트를 일정에 따라 실행하고 환경 변수를 볼트에 저장하기</title>
+<style>
+  :root { --fg:#1a1a1a; --muted:#666; --line:#e5e5e5; --accent:#c96442; --code-bg:#f6f6f4; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo",
+      "Malgun Gothic", sans-serif;
+    color: var(--fg); line-height: 1.75; max-width: 760px;
+    margin: 0 auto; padding: 48px 24px 96px; background:#fff;
+  }
+  header { border-bottom: 2px solid var(--line); padding-bottom: 24px; margin-bottom: 32px; }
+  h1 { font-size: 1.9rem; line-height: 1.35; margin: 0 0 12px; }
+  .meta { color: var(--muted); font-size: 0.9rem; }
+  .meta .orig { display:block; margin-top:6px; }
+  .meta a { color: var(--accent); text-decoration: none; }
+  h2 { font-size: 1.4rem; margin: 44px 0 8px; padding-top: 8px; }
+  h3 { font-size: 1.15rem; margin: 30px 0 8px; color:#000; }
+  .builders { color: var(--muted); font-size: 0.92rem; margin: 0 0 14px; }
+  p { margin: 0 0 16px; }
+  a { color: var(--accent); }
+  ul { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  blockquote { margin: 16px 0; padding: 8px 18px; border-left:3px solid var(--line);
+    color:#333; font-style: italic; }
+  hr { border: none; border-top: 1px solid var(--line); margin: 40px 0; }
+  code { background: var(--code-bg); padding: 2px 6px; border-radius: 4px;
+    font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 0.88em; }
+  pre { background: var(--code-bg); padding: 16px 18px; border-radius: 8px;
+    overflow-x: auto; border:1px solid var(--line); }
+  pre code { background: none; padding: 0; font-size: 0.85rem; line-height:1.5; }
+  figure { margin: 24px 0; }
+  figure img { width: 100%; height: auto; border:1px solid var(--line); border-radius: 8px;
+    background:#fff; }
+  figure.hero img { border:none; max-width: 210px; display:block; margin: 0 auto 8px; }
+  figcaption { color: var(--muted); font-size: 0.85rem; text-align: center;
+    margin-top: 10px; line-height: 1.5; }
+  figcaption a { color: var(--accent); }
+  .video { position: relative; width: 100%; aspect-ratio: 16 / 9; margin: 22px 0; }
+  .video iframe { position: absolute; inset: 0; width: 100%; height: 100%;
+    border: 0; border-radius: 8px; }
+  .callout { background:#faf6f4; border-left:3px solid var(--accent);
+    padding: 12px 16px; border-radius: 0 6px 6px 0; margin: 16px 0; }
+  .callout strong { color: var(--accent); }
+  footer { margin-top: 64px; padding-top: 20px; border-top:1px solid var(--line);
+    color: var(--muted); font-size: 0.82rem; }
+</style>
+<link rel="stylesheet" href="assets/nav.css">
+</head>
+<body>
+<header>
+  <h1>Claude Managed Agents 새 기능: 에이전트를 일정에 따라 실행하고 환경 변수를 볼트에 저장하기</h1>
+  <div class="meta">
+    2026년 6월 9일 · 읽는 데 약 5분 · 카테고리: <a href="https://claude.com/blog/category/announcements">Product announcements</a>
+    <span class="orig">원문:
+      <a href="https://claude.com/blog/whats-new-in-claude-managed-agents">New in Claude Managed Agents: run agents on a schedule and store environment variables in vaults</a>
+      (한글 번역본)</span>
+  </div>
+</header>
+
+<figure class="hero"><img src="assets/whats-new-in-claude-managed-agents/hero.svg" alt="Claude Managed Agents 일러스트레이션"></figure>
+
+<p>오늘부터 Claude Managed Agents(Claude 관리형 에이전트)를 일정에 따라 실행할 수 있고, CLI 도구와 그 밖의 인증이 필요한 서비스에 안전하게 접근할 수 있습니다. 두 기능 모두 이제 Claude 플랫폼(Claude Platform)에서 퍼블릭 베타(public beta)로 사용할 수 있습니다.</p>
+
+<h2>에이전트를 일정에 따라 실행하기</h2>
+
+<p>이제 에이전트를 일정에 따라 실행해 반복 업무를 자동으로 처리할 수 있습니다. <a href="https://platform.claude.com/docs/en/managed-agents/scheduled-deployments">예약 배포(scheduled deployment)</a>는 에이전트에 cron 일정을 부여하는 기능입니다. 일정이 실행될 때마다 에이전트는 새 세션을 시작해 작업을 완료하며, 여러분이 직접 만들거나 호스팅해야 할 스케줄러는 필요하지 않습니다.</p>
+
+<p>야간 데이터 동기화, 주간 컴플라이언스 점검, 일일 요약 생성처럼 주기적으로 반복되는 작업에 활용하세요. 배포가 한번 활성화되면 언제든지 일시 중지(pause), 재개(resume), 보관(archive)할 수 있고, 필요할 때 추가 실행을 수동으로 트리거할 수도 있습니다.</p>
+
+<figure>
+  <img src="assets/whats-new-in-claude-managed-agents/scheduled-deployments.png" alt="Claude Console의 예약 배포 화면">
+  <figcaption>Claude Console의 예약 배포 화면.</figcaption>
+</figure>
+
+<p>여러 팀이 이미 예약 배포를 활용해 반복 업무를 자동화하고 있습니다:</p>
+
+<ul>
+  <li><a href="https://claude.com/customers/rakuten-qa">Rakuten(라쿠텐)</a>은 예약 배포를 사용해 스프레드시트 데이터를 분석하고, 주간 또는 월간 일정에 따라 보고서와 자료(deck)를 생성합니다. 또한 여러 팀이 운영 로그와 지표를 모니터링해, 프로덕트 매니저가 대시보드를 따로 만들지 않고도 애플리케이션 상태를 파악할 수 있게 했습니다.</li>
+  <li><a href="https://actively.ai/">Actively AI</a>는 Managed Agents를 활용해 영업팀을 위한 교차 계정(cross-account) 에이전트형 검색 기능을 구동합니다. 예약 배포가 답변을 주기적으로 갱신해, 처음에 팀이 직접 구축했던 스케줄링 인프라를 대체함으로써 스택을 단순화했습니다.</li>
+  <li><a href="https://ando.so">Ando</a>는 예약 배포를 사용해 채용 및 영업 팀이 멈추지 않고 굴러가도록 합니다. 에이전트가 채널을 자율적으로 관찰해 다음 단계 제안을 찾아내고, 기한이 되면 후속 조치를 취하며, 회의 알림을 보냅니다.</li>
+</ul>
+
+<h2>CLI 및 기타 도구를 인증하기 위해 환경 변수를 볼트에 저장하기</h2>
+
+<p>에이전트는 직접 API 호출, CLI, MCP를 통해 <a href="https://claude.com/blog/building-agents-that-reach-production-systems-with-mcp">외부 시스템에 연결</a>합니다. 이제 저희는 <a href="https://platform.claude.com/docs/en/managed-agents/vaults">볼트(vaults)</a>를 확장해 환경 변수(environment variables)를 지원합니다. 덕분에 CLI를 비롯한 도구들이 인증된 요청을 보낼 수 있습니다. CLI는 에이전트가 셸을 통해 기존 명령줄 도구를 직접 구동하게 해 주므로, 빠르고 가벼운 통합 경로가 됩니다. API 키를 환경 변수 이름 및 접근 가능한 도메인과 함께 등록하면, 에이전트의 샌드박스(sandbox)에 설치된 CLI가 이 키를 사용해 인증된 API 호출을 할 수 있습니다.</p>
+
+<p>샌드박스에는 자리 표시자(placeholder)만 들어 있기 때문에 에이전트는 실제 키를 절대 보지 못합니다. 실제 키는 네트워크 경계(network boundary)에서 부착되며, 여러분이 허용한 도메인으로 가는 요청에만 부착되므로 키는 승인된 곳으로만 전달됩니다. 키를 변경하려면 볼트에서 값을 업데이트하면 되고, 실행 중인 세션은 다음 호출 시 새 값을 받아 갑니다. HTTP 요청으로 키를 전송하는 대부분의 CLI가 이 방식으로 동작하며, 여기에는 Browserbase, KERNEL, Notion, Ramp, Sentry의 CLI가 포함됩니다. <a href="https://docs.browserbase.com/integrations/anthropic/managed-agents/quickstart">Browserbase</a>와 <a href="https://www.kernel.sh/docs/integrations/claude-managed-agents">KERNEL</a>은 Managed Agents에 처음으로 브라우저 기능을 제공해, 에이전트가 다른 도구들과 함께 웹을 탐색하고 상호작용할 수 있게 합니다.</p>
+
+<figure>
+  <img src="assets/whats-new-in-claude-managed-agents/vaults-cli-diagram.png" alt="Claude Managed Agents의 CLI 자격 증명 볼트 동작 방식 다이어그램">
+  <figcaption>Claude Managed Agents의 CLI 자격 증명 볼트 동작 방식을 보여 주는 다이어그램.</figcaption>
+</figure>
+
+<p>여러 팀이 볼트의 환경 변수를 활용해 에이전트에 인증된 도구에 대한 안전한 접근 권한을 부여하고 있습니다:</p>
+
+<ul>
+  <li><a href="https://claude.com/customers/notion-qa">Notion(노션)</a>은 볼트의 환경 변수를 사용해 자사 CLI를 MCP 도구와 함께 배포하며, API 토큰을 모델에 절대 넘기지 않으면서도 에이전트에 파일 업로드 기능을 추가합니다.</li>
+  <li><a href="https://www.browserbase.com/">Browserbase</a>는 볼트로 인증되는 <a href="https://www.npmjs.com/package/browse">browse CLI</a>를 사용해 브라우저 스킬(browser skills)의 공개 카탈로그를 구축했습니다. 예약 배포가 이 카탈로그를 주기적으로 검증해 정확성을 유지합니다.</li>
+  <li><a href="https://www.kernel.sh/docs/integrations/claude-managed-agents">KERNEL</a>은 볼트의 환경 변수를 사용해 사용량과 고객 대화를 추적하는 데이터베이스에 에이전트를 안전하게 연결합니다. 에이전트는 사용량 급증을 실시간으로 표시해, 팀이 해당 활동이 의도된 것인지 고객에게 확인할 수 있게 합니다.</li>
+  <li><a href="https://getmilana.ai/">Milana</a>는 볼트의 환경 변수를 사용해 자사의 AI 프로덕트 엔지니어를 고객의 코드베이스에 안전하게 연결합니다. 에이전트가 버그를 자동으로 찾아 수정하며, 대규모 데이터 분석도 이전보다 빠르게 수행합니다.</li>
+</ul>
+
+<h2>시작하기</h2>
+
+<p>더 알아보려면 <a href="https://platform.claude.com/docs/en/managed-agents/overview">문서</a>를 살펴보거나, 첫 에이전트를 배포하려면 <a href="https://platform.claude.com/">Claude Console</a>을 방문하세요.</p>
+
+<footer>
+  이 글은 Claude 공식 블로그 원문을 한국어로 옮긴 비공식 번역본입니다.
+  내용의 정확한 의미는 위 원문 링크를 함께 참고하세요.
+</footer>
+<script src="assets/nav.js"></script>
+</body>
+</html>
