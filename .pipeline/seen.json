@@ -1,0 +1,30 @@
+{
+  "_comment": "Slugs already handled. Seeded with everything on the blog index at setup time so only FUTURE posts get translated. Updated automatically after each successful translation.",
+  "slugs": [
+    "agent-identity-access-model",
+    "artifacts-in-claude-code",
+    "building-with-claude-managed-agents",
+    "claude-code-desktop-redesign",
+    "claude-design-stays-on-brand-for-daily-work",
+    "claude-for-foundation-models",
+    "claude-managed-agents",
+    "claude-managed-agents-memory",
+    "claude-managed-agents-updates",
+    "connectors-for-everyday-life",
+    "enterprise-managed-auth",
+    "harnessing-claudes-intelligence",
+    "how-anthropic-enables-self-service-data-analytics-with-claude",
+    "how-anthropic-uses-claude-gtm-engineering",
+    "lessons-from-building-claude-code-how-we-use-skills",
+    "meet-the-winners-of-built-with-opus-4-7-claude-code-hackathon",
+    "meet-the-winners-of-our-claude-opus-4-8-build-day-hackathon",
+    "new-in-claude-managed-agents",
+    "observability-for-developers-building-connectors",
+    "preparing-your-security-program-for-ai-accelerated-offense",
+    "steering-claude-code-skills-hooks-rules-subagents-and-more",
+    "the-claude-cowork-product-guide",
+    "the-full-claude-desktop-experience-on-aws-google-cloud-and-microsoft-foundry",
+    "whats-new-in-claude-managed-agents",
+    "workload-identity-federation"
+  ]
+}
