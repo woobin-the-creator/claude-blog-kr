@@ -3,6 +3,7 @@
  * Requires store.js (window.CBK) to be loaded first; degrades gracefully if not. */
 (function () {
   var POSTS = [
+    { file: "building-effective-human-agent-teams.html", title: "효과적인 인간-에이전트 팀",  date: "2026-06-24" },
     { file: "agent-identity-access-model.html",   title: "에이전트 아이덴티티 접근 모델",   date: "2026-06-24" },
     { file: "the-full-claude-desktop-experience-on-aws-google-cloud-and-microsoft-foundry.html", title: "완전한 Claude Desktop 경험", date: "2026-06-22" },
     { file: "artifacts-in-claude-code.html",      title: "Claude Code 아티팩트",          date: "2026-06-18" },
