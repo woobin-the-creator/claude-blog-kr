@@ -19,7 +19,7 @@
   li a { color:#1a1a1a; text-decoration:none; font-size:1.1rem; font-weight:600; }
   li a:hover { color:#c96442; }
   .date { display:block; color:#888; font-size:0.82rem; margin-top:4px; }
-  .toolbar { display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin:0 0 24px; }
+  .toolbar { display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin:0 0 16px; }
   .toolbar button, .toolbar label { font:inherit; cursor:pointer; border:1px solid #e5e5e5;
     background:#fff; color:#1a1a1a; border-radius:8px; padding:6px 12px; }
   .toolbar button:hover, .toolbar label:hover { border-color:#c96442; color:#c96442; }
@@ -27,108 +27,188 @@
   .toolbar .library-link { display:inline-flex; align-items:center; gap:6px; }
   .toolbar .library-link .count { background:#c96442; color:#fff; font-size:0.74rem;
     min-width:18px; text-align:center; padding:1px 6px; border-radius:999px; }
+
+  .cat-filter { margin:0 0 18px; }
+  .cat-row { display:flex; gap:6px; flex-wrap:wrap; align-items:center; margin:0 0 8px; }
+  .cat-row .cat-label { font-size:0.72rem; letter-spacing:0.04em; text-transform:uppercase;
+    color:#999; margin-right:4px; }
+  .chip { font:inherit; font-size:0.84rem; cursor:pointer; border:1px solid #e5e5e5;
+    background:#fff; color:#1a1a1a; border-radius:999px; padding:6px 12px; }
+  .chip:hover { border-color:#c96442; color:#c96442; }
+  .chip.on { background:#c96442; border-color:#c96442; color:#fff; }
+  .cat-sub.hidden { display:none; }
+  .count-note { color:#888; font-size:0.82rem; margin:0 0 14px; }
+
   li .star { color:#c96442; }
+  li .cat-tag { color:#a98; }
   li .note-preview { display:block; color:#888; font-size:0.84rem; margin-top:6px;
     padding-left:11px; border-left:2px solid #e7ddd7; line-height:1.5;
     overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-  body.fav-only li:not(.is-fav) { display:none; }
+  .empty-msg { color:#888; text-align:center; padding:40px 0; }
   footer { margin-top:48px; color:#888; font-size:0.8rem; }
 </style>
 </head>
 <body>
   <h1>Claude 블로그 한글 번역</h1>
   <p class="sub">
-    <a href="https://claude.com/blog">claude.com/blog</a>의 글을 한국어로 옮긴 비공식 번역 모음입니다.
+    <a href="https://claude.com/blog">claude.com/blog</a>의 글과 AI 영상을 한국어로 옮긴 비공식 모음입니다.
   </p>
   <div class="toolbar">
     <button type="button" id="fav-filter">★ 즐겨찾기만 보기</button>
     <a class="library-link" href="library.html">📑 내 보관함<span id="lib-count" class="count" hidden></span></a>
   </div>
-  <ul>
-    <li>
-      <a href="posts/building-effective-human-agent-teams.html">효과적인 인간-에이전트 팀 만들기: Anthropic의 교훈</a>
-      <span class="date">2026-06-24 · Enterprise AI</span>
-    </li>
-    <li>
-      <a href="posts/agent-identity-access-model.html">Claude Tag의 에이전트 아이덴티티: 자율적이고 팀 전체가 함께 쓰는 AI를 위한 새로운 접근 모델</a>
-      <span class="date">2026-06-24 · Claude Code</span>
-    </li>
-    <li>
-      <a href="posts/the-full-claude-desktop-experience-on-aws-google-cloud-and-microsoft-foundry.html">AWS, Google Cloud, Microsoft Foundry에서 누리는 완전한 Claude Desktop 경험</a>
-      <span class="date">2026-06-22 · Enterprise AI</span>
-    </li>
-    <li>
-      <a href="posts/artifacts-in-claude-code.html">Claude Code가 이제 아티팩트(artifacts)를 지원합니다</a>
-      <span class="date">2026-06-18 · Product announcements</span>
-    </li>
-    <li>
-      <a href="posts/enterprise-managed-auth.html">MCP 커넥터 권한을 중앙에서 관리하기</a>
-      <span class="date">2026-06-18 · Enterprise AI</span>
-    </li>
-    <li>
-      <a href="posts/steering-claude-code.html">Claude Code 길들이기: CLAUDE.md, 스킬, 훅, 룰, 서브에이전트 그 외</a>
-      <span class="date">2026-06-18 · Claude Code</span>
-    </li>
-    <li>
-      <a href="posts/claude-design-stays-on-brand-for-daily-work.html">이제 Claude Design은 일상 업무에서도 브랜드를 일관되게 유지합니다</a>
-      <span class="date">2026-06-17 · Product announcements</span>
-    </li>
-    <li>
-      <a href="posts/workload-identity-federation.html">워크로드 아이덴티티 페더레이션(WIF)으로 Claude 플랫폼에 안전하게 접근하기</a>
-      <span class="date">2026-06-17 · Product announcements</span>
-    </li>
-    <li>
-      <a href="posts/build-day-hackathon-winners.html">Claude Opus 4.8 빌드 데이 해커톤 우승팀을 소개합니다</a>
-      <span class="date">2026-06-17 · Claude Code · 해커톤</span>
-    </li>
-    <li>
-      <a href="posts/opus-4-7-hackathon-winners.html">Built with Opus 4.7 Claude Code 해커톤 우승팀을 소개합니다</a>
-      <span class="date">2026-06-15 · Claude Code · 해커톤</span>
-    </li>
-    <li>
-      <a href="posts/building-with-claude-managed-agents.html">에이전트 표면의 진화: Claude Managed Agents로 만들기</a>
-      <span class="date">2026-06-10 · Agents</span>
-    </li>
-    <li>
-      <a href="posts/whats-new-in-claude-managed-agents.html">Claude Managed Agents 새 기능: 일정 실행과 환경 변수 볼트</a>
-      <span class="date">2026-06-09 · Product announcements</span>
-    </li>
-    <li>
-      <a href="posts/opus-4-6-hackathon-winners.html">Built with Opus 4.6 Claude Code 해커톤 우승팀을 소개합니다</a>
-      <span class="date">2026-04-20 · Claude Code · 해커톤</span>
-    </li>
-  </ul>
-  <footer>비공식 번역본 · 정확한 의미는 각 글의 원문 링크를 함께 참고하세요.</footer>
+
+  <div class="cat-filter">
+    <div class="cat-row" id="cat-main"></div>
+    <div class="cat-row cat-sub hidden" id="cat-sub"></div>
+  </div>
+  <p class="count-note" id="count-note"></p>
+
+  <ul id="post-list"></ul>
+  <p class="empty-msg" id="empty-msg" hidden>조건에 맞는 글이 없습니다.</p>
+
+  <footer>비공식 번역본 · 정확한 의미는 각 글의 원문/영상 링크를 함께 참고하세요.</footer>
+
+  <script src="posts/assets/posts.js"></script>
   <script src="posts/assets/store.js"></script>
   <script>
   (function () {
-    var CBK = window.CBK; if (!CBK) return;
-    var marked = 0;
-    document.querySelectorAll("ul li").forEach(function (li) {
-      var a = li.querySelector("a[href]"); if (!a) return;
-      var slug = CBK.slugOf(a.getAttribute("href"));
-      var fav = CBK.isBookmarked(slug);
-      var note = CBK.getNote(slug);
-      if (fav) {
-        li.classList.add("is-fav");
-        var s = document.createElement("span");
-        s.className = "star"; s.textContent = "★ ";
-        a.insertBefore(s, a.firstChild);
+    var CBK = window.CBK || null;
+    var POSTS = window.CBK_POSTS || [];
+
+    var listEl = document.getElementById("post-list");
+    var emptyEl = document.getElementById("empty-msg");
+    var noteEl = document.getElementById("count-note");
+    var mainRow = document.getElementById("cat-main");
+    var subRow = document.getElementById("cat-sub");
+    var favBtn = document.getElementById("fav-filter");
+
+    var favOnly = false;
+    var selMain = "all";
+    var selSub = "all";
+
+    function esc(s) {
+      return String(s).replace(/[&<>"]/g, function (c) {
+        return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
+      });
+    }
+    function distinct(arr) {
+      var seen = {}, out = [];
+      arr.forEach(function (v) { if (!seen[v]) { seen[v] = 1; out.push(v); } });
+      return out;
+    }
+
+    /* deep-link: #m=<출처>&c=<주제> */
+    (function readHash() {
+      var h = location.hash.replace(/^#/, "");
+      if (!h) return;
+      h.split("&").forEach(function (kv) {
+        var p = kv.split("=");
+        if (p[0] === "m") selMain = decodeURIComponent(p[1] || "") || "all";
+        if (p[0] === "c") selSub = decodeURIComponent(p[1] || "") || "all";
+      });
+    })();
+
+    function mains() { return distinct(POSTS.map(function (p) { return p.main; })); }
+    function subsOf(main) {
+      return distinct(POSTS
+        .filter(function (p) { return main === "all" || p.main === main; })
+        .map(function (p) { return p.cat; }));
+    }
+
+    function chip(val, label, on) {
+      return '<button type="button" class="chip' + (on ? " on" : "") +
+        '" data-val="' + esc(val) + '">' + esc(label) + "</button>";
+    }
+
+    function buildChips() {
+      var mh = '<span class="cat-label">출처</span>' + chip("all", "전체", selMain === "all");
+      mains().forEach(function (m) { mh += chip(m, m, selMain === m); });
+      mainRow.innerHTML = mh;
+
+      if (selMain === "all") {
+        subRow.classList.add("hidden");
+        subRow.innerHTML = "";
+      } else {
+        var sh = '<span class="cat-label">주제</span>' + chip("all", "전체", selSub === "all");
+        subsOf(selMain).forEach(function (c) { sh += chip(c, c, selSub === c); });
+        subRow.innerHTML = sh;
+        subRow.classList.remove("hidden");
       }
-      if (note) {
-        var p = document.createElement("span");
-        p.className = "note-preview";
-        p.textContent = "📝 " + note.replace(/\s+/g, " ").trim();
-        li.appendChild(p);
+    }
+
+    function matches(p) {
+      if (selMain !== "all" && p.main !== selMain) return false;
+      if (selMain !== "all" && selSub !== "all" && p.cat !== selSub) return false;
+      if (favOnly) {
+        if (!CBK || !CBK.isBookmarked(CBK.slugOf(p.file))) return false;
       }
-      if (fav || note) marked++;
+      return true;
+    }
+
+    function render() {
+      buildChips();
+      var shown = POSTS.filter(matches);
+      noteEl.textContent = shown.length + "개 글" +
+        (selMain === "all" ? "" : " · " + selMain) +
+        (selMain !== "all" && selSub !== "all" ? " › " + selSub : "");
+
+      listEl.innerHTML = "";
+      var marked = 0;
+      POSTS.forEach(function (p) {
+        var slug = CBK ? CBK.slugOf(p.file) : p.file.replace(/\.html$/, "");
+        var fav = CBK ? CBK.isBookmarked(slug) : false;
+        var note = CBK ? CBK.getNote(slug) : "";
+        if (fav || note) marked++;
+      });
+
+      shown.forEach(function (p) {
+        var slug = CBK ? CBK.slugOf(p.file) : p.file.replace(/\.html$/, "");
+        var fav = CBK ? CBK.isBookmarked(slug) : false;
+        var note = CBK ? CBK.getNote(slug) : "";
+
+        var li = document.createElement("li");
+        var html =
+          '<a href="posts/' + p.file + '">' +
+            (fav ? '<span class="star">★ </span>' : "") + esc(p.title) +
+          "</a>" +
+          '<span class="date">' + p.date +
+            ' · <span class="cat-tag">' + esc(p.cat) + "</span></span>";
+        if (note) {
+          html += '<span class="note-preview">📝 ' +
+            esc(note.replace(/\s+/g, " ").trim()) + "</span>";
+        }
+        li.innerHTML = html;
+        listEl.appendChild(li);
+      });
+
+      emptyEl.hidden = shown.length > 0;
+
+      var libCount = document.getElementById("lib-count");
+      if (libCount) {
+        if (marked) { libCount.textContent = marked; libCount.hidden = false; }
+        else { libCount.hidden = true; }
+      }
+    }
+
+    mainRow.addEventListener("click", function (e) {
+      var b = e.target.closest(".chip"); if (!b) return;
+      selMain = b.getAttribute("data-val");
+      selSub = "all";
+      render();
     });
-    var libCount = document.getElementById("lib-count");
-    if (marked && libCount) { libCount.textContent = marked; libCount.hidden = false; }
-    var filter = document.getElementById("fav-filter");
-    filter.addEventListener("click", function () {
-      filter.classList.toggle("on", document.body.classList.toggle("fav-only"));
+    subRow.addEventListener("click", function (e) {
+      var b = e.target.closest(".chip"); if (!b) return;
+      selSub = b.getAttribute("data-val");
+      render();
     });
+    favBtn.addEventListener("click", function () {
+      favOnly = !favOnly;
+      favBtn.classList.toggle("on", favOnly);
+      render();
+    });
+
+    render();
   })();
   </script>
 </body>

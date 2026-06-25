@@ -48,3 +48,11 @@
   #site-nav .nav-link.active { border-color: var(--nav-accent); }
   #site-nav .nav-link .nav-date { display:none; }
 }
+
+/* Breadcrumb injected above each post header (메인 › 서브 › 제목). */
+.post-crumb { font-size: 0.82rem; line-height: 1.5; color: var(--nav-muted, #666);
+  margin: 0 0 20px; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.post-crumb a { color: var(--nav-accent, #c96442); text-decoration: none; }
+.post-crumb a:hover { text-decoration: underline; }
+.post-crumb .post-crumb-sep { color: #bbb; }
+.post-crumb .post-crumb-cur { color: var(--nav-muted, #666); }
