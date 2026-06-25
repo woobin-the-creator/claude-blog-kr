@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude 팀은 Claude Code를 이렇게 쓴다: 모호성 제거·HTML 기획·통합 검증</title>
+<style>
+  :root { --fg:#1a1a1a; --muted:#666; --line:#e5e5e5; --accent:#c96442; --code-bg:#f6f6f4; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo",
+      "Malgun Gothic", sans-serif;
+    color: var(--fg); line-height: 1.75; max-width: 760px;
+    margin: 0 auto; padding: 48px 24px 96px; background:#fff;
+  }
+  header { border-bottom: 2px solid var(--line); padding-bottom: 24px; margin-bottom: 32px; }
+  h1 { font-size: 1.9rem; line-height: 1.35; margin: 0 0 12px; }
+  .meta { color: var(--muted); font-size: 0.9rem; }
+  .meta .orig { display:block; margin-top:6px; }
+  .meta a { color: var(--accent); text-decoration: none; }
+  h2 { font-size: 1.4rem; margin: 44px 0 8px; padding-top: 8px; }
+  h3 { font-size: 1.15rem; margin: 30px 0 8px; color:#000; }
+  p { margin: 0 0 16px; }
+  a { color: var(--accent); }
+  ul { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  blockquote { margin: 16px 0; padding: 8px 18px; border-left:3px solid var(--line);
+    color:#333; }
+  blockquote .ko { display:block; margin-top:6px; font-style: normal; color:#555;
+    font-size:0.94rem; }
+  hr { border: none; border-top: 1px solid var(--line); margin: 40px 0; }
+  code { background: var(--code-bg); padding: 2px 6px; border-radius: 4px;
+    font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 0.88em; }
+  pre { background: var(--code-bg); padding: 16px 18px; border-radius: 8px;
+    overflow-x: auto; border:1px solid var(--line); }
+  pre code { background: none; padding: 0; font-size: 0.85rem; line-height:1.5; }
+  figure { margin: 24px 0; }
+  figure img { width: 100%; height: auto; border:1px solid var(--line); border-radius: 8px;
+    background:#fff; }
+  figcaption { color: var(--muted); font-size: 0.85rem; text-align: center;
+    margin-top: 10px; line-height: 1.5; }
+  figcaption a { color: var(--accent); }
+  .video { position: relative; width: 100%; aspect-ratio: 16 / 9; margin: 22px 0; }
+  .video iframe { position: absolute; inset: 0; width: 100%; height: 100%;
+    border: 0; border-radius: 8px; }
+  .callout { background:#faf6f4; border-left:3px solid var(--accent);
+    padding: 12px 16px; border-radius: 0 6px 6px 0; margin: 16px 0; }
+  .callout strong { color: var(--accent); }
+  .takeaway { background:#f6f6f4; border-radius:8px; padding:16px 20px; margin:28px 0; }
+  .takeaway h2 { margin-top:0; }
+  footer { margin-top: 64px; padding-top: 20px; border-top:1px solid var(--line);
+    color: var(--muted); font-size: 0.82rem; }
+</style>
+<link rel="stylesheet" href="assets/nav.css">
+</head>
+<body>
+<header>
+  <h1>Claude 팀은 Claude Code를 이렇게 쓴다: 모호성 제거·HTML 기획·통합 검증</h1>
+  <div class="meta">
+    2026-05-23 · 카테고리: Claude Code
+    <span class="orig">출처 영상:
+      <a href="https://youtu.be/IlqJqcl8ONE">How we Claude Code</a>
+      (YouTube · 한국어 정리본)</span>
+  </div>
+</header>
+
+<!-- Optional: embed the source video at the top.
+<div class="video"><iframe src="https://www.youtube.com/embed/IlqJqcl8ONE"
+  title="How we Claude Code"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+  allowfullscreen></iframe></div> -->
+
+<p>이 영상은 Claude 팀이 직접 "우리는 Claude Code를 이렇게 쓴다"를 공개한 워크숍(<em>Code w/ Claude</em>)이다. 핵심 메시지는 하나다. 에이전트가 몇 분이 아니라 몇 시간을 돌게 된 지금, <strong>일하는 방식 자체를 바꿔야 한다</strong>는 것. 팀은 그 방법을 세 가지 — 모호성 제거, 이해와 기획, 통합 검증 — 으로 정리한다.</p>
+
+<h2>왜 지금 워크플로가 문제인가</h2>
+<p>에이전트는 점점 더 길고 복잡한 작업을 자율적으로 수행한다. 실행 시간이 길어질수록 잘못된 방향으로 들어섰을 때의 비용도 커진다. 그래서 "끝에서 고치는" 게 아니라 "시작에서 어긋나지 않게 하는" 쪽으로 무게중심이 옮겨간다.</p>
+<blockquote>Agents now run for hours, not minutes, and do more work than ever before.<span class="ko">에이전트는 이제 몇 분이 아니라 몇 시간을 돌며, 그 어느 때보다 많은 일을 한다. (02:23)</span></blockquote>
+
+<h2>세 가지 전략</h2>
+<p>팀은 효과적인 협업을 세 축으로 나눈다. 슬라이드 한 장에 핵심이 압축돼 있다.</p>
+<figure>
+  <img src="assets/how-we-claude-code/IlqJqcl8ONE_285s.jpg" alt="세 가지 도구를 정리한 발표 슬라이드">
+  <figcaption>세 가지 도구 — 모호성 제거 · 이해와 기획 · 통합 검증. (슬라이드 'Three tools for working with long-running agents', 03:30 무렵)</figcaption>
+</figure>
+<ul>
+<li><strong>모호성 제거 (Removing ambiguity)</strong> — 에이전트가 무언가에 착수하기 전에, 먼저 당신을 인터뷰하게 하라.</li>
+<li><strong>이해와 기획 (Understanding &amp; planning)</strong> — 실제로 읽을 수 있는 계획서를. 마크다운이 아니라 HTML로.</li>
+<li><strong>통합 검증 (Integrated verification)</strong> — 검증을 끝에 덧붙이지 말고, 처음부터 설계에 넣어라.</li>
+</ul>
+
+<h2>1. 모호성 제거 — Claude가 당신을 인터뷰하게 하라</h2>
+<p>좋은 결과의 출발점은 정확한 요구사항이다. 그런데 팀의 관찰은 역설적이다. 사용자가 스스로 요구사항을 정의하는 것보다, 모델이 사용자에게 질문해 요구사항을 끌어내는 편이 더 정확하다는 것. 그래서 "바로 만들라" 대신 "먼저 나를 인터뷰하라"고 시킨다.</p>
+<figure>
+  <img src="assets/how-we-claude-code/IlqJqcl8ONE_406s.jpg" alt="'모호성 제거' 섹션 표지 슬라이드">
+  <figcaption>섹션 1 '모호성 제거' 표지. 슬라이드 원문: "Don't ask the agent to build it yet. Ask the agent to interview you about it." (06:46 무렵)</figcaption>
+</figure>
+<blockquote>The model is probably better at extracting requirements from you.<span class="ko">모델은 아마 당신에게서 요구사항을 끌어내는 데 더 능하다 — 당신이 직접 정의하는 것보다. (04:45)</span></blockquote>
+
+<h2>2. 마크다운에서 HTML로 — 더 촘촘한 소통</h2>
+<p>마크다운은 AI 네이티브 개발의 공용어가 됐지만, 형식이 다소 제약적이다. 팀은 기획·소통 문서를 HTML로 옮기면 같은 공간에 더 많은 정보를 담을 수 있고, 사람이 보기에도 더 편하다고 본다. 계획서가 곧 레이아웃이 되는 셈이다.</p>
+<blockquote>Plans you can actually read — HTML, not Markdown.<span class="ko">실제로 읽을 수 있는 계획서를 — 마크다운이 아니라 HTML로. (05:30, 슬라이드)</span></blockquote>
+
+<h2>3. 이해와 기획 — 코드 전에 레이아웃을 먼저 본다</h2>
+<p>구현에 바로 들어가는 대신, Claude로 UI 레이아웃을 먼저 생성해 눈으로 확인한다. 영상에서는 지출 정산(더치페이) 화면을 예로 든다. 코드를 짜기 전에 "무엇을 만들지"를 시각적으로 합의하는 단계다.</p>
+<figure>
+  <img src="assets/how-we-claude-code/IlqJqcl8ONE_697s.jpg" alt="Claude로 생성한 지출 정산 앱 화면">
+  <figcaption>이해·기획 단계 예시 — Claude로 생성한 지출 정산 UI("Saturday Dinner"). 항목·금액이 들어간 실제 HTML 화면을 브라우저에서 바로 확인한다. (11:37 무렵)</figcaption>
+</figure>
+
+<h2>4. 통합 검증 — 처음부터 검증을 위해 설계하라</h2>
+<p>가장 강조되는 부분이다. 검증은 단순한 테스트가 아니라, 에이전트가 스스로 결과를 확인할 수 있도록 시스템을 설계하는 일이다. 팀은 "에이전트 네이티브 검증 시스템"을 만들어, 사람이 읽을 수 있는 대시보드와 에이전트가 직접 돌리는 검증, 헤드리스 실행을 결합한다.</p>
+<figure>
+  <img src="assets/how-we-claude-code/IlqJqcl8ONE_781s.jpg" alt="'검증은 단순한 테스트가 아니다' 섹션 표지">
+  <figcaption>섹션 3 표지 — "Verification is not just testing(검증은 단순한 테스트가 아니다)". (13:01 무렵)</figcaption>
+</figure>
+<blockquote>Build for it from the start, don't bolt it on at the end.<span class="ko">처음부터 검증을 위해 설계하라. 끝에 가서 덧붙이지 마라. (08:31)</span></blockquote>
+
+<h2>실제 동작 — 여러 단계를 나란히</h2>
+<p>발표에서는 Claude Code 세션을 둘로 나눠 탐색(phase-1)과 검증(phase-3)을 나란히 돌리는 모습을 보여준다. 사람이 읽는 대시보드로 상태를 보고, 에이전트가 검증을 주도하며, 헤드리스로 반복 실행한다 — 검증이 워크플로에 녹아 있다.</p>
+<figure>
+  <img src="assets/how-we-claude-code/IlqJqcl8ONE_511s.jpg" alt="두 개의 Claude Code 터미널 세션 라이브 데모">
+  <figcaption>라이브 데모 — 두 개의 Claude Code 세션(Opus 4.7, 1M 컨텍스트)을 나란히 띄워 탐색과 검증 단계를 동시에 진행한다. (08:31 무렵)</figcaption>
+</figure>
+
+<h2>마무리</h2>
+<p>팀은 Opus 4.7의 향상된 비전(vision) 능력이 HTML 기반 스펙·레이아웃 작업과 특히 잘 맞는다고 정리한다. 핵심은, 점점 더 유능해지는 에이전트를 감독하려면 소통과 검증의 방식 자체가 더 정교해져야 한다는 것이다.</p>
+
+<div class="takeaway"><h2>핵심 정리</h2>
+<ul>
+<li><strong>모호성을 먼저 없애라.</strong> 요구사항은 당신이 정의하기보다 Claude가 인터뷰로 끌어내게 하는 편이 더 정확하다.</li>
+<li><strong>기획은 HTML로.</strong> 마크다운보다 정보 밀도가 높고, 계획서가 곧 레이아웃이 된다.</li>
+<li><strong>구현 전에 방향을 합의하라.</strong> UI를 먼저 생성해 눈으로 확인하고 좁힌다.</li>
+<li><strong>검증은 처음부터 설계에.</strong> 나중에 덧붙이는 테스트가 아니라, 에이전트가 스스로 확인하는 시스템으로.</li>
+<li><strong>긴 자율 실행 시대의 규칙.</strong> 에이전트가 오래 돌수록 시작 단계의 정렬과 상시 검증이 비용을 좌우한다.</li>
+</ul></div>
+
+<!-- BODY guidance (the assembler injects your /tmp/<slug>-body.html here):
+     - Intro (왜 중요한가, 2–3문장).
+     - <h2> per section + paragraphs.
+     - Frames: <figure><img src="assets/<slug>/<frame>.jpg" alt="…">
+         <figcaption>설명</figcaption></figure>  (relative path; never base64).
+     - Quotes: <blockquote>English original ≤15 words<span class="ko">한국어 옮김</span></blockquote>
+     - On-screen code: <pre><code>…</code></pre>
+     - Close: <div class="takeaway"><h2>핵심 정리</h2><ul>…3–5개…</ul></div> -->
+
+<footer>
+  이 글은 위 YouTube 영상을 보고 한국어로 정리한 비공식 요약·해설입니다.
+  직접 인용은 짧게 옮겼으며, 정확한 내용과 뉘앙스는 원본 영상을 함께 보세요.
+</footer>
+<script src="assets/store.js"></script>
+<script src="assets/posts.js"></script>
+<script src="assets/nav.js"></script>
+</body>
+</html>

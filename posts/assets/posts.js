@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "how-we-claude-code.html", date: "2026-05-23", main: "Claude Youtube", cat: "Claude Code",
+      title: "Claude 팀은 Claude Code를 이렇게 쓴다: 모호성 제거·HTML 기획·통합 검증", nav: "How we Claude Code" },
     { file: "building-effective-human-agent-teams.html", date: "2026-06-24", main: "Claude blog", cat: "Enterprise AI",
       title: "효과적인 인간-에이전트 팀 만들기: Anthropic의 교훈", nav: "효과적인 인간-에이전트 팀" },
     { file: "agent-identity-access-model.html", date: "2026-06-24", main: "Claude blog", cat: "Claude Code",
