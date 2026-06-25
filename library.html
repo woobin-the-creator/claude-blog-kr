@@ -92,24 +92,13 @@
 
   <footer>비공식 번역본 · 데이터는 이 브라우저에만 저장됩니다. 다른 기기로 옮기려면 내보내기/가져오기를 쓰세요.</footer>
 
+  <script src="posts/assets/posts.js"></script>
   <script src="posts/assets/store.js"></script>
   <script>
   (function () {
     var CBK = window.CBK;
-    /* Canonical post list — keep in sync with posts/assets/nav.js when adding a post. */
-    var POSTS = [
-      { file: "the-full-claude-desktop-experience-on-aws-google-cloud-and-microsoft-foundry.html", title: "AWS, Google Cloud, Microsoft Foundry에서 누리는 완전한 Claude Desktop 경험", date: "2026-06-22", cat: "Enterprise AI" },
-      { file: "artifacts-in-claude-code.html", title: "Claude Code가 이제 아티팩트(artifacts)를 지원합니다", date: "2026-06-18", cat: "Product announcements" },
-      { file: "enterprise-managed-auth.html", title: "MCP 커넥터 권한을 중앙에서 관리하기", date: "2026-06-18", cat: "Enterprise AI" },
-      { file: "steering-claude-code.html", title: "Claude Code 길들이기: CLAUDE.md, 스킬, 훅, 룰, 서브에이전트 그 외", date: "2026-06-18", cat: "Claude Code" },
-      { file: "claude-design-stays-on-brand-for-daily-work.html", title: "이제 Claude Design은 일상 업무에서도 브랜드를 일관되게 유지합니다", date: "2026-06-17", cat: "Product announcements" },
-      { file: "workload-identity-federation.html", title: "워크로드 아이덴티티 페더레이션(WIF)으로 Claude 플랫폼에 안전하게 접근하기", date: "2026-06-17", cat: "Product announcements" },
-      { file: "build-day-hackathon-winners.html", title: "Claude Opus 4.8 빌드 데이 해커톤 우승팀을 소개합니다", date: "2026-06-17", cat: "Claude Code · 해커톤" },
-      { file: "opus-4-7-hackathon-winners.html", title: "Built with Opus 4.7 Claude Code 해커톤 우승팀을 소개합니다", date: "2026-06-15", cat: "Claude Code · 해커톤" },
-      { file: "building-with-claude-managed-agents.html", title: "에이전트 표면의 진화: Claude Managed Agents로 만들기", date: "2026-06-10", cat: "Agents" },
-      { file: "whats-new-in-claude-managed-agents.html", title: "Claude Managed Agents 새 기능: 일정 실행과 환경 변수 볼트", date: "2026-06-09", cat: "Product announcements" },
-      { file: "opus-4-6-hackathon-winners.html", title: "Built with Opus 4.6 Claude Code 해커톤 우승팀을 소개합니다", date: "2026-04-20", cat: "Claude Code · 해커톤" }
-    ];
+    /* Post catalog comes from posts/assets/posts.js (window.CBK_POSTS) — single source. */
+    var POSTS = window.CBK_POSTS || [];
 
     var listEl = document.getElementById("list");
     var summaryEl = document.getElementById("summary");

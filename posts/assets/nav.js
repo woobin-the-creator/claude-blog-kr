@@ -1,22 +1,8 @@
-/* Shared sidebar nav + per-post bookmark/notes UI.
- * Add a post = add one entry below (newest first).
- * Requires store.js (window.CBK) to be loaded first; degrades gracefully if not. */
+/* Shared sidebar nav + breadcrumb + per-post bookmark/notes UI.
+ * Post catalog lives in posts.js (window.CBK_POSTS) — load it before this file.
+ * Requires store.js (window.CBK) for bookmarks; degrades gracefully if absent. */
 (function () {
-  var POSTS = [
-    { file: "building-effective-human-agent-teams.html", title: "효과적인 인간-에이전트 팀",  date: "2026-06-24" },
-    { file: "agent-identity-access-model.html",   title: "에이전트 아이덴티티 접근 모델",   date: "2026-06-24" },
-    { file: "the-full-claude-desktop-experience-on-aws-google-cloud-and-microsoft-foundry.html", title: "완전한 Claude Desktop 경험", date: "2026-06-22" },
-    { file: "artifacts-in-claude-code.html",      title: "Claude Code 아티팩트",          date: "2026-06-18" },
-    { file: "enterprise-managed-auth.html",       title: "MCP 커넥터 중앙 권한 관리",       date: "2026-06-18" },
-    { file: "steering-claude-code.html",          title: "Claude Code 길들이기",          date: "2026-06-18" },
-    { file: "claude-design-stays-on-brand-for-daily-work.html", title: "Claude Design 브랜드 유지", date: "2026-06-17" },
-    { file: "workload-identity-federation.html",  title: "워크로드 아이덴티티 페더레이션",   date: "2026-06-17" },
-    { file: "build-day-hackathon-winners.html",   title: "Opus 4.8 빌드 데이 해커톤",       date: "2026-06-17" },
-    { file: "opus-4-7-hackathon-winners.html",    title: "Built with Opus 4.7 해커톤",     date: "2026-06-15" },
-    { file: "building-with-claude-managed-agents.html", title: "Managed Agents로 만들기",   date: "2026-06-10" },
-    { file: "whats-new-in-claude-managed-agents.html",  title: "관리형 에이전트 새 기능",     date: "2026-06-09" },
-    { file: "opus-4-6-hackathon-winners.html",    title: "Built with Opus 4.6 해커톤",     date: "2026-04-20" }
-  ];
+  var POSTS = window.CBK_POSTS || [];
 
   var CBK = window.CBK || null;
   var current = location.pathname.split("/").pop();
@@ -28,7 +14,7 @@
     var star = (CBK && CBK.isBookmarked(CBK.slugOf(p.file))) ? "★ " : "";
     return (
       '<li><a class="nav-link' + active + '" href="' + p.file + '">' +
-        star + p.title +
+        star + (p.nav || p.title) +
         '<span class="nav-date">' + p.date + "</span>" +
       "</a></li>"
     );
@@ -53,6 +39,28 @@
     tools;
 
   document.body.insertBefore(nav, document.body.firstChild);
+
+  /* ---------- breadcrumb (메인 › 서브 › 제목) ---------- */
+  var meta = window.CBK_postBySlug ? window.CBK_postBySlug(current) : null;
+  var header = document.querySelector("header");
+  if (meta && header) {
+    function enc(s) { return encodeURIComponent(s); }
+    function esc(s) {
+      return String(s).replace(/[&<>"]/g, function (c) {
+        return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
+      });
+    }
+    var crumb = document.createElement("nav");
+    crumb.className = "post-crumb";
+    crumb.setAttribute("aria-label", "breadcrumb");
+    crumb.innerHTML =
+      '<a href="../index.html#m=' + enc(meta.main) + '">' + esc(meta.main) + "</a>" +
+      '<span class="post-crumb-sep">›</span>' +
+      '<a href="../index.html#m=' + enc(meta.main) + "&c=" + enc(meta.cat) + '">' + esc(meta.cat) + "</a>" +
+      '<span class="post-crumb-sep">›</span>' +
+      '<span class="post-crumb-cur">' + esc(meta.title) + "</span>";
+    header.parentNode.insertBefore(crumb, header);
+  }
 
   /* ---------- per-post bookmark + note bar ---------- */
   if (!CBK) return;
