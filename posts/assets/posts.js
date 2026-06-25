@@ -11,8 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
-    { file: "how-we-claude-code.html", date: "2026-05-23", main: "Claude Youtube", cat: "Claude Code",
-      title: "Claude 팀은 Claude Code를 이렇게 쓴다: 모호성 제거·HTML 기획·통합 검증", nav: "How we Claude Code" },
+    { file: "keep-claude-working-toward-a-goal.html", date: "2026-06-25", main: "Claude Code Docs", cat: "Claude Code",
+      title: "목표를 향해 Claude를 계속 일하게 하기: /goal 명령어", nav: "/goal로 목표까지 일 시키기" },
     { file: "building-effective-human-agent-teams.html", date: "2026-06-24", main: "Claude blog", cat: "Enterprise AI",
       title: "효과적인 인간-에이전트 팀 만들기: Anthropic의 교훈", nav: "효과적인 인간-에이전트 팀" },
     { file: "agent-identity-access-model.html", date: "2026-06-24", main: "Claude blog", cat: "Claude Code",
@@ -37,6 +37,8 @@
       title: "에이전트 표면의 진화: Claude Managed Agents로 만들기", nav: "Managed Agents로 만들기" },
     { file: "whats-new-in-claude-managed-agents.html", date: "2026-06-09", main: "Claude blog", cat: "Product announcements",
       title: "Claude Managed Agents 새 기능: 일정 실행과 환경 변수 볼트", nav: "관리형 에이전트 새 기능" },
+    { file: "how-we-claude-code.html", date: "2026-05-23", main: "Claude Youtube", cat: "Claude Code",
+      title: "Claude 팀은 Claude Code를 이렇게 쓴다: 모호성 제거·HTML 기획·통합 검증", nav: "How we Claude Code" },
     { file: "opus-4-6-hackathon-winners.html", date: "2026-04-20", main: "Claude blog", cat: "Claude Code · 해커톤",
       title: "Built with Opus 4.6 Claude Code 해커톤 우승팀을 소개합니다", nav: "Built with Opus 4.6 해커톤" }
   ];
