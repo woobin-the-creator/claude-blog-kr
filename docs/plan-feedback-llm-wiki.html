@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>계획: 글 평가 → LLM Wiki 선호 학습</title>
+<style>
+  :root{
+    --bg:#faf9f7; --card:#ffffff; --fg:#1f1d1a; --muted:#6b6660;
+    --line:#e7e3dd; --accent:#cc785c; --accent-soft:#f6e9e3;
+    --good:#2e8b57; --bad:#c0392b; --code:#f4f1ec;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0; background:var(--bg); color:var(--fg);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Apple SD Gothic Neo","Noto Sans KR",sans-serif;
+    line-height:1.6; -webkit-font-smoothing:antialiased;}
+  .page{width:1000px; margin:0 auto; padding:48px 56px 56px;}
+  .kicker{font-size:13px; letter-spacing:.08em; text-transform:uppercase; color:var(--accent); font-weight:700;}
+  h1{font-size:34px; line-height:1.25; margin:8px 0 6px; letter-spacing:-.01em;}
+  .sub{font-size:16px; color:var(--muted); margin:0 0 4px;}
+  .meta{font-size:13px; color:var(--muted); margin-top:10px;}
+  .goal{margin:24px 0 8px; padding:18px 22px; background:var(--accent-soft);
+    border-left:4px solid var(--accent); border-radius:8px; font-size:16px;}
+  .goal b{color:var(--accent);}
+  h2{font-size:21px; margin:38px 0 14px; padding-bottom:8px; border-bottom:2px solid var(--line);
+    display:flex; align-items:center; gap:10px;}
+  h2 .n{display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px;
+    background:var(--accent); color:#fff; border-radius:8px; font-size:15px; font-weight:700;}
+  h3{font-size:16px; margin:22px 0 8px;}
+  p{margin:8px 0;}
+  .grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:14px 0;}
+  .card{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 18px;}
+  .card h4{margin:0 0 6px; font-size:15px;}
+  .card .src{font-size:12px; color:var(--accent); font-weight:600;}
+  .card p{margin:6px 0 0; font-size:13.5px; color:var(--muted);}
+  table{width:100%; border-collapse:collapse; margin:12px 0; font-size:14px; background:var(--card);
+    border:1px solid var(--line); border-radius:10px; overflow:hidden;}
+  th,td{text-align:left; padding:10px 14px; border-bottom:1px solid var(--line); vertical-align:top;}
+  th{background:#f3efe9; font-weight:700; font-size:13px;}
+  tr:last-child td{border-bottom:none;}
+  code,pre{font-family:"SF Mono",ui-monospace,Menlo,Consolas,monospace;}
+  code{background:var(--code); padding:1px 6px; border-radius:5px; font-size:13px;}
+  pre{background:#1f1d1a; color:#f0ece5; padding:16px 18px; border-radius:10px; overflow:auto;
+    font-size:13px; line-height:1.55; margin:12px 0;}
+  pre .c{color:#9aa0a6;} pre .k{color:#e6a07a;} pre .s{color:#9ecb8a;}
+  .flow{display:flex; align-items:stretch; gap:0; margin:16px 0; flex-wrap:nowrap;}
+  .flow .step{flex:1; background:var(--card); border:1px solid var(--line); border-radius:10px;
+    padding:14px 12px; text-align:center; font-size:13px;}
+  .flow .step b{display:block; font-size:14px; margin-bottom:4px;}
+  .flow .step .t{color:var(--muted); font-size:12px;}
+  .flow .arr{display:flex; align-items:center; padding:0 10px; color:var(--accent); font-size:22px; font-weight:700;}
+  .pill{display:inline-block; font-size:12px; padding:2px 10px; border-radius:999px; font-weight:600;}
+  .pill.now{background:#e8f3ec; color:var(--good);}
+  .pill.later{background:#eef0f3; color:#5b6470;}
+  ul.chk{list-style:none; padding:0; margin:12px 0;}
+  ul.chk li{padding:7px 0 7px 30px; position:relative; font-size:14.5px; border-bottom:1px dashed var(--line);}
+  ul.chk li:before{content:"▢"; position:absolute; left:4px; color:var(--accent); font-weight:700;}
+  ul.chk li:last-child{border-bottom:none;}
+  ul.chk li b{font-family:"SF Mono",ui-monospace,monospace; font-size:13px; background:var(--code); padding:1px 6px; border-radius:5px;}
+  .two{display:grid; grid-template-columns:1fr 1fr; gap:18px;}
+  .phase{border:1px solid var(--line); border-radius:14px; overflow:hidden;}
+  .phase .head{padding:14px 18px; font-weight:700; font-size:16px; display:flex; justify-content:space-between; align-items:center;}
+  .phase.a .head{background:#e8f3ec;} .phase.b .head{background:#eef0f3;}
+  .phase .body{padding:14px 18px; font-size:13.5px;}
+  .phase .body ul{margin:6px 0; padding-left:18px;} .phase .body li{margin:5px 0;}
+  .note{font-size:13px; color:var(--muted); background:var(--card); border:1px dashed var(--line);
+    border-radius:10px; padding:12px 16px; margin:14px 0;}
+  .foot{margin-top:40px; padding-top:18px; border-top:2px solid var(--line); font-size:12.5px; color:var(--muted);}
+  .foot a{color:var(--accent); text-decoration:none;}
+  .tag{font-size:11px; color:#fff; background:var(--good); padding:1px 7px; border-radius:6px; vertical-align:middle;}
+  .tag.bad{background:var(--bad);}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="kicker">claude-blog-kr · 기능 계획서</div>
+  <h1>글 평가(좋아요·싫어요·이유) → LLM Wiki 선호 학습</h1>
+  <p class="sub">개인 선호 신호를 모아, "내가 선호하는 타입의 정보를 직접 가져오는" 지식 베이스를 만든다.</p>
+  <p class="meta">설계 확정: 2026-06-26 (grill 인터뷰) · 데이터 주인: 나 한 명 · 저장: localStorage + Supabase</p>
+
+  <div class="goal">
+    <b>목표 한 줄.</b> 글마다 좋아요/싫어요와 <b>그 이유</b>를 남기고, 이 신호를
+    <b>Karpathy "LLM Wiki" 패턴</b>으로 컴파일해 주제·출처별 취향 프로필을 만든다.
+    그러면 "내가 좋아할 OO 주제 글 가져와"에 큐레이션으로 답할 수 있다.
+  </div>
+
+  <h2><span class="n">0</span> "LLM Wiki"가 뭔지부터 — 조사한 실제 유즈케이스</h2>
+  <p>막연한 개념이 아니라 <b>Andrej Karpathy가 정의한 패턴</b>이 정확한 출처였다. 핵심: raw 소스를
+     LLM이 <b>index.md + 위키링크 article로 한 번 컴파일</b>해 누적한다 — 매 질문마다 재검색하는 RAG와 달리
+     <b>종합(synthesis)을 1급 산출물</b>로 둔다. 우리 규모(글 수십 개)면 벡터DB 없이 index 탐색으로 충분.</p>
+  <div class="grid">
+    <div class="card"><div class="src">Karpathy LLM Wiki</div><h4>raw → 컴파일 → 쿼리</h4>
+      <p>index를 항상 컨텍스트에 두고 필요한 article만 읽음. 벡터DB 불필요. 우리 블로그 글 = raw 소스.</p></div>
+    <div class="card"><div class="src">second-brain (구현 예)</div><h4>raw/ → wiki/ → output/</h4>
+      <p>YAML frontmatter + wikilink. ingest·query·lint 3워크플로우. 폴더 규약 그대로 차용 가능.</p></div>
+    <div class="card"><div class="src">Pistis-RAG · EPIC</div><h4>선호로 재랭킹</h4>
+      <p>like/dislike 피드백을 RAG에 주입해 결과 순서를 재정렬. 선호 = compact·stable한 개인 컨텍스트.</p></div>
+    <div class="card"><div class="src">mem0 · Letta</div><h4>메모리 레이어</h4>
+      <p>선호 사실 추출→저장→프롬프트 주입. 우린 대화 대신 <i>명시적 평가</i>라 추출이 더 정확.</p></div>
+  </div>
+  <div class="note"><b>결정적 정합성:</b> <code>schema.sql</code>의 <code>feedback</code> 컬럼은 이미
+    "맥 배치(AI)가 채울 자리"로 예약돼 있었다. 즉 원 설계가 <i>사용자 신호 → AI가 읽고 산출물 써넣기</i> 흐름을
+    의도했다. <b>사용자 코멘트 = 입력 / <code>feedback</code> = AI 산출</b>, 절대 섞지 않는다.</div>
+
+  <h2><span class="n">1</span> 전체 데이터 흐름</h2>
+  <div class="flow">
+    <div class="step"><b>① 평가</b><span class="t">글에서 👍/👎 + 이유<br>nav.js · store.js</span></div>
+    <div class="arr">→</div>
+    <div class="step"><b>② 동기화</b><span class="t">CBK.sync<br>Supabase cbk_items</span></div>
+    <div class="arr">→</div>
+    <div class="step"><b>③ 컴파일</b><span class="t">AI 배치 = Karpathy ingest<br>wiki/ 생성</span></div>
+    <div class="arr">→</div>
+    <div class="step"><b>④ 쿼리</b><span class="t">"좋아할 글 가져와"<br>선호로 재랭킹</span></div>
+  </div>
+
+  <h2><span class="n">2</span> 확정된 설계 결정 (grill)</h2>
+  <table>
+    <tr><th>항목</th><th>결론</th></tr>
+    <tr><td>데이터 주인</td><td>나 한 명(개인 선호 로그). 인증·중복방지 불필요</td></tr>
+    <tr><td>신호 분리</td><td>즐겨찾기★(다시 볼 글)·메모(할 일)는 <b>유지</b>, 좋아요/싫어요·이유는 <b>별도 신규</b></td></tr>
+    <tr><td>좋아요/싫어요</td><td>3상태: 좋아요(+1) / 중립(없음) / 싫어요(−1)</td></tr>
+    <tr><td>코멘트</td><td>"그 평가의 <b>이유</b>". 자유 메모와 의미 분리, 평가에 귀속</td></tr>
+    <tr><td>저장</td><td>localStorage + Supabase 둘 다 (기존 sync 확장 · 라이브 확인됨)</td></tr>
+    <tr><td>wiki 선호 단위</td><td>기존 분류 <code>main</code>(출처)·<code>cat</code>(주제)로 충분. 추가 메타 불필요</td></tr>
+  </table>
+
+  <h2><span class="n">3</span> 2단계 구현 계획</h2>
+  <div class="two">
+    <div class="phase a">
+      <div class="head"><span>Phase A — 신호 수집기</span><span class="pill now">지금</span></div>
+      <div class="body">
+        <ul>
+          <li><b>store.js</b> — <code>ratings</code>/<code>reasons</code> 모델 + API + present/ensure/import</li>
+          <li><b>nav.js</b> — cbk-bar에 👍👎 토글 + 이유칸(평가 시 펼침) + refreshBar 가드</li>
+          <li><b>library.html</b> — 평가 뱃지·이유·필터칩</li>
+          <li><b>schema.sql</b> — <code>rating smallint</code> + <code>reason text</code> 컬럼, cbk_upsert/delete 갱신</li>
+          <li><b>CBK.sync</b> — rating/reason LWW 머지·전달</li>
+          <li><b>export</b> — 위키용 레코드 포맷(Phase B 입력)</li>
+        </ul>
+      </div>
+    </div>
+    <div class="phase b">
+      <div class="head"><span>Phase B — LLM Wiki</span><span class="pill later">추후</span></div>
+      <div class="body">
+        <ul>
+          <li><b>wiki/</b> — <code>index.md</code> · <code>profile.md</code>(선호 프로필) · <code>topics/</code> · <code>sources/</code></li>
+          <li><b>CLAUDE.md</b> — 구조·규약 + ingest/query/lint 워크플로우</li>
+          <li><b>ingest</b> — export 레코드 → source·topic·profile 갱신 + 위키링크</li>
+          <li><b>query</b> — index 후보 → profile로 <b>재랭킹</b> → 큐레이션</li>
+          <li><b>lint</b> — 모순·끊긴 링크·고아·오래된 주장 점검</li>
+          <li>(선택) 결과를 <code>feedback</code> 컬럼에 써 사이트에 노출</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <h2><span class="n">4</span> 핵심 데이터 모델 (Phase A)</h2>
+  <p>기존 <code>cbk:data:v1</code>에 서브객체 2개 추가. <code>notes</code>와 동일 패턴(LWW용 <code>meta</code> 공유).
+     Supabase는 <span class="tag">새 컬럼</span> 2개 — <code>feedback</code> 재사용은 <span class="tag bad">금지</span>.</p>
+  <pre><span class="c">// store.js — localStorage 데이터</span>
+{
+  bookmarks: { [slug]: true },
+  notes:     { [slug]: <span class="s">"string"</span> },
+  <span class="k">ratings</span>:   { [slug]: 1 | -1 },     <span class="c">// 신규. 중립이면 키 없음</span>
+  <span class="k">reasons</span>:   { [slug]: <span class="s">"string"</span> },   <span class="c">// 신규. 평가 이유</span>
+  meta:      { [slug]: <span class="s">"ISO"</span> }       <span class="c">// 모든 신호 공유(per-slug LWW)</span>
+}
+
+<span class="c">-- supabase/schema.sql — 새 컬럼 (feedback 은 AI 배치 전용, 건드리지 않음)</span>
+<span class="k">alter table</span> public.cbk_items <span class="k">add column if not exists</span> rating smallint;     <span class="c">-- 1 | -1 | NULL</span>
+<span class="k">alter table</span> public.cbk_items <span class="k">add column if not exists</span> reason text not null default <span class="s">''</span>;</pre>
+
+  <h2><span class="n">5</span> 작업 순서</h2>
+  <ul class="chk">
+    <li><b>store.js</b> — ratings/reasons 모델·API (로컬만, sync 제외)</li>
+    <li><b>nav.js</b> — cbk-bar 평가 버튼 + 이유칸 + refreshBar 가드</li>
+    <li><b>library.html</b> — 평가 뱃지·이유·필터</li>
+    <li><b>schema.sql</b> — 컬럼 2개 + cbk_upsert/cbk_delete 갱신 + grant (Supabase 적용)</li>
+    <li><b>store.js CBK.sync</b> — rating/reason 머지·전달</li>
+    <li><b>export</b> — 위키용 레코드 포맷</li>
+    <li><span style="color:var(--muted)">(추후) Phase B 위키 스캐폴드 + CLAUDE.md 워크플로우</span></li>
+  </ul>
+
+  <div class="note"><b>미결 3 (기본값으로 진행 예정):</b>
+    ① 이유칸은 평가 누른 뒤 펼침(추천) · ② 컬럼은 <code>rating</code>+<code>reason</code> 분리(추천) ·
+    ③ export는 "위키용 내보내기" 별도 버튼(추천).</div>
+
+  <div class="foot">
+    상세 스펙: <code>docs/spec-feedback-llm-wiki.md</code> · 참고 —
+    <a>Karpathy LLM Wiki gist</a> · <a>NicholasSpisak/second-brain</a> · <a>Pistis-RAG (arXiv 2407.00072)</a> · <a>mem0</a>
+  </div>
+
+</div>
+</body>
+</html>
