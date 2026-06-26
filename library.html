@@ -49,6 +49,20 @@
   .card-fav:hover { border-color:var(--accent); color:var(--accent); }
   .card-fav.on { background:var(--accent); border-color:var(--accent); color:#fff; }
 
+  .card-rate { display:inline-flex; gap:6px; margin-right:6px; }
+  .card-rate button { font:inherit; font-size:0.86rem; cursor:pointer; border:1px solid var(--line);
+    background:#fff; color:var(--muted); border-radius:999px; padding:5px 11px; line-height:1; white-space:nowrap; }
+  .card-rate button:hover { border-color:var(--accent); color:var(--accent); }
+  .card-like.on { background:#2e8b57; border-color:#2e8b57; color:#fff; }
+  .card-like.on:hover { color:#fff; opacity:.92; }
+  .card-dislike.on { background:#c0392b; border-color:#c0392b; color:#fff; }
+  .card-dislike.on:hover { color:#fff; opacity:.92; }
+  .card-reason { width:100%; margin-top:10px; min-height:52px; resize:none; overflow:hidden;
+    font:inherit; font-size:0.9rem; line-height:1.6; padding:10px 13px; border:1px solid var(--line);
+    border-radius:10px; background:#fff; color:var(--fg); }
+  .card-reason::placeholder { color:var(--muted); }
+  .card-reason:focus { outline:none; border-color:var(--accent); box-shadow:0 0 0 3px rgba(201,100,66,.12); }
+  .card-reason[hidden] { display:none; }
   .card-note { width:100%; margin-top:12px; min-height:64px; resize:none; overflow:hidden;
     font:inherit; font-size:0.94rem; line-height:1.6; padding:11px 13px; border:1px solid var(--line);
     border-radius:10px; background:#fff; color:var(--fg); }
@@ -105,9 +119,12 @@
     <div class="chips">
       <button type="button" class="chip on" data-filter="all">전체</button>
       <button type="button" class="chip" data-filter="fav">★ 즐겨찾기</button>
+      <button type="button" class="chip" data-filter="like">👍 좋아요</button>
+      <button type="button" class="chip" data-filter="dislike">👎 싫어요</button>
       <button type="button" class="chip" data-filter="note">📝 메모</button>
     </div>
     <div class="data-tools">
+      <button type="button" id="export-wiki" title="평가한 글을 LLM Wiki 입력용 JSON으로 내려받기">선호 내보내기</button>
       <button type="button" id="export">내보내기</button>
       <label class="import">가져오기<input type="file" id="import-input" accept="application/json" hidden></label>
     </div>
@@ -162,16 +179,24 @@
     function rows() {
       return POSTS.map(function (p) {
         var slug = CBK.slugOf(p.file);
-        return { post: p, slug: slug, fav: CBK.isBookmarked(slug), note: CBK.getNote(slug) };
+        return {
+          post: p, slug: slug,
+          fav: CBK.isBookmarked(slug), note: CBK.getNote(slug),
+          rating: CBK.getRating(slug), reason: CBK.getReason(slug)
+        };
       });
     }
+
+    function hasAny(r) { return r.fav || !!r.note || r.rating !== 0 || !!r.reason; }
 
     function visible(r) {
       if (filter === "fav" && !r.fav) return false;
       if (filter === "note" && !r.note) return false;
-      if (filter === "all" && !r.fav && !r.note) return false;
+      if (filter === "like" && r.rating !== 1) return false;
+      if (filter === "dislike" && r.rating !== -1) return false;
+      if (filter === "all" && !hasAny(r)) return false;
       if (query) {
-        var hay = (r.post.title + " " + r.note).toLowerCase();
+        var hay = (r.post.title + " " + r.note + " " + r.reason).toLowerCase();
         if (hay.indexOf(query) === -1) return false;
       }
       return true;
@@ -185,19 +210,19 @@
     function render() {
       var all = rows();
       var shown = all.filter(visible);
-      var favN = all.filter(function (r) { return r.fav; }).length;
-      var noteN = all.filter(function (r) { return r.note; }).length;
-      summaryEl.textContent = "즐겨찾기 " + favN + " · 메모 " + noteN;
 
       if (!shown.length) {
-        var msg = (favN || noteN)
+        var any = all.some(hasAny);
+        var msg = any
           ? "조건에 맞는 항목이 없습니다."
-          : "아직 즐겨찾기하거나 메모한 글이 없습니다.";
+          : "아직 즐겨찾기·평가하거나 메모한 글이 없습니다.";
+        summaryRefresh();
         listEl.innerHTML = '<div class="empty">' + msg +
           '<br><br><a href="index.html">글 목록에서 시작하기 →</a></div>';
         return;
       }
 
+      summaryRefresh();
       listEl.innerHTML = "";
       shown.forEach(function (r) {
         var card = document.createElement("div");
@@ -206,17 +231,29 @@
           '<div class="card-head">' +
             '<div class="card-title">' +
               '<a href="posts/' + r.post.file + '">' + esc(r.post.title) + "</a>" +
-              '<span class="card-meta">' + r.post.date + " · " + esc(r.post.cat) + "</span>" +
+              '<span class="card-meta">' + r.post.date + " · " + esc(r.post.main) + " · " + esc(r.post.cat) + "</span>" +
             "</div>" +
+            '<span class="card-rate">' +
+              '<button type="button" class="card-like' + (r.rating === 1 ? " on" : "") + '" title="좋아요">👍</button>' +
+              '<button type="button" class="card-dislike' + (r.rating === -1 ? " on" : "") + '" title="별로예요">👎</button>' +
+            "</span>" +
             '<button type="button" class="card-fav' + (r.fav ? " on" : "") + '">' +
               (r.fav ? "★ 즐겨찾기됨" : "☆ 즐겨찾기") + "</button>" +
           "</div>" +
+          '<textarea class="card-reason" placeholder="왜 이렇게 평가했나요? — 취향 학습에 쓰입니다."' +
+            (r.rating !== 0 || r.reason ? "" : " hidden") + "></textarea>" +
           '<textarea class="card-note' + (r.note ? "" : " empty") +
             '" placeholder="메모 추가…">' + "</textarea>" +
           '<div class="card-foot">' +
             '<span class="card-status"></span>' +
             '<button type="button" class="card-del">삭제</button>' +
           "</div>";
+
+        var status = card.querySelector(".card-status");
+        function flash() {
+          status.textContent = "저장됨 ✓"; status.classList.add("show", "saved");
+          setTimeout(function () { status.classList.remove("show"); }, 1500);
+        }
 
         var favBtn = card.querySelector(".card-fav");
         favBtn.addEventListener("click", function () {
@@ -226,10 +263,36 @@
           summaryRefresh();
         });
 
+        var likeBtn = card.querySelector(".card-like");
+        var dislikeBtn = card.querySelector(".card-dislike");
+        var reasonTa = card.querySelector(".card-reason");
+        function paint(v) {
+          likeBtn.classList.toggle("on", v === 1);
+          dislikeBtn.classList.toggle("on", v === -1);
+        }
+        function rate(v) {
+          var cur = CBK.getRating(r.slug);
+          var now = CBK.setRating(r.slug, cur === v ? 0 : v);
+          paint(now);
+          if (now !== 0) { reasonTa.hidden = false; autosize(reasonTa); reasonTa.focus(); }
+          else if (!reasonTa.value.trim()) reasonTa.hidden = true;
+          flash(); summaryRefresh();
+        }
+        likeBtn.addEventListener("click", function () { rate(1); });
+        dislikeBtn.addEventListener("click", function () { rate(-1); });
+
+        reasonTa.value = r.reason;
+        if (!reasonTa.hidden) autosize(reasonTa);
+        var rt = null;
+        reasonTa.addEventListener("input", function () {
+          autosize(reasonTa);
+          if (rt) clearTimeout(rt);
+          rt = setTimeout(function () { CBK.setReason(r.slug, reasonTa.value); flash(); }, 450);
+        });
+
         var ta = card.querySelector(".card-note");
         ta.value = r.note;
         autosize(ta);
-        var status = card.querySelector(".card-status");
         var t = null;
         ta.addEventListener("input", function () {
           autosize(ta);
@@ -238,17 +301,19 @@
           if (t) clearTimeout(t);
           t = setTimeout(function () {
             CBK.setNote(r.slug, ta.value);
-            status.textContent = "저장됨 ✓"; status.classList.add("saved");
-            setTimeout(function () { status.classList.remove("show"); }, 1500);
+            flash();
             summaryRefresh();
           }, 450);
         });
 
         var del = card.querySelector(".card-del");
         del.addEventListener("click", function () {
-          if (r.note && !confirm("이 글의 즐겨찾기와 메모를 모두 지울까요?")) return;
+          if ((r.note || r.reason || r.rating !== 0) &&
+              !confirm("이 글의 즐겨찾기·평가·메모를 모두 지울까요?")) return;
           if (CBK.isBookmarked(r.slug)) CBK.toggleBookmark(r.slug);
           CBK.setNote(r.slug, "");
+          CBK.setRating(r.slug, 0);
+          CBK.setReason(r.slug, "");
           render();
         });
 
@@ -258,9 +323,12 @@
 
     function summaryRefresh() {
       var all = rows();
-      summaryEl.textContent = "즐겨찾기 " +
-        all.filter(function (r) { return r.fav; }).length + " · 메모 " +
-        all.filter(function (r) { return r.note; }).length;
+      var favN = all.filter(function (r) { return r.fav; }).length;
+      var likeN = all.filter(function (r) { return r.rating === 1; }).length;
+      var dislikeN = all.filter(function (r) { return r.rating === -1; }).length;
+      var noteN = all.filter(function (r) { return r.note; }).length;
+      summaryEl.textContent =
+        "즐겨찾기 " + favN + " · 👍 " + likeN + " · 👎 " + dislikeN + " · 메모 " + noteN;
     }
 
     function esc(s) {
@@ -280,6 +348,10 @@
     qEl.addEventListener("input", function () { query = qEl.value.trim().toLowerCase(); render(); });
 
     document.getElementById("export").addEventListener("click", function () { CBK.exportData(); });
+    document.getElementById("export-wiki").addEventListener("click", function () {
+      if (!CBK.ratedSlugs().length) { alert("아직 좋아요/싫어요로 평가한 글이 없습니다."); return; }
+      CBK.exportWiki();
+    });
     var imp = document.getElementById("import-input");
     imp.addEventListener("change", function () {
       if (!imp.files || !imp.files[0]) return;

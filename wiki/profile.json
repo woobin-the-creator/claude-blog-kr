@@ -1,0 +1,95 @@
+{
+  "generated_at": "2026-06-26T07:00:00.000Z",
+  "total": 11,
+  "likes": 6,
+  "dislikes": 5,
+  "byCat": [
+    {
+      "key": "Claude Code",
+      "likes": 4,
+      "dislikes": 0,
+      "n": 4,
+      "net": 4,
+      "score": 1
+    },
+    {
+      "key": "역량·커리어",
+      "likes": 1,
+      "dislikes": 0,
+      "n": 1,
+      "net": 1,
+      "score": 1
+    },
+    {
+      "key": "Claude Code · 해커톤",
+      "likes": 1,
+      "dislikes": 0,
+      "n": 1,
+      "net": 1,
+      "score": 1
+    },
+    {
+      "key": "Product announcements",
+      "likes": 0,
+      "dislikes": 2,
+      "n": 2,
+      "net": -2,
+      "score": -1
+    },
+    {
+      "key": "Enterprise AI",
+      "likes": 0,
+      "dislikes": 3,
+      "n": 3,
+      "net": -3,
+      "score": -1
+    }
+  ],
+  "byMain": [
+    {
+      "key": "AI 인사이트",
+      "likes": 1,
+      "dislikes": 0,
+      "n": 1,
+      "net": 1,
+      "score": 1
+    },
+    {
+      "key": "Claude Code Docs",
+      "likes": 1,
+      "dislikes": 0,
+      "n": 1,
+      "net": 1,
+      "score": 1
+    },
+    {
+      "key": "Claude Youtube",
+      "likes": 1,
+      "dislikes": 0,
+      "n": 1,
+      "net": 1,
+      "score": 1
+    },
+    {
+      "key": "Claude blog",
+      "likes": 3,
+      "dislikes": 5,
+      "n": 8,
+      "net": -2,
+      "score": -0.25
+    }
+  ],
+  "rated_slugs": [
+    "ai-era-durable-skills",
+    "keep-claude-working-toward-a-goal",
+    "building-effective-human-agent-teams",
+    "agent-identity-access-model",
+    "the-full-claude-desktop-experience-on-aws-google-cloud-and-microsoft-foundry",
+    "steering-claude-code",
+    "enterprise-managed-auth",
+    "build-day-hackathon-winners",
+    "workload-identity-federation",
+    "claude-design-stays-on-brand-for-daily-work",
+    "how-we-claude-code"
+  ]
+}

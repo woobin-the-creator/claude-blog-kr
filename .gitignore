@@ -4,3 +4,4 @@
 .pipeline/.env
 .pipeline/log/
 .DS_Store
+node_modules/
