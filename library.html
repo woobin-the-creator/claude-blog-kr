@@ -63,6 +63,32 @@
     background:none; color:var(--muted); text-decoration:underline; padding:0; }
   .card-del:hover { color:#c0392b; }
 
+  .sync { border:1px solid var(--line); border-radius:12px; background:var(--soft);
+    padding:14px 16px; margin:0 0 22px; }
+  .sync-head { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+  .sync-title { font-weight:600; font-size:0.96rem; }
+  .sync-state { font-size:0.8rem; color:var(--muted); }
+  .sync-toggle { margin-left:auto; font:inherit; font-size:0.82rem; cursor:pointer; border:none;
+    background:none; color:var(--accent); text-decoration:underline; padding:0; }
+  .sync-body { margin-top:12px; }
+  .sync-body.hidden { display:none; }
+  .sync-row { display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin:0 0 10px; }
+  .sync-row input { flex:1 1 240px; min-width:200px; font:inherit; font-size:0.9rem;
+    padding:8px 12px; border:1px solid var(--line); border-radius:8px; background:#fff;
+    color:var(--fg); letter-spacing:0.04em; }
+  .sync-row input:focus { outline:none; border-color:var(--accent);
+    box-shadow:0 0 0 3px rgba(201,100,66,.12); }
+  .sync-btn { font:inherit; font-size:0.84rem; cursor:pointer; border:1px solid var(--line);
+    background:#fff; color:var(--fg); border-radius:8px; padding:8px 13px; white-space:nowrap; }
+  .sync-btn:hover { border-color:var(--accent); color:var(--accent); }
+  .sync-btn.primary { background:var(--accent); border-color:var(--accent); color:#fff; }
+  .sync-btn.primary:hover { color:#fff; opacity:.92; }
+  .sync-btn:disabled { opacity:.5; cursor:default; }
+  .sync-hint { font-size:0.78rem; color:var(--muted); line-height:1.6; margin:0; }
+  .sync-msg { font-size:0.8rem; margin:8px 0 0; min-height:1em; }
+  .sync-msg.ok { color:#2e8b57; }
+  .sync-msg.err { color:#c0392b; }
+
   .empty { text-align:center; color:var(--muted); padding:56px 20px; border:1px dashed var(--line);
     border-radius:12px; }
   .empty a { font-weight:600; }
@@ -88,10 +114,37 @@
   </div>
   <p class="summary" id="summary"></p>
 
+  <section class="sync" id="sync" hidden>
+    <div class="sync-head">
+      <span class="sync-title">🔄 기기 간 동기화</span>
+      <span class="sync-state" id="sync-state"></span>
+      <button type="button" class="sync-toggle" id="sync-toggle">설정</button>
+    </div>
+    <div class="sync-body hidden" id="sync-body">
+      <div class="sync-row">
+        <input type="text" id="sync-code" placeholder="동기화 코드" autocomplete="off"
+          spellcheck="false">
+        <button type="button" class="sync-btn" id="sync-gen">새 코드 생성</button>
+        <button type="button" class="sync-btn" id="sync-save">코드 저장</button>
+      </div>
+      <div class="sync-row">
+        <button type="button" class="sync-btn primary" id="sync-now">지금 동기화</button>
+        <button type="button" class="sync-btn" id="sync-forget">코드 지우기</button>
+      </div>
+      <p class="sync-hint">
+        같은 코드를 다른 기기 보관함에 입력하면 즐겨찾기·메모가 합쳐집니다.
+        코드 자체가 비밀번호이니 새 코드를 만들면 안전한 곳에 보관하세요.
+        충돌은 최근에 수정한 쪽이 이깁니다.
+      </p>
+      <p class="sync-msg" id="sync-msg"></p>
+    </div>
+  </section>
+
   <div id="list"></div>
 
-  <footer>비공식 번역본 · 데이터는 이 브라우저에만 저장됩니다. 다른 기기로 옮기려면 내보내기/가져오기를 쓰세요.</footer>
+  <footer>비공식 번역본 · 데이터는 기본적으로 이 브라우저에만 저장됩니다. 다른 기기로 옮기려면 위의 동기화 코드나 내보내기/가져오기를 쓰세요.</footer>
 
+  <script src="posts/assets/cbk-config.js"></script>
   <script src="posts/assets/posts.js"></script>
   <script src="posts/assets/store.js"></script>
   <script>
@@ -241,6 +294,66 @@
       listEl.innerHTML = '<div class="empty">저장소를 불러오지 못했습니다.</div>';
       return;
     }
+
+    /* ---- 기기 간 동기화 UI ---- */
+    (function initSync() {
+      var sync = CBK.sync;
+      var section = document.getElementById("sync");
+      if (!sync || !sync.isConfigured()) return; // 설정 전이면 패널을 숨긴 채로 둔다
+      section.hidden = false;
+
+      var stateEl = document.getElementById("sync-state");
+      var bodyEl = document.getElementById("sync-body");
+      var codeEl = document.getElementById("sync-code");
+      var msgEl = document.getElementById("sync-msg");
+      var nowBtn = document.getElementById("sync-now");
+
+      function setMsg(text, kind) {
+        msgEl.textContent = text || "";
+        msgEl.className = "sync-msg" + (kind ? " " + kind : "");
+      }
+      function refreshState() {
+        var key = sync.getKey();
+        stateEl.textContent = key ? "코드 연결됨" : "코드 없음";
+        codeEl.value = key;
+        nowBtn.disabled = !key;
+      }
+
+      document.getElementById("sync-toggle").addEventListener("click", function () {
+        bodyEl.classList.toggle("hidden");
+      });
+      document.getElementById("sync-gen").addEventListener("click", function () {
+        codeEl.value = sync.generateKey();
+        setMsg("새 코드를 만들었습니다. '코드 저장'을 눌러 적용하세요.", "");
+      });
+      document.getElementById("sync-save").addEventListener("click", function () {
+        var k = sync.setKey(codeEl.value);
+        refreshState();
+        setMsg(k ? "코드를 저장했습니다." : "코드를 비웠습니다.", "ok");
+      });
+      document.getElementById("sync-forget").addEventListener("click", function () {
+        sync.setKey("");
+        refreshState();
+        setMsg("이 기기에서 코드를 지웠습니다(로컬 데이터는 그대로).", "ok");
+      });
+      nowBtn.addEventListener("click", function () {
+        if (codeEl.value.trim() && codeEl.value.trim() !== sync.getKey()) sync.setKey(codeEl.value);
+        refreshState();
+        nowBtn.disabled = true;
+        setMsg("동기화 중…", "");
+        sync.syncNow().then(function (res) {
+          render();
+          refreshState();
+          setMsg("완료 · 받음 " + res.pulled + " · 보냄 " + res.pushed + " · 삭제 " + res.deleted, "ok");
+        }).catch(function (err) {
+          refreshState();
+          setMsg("실패: " + (err && err.message ? err.message : "알 수 없는 오류"), "err");
+        });
+      });
+
+      refreshState();
+    })();
+
     render();
   })();
   </script>
