@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAG는 죽지 않았다 — AI 시대에 4~5년 살아남는 기술 역량</title>
+<style>
+  :root { --fg:#1a1a1a; --muted:#666; --line:#e5e5e5; --accent:#c96442; --code-bg:#f6f6f4; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo",
+      "Malgun Gothic", sans-serif;
+    color: var(--fg); line-height: 1.75; max-width: 760px;
+    margin: 0 auto; padding: 48px 24px 96px; background:#fff;
+  }
+  header { border-bottom: 2px solid var(--line); padding-bottom: 24px; margin-bottom: 32px; }
+  h1 { font-size: 1.9rem; line-height: 1.35; margin: 0 0 12px; }
+  .meta { color: var(--muted); font-size: 0.9rem; }
+  .meta .orig { display:block; margin-top:6px; }
+  .meta a { color: var(--accent); text-decoration: none; }
+  h2 { font-size: 1.4rem; margin: 44px 0 8px; padding-top: 8px; }
+  h3 { font-size: 1.15rem; margin: 30px 0 8px; color:#000; }
+  p { margin: 0 0 16px; }
+  a { color: var(--accent); }
+  ul { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  blockquote { margin: 16px 0; padding: 8px 18px; border-left:3px solid var(--line);
+    color:#333; }
+  blockquote .ko { display:block; margin-top:6px; font-style: normal; color:#555;
+    font-size:0.94rem; }
+  hr { border: none; border-top: 1px solid var(--line); margin: 40px 0; }
+  code { background: var(--code-bg); padding: 2px 6px; border-radius: 4px;
+    font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 0.88em; }
+  pre { background: var(--code-bg); padding: 16px 18px; border-radius: 8px;
+    overflow-x: auto; border:1px solid var(--line); }
+  pre code { background: none; padding: 0; font-size: 0.85rem; line-height:1.5; }
+  figure { margin: 24px 0; }
+  figure img { width: 100%; height: auto; border:1px solid var(--line); border-radius: 8px;
+    background:#fff; }
+  figcaption { color: var(--muted); font-size: 0.85rem; text-align: center;
+    margin-top: 10px; line-height: 1.5; }
+  figcaption a { color: var(--accent); }
+  .video { position: relative; width: 100%; aspect-ratio: 16 / 9; margin: 22px 0; }
+  .video iframe { position: absolute; inset: 0; width: 100%; height: 100%;
+    border: 0; border-radius: 8px; }
+  .callout { background:#faf6f4; border-left:3px solid var(--accent);
+    padding: 12px 16px; border-radius: 0 6px 6px 0; margin: 16px 0; }
+  .callout strong { color: var(--accent); }
+  .takeaway { background:#f6f6f4; border-radius:8px; padding:16px 20px; margin:28px 0; }
+  .takeaway h2 { margin-top:0; }
+  footer { margin-top: 64px; padding-top: 20px; border-top:1px solid var(--line);
+    color: var(--muted); font-size: 0.82rem; }
+  /* article-specific */
+  .diagram { margin: 28px 0; }
+  .diagram svg { width:100%; height:auto; display:block; }
+  .dcap { color: var(--muted); font-size: 0.85rem; text-align:center;
+    margin-top: 10px; line-height: 1.5; }
+  table { border-collapse: collapse; width:100%; margin: 18px 0; font-size: 0.92rem; }
+  th, td { border:1px solid var(--line); padding: 8px 11px; text-align:left;
+    vertical-align: top; }
+  th { background:#f6f6f4; font-weight: 600; }
+  td strong { color: var(--accent); }
+</style>
+<link rel="stylesheet" href="assets/nav.css">
+</head>
+<body>
+<header>
+  <h1>RAG는 죽지 않았다 — AI 시대에 4~5년 살아남는 기술 역량</h1>
+  <div class="meta">
+    2026-06-26 · 카테고리: AI 인사이트 › 역량·커리어
+    <span class="orig">정리: 여러 채널(Anthropic · O'Reilly · Hacker News · 기술 블로그)의
+      리서치를 한국어로 종합한 원본 정리. 출처는 <a href="#sources">맨 아래 목록</a> 참고.</span>
+  </div>
+</header>
+
+<p>질문 하나에서 출발했다. <strong>"RAG는 결국 LLM이 모르는 도메인 지식을 채워넣는 방법인데, 요즘은 long-context나 'LLM 위키' 같은 파이프라인으로 구현이 훨씬 쉬워졌다. 그럼 RAG를 깊게 공부할 이유가 있나?"</strong></p>
+<p>좋은 질문이다. 그리고 답은 "절반만 맞다"이다. 이 글은 그 절반을 가른 뒤, 거기서 한 발 더 나아가 <strong>AI 시대에 4~5년이 지나도 감가상각되지 않을 기술 역량</strong>이 무엇인지까지 정리한다. 결론을 먼저 말하면: <em>쉬워진 것은 답이 아니라 선택지일 뿐이고, 그 선택을 내리는 판단력이 새 핵심 역량이 되었다.</em></p>
+
+<h2>1. "RAG는 죽었다"는 말의 진실</h2>
+<p>2023년 이후 컨텍스트 윈도가 커질 때마다 "RAG는 죽었다"는 선언이 반복됐다. 절반은 사실이다. <strong>죽은 것은 "바닐라 RAG 파이프라인"</strong> — 청크로 쪼개고, 임베딩해서, 벡터 DB에 넣고, 검색하는 그 기계적 구현이다. 이 층은 관리형 플랫폼과 라이브러리가 흡수해 평준화되는 중이다.</p>
+<p>하지만 RAG가 사라진 게 아니라 <strong>더 큰 분야로 격상</strong>됐다. 2025~2026년의 이름은 <strong>컨텍스트 엔지니어링(context engineering)</strong>이다. 핵심 멘탈 모델이 바뀐다 — 지식을 모델 <em>안에</em> "채워넣는" 게 아니라, 질의마다 런타임에 <em>필요한 컨텍스트를 조립해 모델 앞에 차려놓는</em> 일이다.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 760 230" role="img" aria-label="RAG에서 컨텍스트 엔지니어링으로의 진화 다이어그램">
+  <rect x="28" y="55" width="300" height="140" rx="10" fill="#f6f6f4" stroke="#e5e5e5"/>
+  <rect x="432" y="55" width="300" height="140" rx="10" fill="#faf6f4" stroke="#c96442"/>
+  <text x="178" y="40" text-anchor="middle" font-size="15" font-weight="700" fill="#666">2023 — 지식을 '채워넣기'</text>
+  <text x="582" y="40" text-anchor="middle" font-size="15" font-weight="700" fill="#c96442">2026 — 런타임에 '조립'</text>
+  <text x="178" y="88" text-anchor="middle" font-size="13.5" fill="#1a1a1a">청크 → 임베딩 → 벡터DB</text>
+  <text x="178" y="112" text-anchor="middle" font-size="13.5" fill="#1a1a1a">→ 검색 → LLM</text>
+  <text x="178" y="146" text-anchor="middle" font-size="12.5" fill="#666">고정 파이프라인</text>
+  <text x="178" y="166" text-anchor="middle" font-size="12.5" fill="#666">(평준화 = 감가상각)</text>
+  <text x="582" y="84" text-anchor="middle" font-size="13.5" fill="#1a1a1a">무엇을 · 언제 · 왜 검색?</text>
+  <text x="582" y="106" text-anchor="middle" font-size="13.5" fill="#1a1a1a">전략 조합 + 평가 + 운영</text>
+  <text x="582" y="140" text-anchor="middle" font-size="12.5" fill="#666">질의마다 컨텍스트 설계</text>
+  <text x="582" y="160" text-anchor="middle" font-size="12.5" fill="#666">(판단 = 가치 누적)</text>
+  <line x1="338" y1="125" x2="422" y2="125" stroke="#c96442" stroke-width="2"/>
+  <polygon points="422,125 410,119 410,131" fill="#c96442"/>
+  <text x="380" y="113" text-anchor="middle" font-size="12" fill="#c96442">진화</text>
+</svg>
+<div class="dcap">RAG는 죽은 게 아니라 "컨텍스트 엔지니어링"으로 올라섰다. 기계적 구현은 평준화되고, 가치는 "무엇을 언제 검색할지 정하는 판단"으로 이동했다.</div>
+</div>
+
+<h2>2. 그럼 무엇을 언제 쓰나 — 전략 선택이 새 시험문제</h2>
+<p>본인이 말한 "LLM 위키" 방식(구조화된 문서 + 에이전트가 grep으로 직접 탐색)은 RAG의 대체가 아니라 <strong>검색 전략의 한 종류</strong>다. 실제로 Hacker News의 실무자들은 "벡터 DB 만들 바엔 그냥 에이전트한테 ripgrep으로 뒤지게 하는 게 낫다"는 흐름을 증언한다 — 임베딩에는 청킹 전략, 12개월마다 재임베딩, 모델 deprecation 같은 운영 세금이 붙기 때문이다.</p>
+<p>핵심은 이것이다. 쉬운 길이 생겼다고 공부가 필요 없어지는 게 아니라, <strong>"언제 그 쉬운 길이 충분하고 언제 부족한가"를 판단하는 것이 새 시험문제</strong>가 됐다. 그 판단은 단일 선택이 아니라 조합(composition)이다.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 760 440" role="img" aria-label="검색 전략 선택 매트릭스">
+  <line x1="120" y1="40" x2="120" y2="372" stroke="#999" stroke-width="1.5"/>
+  <line x1="120" y1="372" x2="724" y2="372" stroke="#999" stroke-width="1.5"/>
+  <line x1="422" y1="40" x2="422" y2="372" stroke="#e5e5e5" stroke-width="1" stroke-dasharray="4 4"/>
+  <line x1="120" y1="206" x2="724" y2="206" stroke="#e5e5e5" stroke-width="1" stroke-dasharray="4 4"/>
+  <text x="120" y="398" text-anchor="middle" font-size="12.5" fill="#666">코퍼스 작음</text>
+  <text x="700" y="398" text-anchor="end" font-size="12.5" fill="#666">코퍼스 큼 / 수시 갱신 →</text>
+  <text x="105" y="375" text-anchor="end" font-size="12.5" fill="#666">단순</text>
+  <text x="112" y="52" text-anchor="end" font-size="12.5" fill="#666">↑ 복잡·다단계</text>
+  <!-- bottom-left -->
+  <text x="271" y="290" text-anchor="middle" font-size="14" font-weight="700" fill="#c96442">Long-context + 캐싱</text>
+  <text x="271" y="312" text-anchor="middle" font-size="12.5" fill="#1a1a1a">"LLM 위키" / 그냥 다 넣기</text>
+  <text x="271" y="332" text-anchor="middle" font-size="12" fill="#666">&lt;200K 토큰 · 저빈도</text>
+  <!-- bottom-right -->
+  <text x="573" y="290" text-anchor="middle" font-size="14" font-weight="700" fill="#c96442">RAG (검색)</text>
+  <text x="573" y="312" text-anchor="middle" font-size="12.5" fill="#1a1a1a">벡터 + BM25 + 리랭크</text>
+  <text x="573" y="332" text-anchor="middle" font-size="12" fill="#666">&gt;500K · 고빈도 → 8~82× 저렴</text>
+  <!-- top-left -->
+  <text x="271" y="118" text-anchor="middle" font-size="14" font-weight="700" fill="#c96442">Agentic RAG</text>
+  <text x="271" y="140" text-anchor="middle" font-size="12.5" fill="#1a1a1a">검색을 도구로 반복 호출</text>
+  <text x="271" y="160" text-anchor="middle" font-size="12" fill="#666">토큰 3~10× · 정확도↑</text>
+  <!-- top-right -->
+  <text x="573" y="118" text-anchor="middle" font-size="14" font-weight="700" fill="#c96442">GraphRAG / 하이브리드</text>
+  <text x="573" y="140" text-anchor="middle" font-size="12.5" fill="#1a1a1a">정밀 + 전체 조망 동시</text>
+  <text x="573" y="160" text-anchor="middle" font-size="12" fill="#666">교차 문서 · 90%+ 커버</text>
+</svg>
+<div class="dcap">코퍼스 크기(가로)와 질의 복잡도(세로)에 따른 대략의 전략 지도. 현실에선 하나를 고르기보다 이들을 블렌딩한다. 경계 수치는 워크로드에 따라 달라지므로 절대선이 아니다.</div>
+</div>
+
+<h2>3. 평준화되는 층 vs 가치가 오르는 층</h2>
+<p>그래서 "무엇을 깊게 파야 하나"는 층위로 갈린다. 도구는 감가상각하고, 판단·설계·평가는 누적된다.</p>
+<table>
+  <thead><tr><th>깊게 (durable)</th><th>얕게 (decays)</th></tr></thead>
+  <tbody>
+    <tr><td><strong>평가·실험 설계</strong> (eval, A/B, 통계, DOE)</td><td>특정 RAG/에이전트 프레임워크</td></tr>
+    <tr><td><strong>시스템·데이터 아키텍처 원리</strong> (제약 하의 트레이드오프)</td><td>특정 모델 API · 버전</td></tr>
+    <tr><td><strong>ML/LLM 작동 원리·한계 감각</strong> (개념 수준)</td><td>프롬프트 엔지니어링 트릭</td></tr>
+    <tr><td><strong>도메인 깊이</strong> (자기 분야의 물리·맥락)</td><td>이달의 신규 라이브러리</td></tr>
+    <tr><td>문제 정의 · 이해관계자 번역</td><td>툴별 단축키 · 설정값</td></tr>
+  </tbody>
+</table>
+<div class="callout"><strong>판단 기준 한 줄</strong> — "이 지식이 내가 <strong>설계·결정</strong>을 내리는 데 쓰이나, 아니면 남이 만든 걸 <strong>쓰기만</strong> 하나?" 결정에 쓰이면 깊게, 쓰기만 하면 개념만.</div>
+
+<h2>4. 자동화 경계는 계속 위로 올라간다</h2>
+<p>여기서 가장 깊은 반론이 나온다. "agentic RAG가 '무엇을 검색할지'를 모델이 스스로 정하면, 그 판단력마저 자동화되는 것 아닌가?"</p>
+<p>맞다. 자동화되는 건 <strong>전술적 per-query 결정</strong>(지금 이 질문에 뭘 가져올까)이다. 하지만 자동화되지 <em>않는</em> 건 <strong>아키텍처·보안 경계·평가 기준·애초에 어떤 데이터를 노출할지</strong> — 즉 시스템 설계와 문제 정의다. 해자가 사라지는 게 아니라 한 층 더 위로 올라갈 뿐이다.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 760 330" role="img" aria-label="자동화 경계가 위로 이동하는 레이어 다이어그램">
+  <rect x="70" y="250" width="470" height="48" rx="6" fill="#f6f6f4" stroke="#e5e5e5"/>
+  <rect x="70" y="196" width="470" height="48" rx="6" fill="#f6f6f4" stroke="#e5e5e5"/>
+  <rect x="70" y="120" width="470" height="48" rx="6" fill="#faf6f4" stroke="#c96442"/>
+  <rect x="70" y="66" width="470" height="48" rx="6" fill="#faf6f4" stroke="#c96442"/>
+  <text x="86" y="279" font-size="13.5" fill="#666">도구 · 라이브러리 · 모델 API</text>
+  <text x="86" y="225" font-size="13.5" fill="#666">구현 (조립 · 오케스트레이션)</text>
+  <text x="86" y="149" font-size="13.5" font-weight="700" fill="#c96442">전략 선택 (무엇을 · 언제)</text>
+  <text x="86" y="95" font-size="13.5" font-weight="700" fill="#c96442">제약 정의 · 문제 정의 · 평가</text>
+  <line x1="60" y1="184" x2="700" y2="184" stroke="#c96442" stroke-width="2" stroke-dasharray="7 5"/>
+  <text x="548" y="180" font-size="12.5" fill="#c96442">← 자동화 경계</text>
+  <line x1="660" y1="184" x2="660" y2="96" stroke="#c96442" stroke-width="2"/>
+  <polygon points="660,90 654,104 666,104" fill="#c96442"/>
+  <text x="676" y="150" font-size="12" fill="#c96442" transform="rotate(90 676 150)">위로 이동</text>
+  <text x="555" y="232" font-size="12" fill="#666">↓ 평준화 · 감가상각</text>
+  <text x="555" y="115" font-size="12" fill="#666">↑ 가치 누적</text>
+</svg>
+<div class="dcap">자동화가 유능해질수록 경계는 위로 올라간다. 아래 층(도구·구현)은 흡수되고, 사람이 지키는 가치는 위층(전략·제약·평가)으로 이동한다.</div>
+</div>
+
+<h2>5. 그래서 4~5년 뒤에도 유효할 역량</h2>
+<p>가장 강력한 베팅은 한 가지 역량이 아니라 <strong>교집합</strong>이다 — <em>자기 도메인 × AI·시스템 판단력</em>. 도메인은 다운로드가 안 되고(남이 못 따라옴), 판단력은 자동화 위층이라(안 썩음), 그 둘의 곱은 시간이 갈수록 희소해진다.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 760 290" role="img" aria-label="도메인과 판단력의 교집합 벤다이어그램">
+  <circle cx="300" cy="150" r="135" fill="#c96442" fill-opacity="0.12" stroke="#c96442"/>
+  <circle cx="460" cy="150" r="135" fill="#c96442" fill-opacity="0.12" stroke="#c96442"/>
+  <text x="225" y="120" text-anchor="middle" font-size="14" font-weight="700" fill="#1a1a1a">도메인 깊이</text>
+  <text x="225" y="142" text-anchor="middle" font-size="12" fill="#666">다운로드 불가</text>
+  <text x="225" y="160" text-anchor="middle" font-size="12" fill="#666">(남이 못 따라옴)</text>
+  <text x="535" y="120" text-anchor="middle" font-size="14" font-weight="700" fill="#1a1a1a">AI·시스템 판단력</text>
+  <text x="535" y="142" text-anchor="middle" font-size="12" fill="#666">자동화 위층</text>
+  <text x="535" y="160" text-anchor="middle" font-size="12" fill="#666">(안 썩음)</text>
+  <text x="380" y="142" text-anchor="middle" font-size="13.5" font-weight="700" fill="#c96442">희소한 해자</text>
+  <text x="380" y="162" text-anchor="middle" font-size="12" fill="#c96442">= 둘의 곱</text>
+</svg>
+<div class="dcap">단일 역량보다 교집합. "코드를 쓸 수 있는가"가 아니라 "코드가 맞는지 판별할 수 있는가"가 해자다.</div>
+</div>
+
+<p>우선순위로 옮기면 이렇다. 내구성 필터 — 아래 세 질문에 모두 YES면 깊게 팔 가치가 있다.</p>
+<div class="callout">① 이게 <strong>도구</strong>인가, <strong>판단/설계</strong>인가? &nbsp;② 내 <strong>도메인과 결합</strong>하면 희소해지나? &nbsp;③ <strong>10년 전에도</strong> 유효했나?</div>
+<ul>
+<li><strong>1순위 — 평가·실험 설계.</strong> 가장 덜 자동화되고 가장 안 썩는다. "누구나 만들 수 있지만, 그게 진짜 개선인지 증명할 줄 아는 사람은 드물다"가 변별점이 된다.</li>
+<li><strong>2순위 — 시스템·데이터 아키텍처 사고.</strong> 특정 툴이 아니라 "데이터가 어떻게 흐르고, 어디서 깨지고, 비용·지연·보안·신뢰성을 어떻게 맞바꾸나"라는 원리.</li>
+<li><strong>3순위 — ML/LLM 작동 원리(개념)와 한계 감각.</strong> 최신 모델을 좇지 말고 "왜 되고 왜 안 되나"를 추론하는 멘탈 모델.</li>
+<li><strong>상시 — 도메인 깊이.</strong> 따로 공부가 아니라 본업에서 누적되는 자산. 의식적으로 AI·시스템 관점과 엮어 둘 것.</li>
+</ul>
+
+<h2>6. 왜 이게 "합의"인가 — 외부 근거</h2>
+<p>이건 한 사람의 의견이 아니다. 여러 채널이 같은 말을 다른 단어로 하고 있었다.</p>
+<ul>
+<li><strong>도메인 × 판단 = 해자 (데이터로 확증).</strong> Anthropic이 약 40만 건의 Claude Code 세션을 분석한 결과, "도메인 지식이 코딩 경력보다 세션 성공을 더 잘 예측한다"고 보고했다. 한 줄 요약: <em>"해자는 코드를 쓸 수 있는 사람이 아니라, 코드가 맞는지 판별할 수 있는 사람이다."</em> 외부 분석들은 가장 방어적인 도메인-기술 결합으로 규제·운영 복잡도가 큰 분야(제조·공급망·의료·금융)를 꼽는다.</li>
+<li><strong>평가(eval)가 독립 분야로 격상.</strong> O'Reilly 책 <em>Evals for AI Engineers</em>, Anthropic의 <em>Demystifying evals for AI agents</em>, 500+ 기업 교육 강좌까지 나왔다. "evals는 지난 2년간 모호한 주제에서 AI 제품 빌더에게 가장 필요한 스킬로 이동했다."</li>
+<li><strong>내구성의 숨은 축 — 기술 위축(skill atrophy) 방어.</strong> AI를 쓰는 행위 자체가 정작 키워야 할 판단력을 갉아먹을 수 있다. 한 실무자의 정리: "나는 <em>아키텍트</em>여야 하고, 무엇을 물어야 할지, 내가 무엇을 모르는지를 알아야 한다." 검증을 외주화하는 순간 해자가 무너진다.</li>
+</ul>
+
+<div class="takeaway"><h2>핵심 정리</h2>
+<ul>
+<li><strong>RAG는 죽지 않았다.</strong> 죽은 건 기계적 파이프라인이고, 그것은 "컨텍스트 엔지니어링"으로 진화했다.</li>
+<li><strong>쉬워진 건 답이 아니라 선택지.</strong> long-context · RAG · agentic · GraphRAG 중 무엇을 언제 쓸지 정하는 게 새 시험문제다.</li>
+<li><strong>자동화 경계는 위로 올라간다.</strong> 도구·구현은 흡수되고, 전략·제약·평가가 사람의 자리로 남는다.</li>
+<li><strong>4~5년 베팅은 교집합에.</strong> 자기 도메인 × 판단력. 1순위로 평가·실험 설계를 키워라.</li>
+<li><strong>위축을 경계하라.</strong> AI에게 시키되 "왜 맞지? 뭘 놓쳤지?"를 본인이 검증하는 루프를 지켜라.</li>
+</ul></div>
+
+<h2 id="sources">출처</h2>
+<ul>
+<li><a href="https://ragflow.io/blog/rag-review-2025-from-rag-to-context">RAGFlow — From RAG to Context (2025 year-end review)</a></li>
+<li><a href="https://lighton.ai/lighton-blogs/rag-is-dead-long-live-rag-retrieval-in-the-age-of-agents">LightOn — RAG is Dead, Long Live RAG: Retrieval in the Age of Agents</a></li>
+<li><a href="https://www.callstack.com/blog/rag-is-dead-long-live-context-engineering-for-llm-systems">Callstack — RAG Is Dead. Long Live Context Engineering</a></li>
+<li><a href="https://towardsdatascience.com/agentic-rag-vs-classic-rag-from-a-pipeline-to-a-control-loop/">Towards Data Science — Agentic RAG vs Classic RAG: From a Pipeline to a Control Loop</a></li>
+<li><a href="https://www.sitepoint.com/long-context-vs-rag-1m-token-windows/">SitePoint — Long Context vs RAG: When 1M Token Windows Replace RAG</a></li>
+<li><a href="https://www.databricks.com/blog/long-context-rag-capabilities-openai-o1-and-google-gemini">Databricks — Long Context RAG Capabilities of OpenAI o1 and Google Gemini</a></li>
+<li><a href="https://news.ycombinator.com/item?id=42952286">Hacker News — "1M token context will kill a lot of RAG use cases"</a></li>
+<li><a href="https://news.ycombinator.com/item?id=44747457">Hacker News — Gemini Embedding / 임베딩 vs agentic grep 실무 의견</a></li>
+<li><a href="https://www.digitalapplied.com/blog/agentic-coding-domain-expertise-moat-anthropic-research-2026">digitalapplied — Domain Expertise Is the New Moat (Anthropic 40만 세션 분석)</a></li>
+<li><a href="https://hamelhusain.substack.com/p/why-ai-evals-are-an-increasingly">Hamel Husain — Why AI Evals Are An Increasingly Important Skill</a></li>
+<li><a href="https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents">Anthropic — Demystifying evals for AI agents</a></li>
+<li><a href="https://www.oreilly.com/library/view/evals-for-ai/9798341660717/">O'Reilly — Evals for AI Engineers (Shankar &amp; Husain)</a></li>
+<li><a href="https://news.ycombinator.com/item?id=43791474">Hacker News — Avoiding skill atrophy in the age of AI</a></li>
+</ul>
+
+<footer>
+  이 글은 공개 자료와 커뮤니티 토론을 한국어로 종합·재구성한 비공식 정리입니다.
+  수치·인용의 정확한 맥락은 위 출처 원문을 함께 확인하세요.
+</footer>
+<script src="assets/store.js"></script>
+<script src="assets/posts.js"></script>
+<script src="assets/nav.js"></script>
+</body>
+</html>

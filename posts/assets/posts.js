@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "ai-era-durable-skills.html", date: "2026-06-26", main: "AI 인사이트", cat: "역량·커리어",
+      title: "RAG는 죽지 않았다 — AI 시대에 4~5년 살아남는 기술 역량", nav: "AI 시대 내구성 역량" },
     { file: "keep-claude-working-toward-a-goal.html", date: "2026-06-25", main: "Claude Code Docs", cat: "Claude Code",
       title: "목표를 향해 Claude를 계속 일하게 하기: /goal 명령어", nav: "/goal로 목표까지 일 시키기" },
     { file: "building-effective-human-agent-teams.html", date: "2026-06-24", main: "Claude blog", cat: "Enterprise AI",
