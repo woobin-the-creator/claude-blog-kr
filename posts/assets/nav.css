@@ -25,6 +25,8 @@
 #site-nav .nav-library:hover { border-color: var(--nav-accent); color: var(--nav-accent); }
 #site-nav .nav-count { background: var(--nav-accent); color:#fff; font-size:0.72rem;
   min-width:18px; text-align:center; padding:1px 6px; border-radius:999px; }
+/* Mobile-only hamburger toggle (injected by nav-mobile.js); hidden on desktop. */
+#site-nav .nav-toggle { display:none; }
 
 /* Wide screens (>=1080px): fixed sidebar in its own reserved left column.
    The article body is shifted right so the two never overlap. */
@@ -43,10 +45,21 @@
   #site-nav .nav-brand { font-size:0.9rem; }
   #site-nav .nav-home { margin:0 8px 0 0; }
   #site-nav .nav-heading { display:none; }
-  #site-nav ul { display:flex; flex-wrap:wrap; gap:6px; margin-left:auto; }
-  #site-nav .nav-link { padding:5px 9px; border:1px solid var(--nav-line); border-left:1px solid var(--nav-line); }
-  #site-nav .nav-link.active { border-color: var(--nav-accent); }
-  #site-nav .nav-link .nav-date { display:none; }
+  /* hamburger toggle button sits at the right of the bar */
+  #site-nav .nav-toggle { display:inline-flex; align-items:center; gap:6px; margin-left:auto;
+    font:inherit; font-size:0.86rem; cursor:pointer; border:1px solid var(--nav-line);
+    background:#fff; color:var(--nav-accent); border-radius:8px; padding:7px 12px; }
+  #site-nav.nav-open .nav-toggle { background:var(--nav-accent); color:#fff;
+    border-color:var(--nav-accent); }
+  /* the post list is collapsed by default and drops down full-width when open */
+  #site-nav ul { display:none; flex-basis:100%; width:100%; order:10;
+    max-height:60vh; overflow-y:auto; margin-top:10px; padding-top:8px;
+    border-top:1px solid var(--nav-line); }
+  #site-nav.nav-open ul { display:block; }
+  #site-nav ul .nav-link { display:block; border:0; border-bottom:1px solid #f2efed;
+    border-radius:0; padding:9px 8px; }
+  #site-nav ul .nav-link.active { border-left:2px solid var(--nav-accent); }
+  #site-nav ul .nav-link .nav-date { display:none; }
 }
 
 /* Breadcrumb injected above each post header (메인 › 서브 › 제목). */
