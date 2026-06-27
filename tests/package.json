@@ -1,0 +1,18 @@
+{
+  "name": "claude-blog-kr-tests",
+  "private": true,
+  "version": "1.0.0",
+  "description": "검증 테스트: 평가(좋아요/싫어요/이유) 저장 + LLM Wiki 파이프라인",
+  "scripts": {
+    "test": "node store.test.js && node nav.test.js && node library.test.js && node schema.test.js && node wiki.test.mjs",
+    "test:store": "node store.test.js",
+    "test:nav": "node nav.test.js",
+    "test:library": "node library.test.js",
+    "test:schema": "node schema.test.js",
+    "test:wiki": "node wiki.test.mjs"
+  },
+  "devDependencies": {
+    "jsdom": "^26.0.0",
+    "@electric-sql/pglite": "^0.2.0"
+  }
+}

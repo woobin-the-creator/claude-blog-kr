@@ -49,6 +49,40 @@
 }
 .cbk-fav.on:hover { color: #fff; opacity: .92; }
 
+/* like / dislike toggles */
+.cbk-rate { display: inline-flex; gap: 6px; }
+.cbk-rate-label { font-size: 0.9rem; }
+.cbk-like.on {
+  background: #2e8b57; border-color: #2e8b57; color: #fff;
+}
+.cbk-like.on:hover { color: #fff; opacity: .92; }
+.cbk-dislike.on {
+  background: #c0392b; border-color: #c0392b; color: #fff;
+}
+.cbk-dislike.on:hover { color: #fff; opacity: .92; }
+
+/* reason editor — "왜 이렇게 평가했나" (mirrors the note editor) */
+.cbk-reason-wrap { flex-basis: 100%; margin-top: 2px; overflow: hidden; }
+.cbk-reason-wrap[hidden] { display: none; }
+.cbk-reason {
+  width: 100%;
+  min-height: 72px;
+  resize: none;
+  overflow: hidden;
+  font: inherit;
+  line-height: 1.65;
+  padding: 12px 14px;
+  border: 1px solid var(--line, #e5e5e5);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--fg, #1a1a1a);
+}
+.cbk-reason:focus {
+  outline: none;
+  border-color: var(--accent, #c96442);
+  box-shadow: 0 0 0 3px rgba(201, 100, 66, 0.12);
+}
+
 /* note toggle, with a presence dot when a note exists */
 .cbk-note-toggle .cbk-dot {
   width: 7px; height: 7px; border-radius: 50%;
