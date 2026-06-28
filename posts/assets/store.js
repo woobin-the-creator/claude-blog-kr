@@ -36,8 +36,32 @@
     return d;
   }
   function nowISO() { return new Date().toISOString(); }
-  function touch(d, slug) { d.meta[slug] = nowISO(); }
+  function touch(d, slug) { d.meta[slug] = nowISO(); scheduleAuto(); }
   function metaT(d, slug) { return d.meta[slug] || EPOCH; }
+
+  /* ---- auto-sync plumbing ----
+   * touch() runs on every user change (and only those — syncNow writes meta
+   * directly), so it is the single hook for a debounced background push.
+   * Overlapping runs collapse; a change during a run queues exactly one more. */
+  var autoEnabled = true;
+  var _subs = [], _autoTimer = null, _autoRunning = false, _autoAgain = false;
+  function _autoEmit(res) { for (var i = 0; i < _subs.length; i++) { try { _subs[i](res); } catch (e) {} } }
+  function _autoRun() {
+    if (!autoEnabled || !CBK.sync || !CBK.sync.isConfigured() || !CBK.sync.getKey()) return;
+    if (_autoRunning) { _autoAgain = true; return; }
+    _autoRunning = true;
+    CBK.sync.syncNow().then(_autoEmit, function () { /* offline/transient: ignore */ })
+      .then(function () {
+        _autoRunning = false;
+        if (_autoAgain) { _autoAgain = false; scheduleAuto(0); }
+      });
+  }
+  function scheduleAuto(delay) {
+    if (!autoEnabled || typeof setTimeout !== "function") return;
+    if (!CBK.sync || !CBK.sync.isConfigured() || !CBK.sync.getKey()) return;
+    if (_autoTimer) clearTimeout(_autoTimer);
+    _autoTimer = setTimeout(_autoRun, delay == null ? 1800 : delay);
+  }
 
   /* an item "exists" only while it carries a bookmark, a non-empty note, a
      rating, or a non-empty reason; an empty item with a meta timestamp is a
@@ -228,6 +252,12 @@
 
   var Sync = {
     isConfigured: function () { var c = cfg(); return !!(c.url && c.key); },
+
+    /* background auto-sync controls */
+    auto: function () { scheduleAuto(0); },                 // trigger a pull/push now (load-time)
+    onSync: function (fn) { if (typeof fn === "function") _subs.push(fn); }, // notified after each auto sync
+    setAuto: function (on) { autoEnabled = !!on; },          // tests disable for determinism
+
 
     getKey: function () { try { return localStorage.getItem(SYNC_KEY) || ""; } catch (e) { return ""; } },
     setKey: function (k) {

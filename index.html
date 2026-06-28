@@ -70,7 +70,8 @@
   <footer>비공식 번역본 · 정확한 의미는 각 글의 원문/영상 링크를 함께 참고하세요.</footer>
 
   <script src="posts/assets/posts.js"></script>
-  <script src="posts/assets/store.js"></script>
+  <script src="posts/assets/cbk-config.js"></script>
+<script src="posts/assets/store.js"></script>
   <script>
   (function () {
     var CBK = window.CBK || null;
@@ -209,6 +210,12 @@
     });
 
     render();
+
+    // 자동 동기화: 코드가 있으면 목록을 열 때 원격을 받아오고, 끝나면 다시 그린다.
+    if (CBK && CBK.sync && CBK.sync.isConfigured() && CBK.sync.getKey()) {
+      CBK.sync.onSync(function () { render(); });
+      CBK.sync.auto();
+    }
   })();
   </script>
 </body>

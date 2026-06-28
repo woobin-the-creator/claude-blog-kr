@@ -401,7 +401,8 @@
       document.getElementById("sync-save").addEventListener("click", function () {
         var k = sync.setKey(codeEl.value);
         refreshState();
-        setMsg(k ? "코드를 저장했습니다." : "코드를 비웠습니다.", "ok");
+        setMsg(k ? "코드를 저장했습니다. 자동 동기화 중…" : "코드를 비웠습니다.", "ok");
+        if (k) sync.auto(); // 코드를 넣자마자 바로 한 번 동기화
       });
       document.getElementById("sync-forget").addEventListener("click", function () {
         sync.setKey("");
@@ -423,7 +424,16 @@
         });
       });
 
+      // 자동 동기화: 변경 시(store.js 디바운스 push)와 로드 시(pull) 모두 끝나면 다시 그린다.
+      sync.onSync(function (res) {
+        render();
+        refreshState();
+        if (res) setMsg("자동 동기화됨 · 받음 " + res.pulled + " · 보냄 " + res.pushed +
+          (res.deleted ? " · 삭제 " + res.deleted : ""), "ok");
+      });
+
       refreshState();
+      if (sync.getKey()) { setMsg("자동 동기화 중…", ""); sync.auto(); } // 페이지 열면 바로 받아오기
     })();
 
     render();
