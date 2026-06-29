@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 피드 · Claude 블로그 한글 번역</title>
+<style>
+  :root { --fg:#1a1a1a; --muted:#666; --line:#e5e5e5; --accent:#c96442; --soft:#faf8f6; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo",
+      "Malgun Gothic", sans-serif;
+    color: var(--fg); line-height: 1.7; max-width: 720px; margin: 0 auto;
+    padding: 48px 24px 96px; background:#fff;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  .top-nav { display:flex; gap:14px; font-size:0.88rem; margin-bottom:14px; }
+  h1 { font-size:1.7rem; margin:6px 0 6px; }
+  .sub { color: var(--muted); font-size:0.92rem; margin:0 0 28px; }
+  .sub a { color: var(--accent); }
+
+  .day { margin:0 0 10px; }
+  .day-label { font-size:0.78rem; letter-spacing:0.04em; text-transform:uppercase;
+    color:#999; margin:26px 0 12px; padding-bottom:6px; border-bottom:1px solid var(--line); }
+
+  .card { border:1px solid var(--line); border-radius:12px; padding:16px 18px;
+    margin:0 0 14px; background:var(--soft); }
+  .card-title { font-size:1.08rem; font-weight:600; line-height:1.4; }
+  .card-title a { color:var(--fg); }
+  .card-title a:hover { color:var(--accent); }
+  .card-summary { color:#333; font-size:0.95rem; margin:8px 0 0; }
+  .card-meta { display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+    color:var(--muted); font-size:0.78rem; margin-top:10px; }
+  .card-meta .sec { background:#fff; border:1px solid var(--line); border-radius:999px;
+    padding:2px 9px; }
+  .card-meta .src { margin-left:auto; }
+
+  .empty { text-align:center; color:var(--muted); padding:56px 20px; border:1px dashed var(--line);
+    border-radius:12px; }
+  footer { margin-top:40px; color:var(--muted); font-size:0.8rem; }
+</style>
+</head>
+<body>
+  <nav class="top-nav">
+    <a href="index.html">← 글 목록</a>
+    <a href="library.html">📑 보관함</a>
+  </nav>
+  <h1>📰 AI 피드</h1>
+  <p class="sub">
+    <a href="https://tldr.tech/tech">TLDR</a> 뉴스레터의 오늘자 항목을 한국어로 옮긴 타임라인입니다.
+    제목을 누르면 영어 원문으로 이동합니다.
+  </p>
+
+  <div id="feed"></div>
+
+  <footer>비공식 번역본 · 원문 출처는 각 항목의 “원문” 링크를 참고하세요.</footer>
+
+  <script>
+  (function () {
+    var FEED_URL = "feed.json";
+    var feedEl = document.getElementById("feed");
+
+    function esc(s) {
+      return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) {
+        return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
+      });
+    }
+
+    function host(url) {
+      try { return new URL(url).hostname.replace(/^www\./, ""); }
+      catch (e) { return "원문"; }
+    }
+
+    function showEmpty(msg) {
+      feedEl.innerHTML = '<div class="empty">' + esc(msg) + "</div>";
+    }
+
+    function render(items) {
+      if (!Array.isArray(items) || !items.length) {
+        showEmpty("아직 피드 항목이 없습니다. 새 TLDR 호가 들어오면 여기에 쌓입니다.");
+        return;
+      }
+      // newest first by added_at, then keep in-issue order as the source provides.
+      items = items.slice().sort(function (a, b) {
+        return String(b.added_at || "").localeCompare(String(a.added_at || ""));
+      });
+
+      feedEl.innerHTML = "";
+      var lastDay = null;
+      items.forEach(function (it) {
+        var day = it.issue || (it.added_at || "").slice(0, 10);
+        if (day !== lastDay) {
+          lastDay = day;
+          var h = document.createElement("div");
+          h.className = "day-label";
+          h.textContent = day || "최근";
+          feedEl.appendChild(h);
+        }
+
+        var card = document.createElement("div");
+        card.className = "card";
+        var title = it.title_ko || it.title_en || "(제목 없음)";
+        var summary = it.summary_ko || it.summary_en || "";
+        var meta = "";
+        if (it.section) meta += '<span class="sec">' + esc(it.section) + "</span>";
+        if (it.read_min) meta += "<span>" + esc(it.read_min) + "분 읽기</span>";
+        meta += '<a class="src" href="' + esc(it.url || "#") +
+          '" target="_blank" rel="noopener noreferrer">원문(' + esc(host(it.url)) + ") ↗</a>";
+
+        card.innerHTML =
+          '<div class="card-title"><a href="' + esc(it.url || "#") +
+            '" target="_blank" rel="noopener noreferrer">' + esc(title) + "</a></div>" +
+          (summary ? '<p class="card-summary">' + esc(summary) + "</p>" : "") +
+          '<div class="card-meta">' + meta + "</div>";
+        feedEl.appendChild(card);
+      });
+    }
+
+    function load() {
+      if (typeof fetch !== "function") { showEmpty("이 브라우저에서는 피드를 불러올 수 없습니다."); return; }
+      fetch(FEED_URL, { cache: "no-store" })
+        .then(function (r) { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+        .then(render)
+        .catch(function () { showEmpty("피드를 불러오지 못했습니다."); });
+    }
+
+    load();
+  })();
+  </script>
+</body>
+</html>

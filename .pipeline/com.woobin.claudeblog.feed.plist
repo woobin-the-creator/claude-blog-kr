@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  TLDR feed pipeline — runs twice a day (KST 09:00 and 23:00).
+  TLDR(tech) publishes on US weekday mornings (≈ KST evening), so 23:00 catches
+  the same-day issue and 09:00 next morning is the safety net for late publishes.
+  Dedup is by source URL, so a double run never duplicates items.
+
+  Install (one-time, on the Mac that runs the pipeline):
+    cp ~/claude-blog-kr/.pipeline/com.woobin.claudeblog.feed.plist ~/Library/LaunchAgents/
+    launchctl unload ~/Library/LaunchAgents/com.woobin.claudeblog.feed.plist 2>/dev/null
+    launchctl load   ~/Library/LaunchAgents/com.woobin.claudeblog.feed.plist
+-->
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.woobin.claudeblog.feed</string>
+
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/bash</string>
+    <string>-lc</string>
+    <string>$HOME/claude-blog-kr/.pipeline/run-feed.sh</string>
+  </array>
+
+  <key>StartCalendarInterval</key>
+  <array>
+    <dict>
+      <key>Hour</key><integer>9</integer>
+      <key>Minute</key><integer>0</integer>
+    </dict>
+    <dict>
+      <key>Hour</key><integer>23</integer>
+      <key>Minute</key><integer>0</integer>
+    </dict>
+  </array>
+
+  <key>RunAtLoad</key>
+  <false/>
+
+  <key>StandardOutPath</key>
+  <string>/tmp/claudeblog-feed.out</string>
+  <key>StandardErrorPath</key>
+  <string>/tmp/claudeblog-feed.err</string>
+</dict>
+</plist>
