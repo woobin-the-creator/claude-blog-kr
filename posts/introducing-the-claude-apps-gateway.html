@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Amazon Bedrock과 Google Cloud를 위한 Claude apps gateway를 소개합니다</title>
+<style>
+  :root { --fg:#1a1a1a; --muted:#666; --line:#e5e5e5; --accent:#c96442; --code-bg:#f6f6f4; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo",
+      "Malgun Gothic", sans-serif;
+    color: var(--fg); line-height: 1.75; max-width: 760px;
+    margin: 0 auto; padding: 48px 24px 96px; background:#fff;
+  }
+  header { border-bottom: 2px solid var(--line); padding-bottom: 24px; margin-bottom: 32px; }
+  h1 { font-size: 1.9rem; line-height: 1.35; margin: 0 0 12px; }
+  .meta { color: var(--muted); font-size: 0.9rem; }
+  .meta .orig { display:block; margin-top:6px; }
+  .meta a { color: var(--accent); text-decoration: none; }
+  h2 { font-size: 1.4rem; margin: 44px 0 8px; padding-top: 8px; }
+  h3 { font-size: 1.15rem; margin: 30px 0 8px; color:#000; }
+  .builders { color: var(--muted); font-size: 0.92rem; margin: 0 0 14px; }
+  p { margin: 0 0 16px; }
+  a { color: var(--accent); }
+  ul { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  blockquote { margin: 16px 0; padding: 8px 18px; border-left:3px solid var(--line);
+    color:#333; font-style: italic; }
+  hr { border: none; border-top: 1px solid var(--line); margin: 40px 0; }
+  code { background: var(--code-bg); padding: 2px 6px; border-radius: 4px;
+    font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 0.88em; }
+  pre { background: var(--code-bg); padding: 16px 18px; border-radius: 8px;
+    overflow-x: auto; border:1px solid var(--line); }
+  pre code { background: none; padding: 0; font-size: 0.85rem; line-height:1.5; }
+  figure { margin: 24px 0; }
+  figure img { width: 100%; height: auto; border:1px solid var(--line); border-radius: 8px;
+    background:#fff; }
+  figure.hero img { border:none; max-width: 210px; display:block; margin: 0 auto 8px; }
+  figcaption { color: var(--muted); font-size: 0.85rem; text-align: center;
+    margin-top: 10px; line-height: 1.5; }
+  figcaption a { color: var(--accent); }
+  .video { position: relative; width: 100%; aspect-ratio: 16 / 9; margin: 22px 0; }
+  .video iframe { position: absolute; inset: 0; width: 100%; height: 100%;
+    border: 0; border-radius: 8px; }
+  .callout { background:#faf6f4; border-left:3px solid var(--accent);
+    padding: 12px 16px; border-radius: 0 6px 6px 0; margin: 16px 0; }
+  .callout strong { color: var(--accent); }
+  footer { margin-top: 64px; padding-top: 20px; border-top:1px solid var(--line);
+    color: var(--muted); font-size: 0.82rem; }
+</style>
+<link rel="stylesheet" href="assets/nav.css">
+</head>
+<body>
+<header>
+  <h1>Amazon Bedrock과 Google Cloud를 위한 Claude apps gateway를 소개합니다</h1>
+  <div class="meta">
+    2026년 6월 29일 · 카테고리: Claude Code · 읽는 데 5분
+    <span class="orig">원문:
+      <a href="https://claude.com/blog/introducing-the-claude-apps-gateway">Introducing the Claude apps gateway for Amazon Bedrock and Google Cloud</a>
+      (한글 번역본)</span>
+  </div>
+</header>
+
+<figure class="hero"><img src="assets/introducing-the-claude-apps-gateway/hero.svg" alt="엔터프라이즈 에이전트 노드 일러스트"></figure>
+
+<p>오늘 우리는 Amazon Bedrock과 Google Cloud를 위한 Claude apps gateway를 소개합니다. 그동안 이 플랫폼들에서 Claude Code를 운영하려면 개발자마다 클라우드 자격 증명(credential)을 따로 발급하고, 모든 노트북에 설정을 일일이 수동으로 밀어 넣고, 개발자별 지출을 확인하기 위해 별도의 도구를 세워야 했습니다. 이 gateway는 자체 호스팅(self-hosted)되는 컨트롤 플레인(control plane)으로, Claude Code에 기업용 SSO 로그인, 중앙에서 강제되는 정책(policy), 역할 기반 접근 제어(role-based access), 그리고 사용자별 비용 귀속(per-user cost attribution)을 제공합니다.</p>
+
+<h3>gateway 배포하기</h3>
+
+<p>gateway는 Linux에 배포되고 PostgreSQL 데이터베이스를 백엔드로 두는, 상태를 갖지 않는(stateless) 단일 컨테이너로 실행됩니다. gateway는 여러분의 업스트림(upstream) 자격 증명을 보관하고, 개발자를 여러분의 아이덴티티 공급자(identity provider)에 대해 인증하며, 관리형 설정(managed settings)을 배포하고 강제하며, 사용자별 사용량을 여러분이 운영하는 수집기(collector)로 보고합니다. 개발자를 온보딩하는 일은 그들을 여러분의 아이덴티티 공급자(IdP)에 추가하는 것을 의미합니다. 오프보딩은 그들을 제거하는 것을 의미합니다.</p>
+
+<p>gateway는 Anthropic이 만들어 배포하며, 여러분의 개발자가 이미 설치하는 바로 그 <code>claude</code> 바이너리 안에 들어 있습니다. 따라서 여러분은 자신의 인프라에서 상태 없는 컨테이너 하나로 이를 실행할 수 있습니다. gateway와 클라이언트가 함께 빌드되기 때문에, <code>/login</code> 흐름은 gateway를 인식하고, 클라이언트는 로그인 시점에 관리형 설정을 자동으로 적용하며, 정책은 모든 요청에 대해 일관되게 강제됩니다.</p>
+
+<h3>gateway는 어떻게 동작하는가</h3>
+
+<p>gateway는 다음을 처리합니다.</p>
+
+<ul>
+  <li><strong>아이덴티티(Identity).</strong> gateway는 Google Workspace, Microsoft Entra ID, Okta, 또는 표준을 준수하는 모든 OIDC 공급자에 대해 OpenID Connect(OIDC) 신뢰 당사자(relying party)로 동작하며, 수명이 짧은(short-lived) 세션을 발급합니다. 수명이 긴 비밀(long-lived secret)이 개발자 머신에 남지 않습니다.</li>
+  <li><strong>정책(Policy).</strong> 관리형 설정을 서버에서 한 번 정의해 두면, 클라이언트는 로그인 시점에 그 정책을 받고 gateway는 모든 요청에 대해 이를 강제합니다. 허용되는 모델과 기본 설정을 중앙에서 조정할 수 있습니다.</li>
+  <li><strong>텔레메트리(Telemetry).</strong> 클라이언트는 모든 요청마다 사용량 지표(usage metric)를 찍고, gateway는 이를 OTLP를 통해 여러분이 구성한 수집기로 — 여러분의 네트워크 안에서, 여러분의 보존 일정(retention schedule)에 따라 — 중계합니다.</li>
+  <li><strong>라우팅(Routing).</strong> gateway는 여러분의 업스트림 자격 증명을 보관하고 추론(inference)을 Claude API, Amazon Bedrock, 또는 Google Cloud로 라우팅하며, 공급자 간 선택적 장애 조치(failover)를 지원합니다.</li>
+  <li><strong>지출 상한(Spend caps).</strong> gateway는 일간·주간·월간 지출 한도를 설정할 수 있게 해 줍니다. 한도는 조직, 그룹, 또는 사용자 단위로 적용할 수 있습니다.</li>
+</ul>
+
+<p>gateway는, 여러분이 Claude API를 사용하도록 구성하지 않는 한, 추론 트래픽이나 사용량 데이터를 Anthropic에 보내지 않습니다. 또한 우리는 gateway가 사용하는 프로토콜을 공개하고 있어, 다른 gateway 개발자들도 동일한 기능을 구현할 수 있습니다.</p>
+
+<h3>시작하기</h3>
+
+<p>gateway는 지금 바로 사용할 수 있습니다. 시작하려면 다음과 같이 하세요.</p>
+
+<ul>
+  <li><strong>gateway 배포</strong>: Claude Code CLI 바이너리를 내려받고, <code>gateway.yaml</code>이 여러분의 OIDC 발급자(issuer)와 업스트림 자격 증명을 가리키도록 설정한 뒤, 여러분의 IdP에 OIDC 앱 하나를 등록합니다.</li>
+  <li><strong>배포 적용(Roll it out)</strong>: 클라이언트 머신의 <code>managed-settings.json</code>에서 <code>forceLoginMethod</code>와 <code>forceLoginGatewayUrl</code> 파라미터를 설정합니다. 클라이언트는 최초 부팅 시 여러분의 gateway에 연결됩니다.</li>
+</ul>
+
+<p>더 알아보려면 <a href="https://code.claude.com/docs/en/claude-apps-gateway">문서를 참고하세요</a>.</p>
+
+<footer>
+  이 글은 Claude 공식 블로그 원문을 한국어로 옮긴 비공식 번역본입니다.
+  내용의 정확한 의미는 위 원문 링크를 함께 참고하세요.
+</footer>
+<script src="assets/store.js"></script>
+<script src="assets/posts.js"></script>
+<script src="assets/nav.js"></script>
+</body>
+</html>
