@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "claude-in-microsoft-foundry.html", date: "2026-06-29", main: "Claude blog", cat: "Enterprise AI",
+      title: "이제 Microsoft Foundry에서 Claude를 정식으로 사용할 수 있습니다", nav: "Microsoft Foundry의 Claude" },
     { file: "ai-era-durable-skills.html", date: "2026-06-26", main: "AI 인사이트", cat: "역량·커리어",
       title: "RAG는 죽지 않았다 — AI 시대에 4~5년 살아남는 기술 역량", nav: "AI 시대 내구성 역량" },
     { file: "keep-claude-working-toward-a-goal.html", date: "2026-06-25", main: "Claude Code Docs", cat: "Claude Code",
