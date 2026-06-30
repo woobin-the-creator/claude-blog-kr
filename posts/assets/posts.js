@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "getting-started-with-loops.html", date: "2026-06-30", main: "Claude blog", cat: "Claude Code",
+      title: "루프(loop) 시작하기", nav: "루프 시작하기" },
     { file: "introducing-the-claude-apps-gateway.html", date: "2026-06-29", main: "Claude blog", cat: "Claude Code",
       title: "Amazon Bedrock과 Google Cloud를 위한 Claude apps gateway를 소개합니다", nav: "Claude apps gateway 소개" },
     { file: "claude-in-microsoft-foundry.html", date: "2026-06-29", main: "Claude blog", cat: "Enterprise AI",

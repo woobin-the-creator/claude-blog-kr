@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>루프(loop) 시작하기</title>
+<style>
+  :root { --fg:#1a1a1a; --muted:#666; --line:#e5e5e5; --accent:#c96442; --code-bg:#f6f6f4; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo",
+      "Malgun Gothic", sans-serif;
+    color: var(--fg); line-height: 1.75; max-width: 760px;
+    margin: 0 auto; padding: 48px 24px 96px; background:#fff;
+  }
+  header { border-bottom: 2px solid var(--line); padding-bottom: 24px; margin-bottom: 32px; }
+  h1 { font-size: 1.9rem; line-height: 1.35; margin: 0 0 12px; }
+  .meta { color: var(--muted); font-size: 0.9rem; }
+  .meta .orig { display:block; margin-top:6px; }
+  .meta a { color: var(--accent); text-decoration: none; }
+  h2 { font-size: 1.4rem; margin: 44px 0 8px; padding-top: 8px; }
+  h3 { font-size: 1.15rem; margin: 30px 0 8px; color:#000; }
+  .builders { color: var(--muted); font-size: 0.92rem; margin: 0 0 14px; }
+  p { margin: 0 0 16px; }
+  a { color: var(--accent); }
+  ul { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  blockquote { margin: 16px 0; padding: 8px 18px; border-left:3px solid var(--line);
+    color:#333; font-style: italic; }
+  hr { border: none; border-top: 1px solid var(--line); margin: 40px 0; }
+  code { background: var(--code-bg); padding: 2px 6px; border-radius: 4px;
+    font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 0.88em; }
+  pre { background: var(--code-bg); padding: 16px 18px; border-radius: 8px;
+    overflow-x: auto; border:1px solid var(--line); }
+  pre code { background: none; padding: 0; font-size: 0.85rem; line-height:1.5; }
+  figure { margin: 24px 0; }
+  figure img { width: 100%; height: auto; border:1px solid var(--line); border-radius: 8px;
+    background:#fff; }
+  figure.hero img { border:none; max-width: 210px; display:block; margin: 0 auto 8px; }
+  figcaption { color: var(--muted); font-size: 0.85rem; text-align: center;
+    margin-top: 10px; line-height: 1.5; }
+  figcaption a { color: var(--accent); }
+  .video { position: relative; width: 100%; aspect-ratio: 16 / 9; margin: 22px 0; }
+  .video iframe { position: absolute; inset: 0; width: 100%; height: 100%;
+    border: 0; border-radius: 8px; }
+  .callout { background:#faf6f4; border-left:3px solid var(--accent);
+    padding: 12px 16px; border-radius: 0 6px 6px 0; margin: 16px 0; }
+  .callout strong { color: var(--accent); }
+  table { width:100%; border-collapse: collapse; margin: 20px 0; font-size: 0.92rem; }
+  th, td { border:1px solid var(--line); padding: 8px 12px; text-align: left; vertical-align: top; }
+  th { background: var(--code-bg); }
+  footer { margin-top: 64px; padding-top: 20px; border-top:1px solid var(--line);
+    color: var(--muted); font-size: 0.82rem; }
+</style>
+<link rel="stylesheet" href="assets/nav.css">
+</head>
+<body>
+<header>
+  <h1>루프(loop) 시작하기</h1>
+  <div class="meta">
+    2026년 6월 30일 · 카테고리: Claude Code
+    <span class="orig">원문:
+      <a href="https://claude.com/blog/getting-started-with-loops">Getting started with loops</a>
+      (한글 번역본)</span>
+  </div>
+</header>
+
+<figure class="hero"><img src="assets/getting-started-with-loops/hero.svg" alt="루프 시작하기 히어로 이미지"></figure>
+
+<p>요즘 코딩 에이전트에 프롬프트를 넣는 대신 "루프를 설계한다(designing loops)"는 이야기가 많이 나옵니다. X(옛 트위터)에서 루프가 정확히 무엇인지 찾아보려고 시간을 좀 들이다 보면, 서로 다른 여러 가지 답을 마주하게 될 것입니다.</p>
+
+<p>Claude Code 팀에서는 <strong>루프를 "에이전트가 종료 조건(stop condition)이 충족될 때까지 작업 사이클을 반복하는 것"</strong>으로 정의합니다. 우리는 다음 기준에 따라 몇 가지 유형의 루프를 분류합니다.</p>
+
+<ul>
+  <li>어떻게 트리거되는가(triggered)</li>
+  <li>어떻게 멈추는가(stopped)</li>
+  <li>어떤 Claude Code 프리미티브(primitive)를 사용하는가</li>
+  <li>어떤 유형의 작업에 가장 적합한가</li>
+</ul>
+
+<p>이 글에서는 주요 루프 유형, 각각을 언제 사용해야 하는지, 그리고 토큰 사용량을 관리하면서 코드 품질을 유지하는 방법을 다룹니다. 모든 작업에 복잡한 루프가 필요한 것은 아닙니다. 가장 단순한 해법부터 시작하고, 이 패턴들은 선택적으로 사용하세요.</p>
+
+<hr>
+
+<h2>턴 기반 루프(Turn-based loops)</h2>
+<ul>
+  <li><strong>트리거:</strong> 사용자 프롬프트</li>
+  <li><strong>종료 기준:</strong> Claude가 작업을 완료했다고 판단하거나, 추가 컨텍스트가 필요하다고 판단할 때</li>
+  <li><strong>가장 적합한 용도:</strong> 정기적인 프로세스나 일정의 일부가 아닌, 비교적 짧은 작업</li>
+  <li><strong>사용량 관리 방법:</strong> 구체적인 프롬프트를 작성하고, 스킬(skills)을 활용해 검증을 개선하여 턴(turn) 수를 줄인다</li>
+</ul>
+
+<p>여러분이 보내는 모든 프롬프트는, 각 턴을 직접 지휘하는 수동 루프를 시작합니다. Claude는 컨텍스트를 수집하고, 행동을 취하고, 작업 결과를 점검하고, 필요하면 반복한 뒤 응답합니다. 우리는 이를 에이전트 루프(agentic loop)라고 부릅니다.</p>
+
+<p>예를 들어 Claude에게 좋아요 버튼을 만들어 달라고 해 봅시다. Claude는 여러분의 코드를 읽고, 수정을 가하고, 테스트를 실행한 뒤, 스스로 동작한다고 <em>믿는</em> 무언가를 돌려줍니다. 그러면 여러분이 직접 그 결과를 점검하고 다음 프롬프트를 작성합니다.</p>
+
+<p>여러분의 수동 점검 단계를 SKILL.md로 인코딩해 두면 검증 단계를 개선할 수 있습니다. 그러면 Claude가 처음부터 끝까지(end-to-end) 자신의 작업을 더 많이 스스로 점검할 수 있습니다. 여기에는 Claude가 결과를 <em>보고</em>, <em>측정하고</em>, <em>상호작용</em>할 수 있게 해 주는 도구나 커넥터가 포함되어야 합니다. 점검이 정량적일수록 Claude가 스스로 검증하기가 쉬워집니다.</p>
+
+<figure>
+  <img src="assets/getting-started-with-loops/turn-based.png" alt="턴 기반 루프 다이어그램">
+</figure>
+
+<p>예를 들어 SKILL.md 파일에 다음과 같이 명시할 수 있습니다.</p>
+
+<pre><code>---
+name: verify-frontend-change
+description: Verify any UI change end-to-end before declaring it done.
+---
+
+# Verifying frontend changes
+Never report a UI change as complete based on a successful edit alone. Verify it the way a human reviewer would:
+
+1. Start the dev server and open the edited page in the browser.
+
+2. Interact with the change directly. For a new control (button, input, toggle): click it, confirm the expected state change, and screenshot before/after.
+
+3. Check the browser console: zero new errors or warnings.
+
+4. Use the Chrome Devtools MCP, run a performance trace and audit Core Web Vitals.
+
+If any step fails, fix the issue and rerun from step 1 — do not hand back partially verified work.</code></pre>
+
+<hr>
+
+<h2>목표 기반 루프(Goal-based loop, /goal)</h2>
+<ul>
+  <li><strong>트리거:</strong> 실시간으로 입력하는 수동 프롬프트</li>
+  <li><strong>종료 기준:</strong> 목표 달성 또는 최대 턴 수 도달</li>
+  <li><strong>가장 적합한 용도:</strong> 검증 가능한 종료 기준이 있는 작업</li>
+  <li><strong>사용량 관리 방법:</strong> 구체적인 완료 기준과 명시적인 턴 상한을 설정한다(예: "5번 시도 후 멈춰").</li>
+</ul>
+
+<p>때로는 한 턴으로 충분하지 않습니다. 특히 더 복잡한 작업에서 그렇습니다. 에이전트는 반복(iterate)할 수 있을 때 더 잘합니다. <code>/goal</code>로 "완료(done)"가 어떤 모습인지 정의해 두면 Claude가 반복을 계속하는 시간을 늘릴 수 있습니다.</p>
+
+<p>성공 기준을 정의해 두면, Claude는 무엇이 "충분히 좋은지"를 스스로 판단해서 루프를 일찍 끝낼 필요가 없어집니다. Claude가 멈추려고 할 때마다 평가자(evaluator) 모델이 여러분의 조건을 점검하고, 목표가 충족되거나 여러분이 정한 턴 수에 도달할 때까지 다시 작업으로 돌려보냅니다.</p>
+
+<p>그래서 통과한 테스트 수나 일정 점수 임계값 돌파처럼 결정론적(deterministic)인 기준이 매우 효과적입니다.</p>
+
+<figure>
+  <img src="assets/getting-started-with-loops/goal-based.png" alt="목표 기반 루프 다이어그램">
+</figure>
+
+<p>예를 들면 다음과 같습니다.</p>
+
+<pre><code>/goal get the homepage Lighthouse score to 90 or above, stop after 5 tries.</code></pre>
+
+<hr>
+
+<h2>시간 기반 루프(Time-based loop, /loop와 /schedule)</h2>
+<ul>
+  <li><strong>트리거:</strong> 지정한 시간 간격</li>
+  <li><strong>종료 기준:</strong> 여러분이 취소하거나, 작업이 완료될 때(PR이 머지되거나, 큐가 비는 등)</li>
+  <li><strong>가장 적합한 용도:</strong> 반복적으로 일어나는 작업, 또는 외부 환경/시스템과 연동하는 작업</li>
+  <li><strong>사용량 관리 방법:</strong> 더 긴 간격을 설정하거나, 시간이 아니라 이벤트에 반응하게 한다</li>
+</ul>
+
+<p>어떤 에이전트 작업은 반복적입니다. 작업 자체는 똑같고 입력만 바뀝니다. 예를 들어 매일 아침 Slack 메시지를 요약하는 일이 그렇습니다. 또 다른 작업은 외부 시스템에 의존하는데, 외부 시스템과 연동하는 간단한 방법은 일정 간격으로 그것을 확인하고 바뀐 점에 반응하는 것입니다. 예를 들어 코드 리뷰를 받거나 CI가 실패할 수 있는 PR이 그렇습니다.</p>
+
+<p>이런 경우에는 <code>/loop</code>로 Claude가 실행되는 시점을 트리거할 수 있습니다. <code>/loop</code>는 프롬프트를 일정 간격마다 다시 실행합니다. 예를 들면 다음과 같습니다.</p>
+
+<pre><code>/loop 5m check my PR, address review comments, and fix failing CI</code></pre>
+
+<p><code>/loop</code>는 여러분의 컴퓨터에서 실행되므로, 컴퓨터를 끄면 멈춥니다. <code>/schedule</code>로 루틴(routine)을 만들면 루프를 클라우드로 옮길 수 있습니다.</p>
+
+<hr>
+
+<h2>능동적 루프(Proactive loops)</h2>
+<ul>
+  <li><strong>트리거:</strong> 이벤트 또는 일정. 실시간으로 개입하는 사람은 없음</li>
+  <li><strong>종료 기준:</strong> 각 작업은 목표가 충족되면 종료된다. 루틴 자체는 여러분이 끌 때까지 계속 실행된다</li>
+  <li><strong>가장 적합한 용도:</strong> 잘 정의된 작업이 반복적으로 흘러 들어오는 경우(버그 리포트, 이슈 분류(triage), 마이그레이션, 의존성 업그레이드 등)</li>
+  <li><strong>사용량 관리 방법:</strong> 루틴을 더 작고 빠른 모델로 라우팅하고, 판단이 필요한 결정에는 가장 유능한 모델을 사용한다</li>
+</ul>
+
+<p>위에서 다룬 프리미티브들은 <strong>오토 모드(auto mode)</strong>나 <strong>다이내믹 워크플로(dynamic workflows)</strong>(리서치 프리뷰) 같은 다른 Claude Code 기능과 함께 조합되어, 장시간 실행되는 작업을 위한 루프를 구성할 수 있습니다.</p>
+
+<p>예를 들어 들어오는 피드백을 처리하려면 다음을 사용할 수 있습니다.</p>
+
+<ol>
+  <li><strong><code>/schedule</code></strong>(리서치 프리뷰)로 새 리포트를 확인하는 루틴을 실행</li>
+  <li><strong><code>/goal</code></strong>로 "완료"가 어떤 모습인지 정의하고, <strong>스킬(skills)</strong>로 그것을 어떻게 검증할지 문서화</li>
+  <li><strong>다이내믹 워크플로</strong>로 각 리포트를 분류하고, 고치고, 그 수정을 리뷰하는 에이전트들을 오케스트레이션</li>
+  <li><strong>오토 모드</strong>로 루틴이 권한을 묻기 위해 멈추지 않고 실행되도록 설정</li>
+</ol>
+
+<figure>
+  <img src="assets/getting-started-with-loops/proactive.png" alt="능동적 루프 다이어그램">
+</figure>
+
+<p>이것들을 한데 합치면, 프롬프트는 다음과 같은 모습이 될 수 있습니다.</p>
+
+<pre><code>/schedule every hour: check #project-feedback for bug reports. /goal: don't stop until every report found this run is triaged, actioned, and responded to. When fixing a bug, use a workflow to explore three solutions in parallel worktrees and have a judge adversarially review them.</code></pre>
+
+<hr>
+
+<h2>코드 품질 유지하기</h2>
+<p>루프 출력물의 품질은 그 주변을 둘러싼 시스템에 달려 있습니다. 시스템을 설계할 때는 다음을 고려하세요.</p>
+<ul>
+  <li><strong>코드베이스 자체를 깨끗하게 유지하세요:</strong> Claude는 여러분의 코드베이스에 이미 존재하는 패턴과 관례를 따릅니다.</li>
+  <li><strong>Claude가 자신의 작업을 검증할 수 있는 방법을 주세요:</strong> 여러분과 팀에게 "좋은 것"이 무엇인지 <a href="https://code.claude.com/docs/en/skills">스킬(skills)</a>로 인코딩하세요.</li>
+  <li><strong>문서에 쉽게 접근할 수 있게 하세요:</strong> 프레임워크와 라이브러리 문서에는 최신 모범 사례가 담겨 있습니다.</li>
+  <li><strong>코드 리뷰에는 두 번째 에이전트를 사용하세요:</strong> 새로운 컨텍스트를 가진 리뷰어는 편향이 덜하고, 메인 에이전트의 추론에 영향을 받지 않습니다. 내장된 <code>/code-review</code> 스킬이나 GitHub용 <a href="https://code.claude.com/docs/en/code-review">Code Review</a>를 사용할 수 있습니다.</li>
+</ul>
+
+<p>개별 결과물이 기준에 못 미칠 때는 그 개별 문제만 고치고 멈추지 마세요. 그것을 인코딩해서 앞으로의 모든 반복을 위해 시스템 전체를 개선하려고 시도하세요.</p>
+
+<hr>
+
+<h2>토큰 사용량 관리하기</h2>
+<p>토큰 사용량을 관리하려면 루프에 명확한 경계가 있어야 합니다.</p>
+<ul>
+  <li><strong>작업에 맞는 프리미티브와 모델을 고르세요:</strong> 작은 작업에는 여러 에이전트나 루프가 필요 없습니다. 어떤 작업은 더 싸고 빠른 모델을 쓸 수 있습니다.</li>
+  <li><strong>명확한 성공/종료 기준을 정의하세요:</strong> "완료"가 어떤 모습인지 구체적으로 정해, Claude가 (너무 이르지 않게, 그러나) 더 빨리 해법에 도달할 수 있게 하세요.</li>
+  <li><strong>대규모 실행 전에 시험해 보세요:</strong> 다이내믹 워크플로는 수백 개의 에이전트를 생성할 수 있습니다. 먼저 작업의 더 작은 일부로 사용량을 가늠해 보세요.</li>
+  <li><strong>결정론적 작업에는 스크립트를 사용하세요:</strong> 스크립트를 실행하는 것이 단계를 일일이 추론하는 것보다 저렴합니다. 예를 들어 PDF 스킬은 매번 코드를 다시 도출하는 대신, Claude가 매번 실행하는 양식 채우기 스크립트를 함께 제공할 수 있습니다.</li>
+  <li><strong>필요 이상으로 자주 루틴을 실행하지 마세요:</strong> 여러분이 지켜보는 대상이 바뀌는 빈도에 간격을 맞추세요.</li>
+  <li><strong>사용량을 검토하세요:</strong> <code>/usage</code> 명령은 최근 사용량을 스킬, 서브에이전트, MCP별로 분해해 보여 줍니다. 인자 없이 <code>/goal</code>을 실행하면 지금까지의 턴 수와 토큰 사용량을 보여 주고, <code>/workflows</code>는 각 에이전트의 토큰 사용량을 보여 주며 언제든 에이전트를 멈출 수 있습니다.</li>
+</ul>
+
+<hr>
+
+<h2>시작하기</h2>
+<p>정리하면 다음과 같습니다.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>루프</th>
+      <th>당신이 넘기는 것</th>
+      <th>이럴 때 쓰세요</th>
+      <th>활용 수단</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>턴 기반</td>
+      <td>점검(check)</td>
+      <td>탐색하거나 결정을 내리는 중일 때</td>
+      <td>커스텀 검증 스킬</td>
+    </tr>
+    <tr>
+      <td>목표 기반</td>
+      <td>종료 조건(stop condition)</td>
+      <td>"완료"가 어떤 모습인지 알고 있을 때</td>
+      <td><code>/goal</code></td>
+    </tr>
+    <tr>
+      <td>시간 기반</td>
+      <td>트리거(trigger)</td>
+      <td>작업이 프로젝트 바깥에서 일정에 따라 일어날 때</td>
+      <td><code>/loop</code>, <code>/schedule</code></td>
+    </tr>
+    <tr>
+      <td>능동적</td>
+      <td>프롬프트(prompt)</td>
+      <td>작업이 반복적이고 잘 정의되어 있을 때</td>
+      <td>위의 모든 것, 그리고 다이내믹 워크플로</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>루프를 시작하려면, 여러분이 이미 하고 있는 일을 들여다보세요. 여러분이 병목이 되는 작업 하나를 골라, 어떤 부분을 넘길 수 있을지 자문해 보세요. 검증 점검을 작성할 수 있나요? 목표가 충분히 명확한가요? 그 작업이 일정에 따라 들어오나요?</p>
+
+<p>아이디어가 생기면 루프를 실행하고, 어디서 멈추거나 과하게 나아가는지 같은 결과를 관찰하세요. 그리고 그 루프를 개선하는 것을 두려워하지 마세요.</p>
+
+<p>더 자세한 내용은 Claude Code 문서의 <a href="https://code.claude.com/docs/en/agents">에이전트 병렬 실행(running agents in parallel)</a> 페이지와 함께 <a href="https://code.claude.com/docs/en/goal">loop</a>, <a href="https://code.claude.com/docs/en/routines">schedule</a>, <a href="https://code.claude.com/docs/en/goal">goal</a>, <a href="https://code.claude.com/docs/en/workflows#orchestrate-subagents-at-scale-with-dynamic-workflows">다이내믹 워크플로(dynamic workflows)</a> 페이지를 읽어 보세요.</p>
+
+<p class="builders"><em>이 글은 Delba de Oliveira와 Michael Segner가 작성했습니다.</em></p>
+
+<footer>
+  이 글은 Claude 공식 블로그 원문을 한국어로 옮긴 비공식 번역본입니다.
+  내용의 정확한 의미는 위 원문 링크를 함께 참고하세요.
+</footer>
+<script src="assets/store.js"></script>
+<script src="assets/posts.js"></script>
+<script src="assets/nav.js"></script>
+</body>
+</html>
