@@ -7,6 +7,10 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  # 2026-07-02 Pages 백엔드 장애(deployment_queued 무한 대기) 동안 자동 재시도.
+  # 배포는 멱등이라 복구 후에도 해롭지 않지만, 정상화 확인되면 이 블록은 지워도 된다.
+  schedule:
+    - cron: '*/30 * * * *'
 
 permissions:
   contents: read
@@ -31,3 +35,6 @@ jobs:
           path: '.'
       - id: deployment
         uses: actions/deploy-pages@v4
+        with:
+          # 백엔드 큐 적체를 견디도록 기본 10분 → 30분
+          timeout: 1800000
