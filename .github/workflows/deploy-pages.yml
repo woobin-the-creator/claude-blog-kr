@@ -1,0 +1,33 @@
+# 정적 사이트를 GitHub Pages로 배포 (Actions 기반).
+# 2026-07-02: legacy(Jekyll) Pages 빌더가 이 저장소에서 커밋 무관하게 즉시 실패하기
+# 시작해(duration 0, "Page build failed") workflow 방식으로 전환했다.
+name: Deploy static site to Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+      - id: deployment
+        uses: actions/deploy-pages@v4
