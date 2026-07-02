@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "giving-admins-more-visibility-and-control-over-claude-usage-and-spend.html", date: "2026-07-02", main: "Claude blog", cat: "Enterprise AI",
+      title: "관리자에게 Claude 사용량·지출의 가시성과 통제권을 제공합니다", nav: "Claude 지출 가시성·통제" },
     { file: "getting-started-with-loops.html", date: "2026-06-30", main: "Claude blog", cat: "Claude Code",
       title: "루프(loop) 시작하기", nav: "루프 시작하기" },
     { file: "introducing-the-claude-apps-gateway.html", date: "2026-06-29", main: "Claude blog", cat: "Claude Code",
