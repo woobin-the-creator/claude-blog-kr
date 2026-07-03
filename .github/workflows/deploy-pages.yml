@@ -35,6 +35,17 @@ jobs:
           path: '.'
       - id: deployment
         uses: actions/deploy-pages@v4
+        # Pages 백엔드가 간헐적으로 "Deployment failed, try again later"를 뱉는다.
+        # cron 재시도는 GitHub이 한가한 저장소에서 지연/생략하므로 여기서 즉시 1회 재시도.
+        continue-on-error: true
         with:
           # 백엔드 큐 적체를 견디도록 기본 10분 → 30분
+          timeout: 1800000
+      - name: Wait before retry
+        if: steps.deployment.outcome == 'failure'
+        run: sleep 120
+      - id: deployment-retry
+        if: steps.deployment.outcome == 'failure'
+        uses: actions/deploy-pages@v4
+        with:
           timeout: 1800000
