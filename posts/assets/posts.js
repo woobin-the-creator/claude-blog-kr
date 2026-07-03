@@ -12,7 +12,7 @@
 (function () {
   window.CBK_POSTS = [
     { file: "spotify-agents-20m-lines.html", date: "2026-07-03", main: "Claude Youtube", cat: "Agents",
-      title: "Spotify는 2,000만 줄 코드베이스에서 에이전트를 어떻게 굴리는가 — 니클라스 구스타브손", nav: "Spotify의 20M 줄 에이전트 운영" },
+      title: "Spotify는 2,000만 줄 코드베이스에서 에이전트를 어떻게 굴리는가 — 니클라스 구스타브손", nav: "Spotify 2,000만 줄 에이전트" },
     { file: "giving-admins-more-visibility-and-control-over-claude-usage-and-spend.html", date: "2026-07-02", main: "Claude blog", cat: "Enterprise AI",
       title: "관리자에게 Claude 사용량·지출의 가시성과 통제권을 제공합니다", nav: "Claude 지출 가시성·통제" },
     { file: "getting-started-with-loops.html", date: "2026-06-30", main: "Claude blog", cat: "Claude Code",

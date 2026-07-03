@@ -70,103 +70,93 @@
   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
   allowfullscreen></iframe></div> -->
 
-<div class="video"><iframe src="https://www.youtube.com/embed/9DHZLw5653E"
-  title="How Spotify runs agents across 20M+ lines of code, with Niklas Gustavsson"
-  frameborder="0" allow="accelerator; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-  allowfullscreen></iframe></div>
+<p>Anthropic에서 Claude Code를 이끄는 보리스 셔니(Boris Cherny)가 Spotify의 수석 아키텍트이자 엔지니어링 부사장 니클라스 구스타브손(Niklas Gustavsson)을 만나, 2,000만 줄이 넘는 코드베이스에서 AI 에이전트를 실제로 어떻게 굴리는지 대담을 나눴다. 화려한 데모 없이 두 사람의 대화만으로 채워지지만, "코드를 잘 짜는 회사가 아니라 에이전트가 잘 돌아가도록 판을 깔아둔 회사가 빨라진다"는 한 가지 메시지가 전편을 관통한다.</p>
 
-<p>Anthropic의 Claude Code 총괄 보리스 체르니(Boris Cherny)가 진행하는 <em>Office Hours</em> 대담에, Spotify의 수석 아키텍트 겸 엔지니어링 부사장 니클라스 구스타브손(Niklas Gustavsson)이 나왔다. 주제는 하나다. <strong>2,000만 줄이 넘는 모노레포를 굴리는 회사가, AI 에이전트를 실제 프로덕션에 어떻게 녹여 넣었는가.</strong></p>
+<p>이 글은 슬라이드·코드 화면이 전혀 없는 인터뷰 영상이라, 원본에는 임베드할 정보성 시각 자료가 없다. 대신 대화에서 나온 수치와 주장, 그리고 니클라스의 핵심 발언을 그대로 옮겨 정리했다.</p>
 
-<p>이 글은 영상의 흐름을 한국어로 정리한 것이다. 화면은 대부분 두 사람의 대담 장면이라 별도의 슬라이드나 도표는 없다. 대신 핵심 발언은 원문(영어)과 한국어 옮김을 함께 붙였다.</p>
+<h2>IDE를 안 쓰게 된 두 달</h2>
 
-<figure>
-  <img src="assets/spotify-agents-20m-lines/9DHZLw5653E_3s.jpg" alt="Office Hours 오프닝 타이틀 카드 — 책상 위 노트와 유리컵">
-  <figcaption>Anthropic이 진행하는 대담 시리즈 <em>Office Hours</em>. 이번 편의 게스트는 Spotify의 니클라스 구스타브손이다. (00:03 무렵)</figcaption>
-</figure>
+<p>니클라스는 분자생물학에서 엔지니어링으로 넘어와 30년 가까이 개발을 해온 사람이다. 그런 그가 최근 겪은 변화의 속도를 이렇게 표현한다. 처음엔 그저 똑똑한 자동완성 정도로 여겼는데, 두어 달 만에 작업 방식 자체가 완전히 바뀌어 있었다는 것이다.</p>
 
-<figure>
-  <img src="assets/spotify-agents-20m-lines/9DHZLw5653E_52s.jpg" alt="사무실에서 마주 앉아 대담 중인 보리스 체르니와 니클라스 구스타브손">
-  <figcaption>왼쪽이 진행자 보리스 체르니, 오른쪽이 게스트 니클라스 구스타브손. (00:52 무렵)</figcaption>
-</figure>
+<blockquote>
+  "two months later I found myself not using an IDE anymore"
+  <span class="ko">두 달쯤 지나고 보니, 저는 더 이상 IDE를 안 쓰고 있더군요.</span>
+</blockquote>
 
-<h2>"두 달 만에 IDE를 안 쓰게 됐다"</h2>
+<p>그는 이 변화를 "30년 동안 본 적 없는 종류의 변화"라고 못 박았다. 전환점은 Claude 3.5였다. 그전까지 모델은 '똑똑한 자동완성'에 가까웠지만, 이때부터 실제 현업의 복잡한 문제를 어느 정도 자율적으로 풀어내기 시작했다고 회고한다. 도구가 손을 거들어주는 단계에서, 문제를 대신 처리해주는 단계로 넘어간 순간이다.</p>
 
-<p>니클라스는 30년 경력의 엔지니어다. 그런 그가 "몇 달 안에 IDE(통합 개발 환경)가 사라질 것"이라는 말을 처음 들었을 땐 믿지 않았다고 한다. 그런데 정작 두 달 뒤, 자신이 더 이상 IDE를 쓰지 않고 있다는 걸 깨달았다.</p>
+<h2>터미널 여러 개로 2,000만 줄을 헤집는 하루</h2>
 
-<blockquote>I found myself not using an IDE anymore<span class="ko">어느새 나는 더 이상 IDE를 쓰지 않고 있었다. (00:32 무렵)</span></blockquote>
+<p>지금 니클라스의 작업 환경은 IDE 창 하나가 아니라 여러 개의 터미널 세션이다. 각 세션에서 Claude 에이전트를 띄워, Spotify의 거대한 모노레포(monorepo, 단일 저장소) 곳곳을 병렬로 탐색하고 수정하게 한다. 이 코드베이스는 2,000만 줄이 넘는다. 사람이 통째로 머릿속에 담을 수 없는 규모를, 에이전트를 여러 갈래로 풀어 나눠 다루는 방식이다.</p>
 
-<figure>
-  <img src="assets/spotify-agents-20m-lines/9DHZLw5653E_15s.jpg" alt="대담에서 이야기하는 니클라스 구스타브손">
-  <figcaption>니클라스 구스타브손 — Spotify 수석 아키텍트 겸 엔지니어링 부사장. (00:15 무렵)</figcaption>
-</figure>
+<h2>Honk가 태어난 이유: 코드가 사람보다 7배 빨리 자란다</h2>
 
-<p>전환점은 2023년 후반, 더 강력한 모델들이 나오면서 찾아왔다. 그전까지 AI 코딩은 '똑똑한 자동완성' 수준이었다. 이제는 실제로 복잡한 문제를 통째로 던져도 풀어냈고, 프롬프트를 정교하게 다듬는 수고도 크게 줄었다.</p>
+<p>Spotify가 사내 자동화 도구 <strong>Honk</strong>를 만든 배경에는 단순한 관찰 하나가 있었다. 코드베이스가 엔지니어 수보다 훨씬 빠르게 커지고 있었다는 것.</p>
 
-<blockquote>something that I could actually throw real problems at<span class="ko">이제는 진짜 문제를 그냥 던져도 되는 대상이 됐다. (02:37 무렵)</span></blockquote>
+<blockquote>
+  "our codebase was growing much much faster than the number of engineers"
+  <span class="ko">우리 코드베이스는 엔지니어 수보다 훨씬, 훨씬 빠르게 커지고 있었어요.</span>
+</blockquote>
 
-<figure>
-  <img src="assets/spotify-agents-20m-lines/9DHZLw5653E_21s.jpg" alt="진행자 보리스 체르니, 화면 하단에 이름과 직함 자막">
-  <figcaption>진행자 보리스 체르니 — Anthropic의 Claude Code 총괄(Head of Claude Code). (00:21 무렵)</figcaption>
-</figure>
+<p>그 격차가 대략 7배였다고 한다. 코드는 계속 불어나는데 이를 유지·보수할 사람 손은 그 속도를 못 따라간다. 그래서 Honk는 사람이 하기엔 지루하지만 반드시 해야 하는 일 — 라이브러리 버전 업데이트, API 마이그레이션 같은 '재미없는 유지보수' — 을 대신 처리하도록 설계됐다.</p>
 
-<p>니클라스의 현재 작업 방식은 이렇다. 터미널에 여러 개의 Claude 세션을 격자(matrix)처럼 띄워 두고 동시에 굴린다. 2,000만 줄이 넘는 모노레포를 인덱싱하는 게 가능할지 처음엔 의심했지만, 실제로는 모델이 놀라울 만큼 잘 다뤘다고 한다.</p>
+<h2>결정론적 스크립트에서 LLM으로</h2>
 
-<h2>Honk의 탄생 — 스크립트에서 LLM으로</h2>
+<p>처음 Honk는 정해진 규칙대로 코드를 바꾸는 결정론적(deterministic) 스크립트에 기댔다. 하지만 실제 코드의 표면은 케이스가 너무 다양해서, 규칙 기반 변환은 조금만 복잡해져도 무너졌다. 여기서 LLM으로 넘어가자, 문맥에 따라 미묘하게 달라지는 코드 변경(mutation)까지 유연하게 소화할 수 있게 됐다. '규칙을 다 적어두는' 접근에서 '맥락을 이해시키는' 접근으로의 전환이다.</p>
 
-<p>5~6년 전, Spotify는 한 가지 문제를 발견했다. <strong>코드베이스가 엔지니어 수보다 7배 빠르게 커지고 있었다.</strong> 사람을 아무리 뽑아도 유지보수 부담을 따라잡을 수 없다는 뜻이었다.</p>
+<h2>아키텍처와 검증 루프: 빨라지려면 여기에 투자하라</h2>
 
-<blockquote>our codebase was growing much, much faster than the number of engineers<span class="ko">우리 코드베이스는 엔지니어 수보다 훨씬, 훨씬 빠르게 커지고 있었다. (05:29 무렵)</span></blockquote>
+<p>Honk는 <strong>Claude Agent SDK</strong>를 Kubernetes 위에서 돌린다. 핵심은 화려한 생성 능력이 아니라 <strong>검증 루프(verification loop)</strong>다. 에이전트가 만든 코드는 Linux와 macOS 양쪽에서 CI 빌드를 돌려, 실제로 의도대로 동작하는지 확인한 뒤에야 통과된다. 보리스는 많은 기업이 바로 이 지점을 과소평가한다고 짚는다.</p>
 
-<figure>
-  <img src="assets/spotify-agents-20m-lines/9DHZLw5653E_332s.jpg" alt="손짓을 섞어 코드베이스 성장 문제를 설명하는 니클라스">
-  <figcaption>수천 개 저장소에 걸친 지루한 마이그레이션을 자동화하기 위해 Spotify는 'Fleet Management'를 만들었다. (05:32 무렵)</figcaption>
-</figure>
+<blockquote>
+  "companies under-invest in how well that verification loop works"
+  <span class="ko">기업들은 그 검증 루프가 얼마나 잘 도는지에 투자를 너무 적게 합니다.</span>
+</blockquote>
 
-<p>그래서 만든 것이 <strong>Fleet Management</strong>였다. 수천 개 저장소에 걸친 반복적인 마이그레이션 작업을 자동화하는 도구다. 처음엔 결정론적(deterministic) 스크립트로 짰다. 그런데 이 방식이 점점 벽에 부딪혔다. 단순한 API 변경 하나를 처리하는 데도 수천 줄짜리 스크립트가 필요해질 만큼, 현대 코드의 API 표면(surface)이 거대했기 때문이다.</p>
+<p>검증이 촘촘할수록 사람이 일일이 들여다보지 않아도 되고, 그래서 결국 더 빨라진다는 논리다. 에이전트를 빠르게 굴리는 힘은 생성 쪽이 아니라 '틀렸는지 잡아내는 쪽'에서 나온다.</p>
 
-<p>LLM은 바로 이 '거대한 API 표면'을 훨씬 우아하게 다뤘다. 여기서 나온 것이 내부 도구 <strong>Honk</strong>다. 현재의 Honk v2는 <strong>Claude Agent SDK</strong> 위에 만들어졌다. 엔지니어가 OAuth로 자기 도구를 직접 붙일 수 있고, Linux와 macOS 양쪽에서 CI 빌드를 돌린다. iOS 개발에는 macOS 빌드가 필수라 이 점이 중요하다.</p>
+<h2>자동 머지, 그리고 하루 4,500번의 배포</h2>
 
-<h2>'심판(judge) 모델'을 걷어내자 성공률이 뛰었다</h2>
+<p>Spotify는 AI가 작성한 PR을 <strong>자동 머지(auto-merge)</strong>한다. 품질을 지키는 관행 자체를 자동화해두었기 때문에 가능한 일이다. 그 결과 하루에 약 <strong>4,500회</strong>의 프로덕션 배포가 일어난다. 사람이 매 PR을 손으로 검토해 합치는 구조로는 나올 수 없는 숫자다.</p>
 
-<p>초기 Honk에는 결과물을 검증하는 별도의 '심판(judge)' 모델이 있었다. 그런데 주력 모델의 성능이 좋아지자, 이 심판 단계를 아예 없애는 것이 오히려 나은 선택이 됐다. 결과는 극적이었다.</p>
+<h2>수치로 본 성과: PR의 73%가 AI 작성</h2>
 
-<blockquote>roughly like 20 30 percent success rate on PRs to like 80 percent<span class="ko">PR 성공률이 대략 20~30%에서 80% 수준으로 올랐다. (10:20 무렵)</span></blockquote>
+<p>니클라스가 제시한 지표는 구체적이다. PR 빈도가 약 75% 개선됐고, 이제 Spotify 전체 PR 중 상당수가 AI의 손에서 나온다.</p>
 
-<p>여기서 보리스는 흔한 오해 하나를 짚는다. <strong>'속도냐 품질이냐'는 거짓 이분법</strong>이라는 것이다. 속도는 품질 관행을 자동화하는 데서 나온다. Spotify는 모든 PR을 팀이 일일이 손으로 확인하던 방식에서, 탄탄한 테스트 자동화를 바탕으로 AI가 만든 변경 대부분을 자동 병합(auto-merge)하는 쪽으로 옮겨 갔다.</p>
+<blockquote>
+  "73ish percent of PRs are directly attributed to being AI authored"
+  <span class="ko">이제 PR의 73% 정도가 AI가 작성한 것으로 직접 집계됩니다.</span>
+</blockquote>
 
-<figure>
-  <img src="assets/spotify-agents-20m-lines/9DHZLw5653E_858s.jpg" alt="사무실에서 손짓하며 설명하는 보리스 체르니">
-  <figcaption>보리스 체르니: 생산성은 결국 인프라 투자에서 나온다. 더 오래 일하는 게 아니다. (14:23 무렵)</figcaption>
-</figure>
+<h2>엔지니어링 리더에게 주는 조언: 기초에 투자하라</h2>
 
-<blockquote>productivity is always about investing in infrastructure. It's not about working more hours.<span class="ko">생산성은 언제나 인프라에 투자하는 문제다. 더 오래 일하는 문제가 아니다. (14:23 무렵)</span></blockquote>
+<p>그렇다면 다른 조직은 무엇부터 해야 할까. 니클라스의 답은 '더 화려한 에이전트'가 아니라 '더 탄탄한 기초'다. 테스트 자동화와 코드베이스 표준화에 대한 투자가 그 어느 때보다 중요해졌다는 것. 이 기초가 곧 에이전트의 성능으로 직결되기 때문이다.</p>
 
-<h2>숫자로 본 성과, 그리고 리더를 위한 조언</h2>
+<blockquote>
+  "the more consistency we have, the better our agents work"
+  <span class="ko">일관성이 높을수록, 우리 에이전트는 더 잘 동작합니다.</span>
+</blockquote>
 
-<p>Spotify가 체감한 효과는 구체적이다. <strong>PR 빈도가 75% 이상 개선</strong>됐고, 전체 PR의 <strong>약 73%가 AI가 작성한 것</strong>으로 집계된다.</p>
+<p>사람에게 좋은 코드 위생(테스트, 표준, 일관성)이 에이전트에게는 더더욱 결정적이라는 통찰이다. 어질러진 코드베이스에서는 사람도 에이전트도 헤맨다.</p>
 
-<p>엔지니어링 리더를 향한 니클라스의 조언은 의외로 기본기에 관한 것이다. AI 시대에는 '멀쩡한(sane) 엔지니어링 관행' — 표준화, 일관된 코드베이스, 팀 정렬 — 이 오히려 더 중요해진다. 일관성이 높을수록 에이전트가 더 잘 동작하기 때문이다. 표준화 투자를 무시하지 말라는 것이다.</p>
+<h2>프로토타이핑의 민주화</h2>
 
-<h2>누구나 앱을 만드는 사내 앱 스토어</h2>
+<p>마지막 주제는 접근성이다. AI 덕분에 Spotify에서는 엔지니어가 아닌 사람도 자연어만으로 동작하는 소프트웨어 프로토타입을 만들 수 있게 됐다. 공동 CEO를 포함해 누구든 아이디어를 던지면, 몇 주가 아니라 몇 시간 만에 실제로 굴러가는 시제품이 나온다.</p>
 
-<p>마지막 주제는 프로토타이핑의 민주화다. Spotify에는 프로토타입을 위한 <strong>사내 '앱 스토어'</strong>가 있다. 엔지니어가 아니어도 — 심지어 공동 CEO까지 — 자연어로 아이디어를 말해 몇 주가 아니라 몇 시간 만에 동작하는 모바일 앱을 만들고, 이 앱 스토어에서 서로 공유한다.</p>
+<blockquote>
+  "allow anyone to take their idea and have Claude then go implement that"
+  <span class="ko">누구든 자기 아이디어를 가져오면, Claude가 그걸 구현하도록 할 수 있게 된 거죠.</span>
+</blockquote>
 
-<blockquote>we have an internal app store for those prototypes where you can share them<span class="ko">그 프로토타입들을 공유할 수 있는 사내 앱 스토어가 있다. (16:25 무렵)</span></blockquote>
+<h2>핵심 정리</h2>
 
-<figure>
-  <img src="assets/spotify-agents-20m-lines/9DHZLw5653E_966s.jpg" alt="위에서 내려다본 두 사람의 대담 장면">
-  <figcaption>거대 스트리밍 플랫폼이 '반복 작업(toil)'을 걷어내고 아이디어를 즉시 제품으로 바꾸는 방향으로 움직이고 있다. (16:06 무렵)</figcaption>
-</figure>
-
-<div class="takeaway"><h2>핵심 정리</h2>
 <ul>
-  <li><strong>패러다임 전환은 이미 일어났다.</strong> 30년 경력의 아키텍트가 두 달 만에 IDE를 버렸다. 2023년 후반의 모델부터 '똑똑한 자동완성'이 '진짜 문제를 푸는 도구'로 바뀌었다.</li>
-  <li><strong>확장의 문제는 자동화로 푼다.</strong> 코드베이스가 인력보다 7배 빨리 크는 상황에서, Spotify는 수천 개 저장소의 마이그레이션을 자동화하는 Fleet Management → Honk로 대응했다.</li>
-  <li><strong>스크립트 대신 LLM, 심판 대신 주력 모델.</strong> 거대한 API 표면은 LLM이 더 잘 다뤘고, 모델이 좋아지자 별도 심판 모델을 걷어내면서 PR 성공률이 20~30%에서 80%로 뛰었다.</li>
-  <li><strong>속도는 품질 자동화에서 나온다.</strong> 테스트 자동화를 깔아 두고 AI PR 대부분을 자동 병합. PR 빈도 75%+ 개선, 전체 PR의 약 73%가 AI 작성.</li>
-  <li><strong>기본기가 더 중요해진다.</strong> 표준화·일관성·정렬 같은 '멀쩡한 엔지니어링 관행'이 에이전트 성능을 좌우한다. 그리고 자연어 프로토타이핑은 개발을 엔지니어 밖으로 넓힌다.</li>
+  <li><strong>도구가 아니라 일하는 방식이 바뀌었다.</strong> 니클라스는 두 달 만에 IDE를 버리고 여러 터미널 속 Claude 에이전트로 옮겨갔다.</li>
+  <li><strong>Honk는 격차에서 태어났다.</strong> 코드베이스가 엔지니어 수보다 약 7배 빨리 자라자, 지루한 유지보수를 자동화하려 만들었다.</li>
+  <li><strong>규칙 기반에서 LLM으로.</strong> 결정론적 스크립트로는 복잡한 코드 표면을 못 다뤄, 문맥을 이해하는 LLM으로 전환했다.</li>
+  <li><strong>속도의 열쇠는 검증 루프.</strong> Linux·macOS CI로 검증을 촘촘히 하니 AI PR을 자동 머지할 수 있었고, 하루 4,500회 배포에 도달했다.</li>
+  <li><strong>기초가 곧 에이전트 성능.</strong> 테스트 자동화와 표준화·일관성에 투자할수록 에이전트가 더 잘 동작한다 — 현재 PR의 약 73%가 AI 작성이다.</li>
 </ul>
-</div>
 
 <!-- BODY guidance (the assembler injects your /tmp/<slug>-body.html here):
      - Intro (왜 중요한가, 2–3문장).
