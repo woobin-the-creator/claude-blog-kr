@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "meta-ai-codebase-tokens.html", date: "2026-06-30", main: "실밸개발자 Youtube", cat: "실전 테크닉",
+      title: "Meta에서 배운 실전 테크닉: AI가 길 잃지 않는 코드베이스 & 토큰 비용 최적화", nav: "AI-Ready 코드베이스 & 토큰 비용" },
     { file: "spotify-agents-20m-lines.html", date: "2026-07-03", main: "Claude Youtube", cat: "Agents",
       title: "Spotify는 2,000만 줄 코드베이스에서 에이전트를 어떻게 굴리는가 — 니클라스 구스타브손", nav: "Spotify 2,000만 줄 에이전트" },
     { file: "giving-admins-more-visibility-and-control-over-claude-usage-and-spend.html", date: "2026-07-02", main: "Claude blog", cat: "Enterprise AI",
