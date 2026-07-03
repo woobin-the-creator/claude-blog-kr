@@ -88,7 +88,7 @@
 <p>
   <strong>AI-Ready 코드베이스</strong>란 Agent가 길을 잃지 않고 효율적으로 작업하도록 설계된 코드베이스를 말한다.
   사람 개발자는 몇 주에 걸쳐 머릿속에 지도를 그리지만, Agent는 매 세션 "백지 상태(fresh)"에서 다시 시작한다.
-  그래서 지형은 탐색 첫 60초 안에 파악될 만큼 명확해야 한다.
+  그래서 지형은 탐색 첫 60초 안에 진입점과 로직 흐름이 파악될 만큼 명확해야 한다.
 </p>
 
 <h2>Agent 실패의 원인은 코드 품질이 아니라 탐색 비용이다</h2>
@@ -110,12 +110,18 @@
 <p>
   AI-Ready 환경은 두 단계로 만든다. 순서가 중요하다. 1단계 <strong>Codebase Sanity("코드가 건강한가")</strong>가
   선결 조건이고, 2단계 <strong>Cartography("지도가 있는가")</strong>가 가속 장치다. Sanity 없이 Cartography만 그리면
-  "거짓말하는 지도"가 된다.
+  "거짓말하는 지도"가 된다 — 건강하지 않은 코드 위에 그린 지도는 Agent를 더 확신에 차서 틀린 길로 안내한다.
 </p>
 <figure>
   <img src="assets/meta-ai-codebase-tokens/Wlt7GhA_14s_245s.jpg" alt="2-Step 모델: Codebase Sanity와 Cartography">
   <figcaption><a href="https://youtu.be/Wlt7GhA_14s?t=245" target="_blank">[4:05]</a> 1단계 Codebase Sanity(테스트 커버리지·데드 코드 제거·컨벤션 일관성·코드 스멜 정리) → 2단계 Cartography(진입점 명시·의존 그래프·도메인 용어집·헛다리 함정 지점).</figcaption>
 </figure>
+<p>
+  2단계 <strong>Cartography(지도 그리기)</strong>는 구체적으로 네 가지를 남기는 작업이다: ① 어디서부터 읽어야 하는지
+  <strong>진입점(entry point)</strong>을 명시하고, ② 모듈이 서로 어떻게 얽히는지 <strong>의존 그래프</strong>를 그리고,
+  ③ 이 프로젝트에서만 쓰는 용어를 <strong>도메인 용어집</strong>으로 외부화하고, ④ "여긴 진짜 같지만 죽은 코드"
+  같은 <strong>함정 지점(gotcha)</strong>을 표시해 둔다. Agent가 첫 1분에 읽을 지도가 바로 이것이다.
+</p>
 <p>
   흥미로운 건 이 항목들이 <em>새로운 얘기가 아니라는</em> 점이다. 테스트·컨벤션·데드 코드 정리는 원래 사람 중심으로도
   가치가 있었다. 그런데 Agent 시대에는 같은 항목이 다른 이유로 더 중요해진다.
@@ -216,7 +222,7 @@ claude -p "ai-readiness-cartography 돌려서 \
   <p>"한국어로 쓴 1,000줄 CLAUDE.md는 같은 내용의 영어보다 두 배 가까이 토큰을 먹는다."</p>
 </blockquote>
 <p>
-  글로벌 팀이라면 문서를 어떤 언어로 쓸지도 비용 차원에서 한 번 검토할 가치가 있다는 얘기다.
+  글로벌 팀이라면 기술 지침 문서를 어떤 언어로 쓸지도 비용 차원에서 한 번 검토할 가치가 있다는 얘기다.
 </p>
 
 <h2>비용을 숫자로 — 자릿수의 감</h2>
@@ -229,8 +235,10 @@ claude -p "ai-readiness-cartography 돌려서 \
   <figcaption><a href="https://youtu.be/Wlt7GhA_14s?t=1225" target="_blank">[20:25]</a> 1M 토큰당 Input $5 · Output $25 · Cache write $6.25(×1.25) · Cache read $0.50(×0.10). 1명/하루(입력 500K+출력 100K) ≈ $5, 1명/월(20영업일) ≈ $100, 팀 10명/월 ≈ $1,000, 팀 10명/연 ≈ $12,000.</figcaption>
 </figure>
 <p>
-  이건 <strong>아무 최적화도 안 한 자연 상태</strong>다. 캐싱을 잘 쓰면 절반 이하로, 못 쓰면 두 배로 — 한 자릿수씩
-  오르내린다. 그래서 대시보드 한 장이 빠르게 회수된다. 그 갈림길의 핵심 도구가 Prompt Caching이다.
+  이건 <strong>아무 최적화도 안 한 자연 상태</strong>다. 발표자는 여기서 관점을 한 번 뒤집는다 — 개인에게 하루 $5는
+  "그냥 커피값"이라 최적화 동기가 약하지만, 회사 관점에선 같은 낭비가 <strong>인원×근무일로 곱해져</strong> 연 수만
+  달러가 된다. 캐싱을 잘 쓰면 절반 이하로, 못 쓰면 두 배로 — 한 자릿수씩 오르내린다. 그래서 대시보드 한 장이 빠르게
+  회수된다. 그 갈림길의 핵심 도구가 Prompt Caching이다.
 </p>
 
 <h2>Prompt Caching + 캐시를 날리는 실수</h2>
@@ -244,8 +252,13 @@ claude -p "ai-readiness-cartography 돌려서 \
   <img src="assets/meta-ai-codebase-tokens/Wlt7GhA_14s_1560s.jpg" alt="Cache 구조 세 가지 — TTL 5분, Prefix 기반, Write 비용">
   <figcaption><a href="https://youtu.be/Wlt7GhA_14s?t=1560" target="_blank">[26:00]</a> <code>[system + CLAUDE.md + 큰 파일]</code>은 캐시되고 <code>[+ 변하는 user message]</code>는 매번 fresh. cache write ×1.25, cache read ×0.10.</figcaption>
 </figure>
+<div class="callout">
+  <p><strong>가장 비싼 실수:</strong> 세션 도중 <strong>모델을 바꾸면</strong> 프리픽스가 통째로 달라져 캐시가 전부 무효화된다.
+  Opus로 시작해 중간에 Sonnet으로 갈아타는 순간, 그 뒤 모든 turn이 cache read($0.50)가 아니라 full input($5)로 다시
+  계산된다 — 정적 지침 파일을 세션 중간에 수정하는 것도 같은 결과다.</p>
+</div>
 <p>
-  여기서 가장 흔한 실수는 <strong>"현재 시각"처럼 매번 바뀌는 값을 프리픽스 맨 앞에 두는 것</strong>이다. 안티패턴은
+  또 하나 흔한 실수는 <strong>"현재 시각"처럼 매번 바뀌는 값을 프리픽스 맨 앞에 두는 것</strong>이다. 안티패턴은
   <code>[현재 시각] → [CLAUDE.md] → [Second Brain]</code> 순서 — 시각이 매초 바뀌니 뒤의 문서 전체를 매번 다시
   읽어 캐시가 무의미해진다. 정답은 정적 문서를 프리픽스 위에 두고, 동적인 사용자 메시지·타임스탬프를 맨 아래로
   내리는 것이다.
@@ -328,14 +341,16 @@ PRICING = {
   <figcaption><a href="https://youtu.be/Wlt7GhA_14s?t=2735" target="_blank">[45:35]</a> "이제 plugin에는 8개 자산 — CLAUDE.md · grade skill · Second Brain · CI onboarding skill · TDD 가드 hook · SDD harness · 그리고 오늘 박은 token dashboard + cost gate." 다음 강의(09)는 AI-Powered Code Review.</figcaption>
 </figure>
 
+<div class="takeaway">
 <h2>핵심 정리</h2>
 <ul>
   <li><strong>Agent 실패는 지능이 아니라 탐색 비용 문제</strong> — 최적화 안 된 repo에선 토큰의 80%가 길찾기에 낭비된다. AI-Ready 코드베이스는 이 비율을 뒤집는다.</li>
   <li><strong>순서: Sanity → Cartography</strong> — 건강하지 않은 코드 위에 지도를 그리면 "거짓말하는 지도"가 된다. 특히 데드 코드는 Agent를 가짜 진입점으로 유인해 한 세션을 통째로 날린다.</li>
   <li><strong>준비도·효율을 100점으로 채점하라</strong> — AI Readiness(7개 카테고리)와 Token Efficiency(4개 축)를 스킬로 만들어 HTML 대시보드로 시각화하면, "어디서 길을 잃고 어디서 돈이 새는가"가 숫자로 보인다.</li>
-  <li><strong>Prompt Caching의 세 함의</strong> — TTL 5분, Prefix 기반(한 토큰만 앞에서 바뀌어도 전체 무효), Write 25% 프리미엄. 동적 값을 프리픽스 맨 앞에 두는 것이 최악의 안티패턴.</li>
+  <li><strong>Prompt Caching의 세 함의</strong> — TTL 5분, Prefix 기반(한 토큰만 앞에서 바뀌어도 전체 무효), Write 25% 프리미엄. 동적 값을 프리픽스 맨 앞에 두거나 세션 중간에 모델을 바꾸는 것이 최악의 안티패턴.</li>
   <li><strong>비용 통제는 자산으로</strong> — 대시보드(사후) + Cost Gate(사전·실시간)를 팀 plugin에 박아 두면, "절약하자"는 구호 없이도 비용이 내려온다.</li>
 </ul>
+</div>
 
 
 <footer>
