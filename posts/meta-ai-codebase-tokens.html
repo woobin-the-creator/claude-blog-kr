@@ -70,191 +70,271 @@
   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
   allowfullscreen></iframe></div> -->
 
-<p>실리콘밸리에서 일하는 개발자가 Meta에서 배운 실전 테크닉을 정리한 강의 영상이다. 주제는 두 가지 — <strong>AI가 길을 잃지 않는 코드베이스</strong>를 어떻게 설계하고, 에이전트를 팀 단위로 굴릴 때 <strong>토큰 비용</strong>을 어떻게 측정·통제하느냐다. AI 코딩을 "잘 시키는 법"을 넘어, 지속 가능하게 굴리는 운영의 관점을 다룬다.</p>
+<p class="lead">
+  실리콘밸리(Meta) 출신 개발자가 진행하는 "Agentic Engineering" 시리즈의 두 번째 강의다. 주제는 두 개 —
+  <strong>AI가 길 잃지 않는 코드베이스(AI-Ready Codebase)</strong>를 만드는 법, 그리고 자산이 늘수록 폭증하는
+  <strong>토큰 비용을 숫자로 관리하는 법(Token Efficiency)</strong>. 두 가지 모두 개인의 감이 아니라
+  <em>점수·대시보드·Cost Gate</em>라는 팀 공유 자산으로 박아 두는 방식으로 풀어낸다. 아래는 46분 강의를 슬라이드·데모
+  화면과 함께 정리한 것이다.
+</p>
 
-<p>강의의 출발점은 하나의 비유다. 에이전트에게 주는 것은 <strong>지침(Guidance)</strong>과 <strong>지형(Terrain)</strong> 두 가지인데, <code>CLAUDE.md</code> 같은 지침이 아무리 훌륭해도 코드베이스라는 지형이 중복 함수와 숨은 유틸리티로 가득한 미로라면 에이전트는 결국 실패한다는 것이다. 그래서 강의는 "지형을 어떻게 다듬을 것인가"에서 시작한다.</p>
+<h2>Part 1. AI-Ready 코드베이스 — 지침이 좋아도 지형이 미로면 Agent는 길을 잃는다</h2>
+<p>
+  강의의 첫 번째 논지는 명확하다. <code>CLAUDE.md</code> 같은 지침 문서를 아무리 잘 써도, 코드베이스 자체가 미로면
+  Agent는 길을 잃는다. 발표자는 이를 <strong>지침(법) vs 지형(땅)</strong>의 관계로 설명한다. <code>CLAUDE.md</code>는
+  "이렇게 일해라"라는 법·지침이고, 코드베이스는 Agent가 실제로 밟고 다녀야 하는 지형이다. 지형이 험하고 헷갈리면
+  아무리 좋은 지도를 줘도 소용이 없다.
+</p>
+<p>
+  <strong>AI-Ready 코드베이스</strong>란 Agent가 길을 잃지 않고 효율적으로 작업하도록 설계된 코드베이스를 말한다.
+  사람 개발자는 몇 주에 걸쳐 머릿속에 지도를 그리지만, Agent는 매 세션 "백지 상태(fresh)"에서 다시 시작한다.
+  그래서 지형은 탐색 첫 60초 안에 파악될 만큼 명확해야 한다.
+</p>
 
-<h2>실패의 원인은 코드 품질이 아니다</h2>
-
-<p>강의는 도발적인 문장으로 문을 연다. 에이전트가 실패하는 대부분의 이유는 코드를 잘못 짜서가 아니라 <strong>탐색·이해 비용</strong> 때문이라는 것이다. 모델이 똑똑해진다고 저절로 풀리는 문제가 아니다.</p>
-
+<h2>Agent 실패의 원인은 코드 품질이 아니라 탐색 비용이다</h2>
+<p>
+  발표자는 Agent 실패의 대부분이 "로직·지능" 문제가 아니라 <strong>탐색·이해 비용</strong> 문제라고 잘라 말한다.
+  모델이 똑똑해진다고 풀리는 게 아니라는 것이다. AI-ready가 안 된 repo에서 "결제 로직 수정"을 시키면 이런 일이
+  벌어진다: <code>grep "payment"</code> → 47개 파일 매칭 → 진짜 진입점을 몰라 5개 파일을 읽고 → deprecated 코드를
+  진짜인 줄 알고 수정하고 → 테스트를 돌리니 다른 곳이 깨지고 → 다시 탐색.
+</p>
+<figure>
+  <img src="assets/meta-ai-codebase-tokens/Wlt7GhA_14s_194s.jpg" alt="Agent 실패의 원인은 코드 품질이 아니라 탐색 비용이라는 80/20 슬라이드">
+  <figcaption><a href="https://youtu.be/Wlt7GhA_14s?t=194" target="_blank">[3:14]</a> 최적화 안 된 repo에서 Agent는 토큰의 <strong>80%를 탐색</strong>에 소모하고 — 그조차 잘못된 지점에 도달한다. 실제 코드 수정에 쓰이는 건 20%. AI-ready 전략은 이 80%를 수정 쪽으로 되돌리는 것.</figcaption>
+</figure>
 <blockquote>
-  <p>"실패의 원인은 코드 품질이 아니다 — Agent 실패의 대부분은 탐색·이해 비용 문제다."</p>
+  <p>"Agent 실패의 대부분은 탐색·이해 비용 문제다 — 모델이 똑똑해진다고 안 풀린다."</p>
 </blockquote>
 
-<p>슬라이드는 AI-ready가 안 된 저장소에서 "결제 로직 수정" 하나를 시키면 벌어지는 일을 보여준다. <code>grep "payment"</code> 하면 47개 파일이 매칭되고, 진짜 진입점을 몰라 5개 파일을 읽고, deprecated 코드를 진짜인 줄 알고 고치고, 테스트를 돌리면 엉뚱한 곳이 깨지고, 다시 탐색으로 돌아간다. 이 패턴 때문에 최적화되지 않은 저장소에서는 <strong>토큰의 80%가 탐색에 소모</strong>되고, 실제 코드 수정에 쓰이는 건 20%에 불과하다. AI-ready 코드베이스의 목표는 이 비율을 뒤집는 것이다.</p>
-
+<h2>두 단계 — Codebase Sanity(건강) → Cartography(지도)</h2>
+<p>
+  AI-Ready 환경은 두 단계로 만든다. 순서가 중요하다. 1단계 <strong>Codebase Sanity("코드가 건강한가")</strong>가
+  선결 조건이고, 2단계 <strong>Cartography("지도가 있는가")</strong>가 가속 장치다. Sanity 없이 Cartography만 그리면
+  "거짓말하는 지도"가 된다.
+</p>
 <figure>
-  <img src="assets/meta-ai-codebase-tokens/Wlt7GhA_14s_150s.jpg" alt="AI-ready가 안 된 저장소에서 토큰 80%가 탐색에 소모되고 20%만 코드 수정에 쓰인다는 슬라이드">
-  <figcaption>사람은 몇 주에 걸쳐 코드베이스의 지도를 머릿속에 그리지만 에이전트는 매 세션 백지에서 시작한다. 그래서 80%의 낭비가 발생한다.</figcaption>
+  <img src="assets/meta-ai-codebase-tokens/Wlt7GhA_14s_245s.jpg" alt="2-Step 모델: Codebase Sanity와 Cartography">
+  <figcaption><a href="https://youtu.be/Wlt7GhA_14s?t=245" target="_blank">[4:05]</a> 1단계 Codebase Sanity(테스트 커버리지·데드 코드 제거·컨벤션 일관성·코드 스멜 정리) → 2단계 Cartography(진입점 명시·의존 그래프·도메인 용어집·헛다리 함정 지점).</figcaption>
+</figure>
+<p>
+  흥미로운 건 이 항목들이 <em>새로운 얘기가 아니라는</em> 점이다. 테스트·컨벤션·데드 코드 정리는 원래 사람 중심으로도
+  가치가 있었다. 그런데 Agent 시대에는 같은 항목이 다른 이유로 더 중요해진다.
+</p>
+<figure>
+  <img src="assets/meta-ai-codebase-tokens/Wlt7GhA_14s_360s.jpg" alt="Step 1 Codebase Sanity: 사람 중심 가치 vs Agent 시대 가치 비교표">
+  <figcaption><a href="https://youtu.be/Wlt7GhA_14s?t=360" target="_blank">[6:00]</a> 테스트 커버리지 → <strong>agent의 셀프 검증 신호</strong>, 컨벤션 일관성 → agent가 패턴을 일반화, 데드 코드 제거 → agent의 잘못된 길 진입 차단, 코드 스멜 제거 → agent가 따라 쓰지 않게. "데드 코드의 비용이 가장 크다 — agent는 죽은 코드를 진짜 진입점으로 착각해 한 세션을 날린다."</figcaption>
 </figure>
 
-<h2>AI-Ready 코드베이스의 2단계 모델</h2>
-
-<p>AI-ready 코드베이스란 <strong>에이전트가 길을 잃지 않고 명확하게 탐색·작업할 수 있는 코드베이스</strong>다. 사람은 몇 주에 걸쳐 멘탈 맵을 쌓지만 에이전트는 매 세션 처음부터 시작하므로, 세션 시작 <strong>첫 1분</strong> 안에 구조가 파악돼야 한다.</p>
-
-<p>강의는 이를 위한 순차적 2단계 모델을 제시한다. 1단계 <strong>Codebase Sanity(코드가 건강한가)</strong>는 선결 조건이고, 2단계 <strong>Cartography(지도가 있는가)</strong>는 가속 장치다. 순서가 중요한데, Sanity 없이 Cartography만 그리면 "거짓말하는 지도"가 되기 때문에 둘 다 필요하다.</p>
-
+<h2>[데모] AI Readiness 채점 스킬 — 100점·7개 카테고리 → HTML 대시보드</h2>
+<p>
+  발표자는 repo의 AI 준비도를 자동 채점하는 커스텀 스킬 <code>ai-readiness-cartography</code>를 직접 시연한다.
+  <code>/skills</code>에서 <code>cartography</code>를 찾아 실행하면, 7개 카테고리를 100점 만점으로 채점한다.
+</p>
 <figure>
-  <img src="assets/meta-ai-codebase-tokens/Wlt7GhA_14s_245s.jpg" alt="2-Step 모델 슬라이드: 1단계 Codebase Sanity, 2단계 Cartography">
-  <figcaption>1단계는 테스트 커버리지·데드 코드 제거·컨벤션 일관성 같은 건강 지표, 2단계는 진입점·의존 그래프·도메인 용어집·함정 지점을 담은 지도다.</figcaption>
+  <img src="assets/meta-ai-codebase-tokens/Wlt7GhA_14s_490s.jpg" alt="AI-Readiness Score 7개 카테고리와 배점">
+  <figcaption><a href="https://youtu.be/Wlt7GhA_14s?t=490" target="_blank">[8:10]</a> ① Navigation 15 · ② Context Quality 20 · ③ Tribal Knowledge 20 · ④ Dependency Mapping 15 · ⑤ Verification Gates 15 · ⑥ Freshness 10 · ⑦ Agent Outcomes 5. 앞 6개가 입력 측 점검, 7번이 결과 측 점검 → HTML 대시보드로 "어디서 길을 잃는가"를 시각화.</figcaption>
+</figure>
+<p>
+  채점 로직은 그냥 블랙박스가 아니라 <code>score.py</code> 안에 정규식 휴리스틱으로 구현돼 있다. 예를 들어
+  Context Quality(카테고리 C)는 문서에 <code>## Purpose</code> 같은 canonical 헤딩, 패턴 매칭, 의존성 서술 등이
+  있는지를 다섯 문항(Q1~Q5)으로 점수화한다. 발표자는 "이 Rubric이 절대적인 건 아니다"라고 못 박는다 — 팀에 맞게
+  가중치를 바꾸라는 뜻이다.
+</p>
+<figure>
+  <img src="assets/meta-ai-codebase-tokens/Wlt7GhA_14s_690s.jpg" alt="score.py의 카테고리 채점 로직 코드">
+  <figcaption><a href="https://youtu.be/Wlt7GhA_14s?t=690" target="_blank">[11:30]</a> <code>ai-readiness-cartography/scripts/score.py</code> — 각 문항을 정규식(<code>RE_PURPOSE_HEADING</code>, <code>RE_PATTERN_HEADING</code>, <code>RE_NON_OBVIOUS</code>, <code>RE_DEPS_HEADING</code>)으로 pass 처리하고 카테고리별 점수로 합산한다.</figcaption>
+</figure>
+<pre><code># score.py — 카테고리 C(Context Quality) 채점 일부
+for m in modules:
+    if RE_PURPOSE_HEADING.search(text) or "owns" in text.lower() or "configures" in text.lower():
+        q_pass[0] += 1
+    if RE_PATTERN_HEADING.search(text):
+        q_pass[1] += 1
+    if RE_NON_OBVIOUS.search(text):
+        q_pass[2] += 1
+    if RE_DEPS_HEADING.search(text) or "depends on" in text.lower():
+        q_pass[3] += 1
+
+# Q5: tribal store presence (binary, project-wide)
+q5_score = 4 if has_tribal_store else 0
+
+# 각 문항 4점 만점 · Q1~Q4 = 4 * 평균 pass 비율
+sub = {
+    "C_Q1_Owns":        round(4 * q_pass[0] / n),
+    "C_Q2_Patterns":    round(4 * q_pass[1] / n),
+    "C_Q3_NonObvious":  round(4 * q_pass[2] / n),
+    "C_Q4_Dependencies":round(4 * q_pass[3] / n),
+    "C_Q5_TribalStore": q5_score,
+}
+pts = sum(sub.values())
+</code></pre>
+<p>
+  실행 결과, 데모 프로젝트(카카오톡 채팅 CSV 분석 Next.js 웹앱)는 <strong>54/100 · AI-Fragile(에이전트 취약)</strong>
+  등급을 받는다. 대시보드는 카테고리별 점수와 함께 "구조 지도"까지 그려 준다 — 어느 모듈에 <code>CLAUDE.md</code>가
+  없고, 어디서 의존성이 끊기는지가 한눈에 보인다. 흥미로운 디테일: 자동 스크립트는 처음에 22/100(AI-Hostile)을
+  줬지만, 그중 hallucinated path 3건이 모두 false positive여서 manual 보정 후 54/100이 됐다는 주석까지 붙는다.
+</p>
+<figure>
+  <img src="assets/meta-ai-codebase-tokens/Wlt7GhA_14s_725s.jpg" alt="demo_project AI 준비도 지도 대시보드 — 54/100">
+  <figcaption><a href="https://youtu.be/Wlt7GhA_14s?t=725" target="_blank">[12:05]</a> demo_project — AI 준비도 지도. 종합 54/100. 카테고리별: A 탐색·커버리지 6/15, B 컨텍스트 품질 17/20, C 암묵지 외부화 9/20, D 모듈 간 의존성 8/15, E 검증 게이트 10/15, F 신선도 3/10, G 에이전트 성과 1/5. 하단에는 노드=파일, 엣지=데이터 흐름으로 그린 구조 지도.</figcaption>
 </figure>
 
-<h3>1단계 — Codebase Sanity</h3>
-
-<p>새로운 얘기는 아니다. 다만 에이전트 시대에 왜 더 중요해지는지가 핵심이다. 같은 코드 위생 항목이 사람 기준과 에이전트 기준에서 다른 의미를 갖는다.</p>
-
-<ul>
-  <li><strong>테스트 커버리지</strong>: 사람에겐 회귀 방지, 에이전트에겐 스스로 검증하는 신호</li>
-  <li><strong>컨벤션 일관성</strong>: 사람에겐 가독성, 에이전트에겐 패턴을 일반화할 근거</li>
-  <li><strong>데드 코드 제거</strong>: 사람에겐 유지보수, 에이전트에겐 잘못된 길로 들어가는 것을 차단</li>
-  <li><strong>코드 스멜 정리</strong>: 사람에겐 버그 감소, 에이전트가 나쁜 패턴을 따라 쓰지 않게 함</li>
-</ul>
-
-<p>강의는 이 중에서도 <strong>데드 코드의 비용이 가장 컸다</strong>고 강조한다. 사람은 직관적으로 죽은 코드를 거르지만, 에이전트는 죽은 코드를 진짜 진입점으로 착각해 한 세션을 통째로 날린다. 그래서 린터·테스트·커버리지가 자기 저장소에 깔려 있는지부터 점검하는 게 첫 단계다.</p>
-
+<h2>한 번으로 끝내지 마라 — Hook으로 자동화 + PR까지</h2>
+<p>
+  한 번 채점하면 일회성 스냅샷일 뿐이다. 진짜 가치는 자동으로 반복될 때 나온다. 발표자는 트리거 시점 세 가지를
+  비교한다: <strong>pre-commit</strong>(가장 빠른 피드백, 솔로·소규모), <strong>pre-PR(CI)</strong>(우회 어려움,
+  중규모 이상), <strong>주기적 cron(weekly)</strong>(가볍고 트렌드 추적, 모든 팀 베이스라인). 기본값은 weekly cron —
+  점수가 떨어진 주가 곧 "뭔가 들어왔는데 문서 갱신이 안 됐다"는 신호다.
+</p>
 <figure>
-  <img src="assets/meta-ai-codebase-tokens/Wlt7GhA_14s_360s.jpg" alt="사람 중심 가치와 에이전트 시대 가치를 비교한 Codebase Sanity 표">
-  <figcaption>같은 위생 항목이라도 에이전트 관점에서는 "셀프 검증 신호", "잘못된 길 진입 차단"처럼 의미가 달라진다.</figcaption>
+  <img src="assets/meta-ai-codebase-tokens/Wlt7GhA_14s_875s.jpg" alt="Hook 연동 — 반복·자동으로 돌리기">
+  <figcaption><a href="https://youtu.be/Wlt7GhA_14s?t=875" target="_blank">[14:35]</a> 트리거 3가지 비교표와 <code>weekly-readiness-check.sh</code>. "지금은 plugin에 hook 파일만 추가해 두세요. cron 등록은 천천히."</figcaption>
 </figure>
+<pre><code># .claude/hooks/weekly-readiness-check.sh
+#!/bin/bash
+DATE=$(date +%Y-%m-%d)
+claude -p "ai-readiness-cartography 돌려서 \
+  reports/readiness-$DATE.html 로 저장해줘"
+</code></pre>
+<p>
+  나아가 ROI 섹션에서 나온 개선안(모듈별 <code>CLAUDE.md</code> 생성, GitHub Actions에 Lint/Test 자동화,
+  Architecture 문서에 Mermaid 다이어그램 추가 등)을 Agent가 자동으로 PR로 만들게 할 수도 있다. 핵심은 이것을
+  개인 스크립트가 아니라 <strong>팀 레벨 자산</strong>으로 올려, 비용은 낮추고 성공률은 높이는 기반으로 삼는 것이다.
+</p>
 
-<h3>2단계 — Cartography, 그리고 측정 가능한 점수</h3>
-
-<p>README가 사람을 위한 문서라면, Cartography는 에이전트에게 정확한 좌표를 주는 지도다. 진입점, 의존 그래프, 도메인 용어집, 헛다리 함정 지점 같은 것을 명시한다. 강의는 여기서 한 걸음 더 나아가 "측정 가능하게" 만든다. <code>ai-readiness-cartography</code>라는 커스텀 스킬이 저장소를 <strong>7개 카테고리·100점 만점</strong>으로 채점한다.</p>
-
-<ul>
-  <li>Navigation 15점 — 진입점 명시 여부, 디렉토리 구조의 명확성</li>
-  <li>Context Quality 20점 — <code>CLAUDE.md</code>·가이드 문서의 정보 밀도·정확도</li>
-  <li>Tribal Knowledge 20점 — 머릿속 지식이 문서로 외화됐는가</li>
-  <li>Dependency Mapping 15점 — 모듈 의존, 순환 의존, god file 존재</li>
-  <li>Verification Gates 15점 — 테스트·린터·CI 게이트의 신뢰도</li>
-  <li>Freshness 10점 — 문서·코드의 drift, 마지막 갱신 시점</li>
-  <li>Agent Outcomes 5점 — 실제 세션이 첫 시도에 성공하는 비율(결과 측 점검)</li>
-</ul>
-
-<p>앞 6개가 입력 측 점검이고 7번이 결과 측 점검이다. 발표자는 이 루브릭이 "절대적인 정답"은 아니며 프로젝트에 맞게 조정할 출발점이라고 짚는다.</p>
-
+<h2>Part 2. Token Efficiency — 자산이 늘수록 토큰·비용이 폭증한다</h2>
+<p>
+  두 번째 파트는 비용이다. 팀이 자산(<code>CLAUDE.md</code>, Second Brain 문서, grade 스킬, TDD 가드 hook…)을
+  늘릴수록 매 턴 주입되는 컨텍스트가 커지고, 토큰 소비와 비용이 함께 불어난다. 먼저 발표자는 "토큰"이 무엇인지부터
+  짚는다.
+</p>
 <figure>
-  <img src="assets/meta-ai-codebase-tokens/Wlt7GhA_14s_490s.jpg" alt="AI-Readiness Score의 7개 카테고리와 배점을 보여주는 슬라이드">
-  <figcaption>7개 카테고리 100점 만점 루브릭. 입력 측 점검 6개에 결과 측 점검(Agent Outcomes) 1개를 더했다.</figcaption>
+  <img src="assets/meta-ai-codebase-tokens/Wlt7GhA_14s_1110s.jpg" alt="Token이란? BPE와 언어별 토큰 밀도">
+  <figcaption><a href="https://youtu.be/Wlt7GhA_14s?t=1110" target="_blank">[18:30]</a> 토큰은 BPE(Byte Pair Encoding)로 자주 쓰는 부분 문자열을 묶은 최소 단위. 영어 1토큰 ≈ 4글자(≈0.75단어), 코드는 영어와 비슷, <strong>한국어 1토큰 ≈ 1.5~2글자로 영어의 약 2배</strong>.</figcaption>
 </figure>
-
-<h3>스킬을 실제로 돌려보면</h3>
-
-<p>발표자는 VS Code 터미널에서 이 감사 스킬을 실제로 돌린다. <code>score.py</code>는 순수 표준 라이브러리(stdlib)만 쓰는 Python 3.10+ 자동 채점기로, <code>--json</code> 옵션에 구조화된 점수표(카테고리, 근거, 하위 점수, ROI 액션, 큰 파일 목록)를 뱉고 stdout에는 사람이 읽기 좋은 마크다운 요약을 낸다.</p>
-
-<figure>
-  <img src="assets/meta-ai-codebase-tokens/Wlt7GhA_14s_640s.jpg" alt="VS Code에서 ai-readiness-cartography SKILL.md와 터미널의 감사 실행 화면">
-  <figcaption>스킬을 데모 저장소에 돌려 채점하는 장면. 자동 채점은 22/100(AI-Hostile)로 나왔지만, 발표자는 hallucinated path 검증 결과를 반영해 수동으로 보정한다.</figcaption>
-</figure>
-
-<figure>
-  <img src="assets/meta-ai-codebase-tokens/Wlt7GhA_14s_690s.jpg" alt="score.py의 카테고리 채점 로직과 하위 점수 계산 코드">
-  <figcaption>채점 로직은 정규식 휴리스틱으로 문서의 목적 헤딩·패턴·의존 선언 등을 매칭하고, 각 카테고리 evidence를 보고 ROI 순으로 액션을 자동 정렬한다.</figcaption>
-</figure>
-
-<p>결과는 사람이 읽기 좋은 HTML 대시보드로도 나온다. AI 준비도 지수를 게이지로 보여주고(예: 54/100 · AI-Fragile), 7개 카테고리별 점수를 막대로, 프로젝트 구조를 노드 그래프로 시각화한다. 자동 스크립트가 22점으로 채점했더라도 hallucinated path 3건이 실은 false positive였음을 검증해 54점으로 보정하는 식으로, 자동 점수와 수동 검증을 함께 쓴다.</p>
-
-<figure>
-  <img src="assets/meta-ai-codebase-tokens/Wlt7GhA_14s_725s.jpg" alt="demo_project의 AI 준비도 지도 HTML 대시보드: 54/100 게이지와 7개 카테고리 점수, 구조 지도">
-  <figcaption>AI 준비도 지도 대시보드. 왼쪽 게이지(54/100), 오른쪽 카테고리별 점수, 아래쪽 구조 지도로 "어디서 길을 잃는가"를 한눈에 보여준다.</figcaption>
-</figure>
-
-<h2>토큰 효율 — 자산이 늘수록 청구서도 늘어난다</h2>
-
-<p>지침·문서·"세컨드 브레인" 같은 자산을 늘려 에이전트를 똑똑하게 만들수록 컨텍스트가 무거워지고 토큰 사용량이 늘어난다. 강의는 이 인과를 <strong>자산↑ → 컨텍스트↑ → 토큰↑ → 청구서↑</strong>로 정리한다. 그래서 두 번째 파트의 목표는 이 비용을 측정(대시보드)하고 통제(Cost Gate)하는 것이다.</p>
-
-<p>먼저 토큰이 무엇인지부터 짚는다. 모델은 단어가 아니라 <strong>BPE(Byte Pair Encoding)</strong> 사전에 맞춰 자주 쓰는 부분 문자열을 한 덩어리로 묶어 읽는다. 예컨대 "Tokenizer splits subwords"는 <code>Token / izer / splits / sub / word / s</code>처럼 쪼개진다. 언어별 효율 차이가 실무에서 중요하다.</p>
-
-<ul>
-  <li><strong>영어</strong>: 1토큰 ≈ 4글자 (≈ 0.75 단어)</li>
-  <li><strong>코드</strong>: 영어와 비슷한 수준</li>
-  <li><strong>한국어</strong>: 1토큰 ≈ 1.5~2글자로, 영어의 약 2배</li>
-</ul>
-
-<p>즉 한국어로 쓴 1,000줄짜리 <code>CLAUDE.md</code>는 같은 내용의 영어보다 두 배 가까이 토큰을 먹는다. 글로벌 팀이라면 내부 가이드를 영어로 쓰는 선택도 비용 차원에서 검토할 가치가 있다는 것이다.</p>
-
-<figure>
-  <img src="assets/meta-ai-codebase-tokens/Wlt7GhA_14s_1110s.jpg" alt="Token이란 무엇인가 슬라이드: BPE 설명과 영어·코드·한국어 토큰 효율 비교">
-  <figcaption>BPE 토크나이저는 단어를 부분 문자열로 쪼갠다. 한국어는 영어보다 토큰을 약 2배 소비한다.</figcaption>
-</figure>
-
-<h3>토큰의 가격, 그리고 팀 스케일</h3>
-
-<p>추상적인 "토큰 사용량"은 곧 실제 돈이다. 100만 토큰당 단가는 대략 입력 $5, 출력 $25, 캐시 쓰기 $6.25(입력의 1.25배), 캐시 읽기 $0.50(입력의 0.1배) 수준이다. 개인 한 명은 월 $100 정도로 조심스럽게 쓸 수 있지만, 10명 팀은 월 $1,000, 연 $12,000로 스케일한다. 게다가 회사 계정을 쓰는 팀원은 가시성 없이 비용을 쉽게 불릴 수 있다. 사용량이 커질수록 <strong>프롬프트 캐싱(Prompt Caching)</strong>이 비용 절감의 가장 중요한 도구가 된다.</p>
-
-<h3>Caching — 비용을 깎는 단일 최대 도구</h3>
-
-<p>캐싱의 원리는 단순하다. 같은 prefix를 반복해서 보내면 Anthropic 서버가 그 prefix의 계산 결과를 캐시해두고 다음 호출에서 재사용한다. 캐시 없이 매 turn 풀 가격으로 다시 계산하면 비용은 ×1.0이지만, 캐시를 쓰면 이후로는 읽기 가격 ×0.1로 떨어진다. <code>CLAUDE.md</code>·시스템 프롬프트·자주 읽는 큰 파일처럼 매 turn 거의 똑같이 들어가는 것들을 다시 계산하지 않는 게 핵심이다.</p>
-
 <blockquote>
-  <p>"Caching — 비용을 깎는 단일 최대 도구."</p>
+  <p>"한국어로 쓴 1,000줄 CLAUDE.md는 같은 내용의 영어보다 두 배 가까이 토큰을 먹는다."</p>
 </blockquote>
+<p>
+  글로벌 팀이라면 문서를 어떤 언어로 쓸지도 비용 차원에서 한 번 검토할 가치가 있다는 얘기다.
+</p>
 
+<h2>비용을 숫자로 — 자릿수의 감</h2>
+<p>
+  발표자는 비용을 "얼마나 큰 숫자인가"의 감으로 잡게 한다. 정확한 수치는 강의 시점(Opus 4.8 기준·2026-05)의 가격
+  페이지에서 재확인하라고 전제하면서, 1M 토큰당 단가를 이렇게 제시한다.
+</p>
 <figure>
-  <img src="assets/meta-ai-codebase-tokens/Wlt7GhA_14s_1360s.jpg" alt="Caching이 비용을 깎는 단일 최대 도구라는 슬라이드: 캐시 안 쓰면 x1.0, 캐시 쓰면 x0.1">
-  <figcaption>같은 prefix를 반복해서 보내면 서버가 계산 결과를 재사용한다. 캐시 히트는 풀 가격의 약 1/10이다.</figcaption>
+  <img src="assets/meta-ai-codebase-tokens/Wlt7GhA_14s_1225s.jpg" alt="실비용 앵커링 — 1M 토큰당 단가와 팀 비용 추정표">
+  <figcaption><a href="https://youtu.be/Wlt7GhA_14s?t=1225" target="_blank">[20:25]</a> 1M 토큰당 Input $5 · Output $25 · Cache write $6.25(×1.25) · Cache read $0.50(×0.10). 1명/하루(입력 500K+출력 100K) ≈ $5, 1명/월(20영업일) ≈ $100, 팀 10명/월 ≈ $1,000, 팀 10명/연 ≈ $12,000.</figcaption>
 </figure>
+<p>
+  이건 <strong>아무 최적화도 안 한 자연 상태</strong>다. 캐싱을 잘 쓰면 절반 이하로, 못 쓰면 두 배로 — 한 자릿수씩
+  오르내린다. 그래서 대시보드 한 장이 빠르게 회수된다. 그 갈림길의 핵심 도구가 Prompt Caching이다.
+</p>
 
-<p>캐싱에는 반드시 알아야 할 세 가지 함의가 있고, 셋 다 워크플로우에 직접 영향을 준다.</p>
+<h2>Prompt Caching + 캐시를 날리는 실수</h2>
+<p>
+  캐시는 세 가지 함의만 알면 된다. 셋 다 워크플로우에 직접 영향을 준다. ① <strong>TTL 5분</strong> — 마지막 hit에서
+  다시 5분 연장되므로 연속 세션엔 효과가 크지만, "점심 먹고 오면" 캐시는 죽어 있다. ② <strong>Prefix 기반</strong> —
+  앞에서부터 길게 일치할 때만 hit. 한 토큰만 앞에서 바뀌어도 캐시 전체가 깨진다. ③ <strong>Write가 비싸다</strong> —
+  첫 호출은 25% 비싸므로, 적어도 2~3번 재사용될 prefix만 캐시하는 게 합리적이다.
+</p>
+<figure>
+  <img src="assets/meta-ai-codebase-tokens/Wlt7GhA_14s_1560s.jpg" alt="Cache 구조 세 가지 — TTL 5분, Prefix 기반, Write 비용">
+  <figcaption><a href="https://youtu.be/Wlt7GhA_14s?t=1560" target="_blank">[26:00]</a> <code>[system + CLAUDE.md + 큰 파일]</code>은 캐시되고 <code>[+ 변하는 user message]</code>는 매번 fresh. cache write ×1.25, cache read ×0.10.</figcaption>
+</figure>
+<p>
+  여기서 가장 흔한 실수는 <strong>"현재 시각"처럼 매번 바뀌는 값을 프리픽스 맨 앞에 두는 것</strong>이다. 안티패턴은
+  <code>[현재 시각] → [CLAUDE.md] → [Second Brain]</code> 순서 — 시각이 매초 바뀌니 뒤의 문서 전체를 매번 다시
+  읽어 캐시가 무의미해진다. 정답은 정적 문서를 프리픽스 위에 두고, 동적인 사용자 메시지·타임스탬프를 맨 아래로
+  내리는 것이다.
+</p>
 
+<h2>6가지 최적화 기법 — 그대로 팀 wiki에 박아 둘 공유 자산</h2>
+<p>
+  발표자가 평소 쓰는 6가지 최적화를 표로 정리한다.
+</p>
+<figure>
+  <img src="assets/meta-ai-codebase-tokens/Wlt7GhA_14s_1740s.jpg" alt="최적화 기법 권장 6가지 표">
+  <figcaption><a href="https://youtu.be/Wlt7GhA_14s?t=1740" target="_blank">[29:00]</a> 최적화 기법 6가지 권장·이유 표. "3번 subagent 위임이 의외로 큰 효과 — 큰 검색을 메인에서 돌리면 결과 수만 토큰이 영구 누적되지만, subagent에 돌리면 요약만 메인으로 돌아온다."</figcaption>
+</figure>
 <ol>
-  <li><strong>Cache TTL은 5분</strong>: 마지막 히트에서 다시 5분 연장된다. 점심 먹고 오면 캐시는 죽어 있다. 연속 세션에는 효과적이지만 띄엄띄엄 쓰면 쓸모가 적다.</li>
-  <li><strong>Prefix 기반</strong>: 앞에서부터 길게 일치할 때만 히트한다. 한 토큰만 앞에서 바뀌어도 캐시 전체가 깨진다. 그래서 정적인 것(시스템 프롬프트, <code>CLAUDE.md</code>, 큰 파일)은 위에, 매번 변하는 user 메시지는 아래에 둬야 한다.</li>
-  <li><strong>Write가 비싸다</strong>: 첫 호출은 25% 더 비싸다(×1.25). 적어도 2~3번 재사용될 prefix만 캐싱하는 게 합리적이다.</li>
+  <li><strong>큰 파일은 한 번 read 후 캐시에 박는다</strong> — 매 turn read 대신 prefix 캐시로 1/10 비용.</li>
+  <li><strong>CLAUDE.md를 정돈해 상단에 둔다</strong> — Prefix 캐시 hit률 최대화.</li>
+  <li><strong>무거운 탐색은 subagent에 위임</strong> — 메인 컨텍스트 오염 방지, 결과만 회수.</li>
+  <li><strong>장기 세션은 <code>/compact</code>로 적시 압축</strong> — 컨텍스트 폭주 전에 핵심만 남김.</li>
+  <li><strong>작업 성격에 맞게 모델 다운그레이드</strong> — 설계는 Opus, 반복 구현은 Sonnet.</li>
+  <li><strong>CI Engine 호출 결과를 task별로 재사용</strong> — 같은 prefix → 캐시 hit률 자연 증가.</li>
 </ol>
 
+<h2>[데모] Token Efficiency 채점 스킬 — JSONL 로그를 점수로</h2>
+<p>
+  AI Readiness와 짝을 이루는 두 번째 스킬 <code>improve-token-efficiency</code>다. Claude Code가 남기는
+  <code>JSONL</code> 세션 로그를 파싱해 세션별 토큰 사용을 점수화한다. 채점 로직은 <code>analyze_sessions.py</code>에
+  하드코딩된 per-model 가격표(<code>PRICING</code> dict)를 기준으로 4개 축을 계산한다.
+</p>
 <figure>
-  <img src="assets/meta-ai-codebase-tokens/Wlt7GhA_14s_1420s.jpg" alt="Cache 구조 세 가지 슬라이드: TTL 5분, Prefix 기반, Write 비용">
-  <figcaption>동적 데이터(예: 현재 시각)를 프롬프트 맨 위에 두면 뒤따르는 모든 것의 캐시가 깨진다. 정적인 것을 위로, 동적인 것을 아래로.</figcaption>
+  <img src="assets/meta-ai-codebase-tokens/Wlt7GhA_14s_2245s.jpg" alt="analyze_sessions.py 스킬과 per-model 가격표">
+  <figcaption><a href="https://youtu.be/Wlt7GhA_14s?t=2245" target="_blank">[37:25]</a> <code>improve-token-efficiency</code> 스킬. <code>analyze_sessions.py</code>가 <code>~/.claude/projects/</code> 아래 인코딩된 세션 디렉터리를 찾아 모든 <code>.jsonl</code>의 <code>usage</code> 필드를 파싱하고, per-model 가격을 적용해 4축 효율 점수를 계산한다.</figcaption>
 </figure>
-
-<p>발표자가 실제로 쓰는 최적화 6가지는 그대로 팀 위키에 박아 둘 만한 공유 자산이다.</p>
-
+<pre><code># analyze_sessions.py — per-model 가격 (USD per 1M tokens)
+# Model                        | Input | Output | Cache write 5m | Cache read
+PRICING = {
+    "claude-opus-4-6":   {"in": 15.0, "out": 75.0, "cw5": 18.75, "cr": 1.50},
+    "claude-opus-4-7":   {"in": 15.0, "out": 75.0, "cw5": 18.75, "cr": 1.50},
+    "claude-sonnet-4-6": {"in":  3.0, "out": 15.0, "cw5":  3.75, "cr": 0.30},
+    "claude-haiku-4-5":  {"in":  0.80,"out":  4.0, "cw5":  1.0,  "cr": 0.08},
+}
+</code></pre>
+<p>
+  생성된 "Claude Code Session Efficiency Report"는 등급 히스토그램(A+~F), 비용 대비 점수 버블 차트, 비용 상위
+  세션 Top 20 파레토 표를 보여 준다. 평가 기준(Rubric)은 네 축의 가중 합이다.
+</p>
 <figure>
-  <img src="assets/meta-ai-codebase-tokens/Wlt7GhA_14s_1740s.jpg" alt="최적화 기법 권장 6가지를 정리한 표">
-  <figcaption>큰 파일은 한 번 read 후 캐시, CLAUDE.md는 상단에, 무거운 탐색은 서브에이전트에 위임, 장기 세션은 /compact, 작업 성격에 맞게 모델 다운그레이드, CI 결과는 task별 재사용.</figcaption>
+  <img src="assets/meta-ai-codebase-tokens/Wlt7GhA_14s_2470s.jpg" alt="Token Efficiency 대시보드 — 등급 히스토그램과 Rubric">
+  <figcaption><a href="https://youtu.be/Wlt7GhA_14s?t=2470" target="_blank">[41:10]</a> 종합 점수 = 0.4·캐시 활용도 + 0.2·산출 밀도 + 0.2·중복 Read + 0.2·도구 효율. 등급: A+ ≥ 90, A ≥ 85, A- ≥ 80, B+ ≥ 75… F &lt; 40.</figcaption>
 </figure>
-
-<p>특히 3번 <strong>서브에이전트(sub-agent) 위임</strong>이 의외로 효과가 크다. 큰 검색을 메인 세션에서 돌리면 결과 수만 토큰이 컨텍스트에 영구 누적되지만, 서브에이전트에 돌리면 요약만 메인으로 돌아온다. 설계처럼 어려운 작업엔 Opus를, 단순 반복 구현엔 Sonnet·Haiku를 쓰는 모델 다운그레이드도 실질적인 비용 레버다.</p>
-
-<h3>토큰 효율 대시보드와 Cost Gate</h3>
-
-<p>측정을 위해 발표자는 세션 로그(<code>JSONL</code>)를 파싱해 효율 리포트를 만드는 Python 스킬(<code>analyze_sessions.py</code>)을 보여준다. 채점 루브릭은 캐시 활용도 40%(cache_read ÷ 총 입력, 0.85 이상이면 만점), 산출 밀도 20%(출력÷입력, ~2%가 적정), 중복 Read 비율 20%, 도구 사용 효율 20%로 구성된다. HTML 대시보드는 누적 비용, 캐시 히트율(목표 85% 이상), 등급 히스토그램, 비용 대비 점수 버블 차트, 가장 비싼 세션(hotspot)을 한 화면에 모은다.</p>
-
-<figure>
-  <img src="assets/meta-ai-codebase-tokens/Wlt7GhA_14s_2470s.jpg" alt="토큰 효율 대시보드: 등급 히스토그램, 비용 대비 점수 버블 차트, 평가 기준 루브릭">
-  <figcaption>세션별 등급 분포와 비용-점수 산점도, 그리고 종합 점수 루브릭. 종합 점수 = 0.4·캐시 + 0.2·산출밀도 + 0.2·중복read + 0.2·도구효율.</figcaption>
-</figure>
-
-<p>대시보드가 <strong>사후</strong> 점검이라면, Cost Gate는 <strong>사전·실시간</strong> 예방이다. <em>세션 단위 게이트</em>는 한 세션이 임계치(예: 300K 토큰)를 넘으면 "이번 세션 비용 $X, 계속 진행하시겠습니까?"라고 경고하고, <em>PR 단위 게이트</em>는 한 PR을 만드는 누적 비용이 임계치(예: $20)를 넘으면 <code>cost-flag</code> 라벨을 붙여 별도 리뷰를 유도한다. 발표자는 지금 단계의 게이트는 "경고와 가시화"까지이고, 강제 정지 권한(세션을 죽이는 것)은 자율성을 죽이는 결정이라 다음 단계(가드레일)에서 다룬다고 구분한다.</p>
-
-<figure>
-  <img src="assets/meta-ai-codebase-tokens/Wlt7GhA_14s_2600s.jpg" alt="Cost Gate 사전·실시간 정책 슬라이드: 세션 단위 게이트와 PR 단위 게이트">
-  <figcaption>Dashboard는 이미 쓴 비용을 보여주는 사후 도구, Gate는 예산 초과 직전에 신호를 주는 사전·실시간 도구다.</figcaption>
-</figure>
-
-<h2>마무리 — 비용을 깎는 건 다짐이 아니라 자산</h2>
-
-<p>발표자는 토큰 효율이 단지 돈을 아끼는 문제가 아니라, 팀 안에서 AI 에이전트를 지속 가능하고 확장 가능하게 만드는 문제라고 정리한다. 모두가 같은 정의로 같은 숫자를 보고 같은 표를 참조하면, "절약하자"는 구호 없이도 비용은 알아서 내려온다는 것이다. 오늘 만든 토큰 대시보드와 Cost Gate 정책은 플러그인·팀 위키에 박아 두는 공유 자산이 된다.</p>
-
-<blockquote>
-  <p>"요약 — 비용을 깎는 건 다짐이 아니라 자산."</p>
-</blockquote>
-
-<figure>
-  <img src="assets/meta-ai-codebase-tokens/Wlt7GhA_14s_2735s.jpg" alt="요약 슬라이드: 비용을 깎는 건 다짐이 아니라 자산, 그리고 다음 편 예고">
-  <figcaption>Dashboard skill·Cost gate 정책·Do/Don't 표·해석 5단계 흐름을 팀 자산으로 남긴다. 다음 편은 AI-Powered Code Review로 이어진다.</figcaption>
-</figure>
-
-<h2>핵심 요약</h2>
-
 <ul>
-  <li><strong>지형이 지침을 이긴다</strong>: <code>CLAUDE.md</code>가 아무리 좋아도 코드베이스가 미로면 에이전트는 실패한다. AI-ready 코드베이스에서는 낭비되던 탐색 토큰 80%를 실제 수정 쪽으로 되돌린다.</li>
-  <li><strong>순서는 Sanity → Cartography</strong>: 테스트·데드 코드·컨벤션 같은 위생이 먼저다. 특히 데드 코드는 에이전트가 진짜 진입점으로 착각해 한 세션을 통째로 날리는 최악의 함정이다.</li>
-  <li><strong>측정 가능하게 만들어라</strong>: AI 준비도를 7개 카테고리·100점 루브릭으로 채점하고 HTML 대시보드로 "어디서 길을 잃는가"를 시각화하면, 개선을 ROI 순으로 굴릴 수 있다.</li>
-  <li><strong>캐싱이 최대 비용 레버</strong>: 캐시 히트는 풀 가격의 약 1/10. TTL 5분·prefix 기반·write 비용이라는 세 가지 함의를 이해하고, 정적인 것을 위로·동적인 것을 아래로 배치해야 캐시가 산다.</li>
-  <li><strong>비용은 팀 자산으로 관리한다</strong>: 사후 대시보드로 측정하고, 세션·PR 단위 Cost Gate로 사전에 예방한다. 같은 숫자를 함께 보는 것만으로 절약은 습관이 된다.</li>
+  <li><strong>캐시 활용도(40%)</strong> — cache_read ÷ 총 입력. 0.85 이상이 만점. 재사용률이 높을수록 매 turn 같은 토큰을 다시 보내는 비용이 준다.</li>
+  <li><strong>산출 밀도(20%)</strong> — 출력 ÷ 입력. ~2%가 적정 구간. 낮으면 읽기만 많고 산출이 부족, 높으면 긴 독백.</li>
+  <li><strong>중복 Read 비율(20%)</strong> — 같은 파일을 반복 Read한 비중. Grep/Glob으로 위치를 좁히지 않고 Read를 남발하면 감점.</li>
+  <li><strong>도구 사용 효율(20%)</strong> — 출력 1k 토큰당 도구 호출 수. 2~10이 건강한 범위, 20 초과는 탐색 thrash 신호.</li>
+</ul>
+
+<h2>실시간 통제 — Cost Gate</h2>
+<p>
+  대시보드가 "이미 쓴 비용(사후)"을 보여 준다면, <strong>Cost Gate</strong>는 사전·실시간(예산 초과 직전 신호)으로
+  통제한다. 단순한 두 종류면 충분하다.
+</p>
+<figure>
+  <img src="assets/meta-ai-codebase-tokens/Wlt7GhA_14s_2600s.jpg" alt="Cost Gate — 세션 단위·PR 단위 게이트">
+  <figcaption><a href="https://youtu.be/Wlt7GhA_14s?t=2600" target="_blank">[43:20]</a> 세션 단위 gate: 300K tokens 초과 → "이번 세션 비용 $X, 계속 진행하시겠습니까?" (session-start hook이 누적 추적). PR 단위 gate: PR당 $20 초과 → <code>cost-flag</code> 라벨 부착(CI에서 같은 로직).</figcaption>
+</figure>
+<p>
+  발표자는 이 게이트가 "이번 강의(8번)의 평소 최적화"와 "다음 강의(10번)의 폭주 방지"의 경계에 걸쳐 있다고 짚는다.
+  같은 자산이지만 강도가 다르다 — 8번은 경고와 가시화까지, 10번은 강제 정지 권한(경고가 아니라 세션을 죽인다)까지.
+  자율성을 죽이는 결정은 10번의 몫이다.
+</p>
+
+<h2>요약 — 비용을 깎는 건 다짐이 아니라 자산</h2>
+<p>
+  결론은 한 문장이다. "절약하자"는 구호로는 아무도 안 아낀다. 모두가 같은 정의로 같은 숫자를 보고 같은 표를 참조할
+  때, 비용은 알아서 내려온다. 이를 위해 오늘 만든 것 — Dashboard 스킬(세션 JSONL → HTML 리포트), Cost Gate 정책,
+  Do/Don't 표, 해석 5단계 흐름 — 을 개인 스크립트로 두지 말고 팀 plugin·wiki에 공유 자산으로 박아 두라는 것이다.
+</p>
+<figure>
+  <img src="assets/meta-ai-codebase-tokens/Wlt7GhA_14s_2735s.jpg" alt="요약 슬라이드 — plugin에 들어간 8개 자산">
+  <figcaption><a href="https://youtu.be/Wlt7GhA_14s?t=2735" target="_blank">[45:35]</a> "이제 plugin에는 8개 자산 — CLAUDE.md · grade skill · Second Brain · CI onboarding skill · TDD 가드 hook · SDD harness · 그리고 오늘 박은 token dashboard + cost gate." 다음 강의(09)는 AI-Powered Code Review.</figcaption>
+</figure>
+
+<h2>핵심 정리</h2>
+<ul>
+  <li><strong>Agent 실패는 지능이 아니라 탐색 비용 문제</strong> — 최적화 안 된 repo에선 토큰의 80%가 길찾기에 낭비된다. AI-Ready 코드베이스는 이 비율을 뒤집는다.</li>
+  <li><strong>순서: Sanity → Cartography</strong> — 건강하지 않은 코드 위에 지도를 그리면 "거짓말하는 지도"가 된다. 특히 데드 코드는 Agent를 가짜 진입점으로 유인해 한 세션을 통째로 날린다.</li>
+  <li><strong>준비도·효율을 100점으로 채점하라</strong> — AI Readiness(7개 카테고리)와 Token Efficiency(4개 축)를 스킬로 만들어 HTML 대시보드로 시각화하면, "어디서 길을 잃고 어디서 돈이 새는가"가 숫자로 보인다.</li>
+  <li><strong>Prompt Caching의 세 함의</strong> — TTL 5분, Prefix 기반(한 토큰만 앞에서 바뀌어도 전체 무효), Write 25% 프리미엄. 동적 값을 프리픽스 맨 앞에 두는 것이 최악의 안티패턴.</li>
+  <li><strong>비용 통제는 자산으로</strong> — 대시보드(사후) + Cost Gate(사전·실시간)를 팀 plugin에 박아 두면, "절약하자"는 구호 없이도 비용이 내려온다.</li>
 </ul>
 
 
