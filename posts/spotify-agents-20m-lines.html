@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spotify는 2,000만 줄 코드베이스에서 에이전트를 어떻게 굴리는가 — 니클라스 구스타브손</title>
+<style>
+  :root { --fg:#1a1a1a; --muted:#666; --line:#e5e5e5; --accent:#c96442; --code-bg:#f6f6f4; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo",
+      "Malgun Gothic", sans-serif;
+    color: var(--fg); line-height: 1.75; max-width: 760px;
+    margin: 0 auto; padding: 48px 24px 96px; background:#fff;
+  }
+  header { border-bottom: 2px solid var(--line); padding-bottom: 24px; margin-bottom: 32px; }
+  h1 { font-size: 1.9rem; line-height: 1.35; margin: 0 0 12px; }
+  .meta { color: var(--muted); font-size: 0.9rem; }
+  .meta .orig { display:block; margin-top:6px; }
+  .meta a { color: var(--accent); text-decoration: none; }
+  h2 { font-size: 1.4rem; margin: 44px 0 8px; padding-top: 8px; }
+  h3 { font-size: 1.15rem; margin: 30px 0 8px; color:#000; }
+  p { margin: 0 0 16px; }
+  a { color: var(--accent); }
+  ul { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  blockquote { margin: 16px 0; padding: 8px 18px; border-left:3px solid var(--line);
+    color:#333; }
+  blockquote .ko { display:block; margin-top:6px; font-style: normal; color:#555;
+    font-size:0.94rem; }
+  hr { border: none; border-top: 1px solid var(--line); margin: 40px 0; }
+  code { background: var(--code-bg); padding: 2px 6px; border-radius: 4px;
+    font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 0.88em; }
+  pre { background: var(--code-bg); padding: 16px 18px; border-radius: 8px;
+    overflow-x: auto; border:1px solid var(--line); }
+  pre code { background: none; padding: 0; font-size: 0.85rem; line-height:1.5; }
+  figure { margin: 24px 0; }
+  figure img { width: 100%; height: auto; border:1px solid var(--line); border-radius: 8px;
+    background:#fff; }
+  figcaption { color: var(--muted); font-size: 0.85rem; text-align: center;
+    margin-top: 10px; line-height: 1.5; }
+  figcaption a { color: var(--accent); }
+  .video { position: relative; width: 100%; aspect-ratio: 16 / 9; margin: 22px 0; }
+  .video iframe { position: absolute; inset: 0; width: 100%; height: 100%;
+    border: 0; border-radius: 8px; }
+  .callout { background:#faf6f4; border-left:3px solid var(--accent);
+    padding: 12px 16px; border-radius: 0 6px 6px 0; margin: 16px 0; }
+  .callout strong { color: var(--accent); }
+  .takeaway { background:#f6f6f4; border-radius:8px; padding:16px 20px; margin:28px 0; }
+  .takeaway h2 { margin-top:0; }
+  footer { margin-top: 64px; padding-top: 20px; border-top:1px solid var(--line);
+    color: var(--muted); font-size: 0.82rem; }
+</style>
+<link rel="stylesheet" href="assets/nav.css">
+</head>
+<body>
+<header>
+  <h1>Spotify는 2,000만 줄 코드베이스에서 에이전트를 어떻게 굴리는가 — 니클라스 구스타브손</h1>
+  <div class="meta">
+    2026-07-03 · 카테고리: Agents
+    <span class="orig">출처 영상:
+      <a href="https://youtu.be/9DHZLw5653E">How Spotify runs agents across 20M+ lines of code, with Niklas Gustavsson</a>
+      (YouTube · 한국어 정리본)</span>
+  </div>
+</header>
+
+<!-- Optional: embed the source video at the top.
+<div class="video"><iframe src="https://www.youtube.com/embed/9DHZLw5653E"
+  title="How Spotify runs agents across 20M+ lines of code, with Niklas Gustavsson"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+  allowfullscreen></iframe></div> -->
+
+<div class="video"><iframe src="https://www.youtube.com/embed/9DHZLw5653E"
+  title="How Spotify runs agents across 20M+ lines of code, with Niklas Gustavsson"
+  frameborder="0" allow="accelerator; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+  allowfullscreen></iframe></div>
+
+<p>Anthropic의 Claude Code 총괄 보리스 체르니(Boris Cherny)가 진행하는 <em>Office Hours</em> 대담에, Spotify의 수석 아키텍트 겸 엔지니어링 부사장 니클라스 구스타브손(Niklas Gustavsson)이 나왔다. 주제는 하나다. <strong>2,000만 줄이 넘는 모노레포를 굴리는 회사가, AI 에이전트를 실제 프로덕션에 어떻게 녹여 넣었는가.</strong></p>
+
+<p>이 글은 영상의 흐름을 한국어로 정리한 것이다. 화면은 대부분 두 사람의 대담 장면이라 별도의 슬라이드나 도표는 없다. 대신 핵심 발언은 원문(영어)과 한국어 옮김을 함께 붙였다.</p>
+
+<figure>
+  <img src="assets/spotify-agents-20m-lines/9DHZLw5653E_3s.jpg" alt="Office Hours 오프닝 타이틀 카드 — 책상 위 노트와 유리컵">
+  <figcaption>Anthropic이 진행하는 대담 시리즈 <em>Office Hours</em>. 이번 편의 게스트는 Spotify의 니클라스 구스타브손이다. (00:03 무렵)</figcaption>
+</figure>
+
+<figure>
+  <img src="assets/spotify-agents-20m-lines/9DHZLw5653E_52s.jpg" alt="사무실에서 마주 앉아 대담 중인 보리스 체르니와 니클라스 구스타브손">
+  <figcaption>왼쪽이 진행자 보리스 체르니, 오른쪽이 게스트 니클라스 구스타브손. (00:52 무렵)</figcaption>
+</figure>
+
+<h2>"두 달 만에 IDE를 안 쓰게 됐다"</h2>
+
+<p>니클라스는 30년 경력의 엔지니어다. 그런 그가 "몇 달 안에 IDE(통합 개발 환경)가 사라질 것"이라는 말을 처음 들었을 땐 믿지 않았다고 한다. 그런데 정작 두 달 뒤, 자신이 더 이상 IDE를 쓰지 않고 있다는 걸 깨달았다.</p>
+
+<blockquote>I found myself not using an IDE anymore<span class="ko">어느새 나는 더 이상 IDE를 쓰지 않고 있었다. (00:32 무렵)</span></blockquote>
+
+<figure>
+  <img src="assets/spotify-agents-20m-lines/9DHZLw5653E_15s.jpg" alt="대담에서 이야기하는 니클라스 구스타브손">
+  <figcaption>니클라스 구스타브손 — Spotify 수석 아키텍트 겸 엔지니어링 부사장. (00:15 무렵)</figcaption>
+</figure>
+
+<p>전환점은 2023년 후반, 더 강력한 모델들이 나오면서 찾아왔다. 그전까지 AI 코딩은 '똑똑한 자동완성' 수준이었다. 이제는 실제로 복잡한 문제를 통째로 던져도 풀어냈고, 프롬프트를 정교하게 다듬는 수고도 크게 줄었다.</p>
+
+<blockquote>something that I could actually throw real problems at<span class="ko">이제는 진짜 문제를 그냥 던져도 되는 대상이 됐다. (02:37 무렵)</span></blockquote>
+
+<figure>
+  <img src="assets/spotify-agents-20m-lines/9DHZLw5653E_21s.jpg" alt="진행자 보리스 체르니, 화면 하단에 이름과 직함 자막">
+  <figcaption>진행자 보리스 체르니 — Anthropic의 Claude Code 총괄(Head of Claude Code). (00:21 무렵)</figcaption>
+</figure>
+
+<p>니클라스의 현재 작업 방식은 이렇다. 터미널에 여러 개의 Claude 세션을 격자(matrix)처럼 띄워 두고 동시에 굴린다. 2,000만 줄이 넘는 모노레포를 인덱싱하는 게 가능할지 처음엔 의심했지만, 실제로는 모델이 놀라울 만큼 잘 다뤘다고 한다.</p>
+
+<h2>Honk의 탄생 — 스크립트에서 LLM으로</h2>
+
+<p>5~6년 전, Spotify는 한 가지 문제를 발견했다. <strong>코드베이스가 엔지니어 수보다 7배 빠르게 커지고 있었다.</strong> 사람을 아무리 뽑아도 유지보수 부담을 따라잡을 수 없다는 뜻이었다.</p>
+
+<blockquote>our codebase was growing much, much faster than the number of engineers<span class="ko">우리 코드베이스는 엔지니어 수보다 훨씬, 훨씬 빠르게 커지고 있었다. (05:29 무렵)</span></blockquote>
+
+<figure>
+  <img src="assets/spotify-agents-20m-lines/9DHZLw5653E_332s.jpg" alt="손짓을 섞어 코드베이스 성장 문제를 설명하는 니클라스">
+  <figcaption>수천 개 저장소에 걸친 지루한 마이그레이션을 자동화하기 위해 Spotify는 'Fleet Management'를 만들었다. (05:32 무렵)</figcaption>
+</figure>
+
+<p>그래서 만든 것이 <strong>Fleet Management</strong>였다. 수천 개 저장소에 걸친 반복적인 마이그레이션 작업을 자동화하는 도구다. 처음엔 결정론적(deterministic) 스크립트로 짰다. 그런데 이 방식이 점점 벽에 부딪혔다. 단순한 API 변경 하나를 처리하는 데도 수천 줄짜리 스크립트가 필요해질 만큼, 현대 코드의 API 표면(surface)이 거대했기 때문이다.</p>
+
+<p>LLM은 바로 이 '거대한 API 표면'을 훨씬 우아하게 다뤘다. 여기서 나온 것이 내부 도구 <strong>Honk</strong>다. 현재의 Honk v2는 <strong>Claude Agent SDK</strong> 위에 만들어졌다. 엔지니어가 OAuth로 자기 도구를 직접 붙일 수 있고, Linux와 macOS 양쪽에서 CI 빌드를 돌린다. iOS 개발에는 macOS 빌드가 필수라 이 점이 중요하다.</p>
+
+<h2>'심판(judge) 모델'을 걷어내자 성공률이 뛰었다</h2>
+
+<p>초기 Honk에는 결과물을 검증하는 별도의 '심판(judge)' 모델이 있었다. 그런데 주력 모델의 성능이 좋아지자, 이 심판 단계를 아예 없애는 것이 오히려 나은 선택이 됐다. 결과는 극적이었다.</p>
+
+<blockquote>roughly like 20 30 percent success rate on PRs to like 80 percent<span class="ko">PR 성공률이 대략 20~30%에서 80% 수준으로 올랐다. (10:20 무렵)</span></blockquote>
+
+<p>여기서 보리스는 흔한 오해 하나를 짚는다. <strong>'속도냐 품질이냐'는 거짓 이분법</strong>이라는 것이다. 속도는 품질 관행을 자동화하는 데서 나온다. Spotify는 모든 PR을 팀이 일일이 손으로 확인하던 방식에서, 탄탄한 테스트 자동화를 바탕으로 AI가 만든 변경 대부분을 자동 병합(auto-merge)하는 쪽으로 옮겨 갔다.</p>
+
+<figure>
+  <img src="assets/spotify-agents-20m-lines/9DHZLw5653E_858s.jpg" alt="사무실에서 손짓하며 설명하는 보리스 체르니">
+  <figcaption>보리스 체르니: 생산성은 결국 인프라 투자에서 나온다. 더 오래 일하는 게 아니다. (14:23 무렵)</figcaption>
+</figure>
+
+<blockquote>productivity is always about investing in infrastructure. It's not about working more hours.<span class="ko">생산성은 언제나 인프라에 투자하는 문제다. 더 오래 일하는 문제가 아니다. (14:23 무렵)</span></blockquote>
+
+<h2>숫자로 본 성과, 그리고 리더를 위한 조언</h2>
+
+<p>Spotify가 체감한 효과는 구체적이다. <strong>PR 빈도가 75% 이상 개선</strong>됐고, 전체 PR의 <strong>약 73%가 AI가 작성한 것</strong>으로 집계된다.</p>
+
+<p>엔지니어링 리더를 향한 니클라스의 조언은 의외로 기본기에 관한 것이다. AI 시대에는 '멀쩡한(sane) 엔지니어링 관행' — 표준화, 일관된 코드베이스, 팀 정렬 — 이 오히려 더 중요해진다. 일관성이 높을수록 에이전트가 더 잘 동작하기 때문이다. 표준화 투자를 무시하지 말라는 것이다.</p>
+
+<h2>누구나 앱을 만드는 사내 앱 스토어</h2>
+
+<p>마지막 주제는 프로토타이핑의 민주화다. Spotify에는 프로토타입을 위한 <strong>사내 '앱 스토어'</strong>가 있다. 엔지니어가 아니어도 — 심지어 공동 CEO까지 — 자연어로 아이디어를 말해 몇 주가 아니라 몇 시간 만에 동작하는 모바일 앱을 만들고, 이 앱 스토어에서 서로 공유한다.</p>
+
+<blockquote>we have an internal app store for those prototypes where you can share them<span class="ko">그 프로토타입들을 공유할 수 있는 사내 앱 스토어가 있다. (16:25 무렵)</span></blockquote>
+
+<figure>
+  <img src="assets/spotify-agents-20m-lines/9DHZLw5653E_966s.jpg" alt="위에서 내려다본 두 사람의 대담 장면">
+  <figcaption>거대 스트리밍 플랫폼이 '반복 작업(toil)'을 걷어내고 아이디어를 즉시 제품으로 바꾸는 방향으로 움직이고 있다. (16:06 무렵)</figcaption>
+</figure>
+
+<div class="takeaway"><h2>핵심 정리</h2>
+<ul>
+  <li><strong>패러다임 전환은 이미 일어났다.</strong> 30년 경력의 아키텍트가 두 달 만에 IDE를 버렸다. 2023년 후반의 모델부터 '똑똑한 자동완성'이 '진짜 문제를 푸는 도구'로 바뀌었다.</li>
+  <li><strong>확장의 문제는 자동화로 푼다.</strong> 코드베이스가 인력보다 7배 빨리 크는 상황에서, Spotify는 수천 개 저장소의 마이그레이션을 자동화하는 Fleet Management → Honk로 대응했다.</li>
+  <li><strong>스크립트 대신 LLM, 심판 대신 주력 모델.</strong> 거대한 API 표면은 LLM이 더 잘 다뤘고, 모델이 좋아지자 별도 심판 모델을 걷어내면서 PR 성공률이 20~30%에서 80%로 뛰었다.</li>
+  <li><strong>속도는 품질 자동화에서 나온다.</strong> 테스트 자동화를 깔아 두고 AI PR 대부분을 자동 병합. PR 빈도 75%+ 개선, 전체 PR의 약 73%가 AI 작성.</li>
+  <li><strong>기본기가 더 중요해진다.</strong> 표준화·일관성·정렬 같은 '멀쩡한 엔지니어링 관행'이 에이전트 성능을 좌우한다. 그리고 자연어 프로토타이핑은 개발을 엔지니어 밖으로 넓힌다.</li>
+</ul>
+</div>
+
+<!-- BODY guidance (the assembler injects your /tmp/<slug>-body.html here):
+     - Intro (왜 중요한가, 2–3문장).
+     - <h2> per section + paragraphs.
+     - Frames: <figure><img src="assets/<slug>/<frame>.jpg" alt="…">
+         <figcaption>설명</figcaption></figure>  (relative path; never base64).
+     - Quotes: <blockquote>English original ≤15 words<span class="ko">한국어 옮김</span></blockquote>
+     - On-screen code: <pre><code>…</code></pre>
+     - Close: <div class="takeaway"><h2>핵심 정리</h2><ul>…3–5개…</ul></div> -->
+
+<footer>
+  이 글은 위 YouTube 영상을 보고 한국어로 정리한 비공식 요약·해설입니다.
+  직접 인용은 짧게 옮겼으며, 정확한 내용과 뉘앙스는 원본 영상을 함께 보세요.
+</footer>
+<script src="assets/store.js"></script>
+<script src="assets/posts.js"></script>
+<script src="assets/nav.js"></script>
+</body>
+</html>
