@@ -80,6 +80,7 @@ while [ "$processed" -lt "$MAX_PER_RUN" ]; do
   git pull --rebase --quiet 2>/dev/null || true
 
   prompt="Use the claude-youtube-to-blog skill to turn this YouTube video into a Korean blog post for the repo at ${REPO}: ${url}
+IMPORTANT: this is a ONE-SHOT headless run (claude -p). There is no next turn, no notifications, and nothing resumes after you stop: NEVER launch background tasks and NEVER end your turn to 'wait for' an event, notification, or long-running call. Call every tool synchronously (long Gemini video calls included — just block on them) and keep working in this single turn until you print the final RESULT line.
 Work fully autonomously; do not ask questions. Choose the slug and the two-level category (main=출처 channel, cat=주제) yourself following the skill's rules. Do the frame quality pass yourself: Read the extracted frames, drop duplicates, low-value ones, and people-only/talking-head shots (informational visuals only — zero stills is fine for podcast-format videos), and write the captions. Capture animated infographics/demos as short looping mp4 clips per the skill's step 4b.
 Register the post in posts/assets/posts.js as the skill instructs, then commit and push to origin main.
 When (and only when) the post is committed and pushed, print as the very last line of your final message exactly: RESULT_SLUG=<the post slug>
