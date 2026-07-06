@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "a-field-guide-to-claude-fable-finding-your-unknowns.html", date: "2026-07-06", main: "Claude blog", cat: "Claude Code",
+      title: "Claude Fable 필드 가이드: 당신의 '모르는 것'을 찾아내기", nav: "Fable 필드 가이드: 모르는 것 찾기" },
     { file: "meta-ai-codebase-tokens.html", date: "2026-06-30", main: "실밸개발자 Youtube", cat: "실전 테크닉",
       title: "Meta에서 배운 실전 테크닉: AI가 길 잃지 않는 코드베이스 & 토큰 비용 최적화", nav: "AI-Ready 코드베이스 & 토큰 비용" },
     { file: "spotify-agents-20m-lines.html", date: "2026-07-03", main: "Claude Youtube", cat: "Agents",
