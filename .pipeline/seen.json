@@ -1,6 +1,7 @@
 {
   "_comment": "Slugs already handled. Seeded with everything on the blog index at setup time so only FUTURE posts get translated. Updated automatically after each successful translation.",
   "slugs": [
+    "a-field-guide-to-claude-fable-finding-your-unknowns",
     "agent-identity-access-model",
     "artifacts-in-claude-code",
     "building-effective-human-agent-teams",
