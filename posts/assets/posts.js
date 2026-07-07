@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "bringing-claude-code-and-claude-cowork-to-government.html", date: "2026-07-07", main: "Claude blog", cat: "Enterprise AI",
+      title: "Claude Code와 Claude Cowork를 정부 기관에 도입합니다", nav: "정부 기관용 Claude Code·Cowork" },
     { file: "a-field-guide-to-claude-fable-finding-your-unknowns.html", date: "2026-07-06", main: "Claude blog", cat: "Claude Code",
       title: "Claude Fable 필드 가이드: 당신의 '모르는 것'을 찾아내기", nav: "Fable 필드 가이드: 모르는 것 찾기" },
     { file: "meta-ai-codebase-tokens.html", date: "2026-06-30", main: "실밸개발자 Youtube", cat: "실전 테크닉",

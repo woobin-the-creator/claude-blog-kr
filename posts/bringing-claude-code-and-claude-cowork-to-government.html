@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Code와 Claude Cowork를 정부 기관에 도입합니다</title>
+<style>
+  :root { --fg:#1a1a1a; --muted:#666; --line:#e5e5e5; --accent:#c96442; --code-bg:#f6f6f4; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo",
+      "Malgun Gothic", sans-serif;
+    color: var(--fg); line-height: 1.75; max-width: 760px;
+    margin: 0 auto; padding: 48px 24px 96px; background:#fff;
+  }
+  header { border-bottom: 2px solid var(--line); padding-bottom: 24px; margin-bottom: 32px; }
+  h1 { font-size: 1.9rem; line-height: 1.35; margin: 0 0 12px; }
+  .meta { color: var(--muted); font-size: 0.9rem; }
+  .meta .orig { display:block; margin-top:6px; }
+  .meta a { color: var(--accent); text-decoration: none; }
+  h2 { font-size: 1.4rem; margin: 44px 0 8px; padding-top: 8px; }
+  h3 { font-size: 1.15rem; margin: 30px 0 8px; color:#000; }
+  .builders { color: var(--muted); font-size: 0.92rem; margin: 0 0 14px; }
+  p { margin: 0 0 16px; }
+  a { color: var(--accent); }
+  ul { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  blockquote { margin: 16px 0; padding: 8px 18px; border-left:3px solid var(--line);
+    color:#333; font-style: italic; }
+  hr { border: none; border-top: 1px solid var(--line); margin: 40px 0; }
+  code { background: var(--code-bg); padding: 2px 6px; border-radius: 4px;
+    font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 0.88em; }
+  pre { background: var(--code-bg); padding: 16px 18px; border-radius: 8px;
+    overflow-x: auto; border:1px solid var(--line); }
+  pre code { background: none; padding: 0; font-size: 0.85rem; line-height:1.5; }
+  figure { margin: 24px 0; }
+  figure img { width: 100%; height: auto; border:1px solid var(--line); border-radius: 8px;
+    background:#fff; }
+  figure.hero img { border:none; max-width: 210px; display:block; margin: 0 auto 8px; }
+  figcaption { color: var(--muted); font-size: 0.85rem; text-align: center;
+    margin-top: 10px; line-height: 1.5; }
+  figcaption a { color: var(--accent); }
+  .video { position: relative; width: 100%; aspect-ratio: 16 / 9; margin: 22px 0; }
+  .video iframe { position: absolute; inset: 0; width: 100%; height: 100%;
+    border: 0; border-radius: 8px; }
+  .callout { background:#faf6f4; border-left:3px solid var(--accent);
+    padding: 12px 16px; border-radius: 0 6px 6px 0; margin: 16px 0; }
+  .callout strong { color: var(--accent); }
+  footer { margin-top: 64px; padding-top: 20px; border-top:1px solid var(--line);
+    color: var(--muted); font-size: 0.82rem; }
+</style>
+<link rel="stylesheet" href="assets/nav.css">
+</head>
+<body>
+<header>
+  <h1>Claude Code와 Claude Cowork를 정부 기관에 도입합니다</h1>
+  <div class="meta">
+    2026년 7월 7일 · 카테고리: Product announcements · Claude Code
+    <span class="orig">원문:
+      <a href="https://claude.com/blog/bringing-claude-code-and-claude-cowork-to-government">Bringing Claude Code and Claude Cowork to government</a>
+      (한글 번역본)</span>
+  </div>
+</header>
+
+<figure class="hero"><img src="assets/bringing-claude-code-and-claude-cowork-to-government/hero.svg" alt="Claude for Government 대표 이미지"></figure>
+
+<p>이제 <strong>Claude Code</strong>와 <strong>Claude Cowork</strong>를 Claude for Government Desktop에서 퍼블릭 베타로 사용할 수 있습니다. 이 두 제품은 상용 고객이 사용하는 것과 동일한 애플리케이션을 기반으로 하며, FedRAMP High 승인 환경(FedRAMP High authorized environment)을 통해 제공됩니다.</p>
+
+<p>Claude Code를 활용하면 공공 부문 팀은 공공 서비스를 지원하는 소프트웨어 시스템을 구축하고 현대화할 수 있습니다. Claude Cowork는 데스크톱의 파일과 직접 함께 작업하므로, 기관 직원은 메모 작성, RFP(제안요청서) 검토, 사건 처리(casework), 프레젠테이션 같은 업무를 Claude에게 위임할 수 있습니다.</p>
+
+<p>이번에 확장된 경험에는 추가적인 거버넌스 기능이 포함됩니다. 관리자는 구성 기본값(configuration defaults)을 설정하고, 부서 전반에 걸쳐 지출을 할당·통제할 수 있습니다. 보안팀과 인가 담당자(authorizing officials)는 변조 방지(tamper-evident) 감사 로그와, 기관의 ATO(운영 인가, Authority to Operate) 절차를 뒷받침하는 문서를 제공받습니다.</p>
+
+<h2>새로 추가된 것</h2>
+
+<h3>Claude Code와 Claude Cowork</h3>
+<p>정부 기관은 상용 사용자와 동일한 주기(cadence)로 새로운 기능을 제공받습니다. 대화 이력은 기관이 관리하는 기기(agency-managed devices)에 로컬로 저장됩니다. 추론(inference)은 FedRAMP High 승인 환경 내부에서 실행됩니다.</p>
+
+<h3>예산 편성에 맞는 과금</h3>
+<p>사업 부서(program offices)는 표준 좌석(standard seats)을 사용하거나, 지출 및 모델 한도를 지정한 맞춤형 좌석 등급(custom seat tiers)을 정의하여, AI 지출을 편성된 예산(appropriated funds)에 연결할 수 있습니다. 사용량은 고정된 단위(fixed increments)로 구매하며, 초과 불가 상한(hard not-to-exceed cap)이 적용됩니다. 관리자는 관리 콘솔에서 사용자별·모델별 사용량을 추적할 수 있으며, 잔액이 소진되기 전에 자동 소진 경고(burndown alerts)를 받습니다.</p>
+
+<h3>부서 조직 구조에 맞는 관리</h3>
+<p>부서 단위 관리자(department-level administrators)는 하위 기관(sub-agencies)에 좌석과 선불 사용량(prepaid usage)을 할당하면서, 각 하위 기관이 자체 사용자를 스스로 관리하도록 할 수 있습니다. 관리자는 SCIM 그룹 매핑을 사용해 특정 좌석 등급에 대한 요청 한도(rate limits), 금액 상한(dollar caps), 허용 모델(allowed models)을 설정합니다. 계층형 구성(layered configuration)은 연결 옵션(connectivity options), 사용 가능한 기능, 상호작용 지침(interaction guidance) 등 하위 기관을 위한 기본값을 설정합니다.</p>
+
+<h3>설계에 내재된 감독 체계</h3>
+<p>모든 관리 작업은 해시 체인(hash-chained) 감사 로그에 기록되며, 제품 내에서 직접 검토할 수 있습니다. Anthropic 측의 민감한 작업(sensitive operations)에는 2인 승인(two-person approval)이 필요합니다. 사용량 내보내기(usage exports)에는 계측 데이터(metering data)만 포함되므로, 기관은 민감한 자료를 이동시키지 않고도 ATO 및 IG(감찰관, Inspector General) 요청에 대응할 수 있습니다.</p>
+
+<h2>보안과 감독</h2>
+
+<p>데스크톱 배포를 평가하는 보안팀을 위해, Anthropic은 Claude for Government를 안전하게 구성하기 위한 <strong>FedRAMP Secure Configuration Guide</strong>를 공개 문서로 발행합니다.</p>
+
+<p>FedRAMP는 관련 세부 정보가 담긴 공식 변경 통지(formal change notification)를 요구합니다. 새 데스크톱 클라이언트에 대한 침투 테스트 요약본(penetration-test summary)이 제공되며, 이후 요약본도 준비되는 대로 제공됩니다. 변경 통지와 침투 테스트 요약본은 Anthropic의 트러스트 센터(trust center)를 통해 NDA(비밀유지계약) 하에 제공됩니다. 이 애플리케이션은 표준 기관 MDM 플랫폼을 통해 배포됩니다.</p>
+
+<h2>시작하기</h2>
+
+<p>Claude for Government는 오늘부터 베타로 사용할 수 있습니다. Anthropic이 계약 및 과금 주체(contracted and billing party)로 남으므로 — 기관은 별도의 클라우드 제공업체와 관계를 맺을 필요가 없습니다.</p>
+
+<p>신규 고객은 <a href="https://claude.com/solutions/government">claude.com/solutions/government</a>에서 액세스를 요청할 수 있습니다.</p>
+
+<p>보안팀은 Anthropic의 <a href="https://trust.anthropic.com/resources?s=gutlu13ft6nd7famxolbxg&amp;name=[anthropic]-2025-annual-penetration-testing-reports">트러스트 센터 리소스</a>를 통해 침투 테스트 산출물(penetration-test artifact)을 내려받을 수 있습니다.</p>
+
+<footer>
+  이 글은 Claude 공식 블로그 원문을 한국어로 옮긴 비공식 번역본입니다.
+  내용의 정확한 의미는 위 원문 링크를 함께 참고하세요.
+</footer>
+<script src="assets/store.js"></script>
+<script src="assets/posts.js"></script>
+<script src="assets/nav.js"></script>
+</body>
+</html>
