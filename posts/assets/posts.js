@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "how-people-are-using-claude-cowork.html", date: "2026-07-07", main: "Claude blog", cat: "Claude Cowork",
+      title: "사람들은 Claude Cowork를 어떻게 쓰고 있는가", nav: "사람들은 Cowork를 어떻게 쓰나" },
     { file: "cowork-web-mobile.html", date: "2026-07-07", main: "Claude blog", cat: "Claude Cowork",
       title: "Claude Cowork가 모바일과 웹으로 찾아옵니다", nav: "Cowork, 모바일·웹으로" },
     { file: "claude-model-and-effort-level-in-claude-code.html", date: "2026-07-07", main: "Claude blog", cat: "Claude Code",
