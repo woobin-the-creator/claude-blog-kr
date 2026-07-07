@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "claude-model-and-effort-level-in-claude-code.html", date: "2026-07-07", main: "Claude blog", cat: "Claude Code",
+      title: "Claude Code에서 Claude 모델과 노력(effort) 수준 고르기", nav: "모델·노력 수준 고르기" },
     { file: "bringing-claude-code-and-claude-cowork-to-government.html", date: "2026-07-07", main: "Claude blog", cat: "Enterprise AI",
       title: "Claude Code와 Claude Cowork를 정부 기관에 도입합니다", nav: "정부 기관용 Claude Code·Cowork" },
     { file: "a-field-guide-to-claude-fable-finding-your-unknowns.html", date: "2026-07-06", main: "Claude blog", cat: "Claude Code",
