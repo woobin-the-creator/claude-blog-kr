@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "cowork-web-mobile.html", date: "2026-07-07", main: "Claude blog", cat: "Claude Cowork",
+      title: "Claude Cowork가 모바일과 웹으로 찾아옵니다", nav: "Cowork, 모바일·웹으로" },
     { file: "claude-model-and-effort-level-in-claude-code.html", date: "2026-07-07", main: "Claude blog", cat: "Claude Code",
       title: "Claude Code에서 Claude 모델과 노력(effort) 수준 고르기", nav: "모델·노력 수준 고르기" },
     { file: "bringing-claude-code-and-claude-cowork-to-government.html", date: "2026-07-07", main: "Claude blog", cat: "Enterprise AI",
