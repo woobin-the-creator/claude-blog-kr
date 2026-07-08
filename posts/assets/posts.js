@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "working-at-the-frontier-how-thomson-reuters-builds-ai-for-high--stakes-professional-work.html", date: "2026-07-08", main: "Claude blog", cat: "Enterprise AI",
+      title: "프런티어에서 일하기: Thomson Reuters는 고위험 전문 업무를 위한 AI를 어떻게 만드는가", nav: "Thomson Reuters의 전문가급 AI" },
     { file: "how-anthropics-marketing-operations-team-uses-claude-cowork-to-automate-reporting-and-campaign-builds.html", date: "2026-07-08", main: "Claude blog", cat: "Claude Cowork",
       title: "Anthropic 마케팅 운영팀은 Claude Cowork로 리포팅과 캠페인 구축을 어떻게 자동화하는가", nav: "마케팅 운영팀의 Cowork 활용" },
     { file: "how-people-are-using-claude-cowork.html", date: "2026-07-07", main: "Claude blog", cat: "Claude Cowork",
