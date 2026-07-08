@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "how-anthropics-marketing-operations-team-uses-claude-cowork-to-automate-reporting-and-campaign-builds.html", date: "2026-07-08", main: "Claude blog", cat: "Claude Cowork",
+      title: "Anthropic 마케팅 운영팀은 Claude Cowork로 리포팅과 캠페인 구축을 어떻게 자동화하는가", nav: "마케팅 운영팀의 Cowork 활용" },
     { file: "how-people-are-using-claude-cowork.html", date: "2026-07-07", main: "Claude blog", cat: "Claude Cowork",
       title: "사람들은 Claude Cowork를 어떻게 쓰고 있는가", nav: "사람들은 Cowork를 어떻게 쓰나" },
     { file: "cowork-web-mobile.html", date: "2026-07-07", main: "Claude blog", cat: "Claude Cowork",
