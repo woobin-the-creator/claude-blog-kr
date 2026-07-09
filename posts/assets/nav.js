@@ -109,26 +109,53 @@
         '" aria-pressed="' + (rating === -1) + '" title="별로예요">👎' +
         '<span class="cbk-rate-label">별로</span></button>' +
     "</span>" +
-    '<button type="button" id="cbk-note-toggle" class="cbk-note-toggle' +
-      (note ? " has-note" : "") + (note ? " open" : "") + '">' +
-      "메모<span class=\"cbk-dot\"></span>" + "</button>" +
-    '<span id="cbk-note-status" class="cbk-status"></span>' +
+    '<span id="cbk-reason-status" class="cbk-status"></span>' +
     '<span id="cbk-sync-status" class="cbk-status"></span>' +
     '<a class="cbk-library" href="../library.html">📑 보관함</a>' +
     '<div id="cbk-reason-wrap" class="cbk-reason-wrap"' + (reasonOpen ? "" : " hidden") + ">" +
       '<textarea id="cbk-reason" class="cbk-reason" ' +
         'placeholder="왜 이렇게 평가했나요? — 이 이유가 나중에 취향 학습에 쓰입니다."></textarea>' +
       '<div class="cbk-note-hint">평가 이유 · 자동 저장됨</div>' +
-    "</div>" +
-    '<div id="cbk-note-wrap" class="cbk-note-wrap"' + (note ? "" : " hidden") + ">" +
-      '<textarea id="cbk-note" class="cbk-note" ' +
-        'placeholder="이 글에 대한 메모 — 이 브라우저에 저장됩니다."></textarea>' +
-      '<div class="cbk-note-hint">자동 저장됨 · <kbd>Esc</kbd> 로 닫기</div>' +
     "</div>";
 
   var header = document.querySelector("header");
   if (header && header.parentNode) header.parentNode.insertBefore(bar, header.nextSibling);
   else document.body.insertBefore(bar, nav.nextSibling);
+
+  /* ---------- 메모: Notion-style docked note panel (right sidebar) ----------
+   * Lives in its own fixed panel instead of the top bar, so it follows on
+   * scroll. On wide screens it stays docked open in the right gutter; on
+   * narrower/mobile screens a floating 📝 button toggles it as a slide-over. */
+  var panel = document.createElement("aside");
+  panel.id = "cbk-note-panel";
+  panel.className = "cbk-note-panel";
+  panel.setAttribute("aria-label", "이 글에 대한 메모");
+  panel.innerHTML =
+    '<div class="cbk-note-head">' +
+      '<span class="cbk-note-title">📝 메모</span>' +
+      '<span id="cbk-note-status" class="cbk-status"></span>' +
+      '<button type="button" id="cbk-note-close" class="cbk-note-close" ' +
+        'aria-label="메모 닫기" title="닫기">✕</button>' +
+    "</div>" +
+    '<textarea id="cbk-note" class="cbk-note" ' +
+      'placeholder="이 글에 대한 메모를 남겨보세요 — 이 브라우저에 자동 저장됩니다."></textarea>' +
+    '<div class="cbk-note-hint">자동 저장됨 · <kbd>Esc</kbd> 로 닫기</div>';
+
+  var backdrop = document.createElement("div");
+  backdrop.id = "cbk-note-backdrop";
+  backdrop.className = "cbk-note-backdrop";
+
+  var fab = document.createElement("button");
+  fab.type = "button";
+  fab.id = "cbk-note-fab";
+  fab.className = "cbk-note-fab" + (note ? " has-note" : "");
+  fab.setAttribute("aria-expanded", "false");
+  fab.innerHTML = '<span class="cbk-fab-icon">📝</span>' +
+    '<span class="cbk-fab-label">메모</span><span class="cbk-dot"></span>';
+
+  document.body.appendChild(panel);
+  document.body.appendChild(backdrop);
+  document.body.appendChild(fab);
 
   var favBtn = document.getElementById("cbk-fav");
   favBtn.addEventListener("click", function () {
@@ -138,53 +165,52 @@
     favBtn.querySelector(".cbk-fav-label").textContent = on ? "즐겨찾기됨" : "즐겨찾기";
   });
 
-  var noteToggle = document.getElementById("cbk-note-toggle");
-  var noteWrap = document.getElementById("cbk-note-wrap");
   var ta = document.getElementById("cbk-note");
-  var status = document.getElementById("cbk-note-status");
+  var noteStatus = document.getElementById("cbk-note-status");
+  var noteClose = document.getElementById("cbk-note-close");
 
-  function autosize() {
-    ta.style.height = "auto";
-    ta.style.height = Math.max(ta.scrollHeight, 96) + "px";
-  }
-  function openNote(focus) {
-    noteWrap.hidden = false;
-    noteToggle.classList.add("open");
-    autosize();
+  function openNotes(focus) {
+    document.body.classList.add("cbk-notes-open");
+    fab.setAttribute("aria-expanded", "true");
     if (focus) ta.focus();
   }
-  function closeNote() {
-    noteWrap.hidden = true;
-    noteToggle.classList.remove("open");
+  function closeNotes() {
+    document.body.classList.remove("cbk-notes-open");
+    fab.setAttribute("aria-expanded", "false");
   }
-  noteToggle.addEventListener("click", function () {
-    if (noteWrap.hidden) openNote(true);
-    else closeNote();
+  fab.addEventListener("click", function () {
+    if (document.body.classList.contains("cbk-notes-open")) closeNotes();
+    else openNotes(true);
   });
+  noteClose.addEventListener("click", function () { closeNotes(); fab.focus(); });
+  backdrop.addEventListener("click", closeNotes);
+
+  /* Docked open by default on wide screens; a slide-over toggle elsewhere. */
+  if (window.matchMedia && window.matchMedia("(min-width: 1360px)").matches) {
+    document.body.classList.add("cbk-notes-open");
+    fab.setAttribute("aria-expanded", "true");
+  }
 
   ta.value = note;
-  if (!noteWrap.hidden) autosize();
 
   var t = null;
-  function showStatus(text, saved) {
-    status.textContent = text;
-    status.classList.add("show");
-    status.classList.toggle("saved", !!saved);
+  function showNoteStatus(text, saved) {
+    noteStatus.textContent = text;
+    noteStatus.classList.add("show");
+    noteStatus.classList.toggle("saved", !!saved);
   }
   ta.addEventListener("input", function () {
-    autosize();
-    showStatus("저장 중…", false);
+    showNoteStatus("저장 중…", false);
     if (t) clearTimeout(t);
     t = setTimeout(function () {
       CBK.setNote(slug, ta.value);
-      var has = !!ta.value.trim();
-      noteToggle.classList.toggle("has-note", has);
-      showStatus("저장됨 ✓", true);
-      setTimeout(function () { status.classList.remove("show"); }, 1600);
+      fab.classList.toggle("has-note", !!ta.value.trim());
+      showNoteStatus("저장됨 ✓", true);
+      setTimeout(function () { noteStatus.classList.remove("show"); }, 1600);
     }, 500);
   });
   ta.addEventListener("keydown", function (e) {
-    if (e.key === "Escape") { closeNote(); noteToggle.focus(); }
+    if (e.key === "Escape") { closeNotes(); fab.focus(); }
   });
 
   /* ---------- like / dislike + reason ---------- */
@@ -192,7 +218,14 @@
   var dislikeBtn = document.getElementById("cbk-dislike");
   var reasonWrap = document.getElementById("cbk-reason-wrap");
   var reasonTa = document.getElementById("cbk-reason");
+  var reasonStatus = document.getElementById("cbk-reason-status");
   var reasonTimer = null;
+
+  function showReasonStatus(text, saved) {
+    reasonStatus.textContent = text;
+    reasonStatus.classList.add("show");
+    reasonStatus.classList.toggle("saved", !!saved);
+  }
 
   function reasonAutosize() {
     reasonTa.style.height = "auto";
@@ -222,12 +255,12 @@
 
   reasonTa.addEventListener("input", function () {
     reasonAutosize();
-    showStatus("저장 중…", false);
+    showReasonStatus("저장 중…", false);
     if (reasonTimer) clearTimeout(reasonTimer);
     reasonTimer = setTimeout(function () {
       CBK.setReason(slug, reasonTa.value);
-      showStatus("저장됨 ✓", true);
-      setTimeout(function () { status.classList.remove("show"); }, 1600);
+      showReasonStatus("저장됨 ✓", true);
+      setTimeout(function () { reasonStatus.classList.remove("show"); }, 1600);
       reasonTimer = null;
     }, 500);
   });
@@ -248,8 +281,7 @@
     var editing = document.activeElement === ta || t !== null; // unsaved edit in flight
     if (!editing && n !== ta.value) {
       ta.value = n;
-      noteToggle.classList.toggle("has-note", !!n.trim());
-      if (!noteWrap.hidden) autosize();
+      fab.classList.toggle("has-note", !!n.trim());
     }
 
     // rating + reason (don't clobber a reason the user is actively editing)

@@ -83,18 +83,6 @@
   box-shadow: 0 0 0 3px rgba(201, 100, 66, 0.12);
 }
 
-/* note toggle, with a presence dot when a note exists */
-.cbk-note-toggle .cbk-dot {
-  width: 7px; height: 7px; border-radius: 50%;
-  background: var(--accent, #c96442);
-  display: none;
-}
-.cbk-note-toggle.has-note .cbk-dot { display: inline-block; }
-.cbk-note-toggle.open {
-  border-color: var(--accent, #c96442);
-  color: var(--accent, #c96442);
-}
-
 /* link to the library / 보관함 */
 .cbk-bar .cbk-library {
   font-size: 0.84rem;
@@ -116,31 +104,141 @@
 .cbk-status.show { opacity: 1; }
 .cbk-status.saved { color: #2e8b57; }
 
-/* note editor */
-.cbk-note-wrap {
-  flex-basis: 100%;
-  margin-top: 2px;
-  overflow: hidden;
-}
-.cbk-note-wrap[hidden] { display: none; }
-.cbk-note {
-  width: 100%;
-  min-height: 96px;
-  resize: none;            /* auto-grows via JS instead */
-  overflow: hidden;
-  font: inherit;
-  line-height: 1.65;
-  padding: 12px 14px;
-  border: 1px solid var(--line, #e5e5e5);
-  border-radius: 10px;
+/* ---------- 메모: Notion-style docked note panel ----------
+ * A clean floating card. Docked in the right gutter on wide screens (follows
+ * scroll via position:fixed); a slide-over toggled by a floating button below. */
+.cbk-note-panel {
+  display: none;
+  flex-direction: column;
+  min-height: 0;
   background: #fff;
+  border: 1px solid var(--line, #e5e5e5);
+  border-radius: 14px;
+  box-shadow: 0 10px 34px rgba(0, 0, 0, 0.10), 0 1px 3px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  z-index: 40;
+}
+body.cbk-notes-open .cbk-note-panel { display: flex; }
+
+.cbk-note-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--line, #eee);
+  background: #faf8f6;
+}
+.cbk-note-title {
+  font-size: 0.85rem;
+  font-weight: 600;
   color: var(--fg, #1a1a1a);
 }
-.cbk-note:focus {
-  outline: none;
-  border-color: var(--accent, #c96442);
-  box-shadow: 0 0 0 3px rgba(201, 100, 66, 0.12);
+.cbk-note-head .cbk-status { margin-left: auto; }
+.cbk-note-close {
+  flex: none;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  color: var(--muted, #888);
+  font-size: 0.85rem;
+  line-height: 1;
+  padding: 5px 7px;
+  border-radius: 6px;
+  transition: background .15s, color .15s;
 }
+.cbk-note-close:hover { background: rgba(0, 0, 0, 0.06); color: var(--fg, #1a1a1a); }
+
+.cbk-note {
+  flex: 1 1 auto;
+  min-height: 220px;
+  width: 100%;
+  resize: none;
+  overflow-y: auto;
+  font: inherit;
+  line-height: 1.7;
+  padding: 14px 16px;
+  border: 0;
+  background: transparent;
+  color: var(--fg, #1a1a1a);
+}
+.cbk-note:focus { outline: none; }
+.cbk-note::placeholder { color: var(--muted, #b3aca6); }
+
+/* floating toggle button (📝) — shown when the panel is closed */
+.cbk-note-fab {
+  position: fixed;
+  right: 22px;
+  bottom: 24px;
+  z-index: 45;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 11px 16px;
+  border: 1px solid var(--line, #e5e5e5);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--fg, #1a1a1a);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  transition: transform .12s, box-shadow .15s, border-color .15s, color .15s;
+}
+.cbk-note-fab:hover {
+  transform: translateY(-1px);
+  border-color: var(--accent, #c96442);
+  color: var(--accent, #c96442);
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.16);
+}
+.cbk-note-fab .cbk-fab-icon { font-size: 1rem; line-height: 1; }
+.cbk-note-fab .cbk-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--accent, #c96442);
+  display: none;
+}
+.cbk-note-fab.has-note .cbk-dot { display: inline-block; }
+body.cbk-notes-open .cbk-note-fab { display: none; }
+
+/* dimmed backdrop behind the slide-over (narrow screens only) */
+.cbk-note-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 38;
+  background: rgba(0, 0, 0, 0.28);
+  display: none;
+}
+
+/* Wide screens: dock in the right gutter, following scroll. No backdrop. */
+@media (min-width: 1360px) {
+  .cbk-note-panel {
+    position: fixed;
+    top: 96px;
+    right: 24px;
+    width: 300px;
+    max-height: calc(100vh - 132px);
+  }
+  body.cbk-notes-open .cbk-note-backdrop { display: none; }
+}
+
+/* Narrow / mobile: slide-over from the right, toggled by the floating button. */
+@media (max-width: 1359px) {
+  .cbk-note-panel {
+    display: flex;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: min(380px, 92vw);
+    border-radius: 14px 0 0 14px;
+    box-shadow: -10px 0 34px rgba(0, 0, 0, 0.18);
+    transform: translateX(103%);
+    transition: transform .22s ease;
+  }
+  body.cbk-notes-open .cbk-note-panel { transform: translateX(0); }
+  body.cbk-notes-open .cbk-note-backdrop { display: block; }
+}
+
 .cbk-note-hint {
   margin: 6px 2px 0;
   font-size: 0.76rem;
@@ -153,6 +251,15 @@
   border: 1px solid var(--line, #e5e5e5);
   border-radius: 4px;
   padding: 1px 5px;
+}
+/* the hint acts as the panel's footer strip */
+.cbk-note-panel .cbk-note-hint {
+  margin: 0;
+  flex: none;
+  padding: 9px 14px 11px;
+  border-top: 1px solid #f2efed;
+  background: #fff;
+  font-size: 0.74rem;
 }
 
 @media (max-width: 1079px) {
