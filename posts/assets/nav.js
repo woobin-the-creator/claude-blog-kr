@@ -186,7 +186,7 @@
   backdrop.addEventListener("click", closeNotes);
 
   /* Docked open by default on wide screens; a slide-over toggle elsewhere. */
-  if (window.matchMedia && window.matchMedia("(min-width: 1360px)").matches) {
+  if (window.matchMedia && window.matchMedia("(min-width: 1660px)").matches) {
     document.body.classList.add("cbk-notes-open");
     fab.setAttribute("aria-expanded", "true");
   }

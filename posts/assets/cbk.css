@@ -150,7 +150,7 @@ body.cbk-notes-open .cbk-note-panel { display: flex; }
 
 .cbk-note {
   flex: 1 1 auto;
-  min-height: 220px;
+  min-height: 550px;
   width: 100%;
   resize: none;
   overflow-y: auto;
@@ -209,27 +209,29 @@ body.cbk-notes-open .cbk-note-fab { display: none; }
   display: none;
 }
 
-/* Wide screens: dock in the right gutter, following scroll. No backdrop. */
-@media (min-width: 1360px) {
+/* Wide screens: dock in the right gutter, following scroll. No backdrop.
+   The 600px panel needs a wider viewport than the old 300px one to clear the
+   article, so the dock threshold is higher; below it, the slide-over is used. */
+@media (min-width: 1660px) {
   .cbk-note-panel {
     position: fixed;
     top: 96px;
     right: 24px;
-    width: 300px;
+    width: 600px;
     max-height: calc(100vh - 132px);
   }
   body.cbk-notes-open .cbk-note-backdrop { display: none; }
 }
 
 /* Narrow / mobile: slide-over from the right, toggled by the floating button. */
-@media (max-width: 1359px) {
+@media (max-width: 1659px) {
   .cbk-note-panel {
     display: flex;
     position: fixed;
     top: 0;
     right: 0;
     bottom: 0;
-    width: min(380px, 92vw);
+    width: min(680px, 92vw);
     border-radius: 14px 0 0 14px;
     box-shadow: -10px 0 34px rgba(0, 0, 0, 0.18);
     transform: translateX(103%);
