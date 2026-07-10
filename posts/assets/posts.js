@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "working-at-the-frontier-how-cognition-trusts-claude-fable-5-to-work-through-the-night.html", date: "2026-07-10", main: "Claude blog", cat: "Enterprise AI",
+      title: "프런티어에서 일하기: Cognition은 밤새 일하는 Claude Fable 5를 어떻게 신뢰하게 됐는가", nav: "Cognition의 밤샘 Fable 5" },
     { file: "working-at-the-frontier-how-thomson-reuters-builds-ai-for-high--stakes-professional-work.html", date: "2026-07-08", main: "Claude blog", cat: "Enterprise AI",
       title: "프런티어에서 일하기: Thomson Reuters는 고위험 전문 업무를 위한 AI를 어떻게 만드는가", nav: "Thomson Reuters의 전문가급 AI" },
     { file: "how-anthropics-marketing-operations-team-uses-claude-cowork-to-automate-reporting-and-campaign-builds.html", date: "2026-07-08", main: "Claude blog", cat: "Claude Cowork",
