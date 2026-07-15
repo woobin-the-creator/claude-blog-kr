@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "doordash-every-employee-claude-code.html", date: "2026-07-07", main: "Claude Youtube", cat: "Enterprise AI",
+      title: "DoorDash는 전 직원에게 Claude Code를 쥐여줬다 — 앤디 팡 × 보리스 체르니", nav: "DoorDash, 전 직원에게 Claude Code" },
     { file: "working-at-the-frontier-how-hebbia-builds-ai-for-financial-diligence-that-cant-miss-a-detail.html", date: "2026-07-13", main: "Claude blog", cat: "Enterprise AI",
       title: "프런티어에서 일하기: Hebbia는 디테일 하나 놓칠 수 없는 금융 실사를 위한 AI를 어떻게 만드는가", nav: "Hebbia의 금융 실사 AI" },
     { file: "working-at-the-frontier-how-cognition-trusts-claude-fable-5-to-work-through-the-night.html", date: "2026-07-10", main: "Claude blog", cat: "Enterprise AI",

@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DoorDash는 전 직원에게 Claude Code를 쥐여줬다 — 앤디 팡 × 보리스 체르니</title>
+<style>
+  :root { --fg:#1a1a1a; --muted:#666; --line:#e5e5e5; --accent:#c96442; --code-bg:#f6f6f4; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo",
+      "Malgun Gothic", sans-serif;
+    color: var(--fg); line-height: 1.75; max-width: 760px;
+    margin: 0 auto; padding: 48px 24px 96px; background:#fff;
+  }
+  header { border-bottom: 2px solid var(--line); padding-bottom: 24px; margin-bottom: 32px; }
+  h1 { font-size: 1.9rem; line-height: 1.35; margin: 0 0 12px; }
+  .meta { color: var(--muted); font-size: 0.9rem; }
+  .meta .orig { display:block; margin-top:6px; }
+  .meta a { color: var(--accent); text-decoration: none; }
+  h2 { font-size: 1.4rem; margin: 44px 0 8px; padding-top: 8px; }
+  h3 { font-size: 1.15rem; margin: 30px 0 8px; color:#000; }
+  p { margin: 0 0 16px; }
+  a { color: var(--accent); }
+  ul { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  blockquote { margin: 16px 0; padding: 8px 18px; border-left:3px solid var(--line);
+    color:#333; }
+  blockquote .ko { display:block; margin-top:6px; font-style: normal; color:#555;
+    font-size:0.94rem; }
+  hr { border: none; border-top: 1px solid var(--line); margin: 40px 0; }
+  code { background: var(--code-bg); padding: 2px 6px; border-radius: 4px;
+    font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 0.88em; }
+  pre { background: var(--code-bg); padding: 16px 18px; border-radius: 8px;
+    overflow-x: auto; border:1px solid var(--line); }
+  pre code { background: none; padding: 0; font-size: 0.85rem; line-height:1.5; }
+  figure { margin: 24px 0; }
+  figure img { width: 100%; height: auto; border:1px solid var(--line); border-radius: 8px;
+    background:#fff; }
+  figcaption { color: var(--muted); font-size: 0.85rem; text-align: center;
+    margin-top: 10px; line-height: 1.5; }
+  figcaption a { color: var(--accent); }
+  .video { position: relative; width: 100%; aspect-ratio: 16 / 9; margin: 22px 0; }
+  .video iframe { position: absolute; inset: 0; width: 100%; height: 100%;
+    border: 0; border-radius: 8px; }
+  .callout { background:#faf6f4; border-left:3px solid var(--accent);
+    padding: 12px 16px; border-radius: 0 6px 6px 0; margin: 16px 0; }
+  .callout strong { color: var(--accent); }
+  .takeaway { background:#f6f6f4; border-radius:8px; padding:16px 20px; margin:28px 0; }
+  .takeaway h2 { margin-top:0; }
+  footer { margin-top: 64px; padding-top: 20px; border-top:1px solid var(--line);
+    color: var(--muted); font-size: 0.82rem; }
+</style>
+<link rel="stylesheet" href="assets/nav.css">
+</head>
+<body>
+<header>
+  <h1>DoorDash는 전 직원에게 Claude Code를 쥐여줬다 — 앤디 팡 × 보리스 체르니</h1>
+  <div class="meta">
+    2026-07-07 · 카테고리: Enterprise AI
+    <span class="orig">출처 영상:
+      <a href="https://youtu.be/hyqLNX3VExQ">DoorDash gave every employee Claude Code</a>
+      (YouTube · 한국어 정리본)</span>
+  </div>
+</header>
+
+<!-- Optional: embed the source video at the top.
+<div class="video"><iframe src="https://www.youtube.com/embed/hyqLNX3VExQ"
+  title="DoorDash gave every employee Claude Code"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+  allowfullscreen></iframe></div> -->
+
+<p>Anthropic의 <em>Office Hours</em> 인터뷰에서 Claude Code를 이끄는 보리스 체르니(Boris Cherny)가 DoorDash 공동창업자 앤디 팡(Andy Fang)을 만났다. 주제는 하나다. <strong>회사 전체가 AI로 개발하는 조직으로 바뀌면 무엇이 달라지는가.</strong> 더 빠른 타이핑 이야기가 아니라, 리더가 다시 코드를 짜고 디자이너가 프로덕션 코드를 배포하며 성공 지표가 "코드 처리량"에서 "고객 가치를 얼마나 빨리 전달하느냐"로 옮겨간 조직 전환의 기록이다.</p>
+
+<p>DoorDash는 이번 주 전 직원에게 Claude Code를 쥐여줬다. 아래는 그 과정에서 앤디가 겪은 시행착오와, 다른 회사가 그대로 참고할 만한 실전 교훈을 정리한 것이다.</p>
+
+<h2>1. "AI 유창성의 바닥"을 끌어올리다</h2>
+
+<p>앤디가 꼽은 이번 분기의 이정표는 특정 상위 인력의 실력이 아니라 <strong>회사 전체의 AI 유창성(AI fluency)의 바닥을 끌어올린 것</strong>이다. 엔지니어뿐 아니라 비엔지니어까지 Claude Code로 터미널을 열고, 코드를 짜고, 실제로 프로젝트를 배포하기 시작했다.</p>
+
+<blockquote>
+  "Raise the floor in terms of the AI fluency of our company."
+  <span class="ko">"우리 회사의 AI 유창성, 그 바닥을 끌어올리고 싶었다." — <a href="https://youtu.be/hyqLNX3VExQ?t=15" target="_blank">[00:15]</a> 앤디 팡</span>
+</blockquote>
+
+<p>앤디는 임원을 포함해 아직 많은 사람이 AI를 "그냥 채팅창"으로만 본다고 지적한다. 전환점은 AI를 Gmail·Google Calendar·Slack 같은 일상 업무 도구에 연결하는 순간에 온다. 그 순간 지식 노동자의 효율이 눈에 띄게 뛴다는 것이다.</p>
+
+<h2>2. 앤디 팡, 2013년 이후 다시 프로덕션 코드를 짜다</h2>
+
+<p>앤디의 코딩 이력은 특이하다. 아홉 살 때 원래 형을 보내려던 캠프에 대신 가면서 처음 코드를 접했고, 2013년에는 스탠퍼드 기숙사에서 DoorDash의 코드를 전부 직접 짰다. 회사가 커지면서 손을 놓았지만, Claude Code 덕분에 오랜만에 DoorDash 코드베이스에 다시 프로덕션 코드를 올렸다.</p>
+
+<p>작업 방식은 이렇다. 주로 터미널을 쓰고 데스크톱 앱도 실험한다. 개인 목표는 분명하다. <strong>코드를 손으로 짜지 않고 에이전트가 전부 쓰게 하는 것</strong> — 자신은 오케스트레이터 역할만 한다. 한 저장소에서 여러 세션을 충돌 없이 돌리기 위해 여러 저장소와 git worktree를 활용한다.</p>
+
+<p>첫 시도는 실패했다. 아무에게도 묻지 않고 혼자 프로덕션 기능을 배포해보려 했는데, 에이전트가 로컬 환경 설정을 제대로 못 잡았다. 그런데 <strong>2026년 초에 똑같은 실험을 다시 돌리자 완벽하게 작동했다.</strong> 그사이 모델이 좋아졌기 때문이다. 지금까지 Claude로 다섯 개 언어의 프로덕션 코드를 배포했다. 앤디의 결론은 단순하다. 직접 강제로 써보기 전까지는 이 도구의 힘을 믿기 어렵다.</p>
+
+<h2>3. 새 모델에는 "버렸던 아이디어"를 다시 던져보라</h2>
+
+<p>보리스는 여기서 중요한 관찰을 덧붙인다. 최신 모델이 스스로 문제를 풀어내는 능력에 큰 변곡점이 왔다는 것이다. LLM 이전에는 실패한 아이디어를 반복해서 시도하는 건 "역기능적"인 행동이었다. 지금은 반대다.</p>
+
+<blockquote>
+  "Trying just that same exact idea with a newer model, sometimes it just works."
+  <span class="ko">"몇 달 뒤 더 새로운 모델에 똑같은 아이디어를 그대로 던지면, 그냥 되는 때가 있다." — <a href="https://youtu.be/hyqLNX3VExQ?t=245" target="_blank">[04:05]</a> 보리스 체르니</span>
+</blockquote>
+
+<p>앤디는 이걸 조직 차원의 "언런(unlearn)"으로 연결한다. 지금 잘 돌아가는, 직접 공들여 만든 시스템에 대한 애착을 의도적으로 버려야 한다. 모델 능력이 빠르게 바뀌는 만큼, 설정 방식과 에이전트 구성 자체를 계속 다시 상상해야 한다는 것이다.</p>
+
+<h2>4. 매니저도 직접 배포해봐야 한다 — 그리고 토큰 예산</h2>
+
+<p>앤디가 리더들에게 던지는 구체적 과제가 있다. 프로토타입을 만들어 보는 데서 그치지 말라는 것이다.</p>
+
+<blockquote>
+  "Every engineering manager, you should try to set a goal to ship production code."
+  <span class="ko">"모든 엔지니어링 매니저는 프로덕션 코드를 배포한다는 목표를 세워봐야 한다." — <a href="https://youtu.be/hyqLNX3VExQ?t=277" target="_blank">[04:37]</a> 앤디 팡</span>
+</blockquote>
+
+<p>이유는 실용적이다. 직접 프로덕션 머지 과정을 통과해봐야 조직 안에 숨어 있는 온갖 절차적 관문과 병목이 몸으로 보인다. 리더가 그걸 겪어야 무엇을 고쳐야 할지 안다.</p>
+
+<p>DoorDash는 이 실험을 뒷받침하려고 직원들에게 <strong>토큰 예산(token budget)</strong>과 도구를 제공한다. 모두가 코딩 에이전트를 마음껏 탐색하도록 만드는 장치다.</p>
+
+<h2>5. 병목은 이제 "머지"로 옮겨갔다</h2>
+
+<p>보리스는 AI로 프로토타이핑하고 만드는 일이 훨씬 빠르고 재미있어졌다고 말한다. 코드를 짜는 행위 자체보다 최종 결과와 가치를 앞세울 수 있게 됐기 때문이다. 다만 그림자도 짚는다. 여러 에이전트를 동시에 돌리면 끊임없는 컨텍스트 전환이 정신적으로 상당히 소모적이라는 것이다. 앤디도 여러 에이전트 사이를 오가며 맥락을 관리하는 일이 힘들고 지친다고 맞장구친다.</p>
+
+<p>더 큰 변화는 병목의 위치가 바뀌었다는 점이다. AI가 코드를 워낙 빨리 뽑아내다 보니, 이제 "코드를 짜는 일"이 아니라 "코드를 머지하는 일"이 병목이 됐다. 내부에서 "머지가 왜 이렇게 오래 걸리냐"는 불만이 터져 나왔다. DoorDash는 기존 CI/CD 프로세스를 대폭 손보고, 사람 리뷰어를 돕기 위해 <strong>AI 코드 리뷰 에이전트</strong>에 투자했다.</p>
+
+<h2>6. 보안은 타협 대상이 아니다</h2>
+
+<p>속도를 높이면 보안 사고 위험도 함께 커진다. 앤디는 업계 전반에서 보안 관련 이슈가 더 자주 터지고 있다고 본다. 그래서 코드를 프로덕션에 올리기 전에 AI로 보안 문제를 먼저 잡게 한다. 다만 이건 "쫓고 쫓기는 게임"이다. AI의 능력과 처리량이 커질수록 사람도 따라잡으려 애써야 한다.</p>
+
+<p>Claude Code는 2025년에 DoorDash에 처음 들어왔다. 회사는 IT·보안팀과 손잡고 <strong>AI 도구 전용 조달·검토 패스트트랙</strong>을 따로 만들었다. 이 분야는 워낙 빨리 바뀌기 때문에 보안팀도 업계 속도에 맞춰 빠르게 움직이며 새 도구를 함께 검토해야 한다는 것이다. 진짜 변곡점은 2025년 말~2026년 초에 왔다.</p>
+
+<blockquote>
+  "Give the tools to the people and see who the early adopters are."
+  <span class="ko">"일단 도구를 사람들 손에 쥐여주고, 누가 얼리 어답터인지 지켜봐라." — <a href="https://youtu.be/hyqLNX3VExQ?t=504" target="_blank">[08:24]</a> 앤디 팡</span>
+</blockquote>
+
+<p>보리스는 이걸 "탐색의 자유와 올바른 가드레일 사이의 균형"으로 정리한다. 초기에는 예산에 지나치게 인색하지 말고 탐색을 최적화하되, <strong>보안만큼은 타협 불가(non-negotiable)</strong>라는 것이 두 사람의 공통된 선이다.</p>
+
+<h2>7. Flux — 사내 안전지대와 코드 리뷰 에이전트</h2>
+
+<p>DoorDash는 조직 전반에서 Claude Code와 Claude 모델을 여러 사내 하네스를 통해 폭넓게 쓴다. 그 중심에 <strong>Flux</strong>라는 자체 플랫폼이 있다. Flux는 클라우드 가상 머신을 제공하고, 보안 검증을 통과한 Claude 세션에 적절한 도구 접근 권한을 붙여 준다.</p>
+
+<p>앞서 언급한 AI 코드 리뷰 에이전트도 이 위에서 돈다. <strong>Agent SDK와 Claude 모델을 Flux 플랫폼 위에서 구동</strong>하는 구조다. 보리스의 표현대로, 개발 속도를 높이는 일은 결국 연이어 나타나는 병목을 하나씩 깨 나가는 과정이다.</p>
+
+<h2>8. 디자이너·PM도 소프트웨어 사이클 안으로</h2>
+
+<p>앤디는 디자이너에게도 프로덕션 코드를 배포한다는 목표를 제시했다. 코드를 직접 올려보면 자신이 소프트웨어 개발 과정에 얼마나 깊이 들어가 있어야 하는지 체감하게 된다. 그가 보기에 가장 잘 굴러가는 팀은 <strong>디자이너와 PM이 Claude를 써서 개발 사이클 안에 직접 들어와 있는 팀</strong>이다.</p>
+
+<h2>9. "4명이 한 분기" → "1명이 3주"</h2>
+
+<p>앤디는 팀 전체에 프로젝트를 <strong>3배에서 5배 빠르게</strong> 끝내라는 도전 과제를 던졌다. 이렇게 극단적인 제약을 걸어야 팀이 AI를 쓸 때 진짜 마주치는 어려움이 드러난다.</p>
+
+<blockquote>
+  "Try to get projects done in three to five X less time using AI."
+  <span class="ko">"AI를 써서 프로젝트를 3~5배 짧은 시간에 끝내보라." — <a href="https://youtu.be/hyqLNX3VExQ?t=715" target="_blank">[11:55]</a> 앤디 팡</span>
+</blockquote>
+
+<p>구체적인 숫자도 나온다. 한 엔지니어가 <strong>원래는 4명이 한 분기 내내 붙어야 했던 코드 마이그레이션을 혼자 3주 만에 끝냈다.</strong> AI 도입으로 거대 제품의 출시 일정을 절반 이하로 줄인 사례도 있다. 비결 중 하나는 표준화다. 팀 전체가 쓰는 스킬(skill)을 표준화하면, 가장 생산적인 사람의 노하우를 모두가 그대로 물려받을 수 있다.</p>
+
+<h2>10. 에이전트 친화적 코드베이스, 그리고 작은 팀</h2>
+
+<p>앤디는 코드베이스를 미리 "에이전트 친화적"으로 다듬는 선투자가 크게 남는 장사라고 강조한다. 대표적인 예로, 한 테크 리드는 <strong>50개가 넘는 아키텍처 원칙을 마크다운 파일로 문서화</strong>해 두었고, 에이전트가 코딩하는 동안 이 문서를 참조한다. 모바일 개발용 스킬도 표준화해서, 에이전트가 시뮬레이터 세팅과 워크플로 테스트를 자동으로 처리하게 만들었다.</p>
+
+<p>팀 규모에 대한 관찰도 있다. DoorDash는 특정 팀을 골라 AI 탐색에 깊이 파고들게 하는데, <strong>3~5명 규모의 작은 팀이 훌륭한 가속제</strong> 역할을 한다. 개인이 도메인 하나를 통째로 소유하니 조율 비용이 적기 때문이다.</p>
+
+<h2>11. 제너럴리스트의 부상, 스페셜리스트는 게이트키퍼로</h2>
+
+<p>AI는 팀 구성의 전제도 바꾼다. 앤디는 이제 모든 구성원이 각 분야의 깊은 전문가일 필요는 없다고 본다.</p>
+
+<blockquote>
+  "You don't necessarily need everybody to be a domain expert."
+  <span class="ko">"모두가 반드시 도메인 전문가일 필요는 없다." — <a href="https://youtu.be/hyqLNX3VExQ?t=958" target="_blank">[15:58]</a> 앤디 팡</span>
+</blockquote>
+
+<p>그는 모바일 엔지니어가 AI를 활용해 풀스택 제너럴리스트로 넓혀가도록 장려한다. 다만 스페셜리스트가 사라지는 건 아니다. iOS 아키텍처 같은 깊은 전문가는 여전히 <strong>게이트키퍼이자 에이전트를 만드는 사람</strong>으로 필요하다. 메모리·지연 시간(latency)처럼 까다로운 문제는 이들의 몫이다.</p>
+
+<p>프로세스도 다시 본다. 앤디는 제품·디자인·출시로 이어지는 전통적 리뷰 절차가 이제 큰 마찰 지점이 됐다고 지적하며, AI로 가속된 환경에서 전통적인 제품 리뷰가 계속 필요한지 되묻는다. DoorDash의 새 워크플로에서는 엔지니어가 "작동하는 상태(workable state)"의 UI를 먼저 내놓고, 디자이너가 그걸 스스로 다듬는다. AI를 앞세운 팀일수록 프로세스·설계 문서·리뷰를 줄여야 한다는 게 그의 철학이다. 이런 작은 팀이 안심하고 일하는 방식을 다시 상상하려면 <strong>VP급의 후원(sponsorship)</strong>이 필요하다고 덧붙인다.</p>
+
+<h2>12. 성공을 어떻게 측정하나 — 결국 "고객 가치를 더 빨리"</h2>
+
+<p>보리스는 지금 상황을 한 문장으로 요약한다.</p>
+
+<blockquote>
+  "The limiting factor used to be the speed of coding."
+  <span class="ko">"예전엔 병목이 코딩 속도였다 (이제는 그게 아니다)." — <a href="https://youtu.be/hyqLNX3VExQ?t=1113" target="_blank">[18:33]</a> 보리스 체르니</span>
+</blockquote>
+
+<p>엔지니어링 속도가 더 이상 병목이 아니게 되면서, 회사의 다른 모든 프로세스를 통째로 다시 짜야 하는 상황이 됐다. 앤디는 엔지니어링 ROI를 코드 처리량과 프로젝트 전달 속도로 방향성 있게 측정한다. 다만 그 지표들은 대리 지표일 뿐, <strong>궁극적인 성공 지표는 "고객에게 가치를 더 빨리 전달하는 것"</strong>이다.</p>
+
+<p>지식 노동 영역에서는 각 도메인에 <strong>AI 챔피언(AI Champion)</strong>을 세운다. 세일즈·마케팅처럼 비기술 부서에서 도메인 특유의 고충을 찾아내는 사람들이다. 예를 들어 세일즈에서는 수만 개 가맹점을 대상으로 하던 수작업 분기 비즈니스 리뷰(QBR)를 AI로 간소화한다. ROI는 작업 완수의 기준선을 끌어올리고 부서별 워크플로를 자동화하는 방식으로 잰다. 인재 발굴법도 단순하다. 도구를 쥐여주고, 누가 열정을 갖고 집어드는지 관찰한다.</p>
+
+<h2>13. 공유 문화, 그리고 신입에게 주는 조언</h2>
+
+<p>도입을 확산시키는 핵심은 문화다. 앤디는 얼리 어답터와 성공 사례(프로젝트든 사람이든)를 찾아 각 팀 안의 전도사로 삼으라고 권한다. 팀마다 자기들만의 채널과 포럼을 두고, 배운 것을 글로 남긴 <strong>아티팩트(artifact)</strong>로 회사 전체에 공유해야 한다. 중요한 건 균형이다.</p>
+
+<ul>
+  <li>멋진 성공만 자랑하지 말고 <strong>실패와 한계도 똑같이 드러내라.</strong> 이를테면 토큰만 잔뜩 태우고 실패한 통합 사례를 공유하면 다른 사람이 그걸 보고 배운다.</li>
+  <li>사람이 만든 문서 아티팩트는 그 자체로 <strong>AI 에이전트의 학습·참조 데이터</strong>가 된다.</li>
+</ul>
+
+<p>앤디는 리더에게 공감의 조언도 남긴다. 일하는 방식이 바뀌면, 손으로 코드를 짜는 데 자기 정체성을 걸어온 엔지니어에게는 일종의 "정체성의 위기"가 올 수 있다는 것이다. 그 점을 헤아려야 한다.</p>
+
+<p>마지막으로 신입 개발자를 향한 조언.</p>
+
+<blockquote>
+  "Stay curious, play around with the tools."
+  <span class="ko">"호기심을 잃지 말고, 도구를 이것저것 만져보라." — <a href="https://youtu.be/hyqLNX3VExQ?t=1422" target="_blank">[23:42]</a> 앤디 팡</span>
+</blockquote>
+
+<p>새 세대는 AI를 거의 모국어처럼 이해한다. 그 감각을 살려, 이전에는 불가능하다고 여겼던 방식으로 기술을 활용해 고용주를 놀라게 하라는 것이다.</p>
+
+<hr>
+
+<h2>핵심 정리</h2>
+<ul>
+  <li><strong>목표는 "바닥"이다.</strong> 상위 인력의 실력이 아니라 회사 전체의 AI 유창성 바닥을 끌어올리는 것 — AI를 채팅창을 넘어 Gmail·Slack 같은 업무 도구에 연결하는 순간 효율이 뛴다.</li>
+  <li><strong>리더가 직접 배포해봐야 한다.</strong> 프로토타입이 아니라 프로덕션 머지까지 통과해봐야 조직에 숨은 병목이 몸으로 보인다. 실패한 아이디어도 새 모델에 다시 던지면 "그냥 되는" 때가 있다.</li>
+  <li><strong>병목은 코드 작성에서 머지로 옮겨갔다.</strong> AI 처리량이 커지면 CI/CD·코드 리뷰가 새 병목이 된다. DoorDash는 Flux 위에서 Agent SDK 기반 코드 리뷰 에이전트로 대응한다. 단, 보안은 타협 불가.</li>
+  <li><strong>조직이 바뀐다.</strong> 디자이너·PM이 프로덕션 코드를 배포하고, 제너럴리스트가 늘며(스페셜리스트는 게이트키퍼로 남고), 프로세스·설계 문서·리뷰는 줄어든다. 4명이 한 분기 걸리던 일을 1명이 3주에 끝낸 사례가 나온다.</li>
+  <li><strong>지표는 결국 고객 가치다.</strong> 코드 처리량은 대리 지표일 뿐, 궁극의 성공은 고객에게 가치를 3~5배 빨리 전달하는 것. 성공·실패를 글로 남겨 공유하는 문화와, 변화가 부르는 "정체성의 위기"에 대한 공감이 확산의 열쇠다.</li>
+</ul>
+
+
+<footer>
+  이 글은 위 YouTube 영상을 보고 한국어로 정리한 비공식 요약·해설입니다.
+  직접 인용은 짧게 옮겼으며, 정확한 내용과 뉘앙스는 원본 영상을 함께 보세요.
+</footer>
+<script src="assets/store.js"></script>
+<script src="assets/posts.js"></script>
+<script src="assets/nav.js"></script>
+</body>
+</html>
