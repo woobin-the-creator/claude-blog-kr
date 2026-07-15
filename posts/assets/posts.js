@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "working-at-the-frontier-why-base44-trusts-claude-fable-5-with-their-most-challenging-engineering-work.html", date: "2026-07-15", main: "Claude blog", cat: "Enterprise AI",
+      title: "프런티어에서 일하기: Base44는 왜 가장 까다로운 엔지니어링 작업을 Claude Fable 5에 맡기는가", nav: "Base44의 가장 까다로운 작업" },
     { file: "doordash-every-employee-claude-code.html", date: "2026-07-07", main: "Claude Youtube", cat: "Enterprise AI",
       title: "DoorDash는 전 직원에게 Claude Code를 쥐여줬다 — 앤디 팡 × 보리스 체르니", nav: "DoorDash, 전 직원에게 Claude Code" },
     { file: "working-at-the-frontier-how-hebbia-builds-ai-for-financial-diligence-that-cant-miss-a-detail.html", date: "2026-07-13", main: "Claude blog", cat: "Enterprise AI",

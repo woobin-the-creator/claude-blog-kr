@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>프런티어에서 일하기: Base44는 왜 가장 까다로운 엔지니어링 작업을 Claude Fable 5에 맡기는가</title>
+<style>
+  :root { --fg:#1a1a1a; --muted:#666; --line:#e5e5e5; --accent:#c96442; --code-bg:#f6f6f4; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo",
+      "Malgun Gothic", sans-serif;
+    color: var(--fg); line-height: 1.75; max-width: 760px;
+    margin: 0 auto; padding: 48px 24px 96px; background:#fff;
+  }
+  header { border-bottom: 2px solid var(--line); padding-bottom: 24px; margin-bottom: 32px; }
+  h1 { font-size: 1.9rem; line-height: 1.35; margin: 0 0 12px; }
+  .meta { color: var(--muted); font-size: 0.9rem; }
+  .meta .orig { display:block; margin-top:6px; }
+  .meta a { color: var(--accent); text-decoration: none; }
+  h2 { font-size: 1.4rem; margin: 44px 0 8px; padding-top: 8px; }
+  h3 { font-size: 1.15rem; margin: 30px 0 8px; color:#000; }
+  .builders { color: var(--muted); font-size: 0.92rem; margin: 0 0 14px; }
+  p { margin: 0 0 16px; }
+  a { color: var(--accent); }
+  ul { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  blockquote { margin: 16px 0; padding: 8px 18px; border-left:3px solid var(--line);
+    color:#333; font-style: italic; }
+  hr { border: none; border-top: 1px solid var(--line); margin: 40px 0; }
+  code { background: var(--code-bg); padding: 2px 6px; border-radius: 4px;
+    font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 0.88em; }
+  pre { background: var(--code-bg); padding: 16px 18px; border-radius: 8px;
+    overflow-x: auto; border:1px solid var(--line); }
+  pre code { background: none; padding: 0; font-size: 0.85rem; line-height:1.5; }
+  figure { margin: 24px 0; }
+  figure img { width: 100%; height: auto; border:1px solid var(--line); border-radius: 8px;
+    background:#fff; }
+  figure.hero img { border:none; max-width: 210px; display:block; margin: 0 auto 8px; }
+  figcaption { color: var(--muted); font-size: 0.85rem; text-align: center;
+    margin-top: 10px; line-height: 1.5; }
+  figcaption a { color: var(--accent); }
+  .video { position: relative; width: 100%; aspect-ratio: 16 / 9; margin: 22px 0; }
+  .video iframe { position: absolute; inset: 0; width: 100%; height: 100%;
+    border: 0; border-radius: 8px; }
+  .callout { background:#faf6f4; border-left:3px solid var(--accent);
+    padding: 12px 16px; border-radius: 0 6px 6px 0; margin: 16px 0; }
+  .callout strong { color: var(--accent); }
+  footer { margin-top: 64px; padding-top: 20px; border-top:1px solid var(--line);
+    color: var(--muted); font-size: 0.82rem; }
+</style>
+<link rel="stylesheet" href="assets/nav.css">
+</head>
+<body>
+<header>
+  <h1>프런티어에서 일하기: Base44는 왜 가장 까다로운 엔지니어링 작업을 Claude Fable 5에 맡기는가</h1>
+  <div class="meta">
+    2026년 7월 15일 · 카테고리: <a href="https://claude.com/blog/category/enterprise-ai">Enterprise AI</a> · 읽는 데 5분
+    <span class="orig">원문:
+      <a href="https://claude.com/blog/working-at-the-frontier-why-base44-trusts-claude-fable-5-with-their-most-challenging-engineering-work">Working at the frontier: Why Base44 trusts Claude Fable 5 with their most challenging engineering work</a>
+      (한글 번역본)</span>
+  </div>
+</header>
+
+<figure class="hero"><img src="assets/working-at-the-frontier-why-base44-trusts-claude-fable-5-with-their-most-challenging-engineering-work/hero.svg" alt="벽돌을 쌓는 손 일러스트"></figure>
+
+<div class="video"><iframe src="https://www.youtube.com/embed/K14-tbSfqqw" title="Working at the Frontier: Base44"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+  allowfullscreen></iframe></div>
+
+<p>Base44는 기술 실력에 상관없이 누구나 풀스택 애플리케이션과 웹사이트를 만들 수 있게 해 주는 바이브 코딩(vibe-coding) 플랫폼이다. 고객층은 개발자가 한 명도 없는 소규모 사업자부터, 이 플랫폼으로 완전한 SaaS 제품을 만드는 회사까지 걸쳐 있다.</p>
+
+<p>Base44의 첫 직원으로 합류해 지금은 제품을 총괄하는 요아브 오를레브(Yoav Orlev)는, 자기 일에서 가장 만족스러운 부분 하나로 소규모 사업자들이 이 플랫폼으로 해내는 것들을 지켜보는 일을 꼽는다. 시간도, 예산도, 노하우도 없어 엄두를 못 내던 일들이다. 디지털 매장을 만드는 것이든, 식당 직원용 근무 교대 관리 앱을 만드는 것이든 말이다. 그의 팀이 세운 사명은 제품의 역량을 계속 넓혀 가되 누구나 쓸 수 있게 유지하는 것이다.</p>
+
+<p>Base44의 제품 팀과 엔지니어링 팀은 늘 빠르게 움직여 왔다. 특히 규모가 작거나 중간 정도인 기능을 내보낼 때 그랬다. 하지만 서로 얽힌 여러 부분을 건드리는 플랫폼 핵심부의 변경은 오직 가장 노련한 엔지니어들에게만 맡길 수 있었다.</p>
+
+<p>그런 병목 하나가 Base44의 시스템 프롬프트, 그리고 그 수백 가지 변형이었다. 이 프롬프트는 사용자가 첫 앱을 만드는 중인지 다섯 번째 앱을 만드는 중인지, 무료 사용자인지 구독자인지에 따라, 또 만들고 있는 앱의 분류와 기능에 따라 달라진다. 또 다른 병목은 네이티브 모바일 인프라의 변경이었는데, 이는 모바일 전문성을 갖춘 엔지니어만 손댈 수 있었다.</p>
+
+<p>Base44의 앱 생성 엔진은 2025년 초 출시 때부터 초기 Claude 모델들로 구동돼 왔지만, 오를레브의 말에 따르면 그 모델들에는 이런 작업을 맡길 수 없었다. 예를 들어 모델이 어떤 오류에 막히면, 해법이 코드 어딘가에 이미 존재할 가능성이 크다는 점을 알아차리고 그것을 찾아 나서는 대신, 눈앞의 그 지점만 계속 붙들고 씨름하곤 했다.</p>
+
+<blockquote>"다음에 무엇을 할지 정하는 결정이 결정적으로 중요한데, [이전] 모델들은 대부분의 경우, 말하자면 순진한(naive) 접근을 택했습니다." 그는 말한다.</blockquote>
+
+<p>Claude Fable 5는, 소프트웨어가 어떻게 만들어지는지를 이해하고 있는 것처럼 추론해 낸 첫 모델이었다고 오를레브는 말한다.</p>
+
+<h2>가장 복잡한 제품·엔지니어링 작업을 Fable 5에 맡기다</h2>
+
+<p>Base44는 새 Claude 모델이 나올 때마다 여러 앱 유형에 걸쳐 평가(eval)를 돌리며 지연 시간(latency), 비용, 빌드 오류를 측정한다. 팀은 또 마인크래프트 클론을 만들게 해서 모델이 게임 물리와 메커니즘을 어떻게 다루는지 보는 것 같은 테스트도 돌린다.</p>
+
+<p>Claude Fable 5에서는 두 가지가 두드러졌다. 훨씬 적은 턴(turn)으로 작업을 끝냈고, 첫 프롬프트만으로 더 완성도 높은 앱을 만들어 냈다는 점이다. 이전 모델들이 건너뛰던 엣지 케이스(edge case)까지 포함해서다.</p>
+
+<p>그래서 팀은 그동안 가장 노련한 엔지니어들에게만 맡겨 두었던 작업, 즉 Base44 시스템 프롬프트를 다시 짜는 일을 이 모델에 겨냥했다. 약 한 시간 동안 오가는 질문을 주고받은 뒤, Claude Fable 5는 네 시간을 스스로 돌아 필요한 것의 90%에서 95%를 내놓았다. 팀은 이어서 자체 A/B 테스트 인프라를 써서 이 변경들을 그날 오후에 측정하고 내보낼 수 있었다. 게다가 Claude Fable 5는 작업하는 도중에 Base44 자체 평가의 허점 하나까지 짚어 냈다. 프롬프트 변경이 캐시(cache)를 깨뜨릴 수 있는데도 팀이 캐시 적중(cache hit)을 테스트하지 않고 있었다는 점이었다. 수백만 명 규모에서는 이것이 비용을 끌어올린다. 모델이 사각지대를 제기하고 그것을 바로잡은 것이다.</p>
+
+<p>Claude Fable 5가 Base44 인앱 에이전트를 떠받치는 하니스(harness) 변경에서 막혔을 때, 그것은 같은 문제가 코드베이스 어딘가에서 이미 해결됐을 가능성이 크다고 추론했고, 그 부분을 조사하러 가서 해법을 들고 돌아왔다. "'이건 아마 다른 어딘가에서 이미 해결됐을 테니 거길 조사하러 가야겠다'는 이런 추론은, 다른 모델에서는 그리 자주 본 적이 없는 것입니다." 오를레브는 말한다.</p>
+
+<p>오를레브는 Claude Fable 5와 함께 일하는 것을 노련한 엔지니어와 함께 일하는 것에 빗댄다. 주니어 엔지니어에게는 모든 단계를 일일이 지정하고 끊임없이 확인해 줘야 하지만, 시니어에게는 목표와 그 이유만 브리핑하면 된다.</p>
+
+<p>이런 종류의 작업은 엔지니어링 팀 바깥으로도 뻗어 나간다. 한 프로덕트 매니저가 네이티브 모바일 앱 빌드를 Base44 안으로 들여오고 싶어 했을 때, 그는 Claude Fable 5를 그 일에 겨냥했고 대략 두 시간 반 만에 프로덕션으로 옮길 만한 수준의 약 90%에 이르는, 작동하는 환경을 손에 넣었다.</p>
+
+<p>Claude Fable 5 이전에는 이런 종류의 작업이 Base44 최상위 엔지니어 세 명이나 전문가 한 명이 여유가 생길 때까지 기다려야 했다. 이제는 모델이 작업을 실행하고, 오를레브의 팀이 코드를 검토·테스트·승인한 뒤 내보낸다.</p>
+
+<figure>
+  <img src="assets/working-at-the-frontier-why-base44-trusts-claude-fable-5-with-their-most-challenging-engineering-work/team.jpeg" alt="Base44의 제품·엔지니어링·디자인 팀">
+  <figcaption>Claude Fable 5는 Base44의 제품·엔지니어링·디자인 팀에게 Superagents 플랫폼의 더 야심 찬 부분들을 만들어 낼 자신감을 준다.</figcaption>
+</figure>
+
+<h2>다음은 무엇인가</h2>
+
+<p>Claude 모델의 역량이 발전할수록, 이 플랫폼을 향한 Base44 팀의 목표도 함께 커진다. 팀은 Base44를 앱을 만드는 도구에서, 만들어 낸 것을 관리하고 키워 가도록 돕는 도구로도 바꿔 놓는 것을 목표로 한다. 이제 공개된 Base44 Superagents는 그 앱들을 둘러싼 워크플로를 실행한다.</p>
+
+<p>복잡한 작업을 Fable 5에 믿고 맡길 수 있다는 것을 알게 된 오를레브는, 이제 프로덕트 매니저와 디자이너들에게도 그동안 무언가 망가질까 두려워 손대기 꺼렸던 플랫폼의 부분들을 직접 만들어 보라고 독려한다.</p>
+
+<blockquote>"Fable은 우리에게 비즈니스에서 더 과감한 수를 둘 자신감을 줬습니다." 오를레브는 말한다. "그것은 제품을, 예전 같으면 말하자면 겁이 나서 못 했을 완전히 새로운 영역과 가능성으로 데려가고 있습니다."</blockquote>
+
+<footer>
+  이 글은 Claude 공식 블로그 원문을 한국어로 옮긴 비공식 번역본입니다.
+  내용의 정확한 의미는 위 원문 링크를 함께 참고하세요.
+</footer>
+<script src="assets/store.js"></script>
+<script src="assets/posts.js"></script>
+<script src="assets/nav.js"></script>
+</body>
+</html>
