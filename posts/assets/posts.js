@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "working-with-claude-fable-5-in-claude-cowork.html", date: "2026-07-16", main: "Claude blog", cat: "Claude Cowork",
+      title: "Claude Cowork에서 Claude Fable 5와 함께 일하기", nav: "Cowork에서 Fable 5와 일하기" },
     { file: "ai-code-migration.html", date: "2026-07-16", main: "Claude blog", cat: "Claude Code",
       title: "Anthropic은 Claude Code로 대규모 코드 마이그레이션을 어떻게 진행하는가", nav: "대규모 코드 마이그레이션" },
     { file: "working-at-the-frontier-why-base44-trusts-claude-fable-5-with-their-most-challenging-engineering-work.html", date: "2026-07-15", main: "Claude blog", cat: "Enterprise AI",
