@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>제로 리스크는 목표가 아니다: CISO를 위한 에이전틱 AI 가이드</title>
+<style>
+  :root { --fg:#1a1a1a; --muted:#666; --line:#e5e5e5; --accent:#c96442; --code-bg:#f6f6f4; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo",
+      "Malgun Gothic", sans-serif;
+    color: var(--fg); line-height: 1.75; max-width: 760px;
+    margin: 0 auto; padding: 48px 24px 96px; background:#fff;
+  }
+  header { border-bottom: 2px solid var(--line); padding-bottom: 24px; margin-bottom: 32px; }
+  h1 { font-size: 1.9rem; line-height: 1.35; margin: 0 0 12px; }
+  .meta { color: var(--muted); font-size: 0.9rem; }
+  .meta .orig { display:block; margin-top:6px; }
+  .meta a { color: var(--accent); text-decoration: none; }
+  h2 { font-size: 1.4rem; margin: 44px 0 8px; padding-top: 8px; }
+  h3 { font-size: 1.15rem; margin: 30px 0 8px; color:#000; }
+  .builders { color: var(--muted); font-size: 0.92rem; margin: 0 0 14px; }
+  p { margin: 0 0 16px; }
+  a { color: var(--accent); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  blockquote { margin: 16px 0; padding: 8px 18px; border-left:3px solid var(--line);
+    color:#333; font-style: italic; }
+  hr { border: none; border-top: 1px solid var(--line); margin: 40px 0; }
+  code { background: var(--code-bg); padding: 2px 6px; border-radius: 4px;
+    font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 0.88em; }
+  pre { background: var(--code-bg); padding: 16px 18px; border-radius: 8px;
+    overflow-x: auto; border:1px solid var(--line); }
+  pre code { background: none; padding: 0; font-size: 0.85rem; line-height:1.5; }
+  figure { margin: 24px 0; }
+  figure img { width: 100%; height: auto; border:1px solid var(--line); border-radius: 8px;
+    background:#fff; }
+  figure.hero img { border:none; max-width: 210px; display:block; margin: 0 auto 8px; }
+  figcaption { color: var(--muted); font-size: 0.85rem; text-align: center;
+    margin-top: 10px; line-height: 1.5; }
+  figcaption a { color: var(--accent); }
+  .video { position: relative; width: 100%; aspect-ratio: 16 / 9; margin: 22px 0; }
+  .video iframe { position: absolute; inset: 0; width: 100%; height: 100%;
+    border: 0; border-radius: 8px; }
+  .callout { background:#faf6f4; border-left:3px solid var(--accent);
+    padding: 12px 16px; border-radius: 0 6px 6px 0; margin: 16px 0; }
+  .callout strong { color: var(--accent); }
+  footer { margin-top: 64px; padding-top: 20px; border-top:1px solid var(--line);
+    color: var(--muted); font-size: 0.82rem; }
+</style>
+<link rel="stylesheet" href="assets/nav.css">
+</head>
+<body>
+<header>
+  <h1>제로 리스크는 목표가 아니다: CISO를 위한 에이전틱 AI 가이드</h1>
+  <div class="meta">
+    2026년 7월 17일 · 카테고리: <a href="https://claude.com/blog/category/enterprise-ai">Enterprise AI</a> · 읽는 데 5분
+    <span class="orig">원문:
+      <a href="https://claude.com/blog/ciso-guide-to-agentic-ai">Zero risk isn't the job: a CISO's guide to agentic AI</a>
+      (한글 번역본)</span>
+  </div>
+</header>
+
+<figure class="hero"><img src="assets/ciso-guide-to-agentic-ai/hero.svg" alt="에이전틱 AI 보안을 상징하는 일러스트"></figure>
+
+<p class="builders">Anthropic의 부(副)CISO 제이슨 클린턴(Jason Clinton)이 에이전틱 AI를 도입하며 팀이 얻은 교훈과, 에이전트를 안전하게 만들고 배포하기 위해 정립한 리스크 평가 프레임워크를 공유한다.</p>
+
+<p>보안 리더들은 불과 몇 달 전만 해도 존재하지 않던 에이전틱 AI 활용 사례를 승인해 달라는 요청을 받고 있다. 이사회는 그중 무엇이라도 통제되고 있는지 알고 싶어 하고, 조직 어딘가에서는 이미 어떤 직원이 아무 말 없이 에이전트를 무언가에 연결해 두었다.</p>
+
+<p>이런 요청에 “안 된다”고 답하면 섀도 도입(shadow adoption)이 생겨난다. 섀도 도입은 관측 데이터(telemetry)가 전혀 없고, 대개 끌 수 있는 스위치도 없다. 반대로 통제 없이 “된다”고 답하면 사고가 난다. 그리고 회사에서 벌어지는 첫 번째 심각한 에이전트 사고는 AI 프로그램 전체를 뒤로 후퇴시킨다.</p>
+
+<p>에이전틱 AI 시대에 CISO의 책임은 제로 리스크를 달성하는 것이 아니다. 우리의 일은 에이전트 리스크를 눈에 보이고(legible) 경계가 정해진(bounded) 것으로 만드는 것이다. 그래야 우리가 감당할 수 있는 범위를 의도적으로 받아들일 수 있고, 비즈니스가 우리를 우회하는 게 아니라 우리 조건 위에서 움직이게 된다.</p>
+
+<p>이 글에서는 에이전트의 보안 리스크를 평가하는 우리의 프레임워크를 공유하고, ‘경계가 정해졌다’는 말이 실제로 무엇을 뜻하는지 설명하며, 우리 작업이 어디로 향하고 있는지 미리 짚어 본다.</p>
+
+<h2>Mythos 이후 시대의 AI발(發) 외부 리스크 대 내부 리스크</h2>
+
+<p><a href="https://claude.com/blog/preparing-your-security-program-for-ai-accelerated-offense">앞선 블로그 글</a>에서 나와 동료들은, AI가 취약점의 존재와 실제로 작동하는 익스플로잇 사이의 시간을 어떻게 무너뜨리고 있는지 공유하며 조직이 이런 리스크를 어떻게 완화할 수 있는지 강조했다. 앞으로 몇 달 안에, 코드 속에 때로는 몇 년씩 눈에 띄지 않은 채 잠들어 있던 방대한 수의 버그가 AI 모델에 의해 발견되고 작동하는 익스플로잇으로 엮일 것으로 우리는 예상한다. <a href="https://red.anthropic.com/2026/mythos-preview/">Claude Mythos Preview</a>나 <a href="https://www.anthropic.com/news/claude-fable-5-mythos-5">Claude Mythos 5</a> 같은 프런티어 모델은 이미 OpenBSD, 리눅스 커널, 그리고 <a href="https://blog.mozilla.org/en/privacy-security/ai-security-zero-day-vulnerabilities/">모질라 파이어폭스</a>를 포함해, 수년간의 사람 리뷰가 놓쳤던 <a href="https://www.anthropic.com/glasswing">심각한 취약점</a>들을 찾아내고 있다.</p>
+
+<p>이는 모든 GRC(거버넌스·리스크·컴플라이언스) 프로그램에 심각한 위험이다. 취약점 간극을 완화하고 닫는 일, 그리고 다가오는 익스플로잇의 물결에 대비하는 일은 최우선 과제가 되어야 한다. 이 주제에 대해서는 별도의 문서를 준비해 두었다. <a href="https://claude.com/blog/preparing-your-security-program-for-ai-accelerated-offense">AI로 가속된 공격에 대비해 보안 프로그램을 준비하기</a>가 그것이다. 이 가이드에서는 내부 리스크에 초점을 맞춘다.</p>
+
+<h2>내부 리스크를 통제하기</h2>
+
+<p>많은 조직에서 에이전틱 시스템의 가장 가능성 높은 위협 경로는, 감독이 충분치 않은 개인 에이전트를 통해 서로 다른 시스템들이 연결되면서 발생하는 데이터 유출이다. 또 다른 걱정거리는 <a href="https://www.anthropic.com/research/prompt-injection-defenses">프롬프트 인젝션(prompt injection)</a>이다. 공격자가 에이전트가 읽는 콘텐츠 안에 지시를 숨겨 두면, 에이전트는 사용자가 아니라 공격자의 말을 따르게 된다. 신뢰할 수 없는 콘텐츠를 건드리는 에이전트라면, 모델의 방어가 얼마나 견고한지에 따라 이런 공격에 노출될 수 있다. 모델은 점점 더 능력이 커지면서 인젝션에 저항하는 능력도 의미 있게 좋아지고 있다. <a href="http://anthropic.com/research/prompt-injection-defenses">공격 성공률은 계속 떨어지고 있지만</a> 0은 아니다. 이 두 사례 말고도 걱정거리는 많고, 쏟아지는 새로운 유형의 우려들은 압도적으로 느껴질 수 있다.</p>
+
+<h3>던져야 할 네 가지 질문</h3>
+
+<p>에이전틱 활용 사례가 우리 리뷰 절차에 도달하면, 우리는 네 가지 질문을 던지며 그 리스크를 평가한다.</p>
+
+<ol>
+  <li><strong>어떤 신뢰할 수 없는 콘텐츠를 흡수하는가?</strong> ‘신뢰할 수 없다(untrusted)’는 것은 공격자가 그럴듯하게 작성하거나 변조할 수 있는 모든 것을 뜻한다. 외부 이메일, 열린 웹, 제3자 문서, 공개 저장소 등이 여기에 포함된다. 답이 “아무것도 없다”라면, 에이전트 고유의 리스크는 거의 0에 가깝고 빠르게 움직여도 된다.</li>
+
+  <li><strong>어떤 행동을 할 수 있고, 누구를 대신해서 하는가?</strong> 읽기 전용은 읽기/쓰기와는 전혀 다른 문제다. 도구 호출, 코드 실행, 네트워크 아웃바운드(egress)는 각각 노출 범위를 넓힌다. 모든 행동은 어떤 신원(identity) 아래에서 일어나며, 그게 누구의 신원인지 알아야 한다.</li>
+
+  <li><strong>어긋났을 때(misaligned) 피해 반경(blast radius)은 얼마나 되는가?</strong> ‘범위 × 심각도’가 빠른 계산법이다. 악의적 행위자나 정렬(alignment) 사고가 파일 하나에 접근했는가, 아니면 조직 전체에 접근했는가? 그 결과가 이례적 현상인가, 성가신 정도인가, 데이터 노출인가, 아니면 진짜 사고인가?</li>
+
+  <li><strong>내가 어떤 관측 가능성(observability)을 갖고 있는가?</strong> 에이전트의 행동과 사용자의 행동을 구분할 수 있는가? 그것이 SIEM에 남는가?</li>
+</ol>
+
+<p>이 네 질문에 대한 답이 리스크의 전체 그림을 그려 주지만, 무엇을 해야 할지는 ‘최소 에이전시 원칙(principle of least agency)’이 알려 준다. 작업을 완수하는 데 필요한 가장 좁은 권한만 부여하라는 것이다(자세한 내용은 <a href="https://cdn.prod.website-files.com/6889473510b50328dbb70ae6/6a1611a04085d7cd3dadc924_Claude-eBook-Zero-Trust-for-AI-Agents-05182026.pdf">Zero Trust for AI Agents</a> 백서를 참고하라). Anthropic의 기본 자세는 관리자 페이스의 단계적 확산(admin-paced rollout)이다. 소규모 그룹에 먼저 열어 주고, 관측 데이터를 지켜보고, 그런 다음 접근을 확대한다. 이 질문들을 위험한 에이전틱 시스템을 사고하는 새로운 틀로 적용하라.</p>
+
+<p>당신의 의도에서 벗어나 어긋나 버린 에이전트는 내부자 공격과 구분할 수 없다. 보안 업계는 2019~2022년에 걸쳐 <a href="https://www.cisa.gov/resources-tools/resources/insider-threat-mitigation-guide">내부자 리스크를 하나의 분과로</a> 정립했다. 경계(perimeter) 방어와는 구별되는 영역으로 말이다. 시스템에서 가장 위험한 외부 공격 경로는, 이미 정당한 접근권을 가진 누군가를 손에 넣는 방식인 경우가 많다는 것을 인식했기 때문이다.</p>
+
+<p>운영상의 차이는 대응 시간이다. <a href="https://www.ponemon.org/news-updates/blog/security/lessons-learned-from-the-2026-global-cost-of-insider-risks.html">포네몬 연구소(Ponemon Institute)의 2026년 내부자 리스크 비용 보고서</a>에 따르면, 조직들은 전담 내부자 리스크 프로그램에 수년을 투자하고도 내부자 사고를 봉쇄하는 데 평균 67일이 걸렸다. 에이전트의 실행 속도에서는, 며칠 단위로 측정되는 대응은 너무 느리다.</p>
+
+<h2>에이전트 신원의 스펙트럼</h2>
+
+<p>우리가 배포하는 모든 것은 <a href="https://claude.com/blog/agent-identity-access-model">신원 접근 모델(identity access model)</a> 스펙트럼의 두 극단 중 어느 한쪽에 놓인다.</p>
+
+<p>한쪽 극단은 <strong>시스템 서비스 계정</strong>이다. 자기완결적이고, 단일 목적이며, 최소 권한을 가진 신원으로, 사람의 신원이 붙어 있지 않은 채 비즈니스를 위해 딱 한 가지 일만 한다. 아래에 나오는 사고 대응(incident-response) 에이전트, 티켓 분류 에이전트, 자율 코드 리뷰어가 이런 예다. 또 다른 예는 <a href="https://www.anthropic.com/news/introducing-claude-tag">Claude Tag</a>다. 사람 팀이 Slack 같은 공유 워크스페이스에서 Claude를 태그해 부르는 방식으로 에이전트와 협업할 수 있게 해 주는 우리의 새 공유 워크스페이스 에이전트다.</p>
+
+<p>다른 쪽 극단은 <strong>사람의 자격증명(human credential)</strong>이다. 직원이 채팅 인터페이스나 노트북 위의 Claude Cowork 같은 개인 에이전트 하네스를 사용할 때, 키보드 앞의 그 사람이 결과에 책임을 진다. 자기 자격증명으로 한 다른 모든 일에 책임을 지는 것과 똑같다.</p>
+
+<p>스펙트럼의 중간, 즉 에이전트가 어떤 사람의 위임된 신원을 그 사람이 지켜보고 있지 않은 시스템 안으로 가지고 들어가는 지점이 바로 책임 소재가 애매해지는 곳이다. 책임 소재의 모호함은 사고가 설명 불가능한 것이 되는 경로다.</p>
+
+<p>당신의 의도에서 벗어나 어긋나 버린 에이전트는 내부자 공격과 구분할 수 없다. 보안 업계는 2019~2022년에 걸쳐 <a href="https://www.cisa.gov/resources-tools/resources/insider-threat-mitigation-guide">내부자 리스크를 하나의 분과로</a> 정립했다. 경계 방어와는 구별되는 영역으로 말이다. 시스템에서 가장 위험한 외부 공격 경로는, 이미 정당한 접근권을 가진 누군가를 손에 넣는 방식인 경우가 많다는 것을 인식했기 때문이다.</p>
+
+<p><a href="https://www.ponemon.org/news-updates/blog/security/lessons-learned-from-the-2026-global-cost-of-insider-risks.html">포네몬 연구소의 2026년 내부자 리스크 비용 보고서</a>에 따르면, 조직들은 전담 내부자 리스크 프로그램에 수년을 투자하고도 내부자 사고를 봉쇄하는 데 평균 67일이 걸렸다. 에이전트의 실행 속도에서라면 67일은 애초에 잘못된 측정 단위다.</p>
+
+<h2>사례 연구: 사고 대응 에이전트</h2>
+
+<p>1년도 더 전에, 우리는 Claude를 우리의 사고 대응 절차에 붙였다. 운영 애플리케이션에 온콜(on-call)로 서 본 사람이라면 아는 문제다. 새벽 2시에 보안 사고로 호출을 받으면, 사고 대응 채널을 만들고, 적절한 사람들을 불러 모으고, 작업에 착수한다. 이 과정은 지루하고, 문서 작업이 많고, 빠르게 흘러간다. 그러나 운영 환경 코드베이스에 대한 올바른 맥락만 갖춰지면, 그 대부분을 자동화할 수 있다.</p>
+
+<p>그래서 우리는 그 일을 하는 에이전트를 만들었다. 에이전트에게는 세 가지 도구를 주었다. PII(개인식별정보)가 담기지 않은 우리 운영 로그에 대한 읽기 전용 접근, 사고 채널을 열고 절차를 진행하기 위한 Slack 접근, 그리고 사고가 해결된 뒤 사후 분석(postmortem)을 위한 Google Doc 초안 작성 능력이다.</p>
+
+<p>우리는 이 에이전트를 네 가지 질문에 통과시켰다.</p>
+
+<ul>
+  <li><strong>신뢰할 수 없는 콘텐츠:</strong> 없음. 입력은 우리 자신의 로그와 우리 내부 Slack이었고, 둘 다 신뢰 경계 안에 있었다. 따라서 인젝션을 하려면 익명의 공격자가 아니라 내부자나 탈취된 계정이 있어야 했다.</li>
+  <li><strong>행동:</strong> 어디서든 읽지만, 쓰기는 새 문서와 Slack 메시지로 한정됐다. 수정이나 삭제도 없고, 권한 변경도 없고, 외부 엔드포인트도 없다.</li>
+  <li><strong>피해 반경:</strong> 우리가 구성해 볼 수 있었던 최악의 결과는, 이미 잠금이 걸린 사고 채널에 다소 민감한 로그 몇 줄이 올라가는 정도였다.</li>
+  <li><strong>관측 가능성:</strong> 모든 행동이 우리 SIEM에 남았기 때문에, 예상치 못한 일은 몇 주가 아니라 몇 분 안에 드러났을 것이다.</li>
+</ul>
+
+<p>이 에이전트가 리스크가 전혀 없는 것은 아니었지만, 경계가 정해진 쓰기 표면 위에서, 감사(audit)가 완전히 커버되는 상태로 작동했다. 우리가 편안하게 받아들일 수 있는 리스크 프로파일이었다.</p>
+
+<p>그런데 이 이야기에는 흥미로운 후일담이 있다. 모델이 새로 릴리스될 때마다 이 에이전트는 더 똑똑해졌다. 2025년 11월, 우리는 이 에이전트를 Claude Opus 4에서 Claude Opus 4.5로 옮겼고, 그 밖에는 아무것도 바꾸지 않았다. 새 도구도, 권한도, 프롬프트도 없었다. 그 직후, 처음으로, 지능 향상 하나만으로도 에이전트는 사고가 진행되는 도중에 스스로 깨달았다. 자신이 이미 스택 트레이스에서 근본 원인을 찾아냈다는 것, 그리고 아직 도착하지 않은 사람이 없는 상황에서, 적절한 코드 접근권을 가진 다른 에이전트에게 연락해 코드 변경을 만들어 냄으로써 자기 힘으로 운영 환경을 고쳐 볼 수 있다는 것을 말이다.</p>
+
+<p>사후에 우리는 로그를 검토했다. 사고의 흐름(thinking traces) 속에서 에이전트가 이렇게 헤쳐 나가는 것을 지켜봤다. <em>나는 요청받은 일을 다 했다. 사람은 여기 없다. 내가 이 문제를 고쳐 버리면 어떨까?</em> Anthropic 내부에는 코드 변경을 작성하고 사람 리뷰를 위해 업로드할 수 있는, Claude Tag와 유사한 기술의 내부 변형이 있다. 에이전트는 스스로 Slack을 통해 이 Claude Tag 유사 인스턴스에게 연락해 수정 코드를 작성해 달라고 요청했다. 그 수정은 풀 리퀘스트(pull request)로 올라갔고, 운영에 반영되기 전에 사람이 리뷰했다.</p>
+
+<p>이 창발적(emergent) 에이전트-대-에이전트 통신에서 비롯된 확장된 피해 반경은, 그 자체가 우리의 원칙 아래에서 통제되고 있었다. 일어날 수 있는 최악은 운영 로그 한 줄이 담긴 코드 변경이 업로드되는 정도였다. 이 에이전트-대-에이전트 통신은 이제 우리 사고 대응의 근본 원인 분석·수습 관행의 정기적인 일부가 되었다. 모두 ‘휴먼 온 더 루프(human-on-the-loop)’ 모니터링 아래에서다.</p>
+
+<p>이 창발적 행동은 우리에게 두 가지를 가르쳐 주었다. 첫째, 새로운 능력은 에이전트 배포의 경계 안에서 나타날 수 있다. 오늘의 모델 한계가 이러하다고 당신이 믿는 것을 기준으로 삼지 말고, 접근과 행동 자체를 제한하는 것이 중요하다. 둘째, 이처럼 확률적으로(stochastic) 움직이는 에이전트에게도 통제는 효과가 있다. 이 새로운 행동은 Slack 채널에서 일어났기 때문에 휴먼 온 더 루프였고, 유일하게 쓰기에 해당하는 행동조차 여전히 사람의 리뷰를 필요로 했다.</p>
+
+<p>오늘날 사고 대응 바깥에서도, 사람들이 일하는 곳의 채팅 채널 안에서 휴먼 온 더 루프로 이뤄지는 에이전트-대-에이전트 통신은 일상이 되었다.</p>
+
+<h2>사례 연구: Claude Cowork</h2>
+
+<p>사고 대응 에이전트는 한 가지 일을 하는 서비스 계정으로, 경계가 정해진 서비스 계정 안에 있다. <a href="https://support.claude.com/en/articles/13345190-get-started-with-claude-cowork">Claude Cowork</a>는 스펙트럼의 사람 운영자 쪽 끝에 있다. 키보드 앞의 직원이 결과에 책임을 지고, 에이전트는 그 사람이 인가한 시스템 안에서 그를 대신해 행동한다. 그리고 그 실행은 점점 더 클라우드에서 이뤄진다.</p>
+
+<p>Claude Cowork의 위협 모델은 단순하다. 에이전트가 본질적으로 로컬 또는 호스팅된 인터페이스 안에서 실행되는 Claude Code이기 때문이다. 로컬 파일 접근, 브라우저 사용, 컴퓨터 사용에는 여전히 데스크톱 앱이 필요하다. 이런 기능들은 로컬 머신에 직접 닿기 때문에, 그렇게 하려면 앱이 있어야 한다. 따라서 전체 시스템 표면은 두 부분으로 이뤄진다. 오케스트레이션, MCP 호출, 아웃바운드 네트워크 요청을 처리하는 (원격일 수도 있는) 실행 환경과, 파일·화면 접근을 위한 로컬 브리지다.</p>
+
+<p>위에서 제시한 네 가지 질문은 Claude Cowork의 활용 사례마다 다른 답을 낳는다. 그러나 올바른 통제 장치를 갖추면, 어떤 리스크든 더 잘 통제할 수 있도록 경계를 정할 수 있다.</p>
+
+<p>아래의 각 통제 장치는 두 번씩 서술한다. 먼저 어떤 에이전트 환경이든 충족할 수 있어야 하는 요구사항으로, 그다음 그것이 Claude Cowork에서 어떻게 강제되는지로.</p>
+
+<p><strong>신원은 당신의 IdP에서 나온다:</strong> 에이전트의 신원은, 당신이 이미 다른 모든 것을 발급하고 회수하는 바로 그곳에서 발급되고 회수되어야 하며, 기존 그룹이 정책의 단위가 되어야 한다. Claude Cowork는 로그인에 SAML 또는 OIDC를, 프로비저닝에 SCIM을 사용한다. 엔터프라이즈 플랜에서는 커스텀 역할(custom role)을 통해 그룹별로 권한 범위를 정할 수 있다.</p>
+
+<p><strong>커넥터 허용 목록(allowlist)이 데이터 경계를 긋는다:</strong> 커넥터(MCP)에 대한 허용 목록을 통해 에이전트가 어떤 시스템에 닿을 수 있는지 결정한다. Claude Cowork는 두 관문(two-gate) 모델을 사용한다. 관리자가 각 커넥터를 조직 전체에 활성화하고, 그다음 각 사용자가 자기 계정을 개별적으로 인가한다. 역할별 커넥터 제어가 있어서, 커넥터를 켜면 그 역할에 속한 모든 사람이 그것을 쓸 수 있게 된다(IdP의 그룹을 역할에 배정할 수 있다). 어떤 커넥터를 켤지에 대한 관리자의 결정은, 곧 에이전트가 어떤 데이터에 닿을 수 있는지에 대한 결정이기도 하다. 커넥터는 회사/운영(corporate/production) 데이터 경계의 회사 쪽에 두거나, 신뢰할 수 없는 출처의 정보에 접근한다면 파괴적이거나 되돌릴 수 없는 결정에는 반드시 사람의 리뷰가 필요하도록 하라. 예를 들어 개인 에이전트를 이메일에 쓰면서 웹 검색 결과를 입력의 일부로 사용한다면, 사람의 리뷰 없이 자동으로 외부에 발송하지 않고 오직 <em>초안</em> 이메일만 만들도록 하는 것이 훌륭한 기본값이다. 데이터가 경계를 넘어야 한다면, DLP나 DSPM 통제를 거치게 해야 한다.</p>
+
+<p><strong>도구별·행동별 승인이 리스크 축소가 세밀해지는 지점이다:</strong> 에이전트의 도구 목록은 더 촘촘한 권한 경계다. 그래서 특정 커넥터 시스템 전체가 아니라 그 커넥터의 특정 동사/행동만 제거할 수 있어야 한다. Claude Enterprise Chat과 Cowork에서 관리자는 이제 각 커넥터 안에서 어떤 행동이 가능한지를 조직 전체 및 역할별로 제한할 수 있다. 문서 초안 작성은 허용하되 자동 발송은 절대 금지, 읽기와 검색은 허용하되 삭제는 절대 금지 하는 식이다. 당신을 밤에 잠 못 들게 하는 실패 모드가 “운영 데이터베이스가 삭제되는 것”이라면, 에이전트의 세계에서 삭제 동사를 아예 제거하라. 도구 목록에 없는 행동은 에이전트가 결코 시도하지 않는다. (여기에 한 가지 유의점: Claude for Chrome과 Claude Code는 더 많은 자유도를 부여하므로, 잘 통제하지 않으면 더 위험하다. 에이전트가 엔지니어의 브라우저를 이용해 운영 리소스를 삭제하거나, 그의 명령줄 CSP 도구로 같은 일을 할 수 있다. 자세한 내용은 <a href="https://code.claude.com/docs/en/security">Claude Code 보안 가이드</a>를 참고하라.)</p>
+
+<p><strong>샌드박스 실행은 에이전트의 작업 환경을 운영 자격증명으로부터 떼어 놓는다:</strong> Anthropic이 변함없이 지키는 한 가지 원칙은, 에이전트 루프가 도는 환경은 훔칠 가치가 있는 자격증명을 절대 보유해서는 안 된다는 것이다. Claude Cowork의 원격 세션에서 에이전트 루프는 Anthropic이 관리하는 인프라 위의 격리된 임시 샌드박스에서 돈다. 커넥터 인가 토큰은 절대 샌드박스에 들어가지 않는데, 커넥터 호출이 실제 자격증명을 주입하는 리버스 프록시를 통해 이뤄지기 때문이다. 그래서 샌드박스는 유출될 수 있는 자격증명을 결코 보유하지 않는다. 2026년 7월 기준으로, Anthropic에서 풀 리퀘스트로 제출되는 모든 코드의 50% 이상이 우리의 내부 버전 Claude Tag 유사 시스템에 의해 작성된다. 우리가 그것을 안전하게 돌릴 수 있는 가장 큰 이유는, 그 모든 일이 운영 키·계정과 분리된 일회성(ephemeral) VM에서 일어나고, 무엇이든 반영되기 전에 사람의 리뷰를 거치기 때문이다.</p>
+
+<p><strong>아웃바운드 허용 목록(egress allowlisting)은 프롬프트 인젝션에 맞선 가장 강력한 통제 수단이다:</strong> 에이전트의 실행 환경을 떠나는 모든 트래픽은, 그 환경이 재설정하거나 우회할 수 없는 프록시를 통과해야 하며, 당신이 고른 목적지만 닿을 수 있어야 한다. 그 논리는 이렇다. 에이전트가 읽은 무언가에 의해 탈취되더라도, 공격자는 여전히 데이터를 밖으로 빼내야 한다. 그런데 아웃바운드 요청이 당신이 고른 도메인에만 닿을 수 있다면, 공격자가 통제하는 곳으로는 아무것도 보낼 데가 없다. Claude Cowork의 원격 세션에서는 샌드박스를 떠나는 모든 트래픽이, 샌드박스가 재설정하거나 우회할 수 없는 필수 프록시를 통과하며, 허용 목록에 오른 목적지만 닿을 수 있다. 이 기능은 Claude Managed Agents의 일부이기도 하다.</p>
+
+<p><strong>텔레메트리는 OpenTelemetry로 당신의 SIEM에 전달된다:</strong> 에이전트의 행동은 당신이 이미 조사를 수행하는 시스템 안에서 사용자의 행동과 구분될 수 있어야 하며, 공급 업체는 그것을 당신이 방문해야 하는 대시보드가 아니라 당신이 원하는 곳으로 보낼 수 있는 스트림으로 제공해야 한다. Claude Cowork에서 관리자는 조직 설정에서 OTLP 엔드포인트를 구성할 수 있고, 에이전트는 모든 도구 호출을 스트리밍한다. 도구 이름, MCP 서버, 파라미터, 성공 또는 실패, 소요 시간을 사용자 신원 및 세션 맥락과 함께 내보낸다. 유의점: Claude Cowork 활동은 현재 Anthropic의 컴플라이언스 API나 공식 감사 로그에 기록되지 않지만, 우리는 이것이 중요한 고객 니즈임을 알고 있다. OpenTelemetry 스트림이 네이티브 모니터링 경로이며, Claude Cowork의 OTel 출력에는 프롬프트 콘텐츠가 기본으로 포함된다. 이는 옵트인(opt-in) 방식인 Claude Code와 다르다. 당신의 보존(retention)이나 프라이버시 리뷰가 SIEM 안의 프롬프트 콘텐츠에 대해 의견이 있다면, 스트림을 켜기 전에 그 의견을 들어라.</p>
+
+<p><strong>조직 전체를 끄는 스위치가 있다:</strong> Claude Cowork의 조직 설정에는, 진행 중인 세션을 포함해 모든 사용자에 대해 커넥터를 동시에 비활성화하는 단일 토글이 있다. 엔터프라이즈 플랜에서는 같은 제어 표면을 통해 0으로 가기 전에 더 좁게 갈 수 있다. RBAC를 이용하면 다른 그룹은 계속 돌아가게 두면서 특정 그룹의 접근만 회수할 수 있고, 커넥터별 제어를 이용하면 배포의 나머지는 건드리지 않고 특정 통합의 쓰기 작업만 비활성화할 수 있다. 제대로 된 사고 대응 계획은 이 세 계층 모두를, 필요해지기 전에 미리 지도로 그려 둔다.</p>
+
+<h2>거버넌스가 병목이 될 필요는 없다</h2>
+
+<p>다른 CISO들에게서 가장 자주 듣는 이야기는, 이사회로부터 빠르게 움직이라는 요구를 받는데 거버넌스(즉, 이런 질문들에 답하고 이런 통제를 의무화하는 일)가 보안을 병목처럼 보이게 만든다는 것이다. 그럴 필요는 없다.</p>
+
+<p>실제로 우리의 거버넌스·리스크·컴플라이언스(GRC) 팀은 자기들만의 에이전트를 돌린다. 예를 들면 보안 설문 응답, 그리고 벤더 설문 응답과 하위 처리자(subprocessor) 변경 통지를 읽고 우리가 이의를 제기해야 할 것들을 표시하는 일 같은 것이다.</p>
+
+<p>이 에이전트들을 돌리며 우리가 배운 세 가지는 다음과 같다.</p>
+
+<ul>
+  <li><strong>리스크 등록부(risk register)를 먼저 챙겨라.</strong> 분기마다 검토되는 등록부로는, 리스크 거버넌스 절차가 새 리스크를 문서화하는 속도보다 더 빠르게 바뀌는 시스템을 통제할 수 없다. 이를 자동화할 방법을 찾아라. 어쩌면 에이전트를 보안 리뷰 절차에 통합하는 것도 방법이다.</li>
+
+  <li><strong>누가, 왜 만들었는지 이해하라.</strong> 우리의 경우 GRC 에이전트는 엔지니어가 아닌 사람들이, Claude Code를 이용해, 비즈니스 앱을 호스팅하는 내부 플랫폼 위에서 만들었다. 사람들이 보안을 우회하는 이유는 승인된 경로가 느리기 때문이고, 그것이 대부분의 섀도 도입의 기원이다. 필요한 도구를 당신이 볼 수 있는 곳에서 직접 만들 수 있는 컴플라이언스 분석가는 섀도 도입이 아니다.</li>
+
+  <li><strong>사람의 책임은 워크플로의 일부다.</strong> 리스크를 의도적으로 받아들이는 것은, 그것을 받아들일 권한을 가진 사람이 수행하는 행위다. ISO 42001이나 그와 유사한 무언가를, 살아 있는 리스크 등록부와 그 뒤를 받치는 임원 리스크 협의회와 함께 갖추고 있다면, 그 산출물은 어딘가에 안착한다. 재점수(re-score)는 그것을 받아들일 수 있는 사람에게 닿고, 표시된 벤더 약관은 그것을 협상하는 사람에게 닿는다. 이미 ISO 27001을 갖추고 있다면, 42001을 더하는 일은 흔히 현재 감사인과 함께 점진적으로 추가할 수 있는 작업이다.</li>
+</ul>
+
+<h2>진화하는 모델 지능에 맞춰 보안 프로토콜을 설계하라</h2>
+
+<p>새 프로그램을 오늘 모델이 할 수 있는 것에 맞춰 설계하면, 프로그램이 출시될 무렵에는 이미 뒤처져 있을 것이다. 6개월 뒤 모델이 있을 자리를 겨냥해 설계하라. 모델 지능이 높아지면 자유도가 더 커지고, 세심한 프롬프트로 짜 놓은 정교한 스캐폴드(scaffold)는 쓸모없어진다. 통제를 이런 스캐폴드에 의존한다면, 그것들은 미래 세대의 내부 애플리케이션에서 에이전트로부터 잘려 나갈 것이고, 당신은 통제 지점을 잃게 된다.</p>
+
+<p>자기 계정을 가지고 여러 날에 걸친 작업 흐름을 돌리는 에이전트는, Claude Tag 같은 도구와 함께 이미 Anthropic과 다른 조직들 안에서 작동하고 있다. 이런 에이전트는 사람을 통제하는 방식으로 통제해야 한다. 신원, 최소 권한, 모니터링, 그리고 몇 분 안에 대응할 수 있는 내부자 리스크 프로그램으로 말이다. 위 사례들처럼 리스크가 낮은 에이전트에서 지금 그 근육을 키워 두는 조직이, 높은 자율성의 활용 사례가 도래했을 때 “예”라고 말할 준비가 되어 있을 것이다.</p>
+
+<h2>시작하기</h2>
+
+<p>위의 프레임워크는 당신 조직에서 어떤 결정을 바꿔 놓을 때에만 유용하다. 시작하기 좋은 세 곳을 소개한다.</p>
+
+<ol>
+  <li><strong>내부 압력이 가장 큰 에이전틱 활용 사례를 골라 네 가지 질문에 통과시켜라.</strong> 목표는 평결을 내리는 것이 아니라, 어떤 조건이라면 그것을 승인할지를 찾아내는 것이다.</li>
+
+  <li><strong>위의 일곱 가지 요구사항을, 당신이 이미 비용을 지불하고 있으며 에이전트를 만드는 팀과 벤더에게 들이대라.</strong> 당신의 IdP, SIEM, 그리고 모든 에이전트 벤더에게, 이 중 무엇을 지금 당신의 스택 안에서 실제로 작동하는 상태로 보여 줄 수 있는지 물어라.</li>
+
+  <li><strong>당신의 신뢰 경계를 결정하라.</strong> 당신의 환경에서 무엇이 신뢰할 수 없는 콘텐츠로 간주되는지 적어 두어라. 그 선이 존재하는 순간, 앞으로의 모든 에이전트 관련 결정이 더 쉬워진다.</li>
+</ol>
+
+<p>제로 리스크를 기다리는 것은 영원히 기다리는 것이다. 웹은 적대적이고, 모델은 빠르게 진화하고 있으며, 지금 이 리스크를 가늠하고 받아들이는 법을 배우는 조직이 바로 우위를 점하는 조직이다.</p>
+
+<p><em>이 글의 바탕이 된 통제, 증빙(attestation), 백서는</em> <a href="https://trust.anthropic.com"><em>trust.anthropic.com</em></a><em>에서 시작하라. AI로 가속된 공격에 맞서는 방어를 다룬</em> <a href="https://claude.com/blog/preparing-your-security-program-for-ai-accelerated-offense"><em>동반 글</em></a><em>도 확인하라.</em></p>
+
+<p><em>이 글은 Anthropic 부CISO 제이슨 클린턴(Jason Clinton)이 작성했다.</em></p>
+
+<footer>
+  이 문서는 <a href="https://claude.com/blog/ciso-guide-to-agentic-ai">Anthropic 블로그 원문</a>의 한글 번역본입니다.
+  모든 권리와 출처는 Anthropic에 있습니다.
+</footer>
+
+<script src="assets/store.js"></script>
+<script src="assets/posts.js"></script>
+<script src="assets/nav.js"></script>
+</body>
+</html>

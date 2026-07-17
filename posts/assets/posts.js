@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "ciso-guide-to-agentic-ai.html", date: "2026-07-17", main: "Claude blog", cat: "Enterprise AI",
+      title: "제로 리스크는 목표가 아니다: CISO를 위한 에이전틱 AI 가이드", nav: "CISO의 에이전틱 AI 가이드" },
     { file: "working-with-claude-fable-5-in-claude-cowork.html", date: "2026-07-16", main: "Claude blog", cat: "Claude Cowork",
       title: "Claude Cowork에서 Claude Fable 5와 함께 일하기", nav: "Cowork에서 Fable 5와 일하기" },
     { file: "ai-code-migration.html", date: "2026-07-16", main: "Claude blog", cat: "Claude Code",
