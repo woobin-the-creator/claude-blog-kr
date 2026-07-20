@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "working-at-the-frontier-rakuten.html", date: "2026-07-20", main: "Claude blog", cat: "Enterprise AI",
+      title: "프런티어에서 일하기: 라쿠텐은 Claude Fable 5로 밤새 에이전트를 만든다", nav: "라쿠텐의 밤샘 에이전트" },
     { file: "working-at-the-frontier-cursor.html", date: "2026-07-17", main: "Claude blog", cat: "Enterprise AI",
       title: "프런티어에서 일하기: Cursor는 Claude Fable 5가 가장 어려운 1% 문제를 풀 준비가 됐음을 어떻게 알았나", nav: "Cursor의 가장 어려운 1% 문제" },
     { file: "ciso-guide-to-agentic-ai.html", date: "2026-07-17", main: "Claude blog", cat: "Enterprise AI",
