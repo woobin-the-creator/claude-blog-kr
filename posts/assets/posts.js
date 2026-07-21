@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "how-anthropic-secures-its-ai-native-software-development-lifecycle.html", date: "2026-07-21", main: "Claude blog", cat: "Claude Code",
+      title: "Anthropic은 AI 네이티브 소프트웨어 개발 생명주기를 어떻게 안전하게 지키는가", nav: "AI 네이티브 SDLC 보안" },
     { file: "working-at-the-frontier-rakuten.html", date: "2026-07-20", main: "Claude blog", cat: "Enterprise AI",
       title: "프런티어에서 일하기: 라쿠텐은 Claude Fable 5로 밤새 에이전트를 만든다", nav: "라쿠텐의 밤샘 에이전트" },
     { file: "working-at-the-frontier-cursor.html", date: "2026-07-17", main: "Claude blog", cat: "Enterprise AI",
