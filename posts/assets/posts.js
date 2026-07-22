@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "how-outtake-built-a-cyber-investigator-on-claude.html", date: "2026-07-22", main: "Claude blog", cat: "Agents",
+      title: "Outtake는 Claude로 어떻게 사이버 수사관을 만들었나", nav: "Outtake의 사이버 수사관 Recon Agent" },
     { file: "building-verification-loops-in-claude-code-with-skills.html", date: "2026-07-22", main: "Claude blog", cat: "Claude Code",
       title: "스킬로 Claude Code 안에 검증 루프 만들기", nav: "스킬로 만드는 검증 루프" },
     { file: "how-datadog-built-a-universal-machine-tool-for-claude-code.html", date: "2026-07-21", main: "Claude blog", cat: "Claude Code",
