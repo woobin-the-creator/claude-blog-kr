@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "building-verification-loops-in-claude-code-with-skills.html", date: "2026-07-22", main: "Claude blog", cat: "Claude Code",
+      title: "스킬로 Claude Code 안에 검증 루프 만들기", nav: "스킬로 만드는 검증 루프" },
     { file: "how-datadog-built-a-universal-machine-tool-for-claude-code.html", date: "2026-07-21", main: "Claude blog", cat: "Claude Code",
       title: "Datadog는 Claude Code를 위한 ‘범용 공작기계’를 어떻게 만들었나", nav: "Datadog의 범용 공작기계 Temper" },
     { file: "how-anthropic-secures-its-ai-native-software-development-lifecycle.html", date: "2026-07-21", main: "Claude blog", cat: "Claude Code",
