@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "think-through-hard-problems-in-voice-mode.html", date: "2026-07-23", main: "Claude blog", cat: "Product announcements",
+      title: "어려운 문제는 음성 모드로 끝까지 생각해 보라", nav: "음성 모드로 어려운 문제 풀기" },
     { file: "how-outtake-built-a-cyber-investigator-on-claude.html", date: "2026-07-22", main: "Claude blog", cat: "Agents",
       title: "Outtake는 Claude로 어떻게 사이버 수사관을 만들었나", nav: "Outtake의 사이버 수사관 Recon Agent" },
     { file: "building-verification-loops-in-claude-code-with-skills.html", date: "2026-07-22", main: "Claude blog", cat: "Claude Code",
