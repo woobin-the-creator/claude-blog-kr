@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "the-new-rules-of-context-engineering-for-claude-5-generation-models.html", date: "2026-07-24", main: "Claude blog", cat: "Claude Code",
+      title: "Claude 5세대 모델을 위한 새로운 컨텍스트 엔지니어링 규칙", nav: "5세대 모델의 새 컨텍스트 엔지니어링 규칙" },
     { file: "how-the-product-designer-who-built-claude-design-uses-it-to-explore-ideas-before-building-them.html", date: "2026-07-24", main: "Claude blog", cat: "Enterprise AI",
       title: "Claude Design을 만든 프로덕트 디자이너는 아이디어를 어떻게 미리 탐색하는가", nav: "Claude Design 만든 디자이너의 활용법" },
     { file: "claude-models-explained-choosing-the-best-model-for-your-use-case.html", date: "2026-07-24", main: "Claude blog", cat: "Claude Code",
