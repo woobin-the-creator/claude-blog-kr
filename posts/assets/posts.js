@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "claude-models-explained-choosing-the-best-model-for-your-use-case.html", date: "2026-07-24", main: "Claude blog", cat: "Claude Code",
+      title: "Claude 모델 완전정복: 내 작업에 맞는 모델 고르기", nav: "내 작업에 맞는 Claude 모델 고르기" },
     { file: "think-through-hard-problems-in-voice-mode.html", date: "2026-07-23", main: "Claude blog", cat: "Product announcements",
       title: "어려운 문제는 음성 모드로 끝까지 생각해 보라", nav: "음성 모드로 어려운 문제 풀기" },
     { file: "how-outtake-built-a-cyber-investigator-on-claude.html", date: "2026-07-22", main: "Claude blog", cat: "Agents",
