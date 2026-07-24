@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "how-the-product-designer-who-built-claude-design-uses-it-to-explore-ideas-before-building-them.html", date: "2026-07-24", main: "Claude blog", cat: "Enterprise AI",
+      title: "Claude Design을 만든 프로덕트 디자이너는 아이디어를 어떻게 미리 탐색하는가", nav: "Claude Design 만든 디자이너의 활용법" },
     { file: "claude-models-explained-choosing-the-best-model-for-your-use-case.html", date: "2026-07-24", main: "Claude blog", cat: "Claude Code",
       title: "Claude 모델 완전정복: 내 작업에 맞는 모델 고르기", nav: "내 작업에 맞는 Claude 모델 고르기" },
     { file: "four-role-based-claude-certifications.html", date: "2026-07-23", main: "Claude blog", cat: "Enterprise AI",
