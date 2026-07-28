@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "bringing-mcp-2026-07-28-to-claude.html", date: "2026-07-28", main: "Claude blog", cat: "Product announcements",
+      title: "MCP 2026-07-28을 Claude에 도입하다", nav: "MCP 2026-07-28, Claude 도입" },
     { file: "the-new-rules-of-context-engineering-for-claude-5-generation-models.html", date: "2026-07-24", main: "Claude blog", cat: "Claude Code",
       title: "Claude 5세대 모델을 위한 새로운 컨텍스트 엔지니어링 규칙", nav: "5세대 모델의 새 컨텍스트 엔지니어링 규칙" },
     { file: "how-the-product-designer-who-built-claude-design-uses-it-to-explore-ideas-before-building-them.html", date: "2026-07-24", main: "Claude blog", cat: "Enterprise AI",

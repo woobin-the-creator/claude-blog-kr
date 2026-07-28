@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MCP 2026-07-28을 Claude에 도입하다</title>
+<style>
+  :root { --fg:#1a1a1a; --muted:#666; --line:#e5e5e5; --accent:#c96442; --code-bg:#f6f6f4; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo",
+      "Malgun Gothic", sans-serif;
+    color: var(--fg); line-height: 1.75; max-width: 760px;
+    margin: 0 auto; padding: 48px 24px 96px; background:#fff;
+  }
+  header { border-bottom: 2px solid var(--line); padding-bottom: 24px; margin-bottom: 32px; }
+  h1 { font-size: 1.9rem; line-height: 1.35; margin: 0 0 12px; }
+  .meta { color: var(--muted); font-size: 0.9rem; }
+  .meta .orig { display:block; margin-top:6px; }
+  .meta a { color: var(--accent); text-decoration: none; }
+  h2 { font-size: 1.4rem; margin: 44px 0 8px; padding-top: 8px; }
+  h3 { font-size: 1.15rem; margin: 30px 0 8px; color:#000; }
+  .builders { color: var(--muted); font-size: 0.92rem; margin: 0 0 14px; }
+  p { margin: 0 0 16px; }
+  a { color: var(--accent); }
+  ul { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  blockquote { margin: 16px 0; padding: 8px 18px; border-left:3px solid var(--line);
+    color:#333; font-style: italic; }
+  hr { border: none; border-top: 1px solid var(--line); margin: 40px 0; }
+  code { background: var(--code-bg); padding: 2px 6px; border-radius: 4px;
+    font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 0.88em; }
+  pre { background: var(--code-bg); padding: 16px 18px; border-radius: 8px;
+    overflow-x: auto; border:1px solid var(--line); }
+  pre code { background: none; padding: 0; font-size: 0.85rem; line-height:1.5; }
+  figure { margin: 24px 0; }
+  figure img { width: 100%; height: auto; border:1px solid var(--line); border-radius: 8px;
+    background:#fff; }
+  figure.hero img { border:none; max-width: 210px; display:block; margin: 0 auto 8px; }
+  figcaption { color: var(--muted); font-size: 0.85rem; text-align: center;
+    margin-top: 10px; line-height: 1.5; }
+  figcaption a { color: var(--accent); }
+  .video { position: relative; width: 100%; aspect-ratio: 16 / 9; margin: 22px 0; }
+  .video iframe { position: absolute; inset: 0; width: 100%; height: 100%;
+    border: 0; border-radius: 8px; }
+  .callout { background:#faf6f4; border-left:3px solid var(--accent);
+    padding: 12px 16px; border-radius: 0 6px 6px 0; margin: 16px 0; }
+  .callout strong { color: var(--accent); }
+  footer { margin-top: 64px; padding-top: 20px; border-top:1px solid var(--line);
+    color: var(--muted); font-size: 0.82rem; }
+  /* 파트너 인용 카드 (원문의 가로 슬라이더를 세로 목록으로 옮김) */
+  .partner { border:1px solid var(--line); border-radius: 10px; padding: 20px 22px; margin: 18px 0; }
+  .partner img { height: 26px; width: auto; max-width: 190px; display:block;
+    margin: 0 0 14px; border: none; border-radius: 0; }
+  .partner blockquote { margin: 0 0 10px; padding: 0; border-left: none; font-style: normal; }
+  .partner .who { color: var(--muted); font-size: 0.86rem; }
+</style>
+<link rel="stylesheet" href="assets/nav.css">
+</head>
+<body>
+<header>
+  <h1>MCP 2026-07-28을 Claude에 도입하다</h1>
+  <div class="meta">
+    2026년 7월 28일 · 카테고리: <a href="https://claude.com/blog/category/announcements">제품 발표(Product announcements)</a>
+    · 제품: Claude 앱, Claude 플랫폼 · 읽는 데 5분
+    <span class="orig">원문:
+      <a href="https://claude.com/blog/bringing-mcp-2026-07-28-to-claude">Bringing MCP 2026-07-28 to Claude</a>
+      (한글 번역본)</span>
+  </div>
+</header>
+
+<figure class="hero"><img src="assets/bringing-mcp-2026-07-28-to-claude/hero.svg" alt=""></figure>
+
+<p>모델 컨텍스트 프로토콜(Model Context Protocol, MCP)의 다섯 번째 스펙 릴리스인 <a href="https://modelcontextprotocol.io/specification/2026-07-28">MCP 2026-07-28</a>이 오늘 공개됐다. 이번 스펙은 MCP를 상태 없는(stateless) 코어로 옮기고, 인가(authorization)를 한층 견고하게 다듬었으며, 공식 확장(extension)들을 정식 단계로 승격시켰다. 관련 지원은 Claude 제품 전반에 걸쳐 순차적으로 적용되고 있다.</p>
+
+<h2>MCP에 새로 들어온 것들</h2>
+
+<p>MCP는 최근 월간 SDK 다운로드 4억 건을 넘어섰다. 올해 들어 4배로 늘어난 수치이며, AI 에이전트를 애플리케이션에 연결하는 업계 표준으로 자리 잡았다. MCP 2026-07-28은 지금까지의 스펙 릴리스 가운데 가장 큰 변화를 담은 축에 속한다.</p>
+
+<p><strong>상태 없는 코어(Stateless core).</strong> MCP가 양방향 상태 유지(stateful) 프로토콜에서 요청/응답 모델로 바뀐다. 이제 서버를 서버리스와 엣지 인프라에 배포할 수 있다. 덕분에 Claude용 MCP 서버를 만드는 경험이 단순해지고, 서버 채택이 늘어날 때 사용량을 확장하기도 쉬워진다.</p>
+
+<p><strong>표준화된 확장(Standardized extensions).</strong> <a href="https://modelcontextprotocol.io/extensions/apps/overview">MCP Apps</a>와 <a href="https://modelcontextprotocol.io/extensions/tasks/overview">Tasks</a>가 버전이 관리되는 확장 프레임워크 아래로 들어왔다. 개발자는 핵심 프로토콜을 건드리지 않고도 인터랙티브 UI나 장시간 실행 작업 같은 기능을 정식 경로를 통해 추가할 수 있다.</p>
+
+<p><strong>인증·인가 강화(Auth hardening).</strong> 인가 방식이 실제 프로덕션에서 쓰이는 OAuth 2.0 및 OIDC 배포와 정렬됐다. 따라서 MCP 서버를 Entra나 Okta 같은 엔터프라이즈 아이덴티티 시스템에 우회 처리 없이 연결할 수 있다.</p>
+
+<p>베타 단계부터 생태계 전반의 여러 기업이 MCP 커뮤니티와 함께 이 새 스펙 위에서 개발을 진행해 왔다.</p>
+
+<div class="partner">
+  <img src="assets/bringing-mcp-2026-07-28-to-claude/figma.svg" alt="Figma 로고">
+  <blockquote>“점점 더 많은 빌더가 우리 MCP 서버를 이용해 생성된 결과물을 Figma 캔버스로 가져오고, 그 안에서 팀과 함께 탐색하고 변주하고 다듬어 눈에 띄는 제품으로 만들어 갑니다. 그런 사용이 늘어나는 만큼 우리의 상태 없는 아키텍처도 함께 확장될 수 있고, MCP Apps와 Tasks, 그리고 Enterprise-Managed Auth가 더해지면서 디자인과 코드를 하나의 연결된 흐름 안에 묶어두는 일을 더 잘 해낼 수 있게 됐습니다.”</blockquote>
+  <div class="who">Josh Clemm, VP of Engineering</div>
+</div>
+
+<div class="partner">
+  <img src="assets/bringing-mcp-2026-07-28-to-claude/intuit.svg" alt="Intuit 로고">
+  <blockquote>“MCP는 AI 에이전트를 도구·데이터에 연결하는 업계 표준이며, Intuit는 새로운 MCP 2026-07-28 스펙을 지원하게 되어 자랑스럽습니다. 상태 없는 프로토콜 코어와 MCP Apps·Tasks를 포함한 확장 프레임워크 덕분에 우리 기술 인력과 고객이 엔터프라이즈 규모로 에이전틱 경험을 만들고 연결할 수 있게 됐고, Intuit는 1억 명의 소비자와 기업 고객이 어디에서 일하든 신뢰할 수 있는 금융 인텔리전스 경험을 계속 제공할 수 있습니다.”</blockquote>
+  <div class="who">Chris Kasten, Chief Architect and SVP of Engineering, Platform and Development Xceleration Group</div>
+</div>
+
+<div class="partner">
+  <img src="assets/bringing-mcp-2026-07-28-to-claude/netlify.svg" alt="Netlify 로고">
+  <blockquote>“2026-07-28 스펙의 상태 없는 코어는 MCP를 우회할 세션 관리가 없는, 일급 HTTP 워크로드로 만들어 줍니다. 우리 고객들은 Netlify 위의 MCP도 플랫폼의 나머지 부분만큼 단순하기를 원했는데, 이번 새 스펙이 그것을 근본에서부터 가능하게 했습니다. MCP Apps를 새로운 확장 프레임워크 안으로 편입한 것은 생태계 전반의 확장성·접근성·기능성 측면에서 큰 진전입니다.”</blockquote>
+  <div class="who">Sean Roberts, VP of Applied AI</div>
+</div>
+
+<div class="partner">
+  <img src="assets/bringing-mcp-2026-07-28-to-claude/posthog.svg" alt="PostHog 로고">
+  <blockquote>“MCP를 상태 없는 프로토콜로 옮긴 덕분에 우리 서비스를 확장하기도 쉬워졌고, 고객의 MCP 서버를 위한 분석 기능을 추가하기도 쉬워졌습니다. 이를 통해 사람들에게 자신의 MCP 도구가 어떻게 쓰이고 있는지, 사용자들이 원하지만 아직 없는 도구가 무엇인지 보여줄 수 있습니다. 이 프로토콜이 이런 방향으로 성장하는 모습을 보는 것은 정말 반가운 일입니다.”</blockquote>
+  <div class="who">Paul D'Ambra, Product Engineer</div>
+</div>
+
+<div class="partner">
+  <img src="assets/bringing-mcp-2026-07-28-to-claude/xero.svg" alt="Xero 로고">
+  <blockquote>“Anthropic은 프런티어 모델과 함께, 기준을 계속 끌어올리는 개발자 경험을 제공합니다. 개방형 MCP 2026-07-28 스펙의 상태 없는 코어는 우리가 관리해야 할 복잡도를 줄여 주고, 그만큼 우리는 더 많은 기능을 더 빠르게, 더 큰 규모로 고객에게 내놓을 수 있습니다.”</blockquote>
+  <div class="who">Andrew Goodman, VP of AI</div>
+</div>
+
+<div class="partner">
+  <img src="assets/bringing-mcp-2026-07-28-to-claude/zoom.svg" alt="Zoom 로고">
+  <blockquote>“Zoom은 AI가 의미 있는 성과를 내게 하는 것이 결국 조직의 맥락(organizational context)이라고 믿습니다. 그래서 Zoom 미팅 인텔리전스를 Claude 같은 AI 플랫폼으로 안전하게 가져가는 MCP 서버를 만들었습니다. 새 MCP 스펙은 표준 HTTP 인프라 위에서 MCP 서버를 배포하고 확장하는 일을 훨씬 쉽게 만들어 줍니다. 그 결과 사용자는 매일 의존하는 AI 워크플로 안에서 Zoom의 미팅 인텔리전스를 더 빠르고 더 안정적으로 받아볼 수 있습니다.”</blockquote>
+  <div class="who">Ross Mayfield, Head of Product for AI Platform</div>
+</div>
+
+<p>새 스펙에 대한 자세한 내용은 <a href="https://blog.modelcontextprotocol.io/posts/2026-07-28/">MCP 2026-07-28 릴리스 발표</a>를 참고하면 된다.</p>
+
+<h2>Claude 안에서 MCP를 발전시키기</h2>
+
+<p>현재 Claude의 <a href="https://claude.ai/directory/connectors">커넥터 디렉터리</a>에는 950개가 넘는 MCP 서버가 등록되어 있고, 매일 수백만 명이 이를 사용한다. 올해 Anthropic은 새로운 프로토콜 확장에 대한 지원과 더불어, MCP를 기반으로 개발하고 배포하기 쉽게 만드는 기능들을 함께 출시했다.</p>
+
+<p><a href="https://claude.com/blog/interactive-tools-in-claude">MCP Apps</a>는 서버가 대화창 안에 인터랙티브 UI를 직접 렌더링할 수 있게 한다. 사용자는 커넥터가 무슨 일을 하고 있는지 눈으로 확인하고, 탭을 옮겨 다니지 않고 그 자리에서 함께 작업할 수 있다.</p>
+
+<p><a href="https://claude.com/blog/enterprise-managed-auth">Enterprise-managed auth(엔터프라이즈 관리형 인증)</a>는 관리자가 자사 아이덴티티 제공자(IdP)를 통해 조직 전체에 MCP 커넥터를 프로비저닝할 수 있게 한다. 관리자가 커넥터를 한 번 승인해 두면 사용자는 기존 IdP 그룹을 통해 접근 권한을 물려받고, 첫 로그인 시점에 곧바로 연결된다. 최종 사용자 입장에서는 설정할 것이 전혀 없는 셈이다.</p>
+
+<p><a href="https://claude.com/blog/observability-for-developers-building-connectors">커넥터를 만드는 개발자를 위한 관측 기능(Observability)</a>은 디렉터리에 게시된 커넥터에 대해, 여러 Claude 제품 표면에서 어떻게 동작하는지 보여주는 대시보드를 제공한다. 개발자는 이를 통해 채택 현황을 추적하고, 오류와 지연(latency)을 진단하고, 제품별로 사용량을 쪼개어 볼 수 있다.</p>
+
+<p><a href="https://platform.claude.com/docs/en/agents-and-tools/mcp-tunnels/overview">MCP 터널(리서치 프리뷰)</a>은 사설 네트워크 내부의 MCP 서버를 공개 인터넷에 노출하지 않고 Claude에 연결한다. 덕분에 팀은 인바운드 방화벽 규칙도, 공개 엔드포인트도, 오리진의 IP 허용 목록도 없이 사내 도구를 Claude로 가져올 수 있다.</p>
+
+<p>2026-07-28의 상태 없는 코어, 표준화된 확장, 강화된 인증은 개발자가 더 많은 애플리케이션을 Claude로 가져오도록 돕고, 최종 사용자에게는 마찰이 적고 더 일관된 경험을 제공할 것이다. Anthropic은 앞으로도 커뮤니티와 함께 개방형 표준으로서의 MCP에 투자하고, 프로덕션 환경에서 MCP를 더 쉽고 효과적으로 쓸 수 있게 하는 Claude 기능에도 계속 투자할 예정이다.</p>
+
+<h2>시작하기</h2>
+
+<p><a href="https://modelcontextprotocol.io/specification/2026-07-28/">스펙</a>과 <a href="https://modelcontextprotocol.io/docs/sdk">SDK</a>를 살펴보는 것으로 시작하면 된다. 관련 지원은 곧 Claude 제품 전반에 순차 적용된다. 자신의 MCP 서버를 Claude <a href="https://claude.ai/directory/connectors">커넥터 디렉터리</a>에 제출할 계획이라면 <a href="https://claude.com/docs/connectors/building/submission">여기</a>에서 더 자세한 내용을 확인할 수 있다.</p>
+
+<footer>
+  이 글은 Claude 공식 블로그 원문을 한국어로 옮긴 비공식 번역본입니다.
+  내용의 정확한 의미는 위 원문 링크를 함께 참고하세요.
+</footer>
+<script src="assets/store.js"></script>
+<script src="assets/posts.js"></script>
+<script src="assets/nav.js"></script>
+</body>
+</html>
