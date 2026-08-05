@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "claude-enterprise-inference-hooks.html", date: "2026-08-05", main: "Claude blog", cat: "Enterprise AI",
+      title: "인퍼런스 훅(Inference hooks): Claude Enterprise를 위한 인라인 데이터 유출 방지", nav: "인퍼런스 훅 · 인라인 DLP" },
     { file: "a-guide-to-cost-visibility-and-control-in-claude.html", date: "2026-08-04", main: "Claude blog", cat: "Enterprise AI",
       title: "Claude의 비용 가시성과 통제 가이드", nav: "Claude 비용 가시성·통제 가이드" },
     { file: "bringing-mcp-2026-07-28-to-claude.html", date: "2026-07-28", main: "Claude blog", cat: "Product announcements",

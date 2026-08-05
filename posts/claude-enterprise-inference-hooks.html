@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>인퍼런스 훅(Inference hooks): Claude Enterprise를 위한 인라인 데이터 유출 방지</title>
+<style>
+  :root { --fg:#1a1a1a; --muted:#666; --line:#e5e5e5; --accent:#c96442; --code-bg:#f6f6f4; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo",
+      "Malgun Gothic", sans-serif;
+    color: var(--fg); line-height: 1.75; max-width: 760px;
+    margin: 0 auto; padding: 48px 24px 96px; background:#fff;
+  }
+  header { border-bottom: 2px solid var(--line); padding-bottom: 24px; margin-bottom: 32px; }
+  h1 { font-size: 1.9rem; line-height: 1.35; margin: 0 0 12px; }
+  .meta { color: var(--muted); font-size: 0.9rem; }
+  .meta .orig { display:block; margin-top:6px; }
+  .meta a { color: var(--accent); text-decoration: none; }
+  h2 { font-size: 1.4rem; margin: 44px 0 8px; padding-top: 8px; }
+  h3 { font-size: 1.15rem; margin: 30px 0 8px; color:#000; }
+  p { margin: 0 0 16px; }
+  a { color: var(--accent); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  blockquote { margin: 16px 0; padding: 8px 18px; border-left:3px solid var(--line);
+    color:#333; font-style: italic; }
+  hr { border: none; border-top: 1px solid var(--line); margin: 40px 0; }
+  code { background: var(--code-bg); padding: 2px 6px; border-radius: 4px;
+    font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 0.88em; }
+  pre { background: var(--code-bg); padding: 16px 18px; border-radius: 8px;
+    overflow-x: auto; border:1px solid var(--line); }
+  pre code { background: none; padding: 0; font-size: 0.85rem; line-height:1.5; }
+  figure { margin: 24px 0; }
+  figure img { width: 100%; height: auto; border:1px solid var(--line); border-radius: 8px;
+    background:#fff; }
+  figure.hero img { border:none; max-width: 210px; display:block; margin: 0 auto 8px; }
+  figcaption { color: var(--muted); font-size: 0.85rem; text-align: center;
+    margin-top: 10px; line-height: 1.5; }
+  figcaption a { color: var(--accent); }
+  .video { position: relative; width: 100%; aspect-ratio: 16 / 9; margin: 22px 0; }
+  .video iframe { position: absolute; inset: 0; width: 100%; height: 100%;
+    border: 0; border-radius: 8px; }
+  .callout { background:#faf6f4; border-left:3px solid var(--accent);
+    padding: 12px 16px; border-radius: 0 6px 6px 0; margin: 16px 0; }
+  .callout strong { color: var(--accent); }
+  footer { margin-top: 64px; padding-top: 20px; border-top:1px solid var(--line);
+    color: var(--muted); font-size: 0.82rem; }
+</style>
+<link rel="stylesheet" href="assets/nav.css">
+</head>
+<body>
+<header>
+  <h1>인퍼런스 훅(Inference hooks): Claude Enterprise를 위한 인라인 데이터 유출 방지</h1>
+  <div class="meta">
+    2026년 8월 5일 · 카테고리: <a href="https://claude.com/blog/category/enterprise-ai">엔터프라이즈 AI(Enterprise AI)</a>,
+    <a href="https://claude.com/blog/category/announcements">제품 공지(Product announcements)</a>
+    · 제품: <a href="https://claude.com/solutions/enterprise">Claude Enterprise</a> · 읽는 데 5분
+    <span class="orig">원문:
+      <a href="https://claude.com/blog/claude-enterprise-inference-hooks">Inference hooks: inline data loss prevention for Claude Enterprise</a>
+      (한글 번역본)</span>
+  </div>
+</header>
+
+<figure class="hero"><img src="assets/claude-enterprise-inference-hooks/hero.svg" alt=""></figure>
+
+<figure>
+  <img src="assets/claude-enterprise-inference-hooks/inference-hooks.gif" alt="인퍼런스 훅 소개 애니메이션">
+</figure>
+
+<p>인퍼런스 훅(Inference hooks)을 쓰면 컴플라이언스 팀이 모든 프롬프트와 도구 호출 응답이 Claude에 도달하기 전에 이를 검사하고 정책을 집행할 수 있다. 채팅, <a href="https://claude.com/product/claude-code">Claude Code</a>, <a href="https://claude.com/product/cowork">Claude Cowork</a>를 비롯한 <a href="https://claude.com/solutions/enterprise">Claude Enterprise</a>의 모든 표면(surface)에 걸쳐서다. 차단할지 허용할지는 여러분의 DLP 서버가 판단하고, Claude는 그 결정을 실시간으로 집행해 승인되지 않은 콘텐츠가 Claude에 도달하기 전에 막는다.</p>
+
+<p>보안 팀은 임직원이 민감 데이터를 옮길 수 있는 모든 경로가 자기 팀이 통제하는 검사 지점을 반드시 거치도록 요구한다. 오늘 이전까지 네이티브 인라인 집행은 Claude Code의 클라이언트 사이드 훅(client-side hooks)에 한정돼 있었다. 인퍼런스 훅은 제품마다 별도의 통합 작업이나 에이전트를 두지 않고도 모든 Claude Enterprise 표면을 아우르는 단일 집행 계층으로 그 공백을 메운다.</p>
+
+<h2>인퍼런스 훅의 작동 방식</h2>
+
+<figure>
+  <img src="assets/claude-enterprise-inference-hooks/dlp-flow.png" alt="인퍼런스 훅의 DLP 검사 흐름도">
+</figure>
+
+<p>조직이 인퍼런스 훅을 켜면 모든 추론(inference) 요청은 서명된 WebSocket 연결을 통해 보안 서버로 라우팅된다. 모델이 생성을 시작하기 전에 Claude는 프롬프트와 그 주변 컨텍스트를 여러분의 서버로 보낸다. 서버는 허용(allow) 또는 거부(deny)라는 판정을 돌려주고, Claude는 판정을 받은 뒤에야 진행한다. 같은 검사가 도구 호출에도 적용된다. Claude가 도구를 호출할 때 — MCP, 스킬(skills), 플러그인(plugins)을 통해 연결된 도구를 포함해 — 그 도구의 응답은 모델로 되돌아가기 전에 검사된다.</p>
+
+<h2>인퍼런스 훅 활용 방법</h2>
+
+<p>기존 DLP 프로그램을 Claude까지 확장한다. 인퍼런스 훅은 공개된 스키마를 갖춘 개방형 웹훅(webhook) 기반 프로토콜을 사용한다. 덕분에 배포가 쉽다. 다른 도구들이 이미 리포팅하고 있는 바로 그 서버 — Netskope, Palo Alto Networks, Proofpoint, Zscaler, 또는 사내에서 직접 구축한 AI 보안 서버 — 를 가리키게 하기만 하면 된다.</p>
+
+<p>채팅, Claude Code, Cowork를 비롯한 Claude Enterprise 제품들을 설정 하나로 커버한다. 조직 수준에서 인퍼런스 훅을 한 번 켜면 MCP 커넥터, 스킬, 플러그인을 통해 이뤄지는 도구 호출을 포함해 Claude Enterprise 표면 전반에 적용된다.</p>
+
+<p>섀도 모드(shadow mode, 항상 허용), 역할 기반 제외(role-based exclusions), 비율 기반 롤아웃(percentage-based rollouts)으로 도입을 단순화한다. 실패 정책(failure-policy) 허용 범위, 타임아웃을 비롯한 설정을 조직의 위험 감수 수준에 맞게 조정할 수 있다.</p>
+
+<h2>시작하기</h2>
+
+<p>인퍼런스 훅은 오늘부터 Claude Enterprise 고객을 대상으로 베타로 제공된다. <a href="https://platform.claude.com/docs/en/manage-claude/inference-hooks">문서</a>를 읽고 조직의 DLP 서버를 구성해 Claude Enterprise 표면 전반에 정책 집행을 시작하면 된다.</p>
+
+<p>보안 벤더라면, 인퍼런스 훅은 문서화된 스키마를 갖춘 웹훅 기반 프로토콜 위에 만들어져 있으므로 통합을 직접 구축할 수 있고, Claude Enterprise 고객은 자사 조직이 여러분의 플랫폼을 바라보도록 설정할 수 있다.</p>
+
+<p>관련 링크: <a href="https://claude.com/pricing#api">요금 보기</a> · <a href="https://claude.com/contact-sales">영업팀 문의</a></p>
+
+<footer>
+  이 글은 Claude 공식 블로그 원문을 한국어로 옮긴 비공식 번역본입니다.
+  내용의 정확한 의미는 위 원문 링크를 함께 참고하세요.
+</footer>
+<script src="assets/store.js"></script>
+<script src="assets/posts.js"></script>
+<script src="assets/nav.js"></script>
+</body>
+</html>
