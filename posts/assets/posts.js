@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "a-guide-to-cost-visibility-and-control-in-claude.html", date: "2026-08-04", main: "Claude blog", cat: "Enterprise AI",
+      title: "Claude의 비용 가시성과 통제 가이드", nav: "Claude 비용 가시성·통제 가이드" },
     { file: "bringing-mcp-2026-07-28-to-claude.html", date: "2026-07-28", main: "Claude blog", cat: "Product announcements",
       title: "MCP 2026-07-28을 Claude에 도입하다", nav: "MCP 2026-07-28, Claude 도입" },
     { file: "the-new-rules-of-context-engineering-for-claude-5-generation-models.html", date: "2026-07-24", main: "Claude blog", cat: "Claude Code",
