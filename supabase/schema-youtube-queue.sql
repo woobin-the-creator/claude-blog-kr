@@ -1,10 +1,13 @@
--- Claude Blog KR — 유튜브 자동 포스팅 큐 스키마
+-- Claude Blog KR — 링크 자동 포스팅 큐 스키마 (유튜브 + 일반 웹 문서)
 -- 모델: schema.sql 과 동일 — 비밀 sync_key 하나가 보안을 책임진다.
 -- 브라우저(웹 폼)와 맥의 워커 둘 다 anon 키 + 아래 RPC로만 접근한다.
 -- 테이블 직접 접근은 RLS로 전면 차단.
 --
 -- 흐름: youtube.html 폼이 cbk_yt_enqueue → 맥 launchd 워커가 cbk_yt_claim 으로
 -- 한 건씩 가져가 처리(processing) → 성공/실패를 cbk_yt_finish 로 기록.
+--
+-- 이름은 과거 호환을 위해 cbk_yt_* 를 유지한다(유튜브 전용으로 시작한 큐).
+-- 유튜브/일반 글 구분은 URL 모양으로 워커와 폼이 각자 판단한다.
 
 -- 1) 큐 테이블: URL 하나 = 한 줄
 create table if not exists public.cbk_yt_queue (
@@ -25,7 +28,8 @@ alter table public.cbk_yt_queue add  constraint cbk_yt_queue_status_chk
 -- 2) RLS 켜기. 정책 없음 = 직접 접근 전면 차단.
 alter table public.cbk_yt_queue enable row level security;
 
--- 3) 등록: 유튜브 URL 검증 + 같은 URL의 대기/처리중 중복 방지.
+-- 3) 등록: http(s) URL 검증 + 같은 URL의 대기/처리중 중복 방지.
+--    유튜브 영상이든 일반 블로그/문서 페이지든 모두 받는다.
 create or replace function public.cbk_yt_enqueue(p_key text, p_url text)
 returns public.cbk_yt_queue
 language plpgsql security definer set search_path = public as $$
@@ -34,8 +38,12 @@ begin
   if p_key is null or length(trim(p_key)) < 8 then
     raise exception 'invalid sync key';
   end if;
-  if p_url !~* '^https?://(www\.)?(youtube\.com/(watch\?|live/|shorts/)|youtu\.be/)' then
-    raise exception 'not a youtube url';
+  -- 호스트에 점이 있는 http(s) 주소만 통과 (javascript:, data:, 사내 호스트 등 차단).
+  if p_url !~* '^https?://[a-z0-9][a-z0-9._-]*\.[a-z]{2,}(:[0-9]{1,5})?([/?#]|$)' then
+    raise exception 'not a http url';
+  end if;
+  if p_url ~ '\s' then
+    raise exception 'not a http url';
   end if;
   -- 같은 URL이 아직 안 끝났으면 그 줄을 그대로 돌려준다 (중복 등록 방지).
   select * into r from public.cbk_yt_queue
