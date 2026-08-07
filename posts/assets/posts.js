@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "millennium-and-anthropic-are-building-a-digital-risk-analyst-with-claude.html", date: "2026-08-06", main: "Claude blog", cat: "Enterprise AI",
+      title: "Millennium과 Anthropic이 Claude로 디지털 리스크 애널리스트를 만들고 있다", nav: "Millennium · 디지털 리스크 애널리스트" },
     { file: "claude-enterprise-inference-hooks.html", date: "2026-08-05", main: "Claude blog", cat: "Enterprise AI",
       title: "인퍼런스 훅(Inference hooks): Claude Enterprise를 위한 인라인 데이터 유출 방지", nav: "인퍼런스 훅 · 인라인 DLP" },
     { file: "a-guide-to-cost-visibility-and-control-in-claude.html", date: "2026-08-04", main: "Claude blog", cat: "Enterprise AI",
