@@ -140,6 +140,23 @@
     var msgEl = document.getElementById("yt-msg");
     var listEl = document.getElementById("yt-list");
 
+    // 서버(DB 함수)가 던진 메시지를 사람 말로 옮긴다.
+    // 'not a youtube url' 은 유튜브 전용이던 옛 cbk_yt_enqueue 만 던진다 →
+    // 일반 주소가 막힌 게 아니라 DB 스키마가 아직 안 올라간 상태라는 뜻.
+    function explain(msg) {
+      msg = String(msg || "");
+      if (/not a youtube url/.test(msg)) {
+        return "서버의 큐 함수가 아직 유튜브 전용 옛 버전입니다. " +
+               "Supabase에서 supabase/schema-youtube-queue.sql 을 다시 실행해주세요.";
+      }
+      if (/not a http url/.test(msg)) {
+        return "http(s)로 시작하는 주소만 넣을 수 있습니다.";
+      }
+      if (/invalid sync key/.test(msg)) {
+        return "동기화 코드가 올바르지 않습니다. 보관함에서 다시 확인해주세요.";
+      }
+      return msg;
+    }
     function setMsg(text, kind) {
       msgEl.textContent = text || "";
       msgEl.className = "enqueue-msg" + (kind ? " " + kind : "");
@@ -223,8 +240,7 @@
           return refresh();
         })
         .catch(function (e) {
-          setMsg("등록 실패: " + (/not a (youtube|http) url/.test(e.message)
-            ? "http(s)로 시작하는 주소만 넣을 수 있습니다." : e.message), "err");
+          setMsg("등록 실패: " + explain(e.message), "err");
         })
         .then(function () { addBtn.disabled = false; });
     }
