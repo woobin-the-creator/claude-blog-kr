@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
-# YouTube queue worker: poll the Supabase queue (filled by youtube.html) ->
-# turn each URL into a Korean post via the claude-youtube-to-blog skill ->
-# push, verify live, mark done/error, notify on Telegram.
+# Link queue worker: poll the Supabase queue (filled by youtube.html) ->
+# turn each URL into a Korean post -> push, verify live, mark done/error,
+# notify on Telegram.
+#
+# Two kinds of URL are accepted:
+#   * YouTube video  -> claude-youtube-to-blog skill (Gemini watches the video)
+#   * any other page -> the same post format, sourced from the fetched article
 set -uo pipefail
 
 PIPE_DIR="$HOME/claude-blog-kr/.pipeline"
@@ -79,12 +83,31 @@ while [ "$processed" -lt "$MAX_PER_RUN" ]; do
 
   git pull --rebase --quiet 2>/dev/null || true
 
-  prompt="Use the claude-youtube-to-blog skill to turn this YouTube video into a Korean blog post for the repo at ${REPO}: ${url}
-IMPORTANT: this is a ONE-SHOT headless run (claude -p). There is no next turn, no notifications, and nothing resumes after you stop: NEVER launch background tasks and NEVER end your turn to 'wait for' an event, notification, or long-running call. Call every tool synchronously (long Gemini video calls included — just block on them) and keep working in this single turn until you print the final RESULT line.
-Work fully autonomously; do not ask questions. Choose the slug and the two-level category (main=출처 channel, cat=주제) yourself following the skill's rules. Do the frame quality pass yourself: Read the extracted frames, drop duplicates, low-value ones, and people-only/talking-head shots (informational visuals only — zero stills is fine for podcast-format videos), and write the captions. Capture animated infographics/demos as short looping mp4 clips per the skill's step 4b.
+  # 유튜브 영상이냐 일반 웹 문서냐에 따라 소스 수집 방법만 달라진다.
+  case "$url" in
+    *youtube.com/*|*youtu.be/*) kind="youtube" ;;
+    *)                          kind="web" ;;
+  esac
+  echo "kind: $kind"
+  if [ "$kind" = "youtube" ]; then kind_label="📺 유튜브"; else kind_label="🔗 웹 문서"; fi
+
+  common_rules="IMPORTANT: this is a ONE-SHOT headless run (claude -p). There is no next turn, no notifications, and nothing resumes after you stop: NEVER launch background tasks and NEVER end your turn to 'wait for' an event, notification, or long-running call. Call every tool synchronously (long Gemini video calls included — just block on them) and keep working in this single turn until you print the final RESULT line.
+Work fully autonomously; do not ask questions. Choose the slug and the two-level category (main=출처, cat=주제) yourself following the skill's rules.
 Register the post in posts/assets/posts.js as the skill instructs, then commit and push to origin main.
 When (and only when) the post is committed and pushed, print as the very last line of your final message exactly: RESULT_SLUG=<the post slug>
 If you cannot complete the post for any reason, print as the very last line exactly: RESULT_ERROR=<one-line reason>"
+
+  if [ "$kind" = "youtube" ]; then
+    prompt="Use the claude-youtube-to-blog skill to turn this YouTube video into a Korean blog post for the repo at ${REPO}: ${url}
+${common_rules}
+Do the frame quality pass yourself: Read the extracted frames, drop duplicates, low-value ones, and people-only/talking-head shots (informational visuals only — zero stills is fine for podcast-format videos), and write the captions. Capture animated infographics/demos as short looping mp4 clips per the skill's step 4b."
+  else
+    prompt="Turn this web page into a Korean blog post for the repo at ${REPO}: ${url}
+This is NOT a YouTube video — it is an ordinary article/blog/doc page. Read the claude-youtube-to-blog skill and follow it for EVERYTHING about the output: post HTML structure and styling, slug and two-level category rules, posts/assets/<slug>/ media layout, posts.js registration, and the Korean writing voice. Only the sourcing step differs: instead of having Gemini watch a video, fetch the page itself (WebFetch, and curl if the page needs it) and work from its actual text. Never write from memory or from the URL alone — if you cannot retrieve the page body, stop and report the error.
+Produce a 요약 + 해석 post: summarize what the article actually says, faithfully and in the author's order, then add your own 해석/맥락 section that explains why it matters for a Korean reader. Keep the source's own headings as the section spine, quote sparingly (short quotes only, never a full reproduction of the article), and link back to the original at the top of the post.
+For visuals, carry over the article's own diagrams/screenshots into posts/assets/<slug>/ when they are informational, with Korean captions; skip decorative stock photos and author headshots. Zero images is fine for a text-only article.
+${common_rules}"
+  fi
 
   out_file="$PIPE_DIR/log/youtube-claude-$row_id.out"
   if claude -p "$prompt" --dangerously-skip-permissions >"$out_file" 2>&1; then
@@ -107,11 +130,11 @@ If you cannot complete the post for any reason, print as the very last line exac
       echo "live OK: $slug"
       rpc cbk_yt_finish "{\"p_key\":\"$CBK_SYNC_KEY\",\"p_id\":$row_id,\"p_status\":\"done\",\"p_slug\":\"$slug\"}" >/dev/null \
         || echo "finish rpc failed (post is live though)"
-      notify "📺 유튜브 포스트 완료%0A${PAGES_BASE}/posts/${slug}.html"
+      notify "${kind_label} 포스트 완료%0A${PAGES_BASE}/posts/${slug}.html"
     else
       echo "pushed but not live yet: $slug — leaving as done (pages lag)"
       rpc cbk_yt_finish "{\"p_key\":\"$CBK_SYNC_KEY\",\"p_id\":$row_id,\"p_status\":\"done\",\"p_slug\":\"$slug\"}" >/dev/null || true
-      notify "⚠️ 유튜브 포스트 push 완료, GitHub Pages 반영 대기 중%0A${PAGES_BASE}/posts/${slug}.html"
+      notify "⚠️ ${kind_label} 포스트 push 완료, GitHub Pages 반영 대기 중%0A${PAGES_BASE}/posts/${slug}.html"
     fi
   else
     [ -z "$err_line" ] && err_line="no RESULT_SLUG in output (log: $(basename "$out_file"))"
@@ -119,7 +142,7 @@ If you cannot complete the post for any reason, print as the very last line exac
     safe_err="$(printf '%s' "$err_line" | jq -Rs .)"
     rpc cbk_yt_finish "{\"p_key\":\"$CBK_SYNC_KEY\",\"p_id\":$row_id,\"p_status\":\"error\",\"p_error\":$safe_err}" >/dev/null \
       || echo "finish(error) rpc failed"
-    notify "❌ 유튜브 포스트 실패%0A${url}%0A${err_line}"
+    notify "❌ ${kind_label} 포스트 실패%0A${url}%0A${err_line}"
   fi
 done
 

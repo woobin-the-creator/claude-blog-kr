@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>유튜브 → 포스트 큐 · Claude 블로그 한글 번역</title>
+<title>링크 → 포스트 큐 · Claude 블로그 한글 번역</title>
 <style>
   :root { --fg:#1a1a1a; --muted:#666; --line:#e5e5e5; --accent:#c96442; --soft:#faf8f6; }
   * { box-sizing: border-box; }
@@ -69,9 +69,10 @@
 </head>
 <body>
   <a class="top-back" href="index.html">← 글 목록으로</a>
-  <h1>📺 유튜브 → 포스트 큐</h1>
-  <p class="sub">유튜브 URL을 넣어두면 맥의 파이프라인이 순서대로 한글 포스트로 만들어 올립니다.
-    처리 주기는 약 10분이며, 영상 하나에 수 분이 걸립니다.</p>
+  <h1>🔗 링크 → 포스트 큐</h1>
+  <p class="sub">유튜브 영상이든 일반 블로그·문서 페이지든 URL을 넣어두면 맥의 파이프라인이
+    순서대로 요약·해석한 한글 포스트로 만들어 올립니다.
+    처리 주기는 약 10분이며, 한 건에 수 분이 걸립니다.</p>
 
   <div id="app"></div>
 
@@ -122,11 +123,12 @@
     app.innerHTML =
       '<section class="enqueue">' +
         '<div class="enqueue-row">' +
-          '<input type="url" id="yt-url" placeholder="https://www.youtube.com/watch?v=… 또는 youtu.be/…"' +
+          '<input type="url" id="yt-url" placeholder="유튜브 영상 또는 블로그·문서 페이지 주소 (https://…)"' +
             ' autocomplete="off" spellcheck="false">' +
           '<button type="button" id="yt-add">큐에 넣기</button>' +
         "</div>" +
-        '<p class="enqueue-hint">공개 영상만 가능합니다(비공개·일부공개는 Gemini가 못 봅니다).' +
+        '<p class="enqueue-hint">유튜브는 공개 영상만 가능합니다(비공개·일부공개는 Gemini가 못 봅니다).' +
+          " 일반 페이지는 로그인·유료 구독 없이 열리는 주소여야 본문을 읽어옵니다." +
           " 완료되면 텔레그램으로 알림이 옵니다.</p>" +
         '<p class="enqueue-msg" id="yt-msg"></p>' +
       "</section>" +
@@ -155,10 +157,14 @@
       } catch (e) { return ts; }
     }
     var LABEL = { pending: "대기 중", processing: "처리 중", done: "완료", error: "실패" };
+    // 워커와 같은 규칙으로 유튜브/일반 문서를 구분한다.
+    function kindIcon(url) {
+      return /^https?:\/\/([^\/]*\.)?(youtube\.com|youtu\.be)\//i.test(url) ? "📺" : "🔗";
+    }
 
     function render(rows) {
       if (!rows || !rows.length) {
-        listEl.innerHTML = '<div class="empty">아직 큐에 넣은 영상이 없습니다.</div>';
+        listEl.innerHTML = '<div class="empty">아직 큐에 넣은 링크가 없습니다.</div>';
         return;
       }
       listEl.innerHTML = "";
@@ -170,7 +176,7 @@
             ? '<a href="posts/' + esc(r.post_slug) + '.html">' + esc(r.url) + "</a>"
             : esc(r.url)) +
           "</span>" +
-          '<span class="qmeta">' + fmt(r.created_at) + " 등록" +
+          '<span class="qmeta">' + kindIcon(r.url) + " " + fmt(r.created_at) + " 등록" +
             (r.status === "done" && r.post_slug ? " · posts/" + esc(r.post_slug) + ".html" : "") +
           "</span>" +
           (r.status === "error" && r.error ? '<span class="qerr">' + esc(r.error) + "</span>" : "") +
@@ -217,8 +223,8 @@
           return refresh();
         })
         .catch(function (e) {
-          setMsg("등록 실패: " + (/not a youtube url/.test(e.message)
-            ? "유튜브 URL이 아닙니다." : e.message), "err");
+          setMsg("등록 실패: " + (/not a (youtube|http) url/.test(e.message)
+            ? "http(s)로 시작하는 주소만 넣을 수 있습니다." : e.message), "err");
         })
         .then(function () { addBtn.disabled = false; });
     }
