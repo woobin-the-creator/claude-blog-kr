@@ -11,6 +11,12 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "auto-mode-default-in-claude-code.html", date: "2026-08-07", main: "Claude blog", cat: "Claude Code",
+      title: "이제 Pro·Max·Team 플랜의 Claude Code는 오토 모드가 기본값이다", nav: "오토 모드가 기본값이 되다" },
+    { file: "auto-mode-in-production.html", date: "2026-08-07", main: "Claude blog", cat: "Claude Code",
+      title: "프로덕션에서 오토 모드 운영하기: Nuro · Gusto · Garner Health", nav: "프로덕션에서 오토 모드 운영하기" },
+    { file: "run-claude-code-sessions-on-your-own-compute.html", date: "2026-08-06", main: "Claude blog", cat: "Product announcements",
+      title: "Claude Code 세션을 우리 인프라에서 실행하기: 셀프호스트 환경 퍼블릭 베타", nav: "셀프호스트 환경 · 우리 인프라에서 실행" },
     { file: "millennium-and-anthropic-are-building-a-digital-risk-analyst-with-claude.html", date: "2026-08-06", main: "Claude blog", cat: "Enterprise AI",
       title: "Millennium과 Anthropic이 Claude로 디지털 리스크 애널리스트를 만들고 있다", nav: "Millennium · 디지털 리스크 애널리스트" },
     { file: "claude-enterprise-inference-hooks.html", date: "2026-08-05", main: "Claude blog", cat: "Enterprise AI",
