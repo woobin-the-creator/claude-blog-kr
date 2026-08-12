@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "compliance-api-cowork-and-claude-code.html", date: "2026-08-11", main: "Claude blog", cat: "Enterprise AI",
+      title: "컴플라이언스 API 커버리지가 Claude Cowork와 Claude Code까지 확장된다", nav: "컴플라이언스 API · Cowork·Claude Code 확장" },
     { file: "auto-mode-default-in-claude-code.html", date: "2026-08-07", main: "Claude blog", cat: "Claude Code",
       title: "이제 Pro·Max·Team 플랜의 Claude Code는 오토 모드가 기본값이다", nav: "오토 모드가 기본값이 되다" },
     { file: "auto-mode-in-production.html", date: "2026-08-07", main: "Claude blog", cat: "Claude Code",
