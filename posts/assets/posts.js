@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "cowork-chrome-side-panel.html", date: "2026-08-12", main: "Claude blog", cat: "Product announcements",
+      title: "Chrome 사이드 패널의 Claude가 이제 Claude Cowork가 된다", nav: "Chrome 사이드 패널 = Claude Cowork" },
     { file: "compliance-api-cowork-and-claude-code.html", date: "2026-08-11", main: "Claude blog", cat: "Enterprise AI",
       title: "컴플라이언스 API 커버리지가 Claude Cowork와 Claude Code까지 확장된다", nav: "컴플라이언스 API · Cowork·Claude Code 확장" },
     { file: "auto-mode-default-in-claude-code.html", date: "2026-08-07", main: "Claude blog", cat: "Claude Code",
