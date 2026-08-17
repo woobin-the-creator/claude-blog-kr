@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "how-jetbrains-evaluates-and-deploys-claude-fable-5.html", date: "2026-08-13", main: "Claude blog", cat: "Enterprise AI",
+      title: "JetBrains는 Claude Fable 5를 어떻게 평가하고 투입하는가", nav: "JetBrains · Claude Fable 5 평가와 투입" },
     { file: "claude-tag-now-reads-even-more-of-the-room.html", date: "2026-08-13", main: "Claude blog", cat: "Product announcements",
       title: "Claude Tag가 채널 전체 맥락을 읽기 시작했다", nav: "Claude Tag · 채널 맥락 기반 판단" },
     { file: "cowork-chrome-side-panel.html", date: "2026-08-12", main: "Claude blog", cat: "Product announcements",
