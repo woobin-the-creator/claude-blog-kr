@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Tag가 채널 전체 맥락을 읽기 시작했다</title>
+<style>
+  :root { --fg:#1a1a1a; --muted:#666; --line:#e5e5e5; --accent:#c96442; --code-bg:#f6f6f4; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo",
+      "Malgun Gothic", sans-serif;
+    color: var(--fg); line-height: 1.75; max-width: 760px;
+    margin: 0 auto; padding: 48px 24px 96px; background:#fff;
+  }
+  header { border-bottom: 2px solid var(--line); padding-bottom: 24px; margin-bottom: 32px; }
+  h1 { font-size: 1.9rem; line-height: 1.35; margin: 0 0 12px; }
+  .subtitle { color:#333; font-size: 1.05rem; margin: 0 0 14px; line-height:1.6; }
+  .meta { color: var(--muted); font-size: 0.9rem; }
+  .meta .orig { display:block; margin-top:6px; }
+  .meta a { color: var(--accent); text-decoration: none; }
+  h2 { font-size: 1.4rem; margin: 44px 0 8px; padding-top: 8px; }
+  h3 { font-size: 1.15rem; margin: 30px 0 8px; color:#000; }
+  p { margin: 0 0 16px; }
+  a { color: var(--accent); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  blockquote { margin: 16px 0; padding: 8px 18px; border-left:3px solid var(--line);
+    color:#333; font-style: italic; }
+  hr { border: none; border-top: 1px solid var(--line); margin: 40px 0; }
+  code { background: var(--code-bg); padding: 2px 6px; border-radius: 4px;
+    font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 0.88em; }
+  pre { background: var(--code-bg); padding: 16px 18px; border-radius: 8px;
+    overflow-x: auto; border:1px solid var(--line); }
+  pre code { background: none; padding: 0; font-size: 0.85rem; line-height:1.5; }
+  figure { margin: 24px 0; }
+  figure img { width: 100%; height: auto; border:1px solid var(--line); border-radius: 8px;
+    background:#fff; }
+  figure.hero img { border:none; max-width: 210px; display:block; margin: 0 auto 8px; }
+  figcaption { color: var(--muted); font-size: 0.85rem; text-align: center;
+    margin-top: 10px; line-height: 1.5; }
+  figcaption a { color: var(--accent); }
+  .video { position: relative; width: 100%; aspect-ratio: 16 / 9; margin: 22px 0; }
+  .video iframe { position: absolute; inset: 0; width: 100%; height: 100%;
+    border: 0; border-radius: 8px; }
+  .callout { background:#faf6f4; border-left:3px solid var(--accent);
+    padding: 12px 16px; border-radius: 0 6px 6px 0; margin: 16px 0; }
+  .callout strong { color: var(--accent); }
+  footer { margin-top: 64px; padding-top: 20px; border-top:1px solid var(--line);
+    color: var(--muted); font-size: 0.82rem; }
+</style>
+<link rel="stylesheet" href="assets/nav.css">
+</head>
+<body>
+<header>
+  <h1>Claude Tag가 채널 전체 맥락을 읽기 시작했다</h1>
+  <p class="subtitle">메시지 하나씩 보고 판단하던 분류기(classifier)를 걷어내고, 채널 전체의 맥락·기억·상시 지시를 함께 보고 끼어들지 말지를 정한다.</p>
+  <div class="meta">
+    2026년 8월 13일 · 카테고리: <a href="https://claude.com/blog/category/announcements">제품 공지(Product announcements)</a>
+    · 제품: <a href="https://claude.com/product/tag">Claude Tag</a>
+    <span class="orig">원문: <a href="https://claude.com/blog/claude-tag-now-reads-even-more-of-the-room">Claude Tag now reads even more of the room</a> (claude.com/blog)</span>
+  </div>
+</header>
+
+<div class="callout">
+  <strong>안내</strong> — 이 글은 원문의 전문 번역이 아니라, 원문을 읽고 핵심을 한국어로 정리한 <strong>요약·해설</strong>입니다.
+  문장 단위의 정확한 표현과 전체 내용은 위 원문 링크에서 직접 확인하세요. 원문에 포함된 스크린샷 이미지도 원문 페이지에서 볼 수 있습니다.
+</div>
+
+<h2>무엇이 바뀌었나</h2>
+
+<p>Claude Tag는 Slack 채널에 Claude를 넣어 팀과 함께 일하게 하는 기능이다. @-멘션으로 부르면 답하고, 도움이 될 것 같다고 판단하면 부르지 않아도 먼저 나선다.</p>
+
+<p>이번 업데이트의 핵심은 그 "먼저 나설지 말지"를 판단하는 방식이다. 종전에는 Claude가 <strong>한 번에 메시지 하나만</strong> 봤다. 눈앞에 놓인 메시지만 놓고 판단했기 때문에, 그 메시지 주변에 깔린 더 넓은 맥락은 판단에 들어가지 않았다.</p>
+
+<p>이제는 <strong>채널 전반의 맥락</strong>에 더해 Claude의 기억(memory)과 사용자가 미리 걸어둔 상시 지시(standing instructions)까지 함께 보고 대화에 낄지를 정한다. 그 결과 언제 먼저 응답해야 하고 언제 하지 말아야 하는지를 가리는 정확도가 약 <strong>30%</strong> 개선됐다는 것이 Anthropic의 설명이다.</p>
+
+<p>비용 측면도 짚어둘 만하다. 맥락을 더 많이 들고 있으면 그만큼 사용량이 늘어나지만, 이번 업데이트로 추가된 맥락은 <strong>어떤 플랜에서도 사용량·지출 한도에 산입되지 않는다.</strong> 추가 비용 없이 적용된다.</p>
+
+<h2>수동적 응답자에서 능동적 참여자로</h2>
+
+<p>이전 구조는 가벼운 분류기가 문지기 역할을 했다. 새 메시지가 올 때마다 그 메시지 하나만 보고 "낄까 말까"를 예/아니오로 한 번 판정하는 식이다.</p>
+
+<p>원문은 이 구조의 한계를 보여주는 예시를 든다. 같은 버그를 양쪽 끝에서 쫓고 있는 엔지니어 두 명이 있다. 한 명(Priya)은 가설을 갖고 있고, 다른 한 명(Devon)은 그 가설을 뒷받침할 증거를 갖고 있다. 그런데 둘 다 이걸 파고들 여유 시간이 없고, 두 메시지 모두 Claude에게 뭘 해달라고 요청하는 말이 아니다.</p>
+
+<p>메시지를 하나씩 따로 읽으면 둘 다 Claude를 향한 말이 아니므로, 분류기는 두 번 다 "가만히 있기"를 고른다. 각각의 판단만 놓고 보면 틀리지 않았다. 하지만 두 메시지를 <em>함께</em> 읽으면 거기에는 명백히 처리해야 할 일이 놓여 있다. 한쪽엔 가설, 다른 쪽엔 증거가 있고, 아무도 확인할 시간이 없는 상태다.</p>
+
+<p>분류기를 걷어낸 지금, Claude는 채널 전반의 맥락을 근거로 다음 네 가지 중 하나를 고른다.</p>
+
+<ul>
+  <li><strong>인라인으로 바로 답한다</strong> — 답이 짧고, 검증 가능하고, 채널이 아직 모르는 내용일 때.</li>
+  <li><strong>스레드를 열어 깊게 파고든다</strong> — 그 메시지가 제대로 된 시간을 들일 값어치가 있을 때.</li>
+  <li><strong>진행 중인 작업으로 메시지를 넘긴다</strong> — 이미 열려 있는 작업 흐름에 보탬이 되는 내용일 때.</li>
+  <li><strong>아무 말도 하지 않는다</strong> — 나설 이유가 없을 때.</li>
+</ul>
+
+<p>앞의 버그 예시에서 Claude는 두 번째 선택지를 고른다. @-멘션이 없어도, Priya의 가설과 Devon의 증거를 함께 읽고 조사를 이미 돌리기 시작한 스레드를 연 뒤 두 엔지니어를 그 안으로 끌어들인다. 물론 이 모든 행동은 사용자가 설정해 둔 권한·도구·범위(scope)의 경계 안에서만 이뤄진다.</p>
+
+<p>대화들이 서로 격리돼 있지 않다는 점도 중요하다. Devon이 나중에 업데이트를 올리면 그 내용이 맞는 작업 흐름에 가서 붙고, 따로 진행되던 두 조사가 알고 보니 같은 버그였다면 그 연결도 만들어진다.</p>
+
+<h2>언제 입을 다물지를 어떻게 정하나</h2>
+
+<p>원문에서 가장 눈여겨볼 만한 대목이다. Anthropic은 <em>"성가신 에이전트가 도움 안 되는 에이전트보다 나쁘다"</em>는 관점을 전제로 깐다. 그래서 Claude Tag는 쓸모 있을 때만 입을 열도록 만들어졌고, 대부분의 채널에서 대부분의 메시지에 대해 그건 <strong>아무 말도 하지 않는다</strong>는 뜻이 된다.</p>
+
+<p>이걸 구현하는 방식은 채점이다. Claude가 채널별로 내린 선택을 루브릭(rubric)에 대고 평가하는데, 그 기준은 이런 원칙들에 기반한다.</p>
+
+<ul>
+  <li>그 코멘트가 얼마나 유용한가</li>
+  <li>Claude가 그 응답에 얼마나 확신을 갖고 있는가</li>
+  <li>그 질문에 답하기에 더 적합한 <em>사람</em>이 있지는 않은가</li>
+</ul>
+
+<p>또 하나 재미있는 동작은 "잠들기"다. 사람이 Slack을 쓰는 방식과 비슷하게, Claude도 언제 관심을 꺼야 하는지를 안다. 몇몇 채널은 바짝 따라가고, 나머지는 누가 태그하기 전까지 덜 주의를 기울인다. 어떤 채널에서 메시지가 계속 올라오는데도 Claude가 매번 "내가 보탤 게 없다"는 결론에 도달하면, 그 채널에서는 잠들어 버린다. @-멘션 한 번이면 즉시 깨어난다.</p>
+
+<p>응답 성향은 평범한 말로 직접 조종할 수도 있다. "여기서는 누가 태그하기 전엔 절대 응답하지 마" 라거나, "배포 파이프라인 관련된 건 뭐든 편하게 끼어들어" 같은 식이다.</p>
+
+<p>아예 태그했을 때만 말하게 하고 싶다면, <a href="https://claude.com/docs/claude-tag/users/when-claude-responds#turn-automatic-replies-on-or-off">채널 멤버 누구나 '자동 응답(Respond automatically)'을 끌 수 있다</a>.</p>
+
+<h2>첫 응답이 빨라졌다</h2>
+
+<p>맥락을 더 갖고 있는 덕에 반응 속도도 빨라졌다. 예전에는 Claude가 작업을 시작하는 동안 아무 말 없이 조용히 돌아가는 구간이 있었는데, 이제는 몇 초 안에 "들었다"는 신호를 준다. 작업 자체에 걸리는 시간이 줄어든 것은 아니다. 사라진 것은 <em>내 말을 들은 건지 아닌지조차 알 수 없던 첫 1분의 침묵</em>이다.</p>
+
+<h2>지금 사용 가능</h2>
+
+<p>이번 업데이트는 Claude Tag 전반에 이미 적용됐고, Claude Teams 및 Enterprise 고객이 사용할 수 있다. <a href="https://claude.ai/admin-settings/claude-tag">관리자 설정</a>에서 시작하면 된다.</p>
+
+<p>정리하면 이번 변경의 방향은 분명하다. 대화를 따라갈 수 있고, 언제 움직일지와 언제 비켜서 있을지를 스스로 판단하는 협업자에 가까워지는 것. 원문은 채널 하나에 Claude를 붙여놓고 무엇이 달라지는지 지켜보라고 권한다. 기능 자체에 대한 설명은 <a href="https://claude.com/product/tag">Claude Tag 제품 페이지</a>에 정리돼 있다.</p>
+
+<p>관련 링크: <a href="https://claude.com/pricing#api">요금 보기</a> · <a href="https://claude.com/contact-sales">영업팀 문의</a></p>
+
+<footer>
+  이 글은 Claude 공식 블로그 원문(<a href="https://claude.com/blog/claude-tag-now-reads-even-more-of-the-room">Claude Tag now reads even more of the room</a>)을
+  읽고 한국어로 정리한 비공식 요약·해설입니다. 전문 번역이 아니며, 저작권은 원저작자에게 있습니다.
+  정확한 내용은 반드시 원문을 확인하세요.
+</footer>
+<script src="assets/store.js"></script>
+<script src="assets/posts.js"></script>
+<script src="assets/nav.js"></script>
+</body>
+</html>

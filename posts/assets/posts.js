@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "claude-tag-now-reads-even-more-of-the-room.html", date: "2026-08-13", main: "Claude blog", cat: "Product announcements",
+      title: "Claude Tag가 채널 전체 맥락을 읽기 시작했다", nav: "Claude Tag · 채널 맥락 기반 판단" },
     { file: "cowork-chrome-side-panel.html", date: "2026-08-12", main: "Claude blog", cat: "Product announcements",
       title: "Chrome 사이드 패널의 Claude가 이제 Claude Cowork가 된다", nav: "Chrome 사이드 패널 = Claude Cowork" },
     { file: "compliance-api-cowork-and-claude-code.html", date: "2026-08-11", main: "Claude blog", cat: "Enterprise AI",
