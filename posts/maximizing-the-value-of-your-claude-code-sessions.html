@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Code 세션에서 가치를 최대로 뽑아내기</title>
+<style>
+  :root { --fg:#1a1a1a; --muted:#666; --line:#e5e5e5; --accent:#c96442; --code-bg:#f6f6f4; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo",
+      "Malgun Gothic", sans-serif;
+    color: var(--fg); line-height: 1.75; max-width: 760px;
+    margin: 0 auto; padding: 48px 24px 96px; background:#fff;
+  }
+  header { border-bottom: 2px solid var(--line); padding-bottom: 24px; margin-bottom: 32px; }
+  h1 { font-size: 1.9rem; line-height: 1.35; margin: 0 0 12px; }
+  .subtitle { color:#333; font-size: 1.05rem; margin: 0 0 14px; line-height:1.6; }
+  .meta { color: var(--muted); font-size: 0.9rem; }
+  .meta .orig { display:block; margin-top:6px; }
+  .meta a { color: var(--accent); text-decoration: none; }
+  h2 { font-size: 1.4rem; margin: 44px 0 8px; padding-top: 8px; }
+  h3 { font-size: 1.15rem; margin: 30px 0 8px; color:#000; }
+  p { margin: 0 0 16px; }
+  a { color: var(--accent); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  blockquote { margin: 16px 0; padding: 8px 18px; border-left:3px solid var(--line);
+    color:#333; font-style: italic; }
+  hr { border: none; border-top: 1px solid var(--line); margin: 40px 0; }
+  code { background: var(--code-bg); padding: 2px 6px; border-radius: 4px;
+    font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 0.88em; }
+  pre { background: var(--code-bg); padding: 16px 18px; border-radius: 8px;
+    overflow-x: auto; border:1px solid var(--line); }
+  pre code { background: none; padding: 0; font-size: 0.85rem; line-height:1.5; }
+  figure { margin: 24px 0; }
+  figure img { width: 100%; height: auto; border:1px solid var(--line); border-radius: 8px;
+    background:#fff; }
+  figure.hero img { border:none; max-width: 210px; display:block; margin: 0 auto 8px; }
+  figcaption { color: var(--muted); font-size: 0.85rem; text-align: center;
+    margin-top: 10px; line-height: 1.5; }
+  figcaption a { color: var(--accent); }
+  .video { position: relative; width: 100%; aspect-ratio: 16 / 9; margin: 22px 0; }
+  .video iframe { position: absolute; inset: 0; width: 100%; height: 100%;
+    border: 0; border-radius: 8px; }
+  .callout { background:#faf6f4; border-left:3px solid var(--accent);
+    padding: 12px 16px; border-radius: 0 6px 6px 0; margin: 16px 0; }
+  .callout strong { color: var(--accent); }
+  table { border-collapse: collapse; width: 100%; margin: 20px 0; font-size: 0.94rem; }
+  th, td { border: 1px solid var(--line); padding: 9px 12px; text-align: left; }
+  th { background: var(--code-bg); font-weight: 600; }
+  footer { margin-top: 64px; padding-top: 20px; border-top:1px solid var(--line);
+    color: var(--muted); font-size: 0.82rem; }
+</style>
+<link rel="stylesheet" href="assets/nav.css">
+</head>
+<body>
+<header>
+  <h1>Claude Code 세션에서 가치를 최대로 뽑아내기</h1>
+  <p class="subtitle">토큰 하나하나가 실제로 내가 요청한 일에 쓰이도록 세션을 굴리는 법 — 토큰 값을 결정하는 것은 무엇이고, 한 세션이 보내는 토큰 수를 결정하는 것은 무엇인가.</p>
+  <div class="meta">
+    2026년 8월 14일 · 글쓴이: Lydia Hallie · 읽는 데 5분
+    · 카테고리: <a href="https://claude.com/blog/category/claude-code">Claude Code</a>,
+    <a href="https://claude.com/blog/category/enterprise-ai">엔터프라이즈 AI(Enterprise AI)</a>
+    · 제품: <a href="https://claude.com/product/claude-code">Claude Code</a>
+    <span class="orig">원문: <a href="https://claude.com/blog/maximizing-the-value-of-your-claude-code-sessions">Maximizing the value of your Claude Code sessions</a> (claude.com/blog)</span>
+  </div>
+</header>
+
+<figure class="hero">
+  <img src="assets/maximizing-the-value-of-your-claude-code-sessions/hero.svg" alt="원문 히어로 일러스트">
+  <figcaption>원문 히어로 이미지 (claude.com/blog)</figcaption>
+</figure>
+
+<div class="callout">
+  <strong>안내</strong> — 이 글은 원문의 전문 번역이 아니라, 원문을 읽고 핵심을 한국어로 정리한 <strong>요약·해설</strong>입니다.
+  문장 단위의 정확한 표현과 전체 내용은 위 원문 링크에서 직접 확인하세요. 본문의 다이어그램은 원문에서 가져온 것입니다.
+</div>
+
+<h2>TL;DR</h2>
+
+<p>원문이 맨 앞에 걸어둔 여섯 줄 요약이다.</p>
+
+<ul>
+  <li><strong>작업이 바뀌면 <code>/clear</code></strong> — 이전 작업의 관계없는 맥락이 계속 모델에 다시 실려 가는 것을 막아 토큰 사용량을 줄인다.</li>
+  <li><strong>모델과 노력 수준(effort level)은 시작할 때 정한다</strong> — 대화 중간에 둘 중 하나라도 바꾸면 프롬프트 캐시가 깨져 비용이 올라갈 수 있다.</li>
+  <li><strong>파일은 경로를 타이핑하지 말고 @-멘션</strong> — 파일이 메시지에 바로 첨부되므로 Read 호출이 한 번 줄고, Claude가 파일을 찾아 헤매는 검색도 없어진다.</li>
+  <li><strong>출력이 시끄러운 명령에는 quiet 플래그를 붙이거나 서브에이전트에서 돌린다</strong> — 명령 출력도 파일과 똑같이 대화에 추가돼 세션이 끝날 때까지 남는다.</li>
+  <li><strong>새 세션에서 <code>/context</code>를 한 번 실행</strong> — CLAUDE.md, MCP 툴 정의 등 뭐가 이미 올라와 있는지 보여주므로 불필요한 것을 걷어낼 수 있다.</li>
+  <li><strong>자리를 비우기 전에 <code>/compact</code></strong> — 프롬프트 캐시는 한 시간이면 만료되는데, 대화 요약은 아직 캐시가 살아 있을 때 하는 편이 훨씬 싸다.</li>
+</ul>
+
+<h2>가치를 최대로 뽑아낸다는 것</h2>
+
+<p>얼마 전까지만 해도 코드를 쓰는 도구는 정액제(또는 무료)였다. 에디터 값은 그날 오후에 테스트 하나를 고치든 쉰 개를 고치든 똑같았고, 그래서 개별 작업에 <em>그 작업만의 가격</em>이라는 게 사실상 없었다.</p>
+
+<p>Claude Code 같은 에이전틱 코딩 도구에서는 사정이 다르다. 같은 작업을 끝내도 어떻게 쓰느냐에 따라 드는 비용이 달라진다.</p>
+
+<p>원문이 드는 예시는 이렇다. 어떤 세션에서는 Claude가 테스트 파일과 그 테스트가 검사하는 파일을 읽고, 수정하고, 몇 턴 만에 끝낸다. 다른 세션에서는 먼저 저장소를 grep으로 훑고, 결국 같은 두 파일에 도달하기까지 열 몇 개 파일을 읽으며, 그 모든 턴이 오늘 아침부터 대화에 쌓인 나머지 전부를 같이 끌고 다닌다.</p>
+
+<figure>
+  <img src="assets/maximizing-the-value-of-your-claude-code-sessions/same-fix-two-sessions.png" alt="같은 수정을 두 가지 방식으로 처리했을 때의 토큰 소비 비교 다이어그램">
+  <figcaption>같은 수정, 다른 경로 — 몇 턴 만에 끝나는 세션과 저장소를 훑으며 불필요한 파일을 잔뜩 끌어안는 세션 (원문 다이어그램)</figcaption>
+</figure>
+
+<p>결과물은 똑같은 수정이다. 다만 거기에 쓴 토큰 수가 달랐고, 그 내내 모델은 필요하지도 않은 열 개의 파일을 함께 머릿속에 두고 생각해야 했다.</p>
+
+<p>그래서 원문이 말하는 "토큰을 효율적으로 쓴다"는 건 전체 토큰을 <em>덜</em> 쓰라는 뜻이 아니다. 쓰는 토큰이 실제로 내가 요청한 그 일에 가도록 만든다는 뜻이다.</p>
+
+<p>글은 이 순서로 파고든다 — 토큰 하나의 값은 무엇이 결정하는가, 한 세션이 보내는 토큰의 <em>개수</em>는 무엇이 결정하는가, 그리고 그게 세션 운영 방식에 무슨 의미인가.</p>
+
+<h2>토큰 하나의 값을 결정하는 것</h2>
+
+<p>청구는 토큰 단위로 되지만, 실제로 돈을 내는 대상은 <strong>추론(inference)</strong>이다. GPU(혹은 TPU 등 모델이 돌아가는 하드웨어)가 내 토큰 위로 모델을 한 번 굴리는 데 걸리는 시간 말이다.</p>
+
+<p>그 시간을 좌우하는 요소는 세 가지다. 어떤 모델을 돌리는가, 그 토큰이 입력(들어가는)인가 출력(나오는)인가, 그리고 캐시되어 있었는가.</p>
+
+<h3>모델</h3>
+
+<p>큰 모델은 입력 토큰에도 출력 토큰에도 더 많은 일을 한다. 어떤 작업에 어떤 모델이 값어치를 하는지는 그 자체로 별도 주제이고, 원문은 <a href="https://claude.com/blog/claude-model-and-effort-level-in-claude-code">Choosing a Claude model and effort level in Claude Code</a>에서 다뤘다고 안내한다.</p>
+
+<p>이 글에서 알아야 할 건 하나다. <strong>앞으로 나올 모든 이야기에 모델 가격이 곱해진다.</strong> 문제가 정말로 어렵거나 모호할 때 큰 모델을 쓰고, 일이 반복적이고 뻔할 때는 작은 모델을 쓴다.</p>
+
+<figure>
+  <img src="assets/maximizing-the-value-of-your-claude-code-sessions/model-size-price.png" alt="모델 크기와 가격 관계를 보여주는 곡선 다이어그램">
+  <figcaption>곡선은 설명을 위한 것이며 실제 벤치마크 데이터를 나타내지 않는다. (원문 캡션 번역)</figcaption>
+</figure>
+
+<h3>입력 토큰과 출력 토큰</h3>
+
+<p>요청 하나는 GPU를 두 단계로 지나가고, 두 단계의 비용이 다르다.</p>
+
+<p>먼저 <strong>프리필(prefill)</strong> 단계에서 모델은 요청과 맥락을 읽는다 — 시스템 프롬프트, CLAUDE.md, 내 메시지, 그리고 그 이후 대화에 추가된 모든 것(Claude가 읽은 파일들, 실행한 명령의 출력). 이게 <strong>입력 토큰</strong>이다.</p>
+
+<p>그다음 <strong>디코드(decode)</strong> 단계에서 <strong>출력 토큰</strong>을 쓴다 — 사고 과정, 도구 호출, 그리고 화면에 보이는 텍스트. 이건 한 번에 한 토큰씩 일어난다. 200토큰짜리 응답은 모델을 200번 연달아 돌리는 것이다. 토큰당으로 보면 디코드가 GPU를 훨씬 오래 붙잡고 있고, <strong>그래서 출력 가격이 입력의 약 5배</strong>다.</p>
+
+<figure>
+  <img src="assets/maximizing-the-value-of-your-claude-code-sessions/prefill-decode.png" alt="프리필과 디코드 단계의 비용 차이를 보여주는 다이어그램">
+  <figcaption>프리필(입력)과 디코드(출력) — 토큰당 GPU 점유 시간이 다르다 (원문 다이어그램)</figcaption>
+</figure>
+
+<p>한 세션의 출력 토큰 중 상당수는 <strong>사고(thinking) 토큰</strong>이고, 턴마다 얼마나 생각할지를 정하는 게 노력 수준이다. 모델과 마찬가지로 <code>/effort</code>로 고른 값은 다음 세션에도 기본값으로 남는다.</p>
+
+<div class="callout">
+  <strong>팁</strong> — 새 세션에서 <code>/model</code>과 <code>/effort</code>를 한 번씩 실행해 지금 뭘 쓰고 있는지 확인하라.
+  둘 다 지난번에 고른 값을 기억하고 있으므로, 그 선택이 <em>의도한</em> 선택이어야 한다.
+</div>
+
+<div class="callout">
+  <strong>팁</strong> — 이번 세션이 단순 노가다라는 걸 이미 알고 있다면 <code>MAX_THINKING_TOKENS=0 claude</code>로 그 세션만 사고를 끈다
+  (Fable 5는 예외). <code>/effort low</code>보다 한 단계 아래다.
+</div>
+
+<h3>프롬프트 캐싱</h3>
+
+<p>어떤 요청이 서버가 방금 본 요청과 <em>정확히 같은 토큰으로 시작</em>한다면, 공유되는 그 앞부분의 상태는 계산해도 똑같이 나온다. 그래서 서버는 지난번 상태를 그대로 들고 있다가 그 뒤에 오는 부분만 프리필하면 된다. 이게 프롬프트 캐싱이다.</p>
+
+<p>캐시에서 <strong>읽는 비용은 입력 가격의 0.1배</strong>다. 계산하는 대신 상태를 불러오기만 하기 때문이다. 캐시에 <strong>쓰는 비용은 일반 입력보다 조금 비싸서 최대 2배</strong>인데, 서버가 그 상태를 이후에도 붙들고 있어야 해서다. 하지만 쓰기는 토큰당 한 번뿐이고, 0.1배 읽기는 그 뒤의 모든 턴마다 일어난다.</p>
+
+<p>Claude Code는 매 요청마다 프롬프트 캐시를 알아서 관리한다. 켤 것도 없다. 다만 <strong>깨뜨릴 수는 있고</strong>, 그래서 어떻게 피하는지 아는 게 중요하다.</p>
+
+<p>원문은 "utils.test.ts에서 실패하는 테스트를 고쳐줘"라고 쳤을 때 Claude Code가 실제로 무엇을 보내는지를 단계별로 보여준다.</p>
+
+<ol>
+  <li>Claude Code가 시스템 프롬프트(툴 정의 포함) + CLAUDE.md + 내 메시지로 첫 요청을 조립해 보낸다(입력 토큰). 캐시에 아직 아무것도 없으니 전부 프리필되고 캐시에 기록된다.</li>
+  <li>모델은 보지도 못한 테스트를 고칠 수 없으므로 잠깐 생각하고 <code>utils.test.ts</code>에 대한 Read 호출로 응답한다(출력 토큰). Claude Code가 파일을 읽어 대화에 덧붙이고 전체를 다시 보낸다(입력 토큰). 이번엔 1번 요청의 모든 것이 10분의 1 가격으로 캐시에서 읽히고, 정가로 프리필되는 건 새로 생긴 것 — Read 호출과 그 파일뿐이다.</li>
+  <li>이제 모델은 테스트 대상 파일을 원한다(출력). 또 Read, 또 덧붙이기, 그리고 전체 재전송 — 1·2번 요청은 캐시에서, 두 번째 파일만 정가로(입력).</li>
+  <li>모델이 Edit으로 응답한다(출력). Claude Code가 적용하고 결과를 덧붙여 전체를 다시 보낸다. 마찬가지로 Edit과 그 결과만 새것이고 그 앞은 전부 캐시 읽기(입력).</li>
+  <li>모델이 <code>npm test</code>를 실행한다(출력). 테스트 출력이 덧붙여지고 전체가 다시 나가며, 새로운 부분은 그 테스트 출력뿐이다(입력).</li>
+  <li>테스트가 통과하고 모델이 짧은 요약으로 응답한다(출력). 도구 호출이 없으니 덧붙일 것도, 6번째 요청도 없다. 끝.</li>
+</ol>
+
+<p>작은 수정 하나에 요청 다섯 번이고, <strong>그 다섯 번 모두가 그 시점까지의 대화 전체를 담고 있었다.</strong> 전형적인 한 턴은 이렇게 기울어져 있다 — 들어가는 건 수만 토큰, 나오는 건 수백 토큰. 하지만 그 턴에서 <em>새로운 것</em>만 정가로 프리필된다.</p>
+
+<p>그래서 턴당 청구서는 이 셋이 전부다. 히스토리에 대한 캐시 읽기, 새로 생긴 것에 대한 정가 입력, 그리고 응답에 대한 출력 가격. 구독 플랜에서도 마찬가지다. 가격이 직접 보이지는 않지만, 한도를 깎아 내리는 건 결국 같은 요청들이다.</p>
+
+<p>캐시는 <strong>요청의 맨 앞부터 순서대로 일치</strong>해야 하고, 요청은 항상 같은 순서로 나간다 — 툴 정의, 그다음 시스템 프롬프트, 그다음 대화(CLAUDE.md는 대화의 맨 앞).</p>
+
+<p>이 앞부분(prefix) 중 뭐라도 바뀌면 그 뒤는 전부 다시 프리필된다. 대화 끝에 붙는 도구 결과는 이상적인 경우다. 뒤에 아무것도 없기 때문이다. <strong>캐시를 버리게 만드는 건 요청의 더 앞쪽을 바꾸거나, 캐시의 키가 되는 값을 바꾸는 것</strong>이다.</p>
+
+<ul>
+  <li><strong><code>/model</code></strong> — 모델마다 자기 캐시가 따로 있어서, 다음 턴에 대화 전체가 정가로 다시 프리필된다. (플랜 모드를 드나들 때마다 모델을 바꾸는 <code>opusplan</code>도 포함이다.)</li>
+  <li><strong><code>/effort</code></strong> — 노력 수준도 캐시 키의 일부라 같은 이야기다. <code>/model</code>과 <code>/effort</code> 둘 다 대화 중간에 바꾸면 확인을 받는 이유가 이것이다.</li>
+  <li><strong>패스트 모드(Fast mode)</strong> — 역시 키의 일부이고, 재프리필이 <em>패스트 모드 가격으로</em> 일어난다. 켤 거라면 시작할 때 켜라. (다시 끄는 건 캐시 관점에서 공짜다.)</li>
+  <li><strong><code>/compact</code></strong> — 대화가 더 짧은 것으로 교체되므로 그 안의 어떤 것도 더는 일치하지 않는다(앞에 있는 시스템 프롬프트는 살아남는다). 요약을 쓰는 것 자체는 <em>옛 대화가 아직 캐시에 있는 동안엔</em> 싸다. 그래서 긴 휴식 <em>뒤</em>보다 <em>앞</em>에 하는 게 훨씬 저렴하다.</li>
+  <li><strong>시간</strong> — 턴마다 시계가 초기화되지만, 캐시는 구독에서 <strong>1시간</strong>, API 키에서 <strong>5분</strong>이면 만료된다(<code>ENABLE_PROMPT_CACHING_1H=1</code>로 API 키도 1시간이 된다). 그보다 늦게 돌아오면 다음 턴에 대화 전체가 다시 프리필된다. 오래된 세션을 재개하는 경우도 거의 항상 그렇다. 그때쯤엔 캐시가 사라져 있고, 시스템 프롬프트는 어차피 실행 시점에 다시 구성된다.</li>
+</ul>
+
+<p>그렇다고 모델이나 노력 수준을 절대 바꾸지 말라는 뜻은 아니다. <strong>싸게 바꿀 수 있는 순간(세션 시작 직후, <code>/clear</code> 직후)과 비싸게 치르는 순간(긴 대화의 한복판)이 따로 있다</strong>는 뜻이다.</p>
+
+<div class="callout">
+  <strong>팁</strong> — 최근 몇 턴이 원하지 않는 방향으로 갔다면 <code>/compact</code> 대신 그 직전으로 <code>/rewind</code>하라.
+  되감기는 그 턴들을 끝에서 잘라낼 뿐이라 앞부분은 여전히 캐시돼 있고 <strong>비용이 들지 않는다</strong>.
+  컴팩트는 대화 전체를 다시 쓰므로 <strong>항상 비용이 든다</strong>.
+</div>
+
+<h2>한 세션이 보내는 토큰 수를 결정하는 것</h2>
+
+<p>여기서 핵심은 하나다. <strong>무엇도 한 번만 보내지지 않는다.</strong> 대화에 들어간 모든 것 — Claude가 읽은 파일이든 실행한 명령의 출력이든 — 은 세션이 끝날 때까지 그 뒤의 모든 턴마다 다시 보내진다.</p>
+
+<p>캐시되어 있으니 그 재전송 하나하나는 싸다. 하지만 싼 것이 공짜는 아니고, 게다가 그것들은 <strong>모델이 매 턴 헤집고 다녀야 하는 컨텍스트 자리를 차지한다.</strong></p>
+
+<p>세션의 비용 모델은 사실상 이게 전부다 — 컨텍스트에 얼마나 많은 토큰이 들어가는가, 그것이 몇 턴 동안 머무는가, 그리고 동시에 몇 개의 컨텍스트를 돌리고 있는가.</p>
+
+<h3>무엇이 컨텍스트에 들어가는가</h3>
+
+<p>컨텍스트의 일부는 내가 뭘 치기도 전에 이미 들어 있다 — 툴 정의, 시스템 프롬프트, CLAUDE.md, 그리고 시작할 때 로드되는 나머지.</p>
+
+<div class="callout">
+  <strong>팁</strong> — 새 세션에서 아무것도 치기 전에 <code>/context</code>를 실행해 뭐가 들어 있는지 보라.
+  CLAUDE.md에는 구체적인 지시만 남기고, 워크플로 전용 지시는 <strong>스킬(skill)</strong>로 옮겨라. 스킬은 실제로 쓰일 때만 로드된다.
+  이번 세션에 필요 없는 MCP 서버가 있으면 <code>/mcp</code>로 꺼라.
+</div>
+
+<p>세션 중에 추가되는 것들은 거의 전부 <strong>도구 결과</strong>다 — Claude가 읽는 파일들, 그리고 실행하는 명령들의 출력.</p>
+
+<p>Claude가 얼마나 많이 읽느냐는 대체로 <strong>스스로 알아내야 하는 양</strong>에 달려 있다. "테스트가 깨졌어"라고만 하면 먼저 어떤 테스트인지부터 알아내야 한다. grep 한두 번, 어느 게 관련 있는지 보려고 파일 몇 개 열어보기, 그리고 그 모든 결과는 쓸모가 다한 뒤에도 한참 컨텍스트에 남는다.</p>
+
+<p>"utils.test.ts에서 실패하는 테스트를 고쳐줘"는 검색 단계를 건너뛰고 파일 하나에 대한 Read 호출 한 번이 든다. 그리고 <strong>"@utils.test.ts에서 실패하는 테스트를 고쳐줘"는 그 Read 호출조차 들지 않는다.</strong></p>
+
+<figure>
+  <img src="assets/maximizing-the-value-of-your-claude-code-sessions/at-mention-vs-read.png" alt="모호한 요청, 파일명을 지정한 요청, @-멘션한 요청의 비용 차이 다이어그램">
+  <figcaption>"테스트가 깨졌어" vs 파일명 지정 vs @-멘션 — 같은 결과에 드는 탐색 비용이 달라진다 (원문 다이어그램)</figcaption>
+</figure>
+
+<div class="callout">
+  <strong>팁</strong> — 파일을 가리킬 때는 경로를 치지 말고 <strong>@-멘션</strong>하라. Claude Code가 아무것도 보내기 전에 파일을 메시지에 붙여주므로
+  맨 첫 요청부터 들어 있고 Read 호출이 없다. 파일 자체가 차지하는 컨텍스트 자리는 어느 쪽이든 같으므로
+  <strong>한 대화에서 한 번만 멘션하면 된다</strong>. 파일은 계속 거기 남아 있고, 나중 턴에 다시 @-멘션하면 보통 사본이 하나 더 붙는다.
+</div>
+
+<p>컨텍스트를 채우는 또 하나는 <strong>Claude가 실행한 명령의 출력</strong>이다. 테스트든 빌드든 <code>git log</code>든, 찍히는 것은 읽은 파일과 똑같이 대화에 덧붙여지고 똑같은 턴 수만큼 남는다.</p>
+
+<p>여기서 반전은, <strong>정말 큰 출력은 오히려 괜찮다</strong>는 점이다. 30,000자를 넘으면 Claude Code가 출력을 파일로 쓰고 대화에는 짧은 미리보기와 경로만 넣는다(바꾸고 싶다면 <code>BASH_MAX_OUTPUT_LENGTH</code>).</p>
+
+<p>문제는 <strong>그 아래 전부</strong>다. 통과한 테스트 400개를 한 줄씩 찍는 테스트 러너는 그 한도에 못 미치고, 그 400줄은 이제 남은 모든 턴의 일부가 된다.</p>
+
+<p>Claude가 알아서 플래그와 <code>tail</code>로 처리해 주는 경우가 많다. Claude에게 맡기고 싶지 않다면, 문서에 <strong>시끄러운 명령을 실행 전에 다시 써서 필요한 줄만 돌아오게 하는 작은 훅</strong>이 나와 있다.</p>
+
+<div class="callout">
+  <strong>팁</strong> — 하루 종일 치는 명령 두세 개를 <strong>quiet 플래그까지 포함해</strong> CLAUDE.md에 적어둬라.
+  내가 직접 칠 때와 똑같은 형태로 ("단일 테스트 파일 실행은 <code>npx vitest run &lt;file&gt; --reporter=dot</code>").
+  아주 작은 추가지만, 그 뒤의 모든 세션에서 한 턴과 수백 줄의 출력을 아낀다.
+</div>
+
+<h3>몇 턴 동안 거기 머무는가</h3>
+
+<p>긴 세션 하나는 같은 일을 짧은 세션 몇 개에 나눠 하는 것보다 비싸다. 그것도 생각보다 훨씬 비싼데, <strong>40번째 턴은 그 앞의 39개 턴을 같이 다시 읽고 있기 때문</strong>이다.</p>
+
+<p>세션의 컨텍스트는 짧고 관련성 높게 유지해야 한다. 한 작업의 맥락을 다음 작업으로 끌고 가지 마라 — <strong>새로운 걸 시작할 땐 <code>/clear</code>, 같은 작업의 앞부분이 끝났을 땐 <code>/compact</code>.</strong></p>
+
+<figure>
+  <img src="assets/maximizing-the-value-of-your-claude-code-sessions/long-session-vs-short.png" alt="턴이 쌓일수록 누적되는 컨텍스트 비용을 보여주는 다이어그램">
+  <figcaption>턴이 쌓일수록 앞선 턴들을 계속 다시 읽는다 — 긴 세션 하나가 짧은 세션 여럿보다 비싼 이유 (원문 다이어그램)</figcaption>
+</figure>
+
+<div class="callout">
+  <strong>팁</strong> — 나중에 그 세션으로 돌아올 생각이면 <code>/clear</code> 전에 <code>/rename</code>하라.
+  <code>/compact</code>할 때는 무엇을 남길지 알려주고, 늘 같은 내용이라면 CLAUDE.md에 "Compact instructions" 섹션을 넣어둬라.
+  1M 모델을 쓰면서 오토 컴팩트 안전망을 예전 위치에 두고 싶다면 <code>/autocompact 200k</code>로 되돌릴 수 있다(Claude Code v2.1.221 이상 필요).
+</div>
+
+<p>내가 타이핑하지 않는 동안 일어나는 턴도 눈여겨봐야 한다. <code>/loop</code>는 <strong>설정한 그 세션에서 온전한 한 턴으로 발화</strong>하며, 매번 그 대화 전체를 함께 끌고 간다. 마지막 턴으로부터 한 시간이 넘었다면 거기에 캐시 미스까지 얹힌다. <strong>다른 터미널에서 새 세션을 열고 거기서 루프를 돌려라.</strong></p>
+
+<h3>서브에이전트</h3>
+
+<p>무언가를 내 컨텍스트 밖에 두는 다른 방법은 <strong>그것을 다른 컨텍스트에서 일어나게 하는 것</strong>이고, 그게 서브에이전트의 용도다. 서브에이전트는 자기만의 컨텍스트 윈도를 갖고, 자기 시스템 프롬프트와 도구, 그리고 내 CLAUDE.md를 갖지만 <strong>내 대화는 갖지 않는다</strong>. 자기 턴을 돌리고, 메인 세션으로 돌아오는 건 그 답변뿐이다. 나머지는 끝나는 즉시 버려진다.</p>
+
+<p>내 대화를 갖지 않는 대가는, 메인 세션이 이미 갖고 있던 것을 서브에이전트가 다시 읽어야 할 때가 있다는 것이다. 그러는 동안 자기 턴 비용도 낸다. 작은 일이라면 그냥 오버헤드다.</p>
+
+<p>값어치를 하는 건 <strong>보관할 필요 없는 출력이 잔뜩 나오는 일</strong>, 예컨대 로그를 훑는 작업이다. 그런 종류의 일에는 Claude가 알아서 서브에이전트를 꺼내 드는 경우가 많고, 그러지 않을 때는 직접 요청하면 된다("이 로그는 서브에이전트에서 훑어줘"). 다만 <strong>메인 세션은 서브에이전트가 보고하기로 선택한 것만 받는다</strong>는 점은 염두에 둘 것.</p>
+
+<figure>
+  <img src="assets/maximizing-the-value-of-your-claude-code-sessions/subagent-context.png" alt="서브에이전트가 메인 세션과 분리된 컨텍스트에서 도는 것을 보여주는 다이어그램">
+  <figcaption>서브에이전트는 별도 컨텍스트에서 돌고, 메인 세션으로는 답변만 돌아온다 (원문 다이어그램)</figcaption>
+</figure>
+
+<div class="callout">
+  <strong>팁</strong> — 반복해서 넘기는 시끄러운 작업이 있다면 <strong>그 작업 전용 서브에이전트 정의</strong>를 만들고 <code>model: haiku</code>(또는 <code>sonnet</code>)를 지정하라.
+  그러지 않으면 메인 세션이 돌고 있는 모델로 실행된다.
+</div>
+
+<h2>어디부터 볼 것인가</h2>
+
+<p>지금까지 나온 것 중에서 눈여겨볼 만한 건 네 가지이고, 원문은 대략 비용이 큰 순서로 정리한다.</p>
+
+<figure>
+  <img src="assets/maximizing-the-value-of-your-claude-code-sessions/where-to-look-first.png" alt="비용에 영향이 큰 네 가지 요인을 정리한 카드 다이어그램">
+  <figcaption>비용 영향이 큰 순서로 정리한 네 가지 (원문 다이어그램)</figcaption>
+</figure>
+
+<ol>
+  <li><strong>긴 세션</strong> — 매 턴이 그 앞의 모든 것을 다시 보낸다. 한 세션의 토큰 대부분이 여기로 간다.</li>
+  <li><strong>컨텍스트에 너무 많은 것</strong> — Claude에게 필요 없던 파일, 시끄러운 명령 출력, 이전 작업의 잔여물, 쓰지도 않는 MCP 서버. 전부 매 턴 다시 보내지고(그리고 매 턴 고려 대상이 된다).</li>
+  <li><strong>작업에 필요한 것보다 큰 모델이나 높은 노력 수준</strong> — 나머지 모든 것에 이 값이 곱해지고, 두 설정 모두 세션 사이에 그대로 남는다.</li>
+  <li><strong>프롬프트 캐시 깨뜨리기</strong> — 대화 중간에 모델·노력 수준·패스트 모드를 바꾸거나 캐시가 만료된 뒤에 돌아오면, 대화 전체가 정가로 다시 프리필된다.</li>
+</ol>
+
+<hr>
+
+<h2>Claude Code 받기</h2>
+
+<p>설치 명령은 아래와 같다.</p>
+
+<pre><code># macOS / Linux
+curl -fsSL https://claude.ai/install.sh | bash
+
+# Windows (PowerShell)
+irm https://claude.ai/install.ps1 | iex</code></pre>
+
+<p>또는 <a href="https://claude.com/download">데스크톱</a>,
+<a href="https://marketplace.visualstudio.com/items?itemName=anthropic.claude-code">VS Code</a>,
+<a href="https://plugins.jetbrains.com/plugin/27310-claude-code-beta-">JetBrains</a>,
+<a href="https://claude.ai/code">웹</a>,
+<a href="https://slack.com/oauth/v2/authorize?client_id=1601185624273.8899143856786&amp;scope=app_mentions:read,assistant:write,channels:history,channels:read,chat:write,files:read,files:write,groups:history,groups:read,im:history,im:read,im:write,mpim:history,reactions:write,users:read,users:read.email,commands,search:read.public&amp;user_scope=bookmarks:read,channels:history,channels:read,chat:write,emoji:read,files:read,groups:history,groups:read,groups:write,im:history,im:read,im:write,links:read,mpim:history,mpim:read,mpim:write,mpim:write.topic,pins:read,reactions:read,reactions:write,remote_files:read,team:read,users:read,users:read.email,search:read.public,search:read.private,search:read.im,search:read.mpim,search:read.files,search:read.users,canvases:read,canvases:write">Slack</a>에서도 쓸 수 있고,
+<a href="https://code.claude.com/docs/en/overview">문서</a>를 먼저 읽어도 된다.</p>
+
+<p>관련 링크: <a href="https://claude.ai/code">Claude Code 사용해 보기</a> ·
+<a href="https://code.claude.com/docs/en/overview">개발자 문서</a> ·
+<a href="https://claude.com/pricing#api">요금 보기</a> ·
+<a href="https://claude.com/contact-sales">영업팀 문의</a></p>
+
+<h2>원문이 함께 추천하는 글</h2>
+
+<ul>
+  <li><a href="https://claude.com/blog/how-jetbrains-evaluates-and-deploys-claude-fable-5">Securing the frontier: How JetBrains evaluates and deploys Claude Fable 5</a> (2026-08-13, Enterprise AI) — <a href="how-jetbrains-evaluates-and-deploys-claude-fable-5.html">이 사이트의 한글 정리</a></li>
+  <li><a href="https://claude.com/blog/product-management-on-the-ai-exponential">Product management on the AI exponential</a> (2026-03-19, Claude Code)</li>
+  <li><a href="https://claude.com/blog/how-brex-improves-code-quality-and-productivity-with-claude-code">How Brex improves code quality and productivity with Claude Code</a> (2025-10-30, Enterprise AI)</li>
+  <li><a href="https://claude.com/blog/using-claude-code-the-unreasonable-effectiveness-of-html">Using Claude Code: The unreasonable effectiveness of HTML</a> (2026-05-20, Claude Code)</li>
+</ul>
+
+<footer>
+  이 글은 Claude 공식 블로그 원문(<a href="https://claude.com/blog/maximizing-the-value-of-your-claude-code-sessions">Maximizing the value of your Claude Code sessions</a>, Lydia Hallie)을
+  읽고 한국어로 정리한 비공식 요약·해설입니다. 전문 번역이 아니며, 저작권은 원저작자에게 있습니다.
+  본문에 실린 다이어그램의 저작권도 Anthropic에 있습니다. 정확한 내용은 반드시 원문을 확인하세요.
+</footer>
+<script src="assets/store.js"></script>
+<script src="assets/posts.js"></script>
+<script src="assets/nav.js"></script>
+</body>
+</html>
