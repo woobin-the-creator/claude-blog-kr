@@ -13,6 +13,8 @@
   window.CBK_POSTS = [
     { file: "maximizing-the-value-of-your-claude-code-sessions.html", date: "2026-08-14", main: "Claude blog", cat: "Claude Code",
       title: "Claude Code 세션에서 가치를 최대로 뽑아내기", nav: "Claude Code 세션 · 토큰 효율" },
+    { file: "self-service-data-analytics-in-slack-how-anthropic-deploys-claude-tag-for-ad-hoc-questions.html", date: "2026-08-13", main: "Claude blog", cat: "Enterprise AI",
+      title: "Slack 안의 셀프서비스 데이터 분석: Anthropic은 즉석 질문용으로 Claude Tag를 어떻게 배포했나", nav: "Slack 셀프서비스 데이터 분석 · Claude Tag 배포" },
     { file: "how-jetbrains-evaluates-and-deploys-claude-fable-5.html", date: "2026-08-13", main: "Claude blog", cat: "Enterprise AI",
       title: "JetBrains는 Claude Fable 5를 어떻게 평가하고 투입하는가", nav: "JetBrains · Claude Fable 5 평가와 투입" },
     { file: "claude-tag-now-reads-even-more-of-the-room.html", date: "2026-08-13", main: "Claude blog", cat: "Product announcements",
