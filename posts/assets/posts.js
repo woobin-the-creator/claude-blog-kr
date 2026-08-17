@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "how-abc-legal-turned-every-employee-into-a-builder-with-claude-managed-agents.html", date: "2026-08-17", main: "Claude blog", cat: "Enterprise AI",
+      title: "ABC Legal은 Claude Managed Agents로 어떻게 전 직원을 빌더로 만들었나", nav: "ABC Legal · 전 직원이 에이전트를 만들다" },
     { file: "maximizing-the-value-of-your-claude-code-sessions.html", date: "2026-08-14", main: "Claude blog", cat: "Claude Code",
       title: "Claude Code 세션에서 가치를 최대로 뽑아내기", nav: "Claude Code 세션 · 토큰 효율" },
     { file: "self-service-data-analytics-in-slack-how-anthropic-deploys-claude-tag-for-ad-hoc-questions.html", date: "2026-08-13", main: "Claude blog", cat: "Enterprise AI",
