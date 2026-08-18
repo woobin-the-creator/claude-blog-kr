@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Science 제품 가이드</title>
+<style>
+  :root { --fg:#1a1a1a; --muted:#666; --line:#e5e5e5; --accent:#c96442; --code-bg:#f6f6f4; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo",
+      "Malgun Gothic", sans-serif;
+    color: var(--fg); line-height: 1.75; max-width: 760px;
+    margin: 0 auto; padding: 48px 24px 96px; background:#fff;
+  }
+  header { border-bottom: 2px solid var(--line); padding-bottom: 24px; margin-bottom: 32px; }
+  h1 { font-size: 1.9rem; line-height: 1.35; margin: 0 0 12px; }
+  .subtitle { color:#333; font-size: 1.05rem; margin: 0 0 14px; line-height:1.6; }
+  .meta { color: var(--muted); font-size: 0.9rem; }
+  .meta .orig { display:block; margin-top:6px; }
+  .meta a { color: var(--accent); text-decoration: none; }
+  h2 { font-size: 1.4rem; margin: 44px 0 8px; padding-top: 8px; }
+  h3 { font-size: 1.15rem; margin: 30px 0 8px; color:#000; }
+  p { margin: 0 0 16px; }
+  a { color: var(--accent); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  blockquote { margin: 16px 0; padding: 8px 18px; border-left:3px solid var(--line);
+    color:#333; font-style: italic; }
+  hr { border: none; border-top: 1px solid var(--line); margin: 40px 0; }
+  code { background: var(--code-bg); padding: 2px 6px; border-radius: 4px;
+    font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 0.88em; }
+  pre { background: var(--code-bg); padding: 16px 18px; border-radius: 8px;
+    overflow-x: auto; border:1px solid var(--line); }
+  pre code { background: none; padding: 0; font-size: 0.85rem; line-height:1.5; }
+  figure { margin: 24px 0; }
+  figure img { width: 100%; height: auto; border:1px solid var(--line); border-radius: 8px;
+    background:#fff; }
+  figure.hero img { border:none; max-width: 210px; display:block; margin: 0 auto 8px; }
+  figcaption { color: var(--muted); font-size: 0.85rem; text-align: center;
+    margin-top: 10px; line-height: 1.5; }
+  figcaption a { color: var(--accent); }
+  .video { position: relative; width: 100%; aspect-ratio: 16 / 9; margin: 22px 0; }
+  .video iframe { position: absolute; inset: 0; width: 100%; height: 100%;
+    border: 0; border-radius: 8px; }
+  .callout { background:#faf6f4; border-left:3px solid var(--accent);
+    padding: 12px 16px; border-radius: 0 6px 6px 0; margin: 16px 0; }
+  .callout strong { color: var(--accent); }
+  .stats { display:flex; flex-wrap:wrap; gap:12px; margin: 20px 0 24px; }
+  .stat { flex:1 1 180px; border:1px solid var(--line); border-radius:8px; padding:14px 16px; }
+  .stat b { display:block; font-size:1.35rem; color:var(--accent); line-height:1.3; }
+  .stat span { color:var(--muted); font-size:0.86rem; }
+  footer { margin-top: 64px; padding-top: 20px; border-top:1px solid var(--line);
+    color: var(--muted); font-size: 0.82rem; }
+</style>
+<link rel="stylesheet" href="assets/nav.css">
+</head>
+<body>
+<header>
+  <h1>Claude Science 제품 가이드</h1>
+  <p class="subtitle">생명과학(life sciences) 조직이 Claude를 어디에, 어떤 순서로 도입하면 되는지 정리한 Anthropic의 공식 가이드 안내. 작업별로 어떤 Claude 표면(surface)을 써야 하는지, Claude Science가 내부적으로 어떻게 동작하는지, 그리고 Foundation → Pilot → Scale 3단계 도입 로드맵까지를 담은 eBook을 소개한다.</p>
+  <div class="meta">
+    2026년 8월 18일 · 읽는 데 약 5분
+    · 카테고리: <a href="https://claude.com/blog/category/enterprise-ai">엔터프라이즈 AI(Enterprise AI)</a>
+    · 제품: Claude Science
+    <span class="orig">원문: <a href="https://claude.com/blog/the-claude-science-product-guide">The Claude Science product guide</a> (claude.com/blog)</span>
+  </div>
+</header>
+
+<figure class="hero">
+  <img src="assets/the-claude-science-product-guide/hero.svg" alt="이중나선(double helix)을 형상화한 Claude Science 대표 일러스트">
+</figure>
+
+<div class="callout">
+  <strong>안내</strong> — 이 글은 원문의 전문 번역이 아니라, 원문을 읽고 핵심을 한국어로 정리한 <strong>요약·해설</strong>입니다.
+  원문의 모든 절(節)과 논점을 순서대로 빠짐없이 다루고, 원문에 실린 이미지와 링크도 모두 그대로 옮겼습니다.
+  다만 문장 단위의 정확한 표현은 원저작물이므로, 정확한 원문 표현은 위 원문 링크에서 확인하세요.
+</div>
+
+<div class="callout">
+  <strong>이 글의 성격</strong> — 원문 자체는 <strong>eBook(PDF) 안내용 짧은 포스트</strong>입니다.
+  본문 분량이 길지 않고, 실제 내용의 본체는 아래에 링크된 PDF 가이드에 들어 있습니다.
+  아래는 그 포스트 본문을 그대로 따라간 정리입니다.
+</div>
+
+<h2>생명과학은 AI 도입의 변곡점에 서 있다</h2>
+
+<p>원문은 업계 수치 두 갈래로 문을 연다.</p>
+
+<p>먼저 <a href="https://www.deloitte.com/us/en/insights/industry/health-care/life-sciences-and-health-care-industry-outlooks/2026-life-sciences-executive-outlook.html">딜로이트의 2026 생명과학 전망(Deloitte's 2026 Life Sciences Outlook)</a>에 따르면, 바이오제약·메드텍(biopharma and medtech) 리더의 <strong>78%</strong>가 올해 AI가 큰 변화를 이끄는 중심 역할을 할 것이라고 본다. 그런데 <strong>조직의 일상 워크플로우에 AI 도구를 완전히 구현해 놓았다고 답한 곳은 14%뿐</strong>이다.</p>
+
+<p>다음은 Anthropic이 직접 수행한 내부 리서치다. 화학·물리·생물·전산 분야 연구자들을 인터뷰한 결과, <strong>91%의 과학자가 자기 연구에 AI가 더 많이 들어오기를 원한다</strong>고 답했다. 반면 <strong>79%는 도입을 가로막는 1순위 장벽으로 신뢰성·재현성(trust and reliability)</strong>을 꼽았다.</p>
+
+<div class="stats">
+  <div class="stat"><b>78%</b><span>AI가 올해 주요 변화를 이끌 것으로 보는 바이오제약·메드텍 리더 (딜로이트)</span></div>
+  <div class="stat"><b>14%</b><span>일상 워크플로우에 AI 도구를 완전히 구현했다고 답한 비율 (딜로이트)</span></div>
+  <div class="stat"><b>91%</b><span>연구에 AI가 더 들어오기를 원하는 과학자 (Anthropic 내부 리서치)</span></div>
+  <div class="stat"><b>79%</b><span>1순위 장벽으로 신뢰성·재현성을 꼽은 비율 (Anthropic 내부 리서치)</span></div>
+</div>
+
+<p>요컨대 <strong>수요는 이미 충분한데, 믿을 수 있느냐가 걸려서 실제 워크플로우로 내려오지 못하고 있다</strong>는 것이 원문이 잡은 문제 설정이다.</p>
+
+<h2>Claude Science는 이 문제에 대한 Anthropic의 답</h2>
+
+<p><a href="https://www.anthropic.com/news/claude-science-ai-workbench">Claude Science</a>(현재 <strong>베타</strong>)는 <strong>생명과학의 모든 디지털 단계를 위한 AI 워크벤치(AI workbench)</strong>다. 설계 원칙이 앞의 "신뢰성" 장벽을 정면으로 겨냥한다.</p>
+
+<ul>
+  <li><strong>과학자의 데이터 옆에서 돌아가도록</strong> 만들어졌다 — 데이터를 어딘가로 실어 보내는 방식이 아니다.</li>
+  <li>결과물이 <strong>추적 가능(traced)하고, 재현 가능(reproduced)하며, 방어 가능(defended)</strong>하도록 만들어졌다. 즉 리뷰를 견디는 결과를 내는 것이 목표다.</li>
+</ul>
+
+<p>그리고 Claude Science는 홀로 서 있는 제품이 아니라, 더 넓은 Claude 제품군 안에 자리 잡고 있다. 원문이 함께 열거하는 표면은 다음과 같다.</p>
+
+<ul>
+  <li>Claude Chat</li>
+  <li>Claude Cowork</li>
+  <li>Claude Code</li>
+  <li>Claude for Microsoft 365</li>
+  <li>Claude Platform</li>
+  <li>Claude Managed Agents</li>
+</ul>
+
+<p>실제로 <a href="https://claude.com/customers/novo-nordisk">노보 노디스크(Novo Nordisk)</a>, <a href="https://claude.com/customers?fcdaa149_1_industry_equal=%5B%22Life+sciences%22%5D&amp;fcdaa149_sort_date=desc">가번 연구소(the Garvan Institute)</a>, <a href="https://claude.com/customers/benchling">벤츨링(Benchling)</a> 같은 생명과학 조직들이, <strong>과학 그 자체를 둘러싼 문서·규제(regulatory)·엔터프라이즈 업무</strong>에 이 제품군을 쓰고 있다.</p>
+
+<p>가이드의 구성은 이렇다. 먼저 <strong>어떤 상황에 어떤 표면을 집어들어야 하는지</strong>를 다루고, 그다음 <strong>연구 조직 안에 Claude Science를 실제로 배포하는 방법</strong>을 깊게 파고든다. 고객 사례와 롤아웃 로드맵이 함께 들어간다.</p>
+
+<h2>가이드에 담긴 내용</h2>
+
+<p>원문이 밝힌 이 가이드의 목차는 다섯 갈래다.</p>
+
+<ul>
+  <li><strong>과학 작업에 어떤 Claude 표면을 언제 쓸 것인가</strong> — 분석·그림(figures)·결과에는 Claude Science, 문서 및 규제 업무에는 Claude Cowork와 Claude for Microsoft 365, 프로덕션 파이프라인 구축에는 Claude Code.</li>
+  <li><strong>Claude Science의 내부 동작 원리</strong> — <strong>로컬 데몬(local daemon)</strong>이 구동한다. 데이터·연산·에이전트를 당신의 머신 위에 그대로 두고, 무거운 작업(heavy jobs)은 당신 소유의 GPU 박스, SLURM 클러스터, 또는 당신의 클라우드 계정으로 디스패치한다.</li>
+  <li><strong>Claude의 과학적 분석이 리뷰를 견디게 만드는 다섯 가지 설계 선택(design choices)</strong>.</li>
+  <li><strong>3단계 도입 로드맵</strong> — Foundation(기반) → Pilot(파일럿) → Scale(확장). 각 단계에서 무엇을 해야 하고 무엇이 보이기 시작하는지, 그리고 <strong>파일럿이 잘 굴러가고 있음을 보여주는 지표</strong>까지 함께.</li>
+  <li><strong>발견(discovery)·분석(analysis)·출판(publication) 전반의 기능별·워크플로우별 활용 사례</strong> — 단일세포 RNA 시퀀싱(single-cell RNA-seq) 클러스터링부터 논문 방법론 섹션(methods section) 초안 작성까지.</li>
+</ul>
+
+<div class="callout">
+  <strong>핵심 한 줄</strong> — 로컬 데몬 구조는 앞서 나온 <strong>"79%가 신뢰성을 장벽으로 꼽았다"</strong>에 대한 직접적인 응답이다.
+  데이터와 연산을 조직 경계 밖으로 내보내지 않으면서, 결과의 출처와 재현 경로를 남기는 것이 설계의 축이다.
+</div>
+
+<h2>가이드 받아보기</h2>
+
+<p>가이드 전문은 PDF eBook으로 공개돼 있다. <a href="https://cdn.prod.website-files.com/6889473510b50328dbb70ae6/6a83dc7ae3c1656fe5f41d40_Claude-eBook-Claude-Science-product-guide-08112026%20(2).pdf">여기에서 확인할 수 있다</a>.</p>
+
+<p>그리고 원문은 이렇게 맺는다 — 오늘 바로 <a href="https://www.anthropic.com/news/claude-science-ai-workbench">Claude Science</a>로 시작해 보라.</p>
+
+<p>관련 링크: <a href="https://claude.com/pricing#api">요금 보기</a> · <a href="https://claude.com/contact-sales">영업팀 문의</a></p>
+
+<footer>
+  이 글은 Claude 공식 블로그 원문(<a href="https://claude.com/blog/the-claude-science-product-guide">The Claude Science product guide</a>)을
+  읽고 한국어로 정리한 비공식 요약·해설입니다. 전문 번역이 아니며, 저작권은 원저작자에게 있습니다.
+  정확한 내용은 반드시 원문을 확인하세요.
+</footer>
+<script src="assets/store.js"></script>
+<script src="assets/posts.js"></script>
+<script src="assets/nav.js"></script>
+</body>
+</html>

@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "the-claude-science-product-guide.html", date: "2026-08-18", main: "Claude blog", cat: "Enterprise AI",
+      title: "Claude Science 제품 가이드", nav: "Claude Science 제품 가이드" },
     { file: "ai-ci-cd-on-call.html", date: "2026-08-18", main: "Claude blog", cat: "Agents",
       title: "Claude on call: Claude Tag는 Anthropic의 CI/CD 장애 1차 대응자다", nav: "Claude 온콜 · CI/CD 장애 1차 대응" },
     { file: "how-abc-legal-turned-every-employee-into-a-builder-with-claude-managed-agents.html", date: "2026-08-17", main: "Claude blog", cat: "Enterprise AI",
