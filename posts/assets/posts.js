@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "ai-ci-cd-on-call.html", date: "2026-08-18", main: "Claude blog", cat: "Agents",
+      title: "Claude on call: Claude Tag는 Anthropic의 CI/CD 장애 1차 대응자다", nav: "Claude 온콜 · CI/CD 장애 1차 대응" },
     { file: "how-abc-legal-turned-every-employee-into-a-builder-with-claude-managed-agents.html", date: "2026-08-17", main: "Claude blog", cat: "Enterprise AI",
       title: "ABC Legal은 Claude Managed Agents로 어떻게 전 직원을 빌더로 만들었나", nav: "ABC Legal · 전 직원이 에이전트를 만들다" },
     { file: "maximizing-the-value-of-your-claude-code-sessions.html", date: "2026-08-14", main: "Claude blog", cat: "Claude Code",
