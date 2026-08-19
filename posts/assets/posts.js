@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "turning-conversation-into-knowledge-how-slack-builds-human-agent-teams.html", date: "2026-08-19", main: "Claude blog", cat: "Enterprise AI",
+      title: "대화를 지식으로 바꾸기: Slack은 인간-에이전트 팀을 어떻게 만드는가", nav: "Slack · 대화를 지식으로 바꾸는 인간-에이전트 팀" },
     { file: "the-claude-science-product-guide.html", date: "2026-08-18", main: "Claude blog", cat: "Enterprise AI",
       title: "Claude Science 제품 가이드", nav: "Claude Science 제품 가이드" },
     { file: "ai-ci-cd-on-call.html", date: "2026-08-18", main: "Claude blog", cat: "Agents",
