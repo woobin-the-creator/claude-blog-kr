@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "anthropics-approach-to-teaching-and-learning-ai.html", date: "2026-08-20", main: "Claude blog", cat: "Product announcements",
+      title: "AI를 가르치고 배우는 것에 대한 Anthropic의 접근법", nav: "Claude Academy · AI 교육 접근법" },
     { file: "turning-conversation-into-knowledge-how-slack-builds-human-agent-teams.html", date: "2026-08-19", main: "Claude blog", cat: "Enterprise AI",
       title: "대화를 지식으로 바꾸기: Slack은 인간-에이전트 팀을 어떻게 만드는가", nav: "Slack · 대화를 지식으로 바꾸는 인간-에이전트 팀" },
     { file: "the-claude-science-product-guide.html", date: "2026-08-18", main: "Claude blog", cat: "Enterprise AI",
