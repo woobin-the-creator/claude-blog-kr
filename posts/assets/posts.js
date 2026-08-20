@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "how-monday-com-transformed-its-platform-into-an-agent-first-product-where-humans-and-agents-collaborate.html", date: "2026-08-20", main: "Claude blog", cat: "Agents",
+      title: "monday.com은 어떻게 플랫폼을 에이전트 우선 제품으로 다시 만들었나", nav: "monday.com · 에이전트 우선 제품 재건축" },
     { file: "computer-use-skills-api-files-api.html", date: "2026-08-20", main: "Claude blog", cat: "Product announcements",
       title: "컴퓨터 사용(computer use)·Skills API·Files API로 프로덕션 에이전트 만들기", nav: "컴퓨터 사용·Skills API·Files API 정식 출시" },
     { file: "claude-code-guide-for-startups.html", date: "2026-08-20", main: "Claude blog", cat: "Claude Code",
