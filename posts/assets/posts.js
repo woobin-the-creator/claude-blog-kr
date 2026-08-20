@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "computer-use-skills-api-files-api.html", date: "2026-08-20", main: "Claude blog", cat: "Product announcements",
+      title: "컴퓨터 사용(computer use)·Skills API·Files API로 프로덕션 에이전트 만들기", nav: "컴퓨터 사용·Skills API·Files API 정식 출시" },
     { file: "claude-code-guide-for-startups.html", date: "2026-08-20", main: "Claude blog", cat: "Claude Code",
       title: "스타트업을 위한 Claude Code 가이드", nav: "스타트업을 위한 Claude Code 가이드 · 5가지 규칙" },
     { file: "anthropics-approach-to-teaching-and-learning-ai.html", date: "2026-08-20", main: "Claude blog", cat: "Product announcements",
