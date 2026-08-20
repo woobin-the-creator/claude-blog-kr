@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>스타트업을 위한 Claude Code 가이드</title>
+<style>
+  :root { --fg:#1a1a1a; --muted:#666; --line:#e5e5e5; --accent:#c96442; --code-bg:#f6f6f4; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo",
+      "Malgun Gothic", sans-serif;
+    color: var(--fg); line-height: 1.75; max-width: 760px;
+    margin: 0 auto; padding: 48px 24px 96px; background:#fff;
+  }
+  header { border-bottom: 2px solid var(--line); padding-bottom: 24px; margin-bottom: 32px; }
+  h1 { font-size: 1.9rem; line-height: 1.35; margin: 0 0 12px; }
+  .subtitle { color:#333; font-size: 1.05rem; margin: 0 0 14px; line-height:1.6; }
+  .meta { color: var(--muted); font-size: 0.9rem; }
+  .meta .orig { display:block; margin-top:6px; }
+  .meta a { color: var(--accent); text-decoration: none; }
+  h2 { font-size: 1.4rem; margin: 44px 0 8px; padding-top: 8px; }
+  h2 .num { color: var(--accent); font-size: 0.85em; margin-right: 8px; }
+  h3 { font-size: 1.15rem; margin: 30px 0 8px; color:#000; }
+  h4 { font-size: 1.02rem; margin: 26px 0 6px; color:#000; }
+  p { margin: 0 0 16px; }
+  .lead { font-size: 1.05rem; color:#333; }
+  .deck { color:#555; font-style: italic; margin: 0 0 16px; }
+  a { color: var(--accent); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  blockquote { margin: 16px 0; padding: 8px 18px; border-left:3px solid var(--line);
+    color:#333; font-style: italic; }
+  hr { border: none; border-top: 1px solid var(--line); margin: 40px 0; }
+  code { background: var(--code-bg); padding: 2px 6px; border-radius: 4px;
+    font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 0.88em; }
+  pre { background: var(--code-bg); padding: 16px 18px; border-radius: 8px;
+    overflow-x: auto; border:1px solid var(--line); }
+  pre code { background: none; padding: 0; font-size: 0.85rem; line-height:1.5; }
+  figure { margin: 24px 0; }
+  figure img { width: 100%; height: auto; border:1px solid var(--line); border-radius: 8px;
+    background:#fff; }
+  figure.hero img { border:none; max-width: 210px; display:block; margin: 0 auto 8px; }
+  figcaption { color: var(--muted); font-size: 0.85rem; text-align: center;
+    margin-top: 10px; line-height: 1.5; }
+  figcaption a { color: var(--accent); }
+  .video { position: relative; width: 100%; aspect-ratio: 16 / 9; margin: 22px 0; }
+  .video iframe { position: absolute; inset: 0; width: 100%; height: 100%;
+    border: 0; border-radius: 8px; }
+  .callout { background:#faf6f4; border-left:3px solid var(--accent);
+    padding: 12px 16px; border-radius: 0 6px 6px 0; margin: 16px 0; }
+  .callout strong { color: var(--accent); }
+  .stats { display:flex; flex-wrap:wrap; gap:12px; margin: 20px 0 24px; }
+  .stat { flex:1 1 180px; border:1px solid var(--line); border-radius:8px; padding:14px 16px; }
+  .stat b { display:block; font-size:1.35rem; color:var(--accent); line-height:1.3; }
+  .stat span { color:var(--muted); font-size:0.86rem; }
+  .q { display:flex; gap:14px; align-items:flex-start; margin: 22px 0;
+    background:#fafafa; border:1px solid var(--line); border-radius:10px; padding:16px 18px; }
+  .q img { width:52px; height:52px; border-radius:50%; object-fit:cover; flex:0 0 52px;
+    border:1px solid var(--line); }
+  .q .qt { margin:0 0 8px; font-style:italic; color:#222; }
+  .q .qa { margin:0; font-size:0.86rem; color:var(--muted); }
+  .q .qa a { color:var(--accent); text-decoration:none; }
+  .logos { display:flex; flex-wrap:wrap; gap:10px; margin:16px 0 24px; }
+  .logos a { flex:0 0 auto; }
+  .logos img { height:44px; width:auto; border:1px solid var(--line); border-radius:6px;
+    background:#fff; padding:4px 8px; display:block; }
+  .rules { counter-reset: r; list-style:none; padding-left:0; }
+  .rules li { counter-increment: r; padding-left:36px; position:relative; }
+  .rules li::before { content: counter(r,decimal-leading-zero); position:absolute; left:0;
+    color:var(--accent); font-weight:700; }
+  footer { margin-top: 64px; padding-top: 20px; border-top:1px solid var(--line);
+    color: var(--muted); font-size: 0.82rem; }
+</style>
+<link rel="stylesheet" href="assets/nav.css">
+</head>
+<body>
+<header>
+  <h1>스타트업을 위한 Claude Code 가이드</h1>
+  <p class="subtitle">빠르게 성장하는 스타트업 십수 곳이 에이전틱 코딩으로 제품을 만들고 회사를 굴리는 방식을 인터뷰해 정리한 가이드. 이들이 지키는 <strong>다섯 가지 규칙</strong>과 창업자들의 현장 인사이트, 그리고 바로 적용할 체크리스트.</p>
+  <div class="meta">
+    2026년 8월 20일 · 읽는 데 약 15분
+    · 카테고리: <a href="https://claude.com/blog/category/claude-code">Claude Code</a>
+    <span class="orig">원문: <a href="https://claude.com/blog/claude-code-guide-for-startups">The Claude Code Guide For Startups by Anthropic</a> (claude.com/blog)</span>
+  </div>
+</header>
+
+<figure class="hero">
+  <img src="assets/claude-code-guide-for-startups/hero.svg" alt="글의 대표 일러스트레이션">
+</figure>
+
+<div class="callout">
+  <strong>안내</strong> — 이 글은 원문의 축자 번역이 아니라, 원문을 읽고 핵심을 한국어로 정리한 <strong>요약·해설</strong>입니다.
+  원문의 모든 절(節)과 항목을 원문 순서 그대로 빠짐없이 다루고, 원문에 실린 이미지와 링크도 모두 그대로 옮겼습니다.
+  인용문은 짧게 발췌해 옮겼으며, 정확한 원문 표현은 위 원문 링크에서 확인하세요.
+</div>
+
+<p><strong>PDF로 보고 싶다면</strong> — 같은 다섯 가지 규칙, 창업자 인사이트, 체크리스트를 오프라인에서 읽거나 팀에 공유할 수 있게 정리한 PDF가 제공된다.
+<a href="https://cdn.prod.website-files.com/6889473510b50328dbb70ae6/6a85f3ce3623355a8a44ca36_Claude_Code_Guide_For_Startups_Final_web.pdf">PDF 내려받기 ↓</a></p>
+
+<h2>프런티어에서 일하는 AI 네이티브들</h2>
+
+<p class="lead">일의 미래를 미리 엿보고 싶다면, 스타트업이 <em>오늘</em> 어떻게 일하고 있는지 물어보면 된다. Anthropic이 실제로 그렇게 했다.</p>
+
+<p>빠르게 성장 중인 스타트업 십수 곳 이상을 인터뷰해, 이들이 에이전틱 코딩 도구로 제품을 만들고 회사를 확장하는 방식을 들었다. 이 스타트업들은 <strong>누가 만들 수 있는가, 무엇을 버릴 것인가, 그리고 "어떻게 만드는가"와 "무엇을 만드는가" 사이에 어떻게 플라이휠을 만드는가</strong>에 대한 규칙 자체를 바꾸고 있었다.</p>
+
+<p>그리고 이들은 <strong>자기보다 열 배 큰 조직처럼 출시하고 있다.</strong></p>
+
+<div class="stats">
+  <div class="stat"><b>+30%</b><span>ClickHouse · 출시 기능 증가</span></div>
+  <div class="stat"><b>2–3배</b><span>Omni · 엔지니어링 생산성</span></div>
+  <div class="stat"><b>100%</b><span>Clay · 버그 트리아지 자동화</span></div>
+  <div class="stat"><b>6,000+</b><span>Artemis Security · 주당 PR</span></div>
+</div>
+
+<p>이 가이드는 각 조직의 독특한 도입 사례를 파고들어, 빠르게 출시하면서도 경쟁 우위를 유지하기 위해 이들이 따르는 규칙을 뽑아낸다. 그 과정에서 이런 질문의 답도 어렴풋이 보이기 시작한다 — <strong>어떤 조직이 제품 개발 라이프사이클을 처음부터 Claude Code로 설계한다면 어떤 모습일까?</strong></p>
+
+<h3>다섯 가지 규칙</h3>
+
+<ol class="rules">
+  <li><strong>모두가 출시한다</strong> (Everyone ships)</li>
+  <li><strong>지루한 일을 자동화한다</strong> (Automate the tedium)</li>
+  <li><strong>믿되, 검증한다</strong> (Trust, but verify)</li>
+  <li><strong>다시 만들 것을 전제로 만든다</strong> (Build for rebuilding)</li>
+  <li><strong>프로토타입 → 도그푸딩 → 프로덕션화</strong> (Prototype, dogfood, productionize)</li>
+</ol>
+
+<h3>창업자 인사이트를 제공한 회사들</h3>
+
+<div class="logos">
+  <a href="https://artemissecurity.com/"><img src="assets/claude-code-guide-for-startups/logo-artemis.jpg" alt="Artemis Security"></a>
+  <a href="https://www.cainex.com/"><img src="assets/claude-code-guide-for-startups/logo-cainex.jpg" alt="Cainex"></a>
+  <a href="https://www.clay.com/"><img src="assets/claude-code-guide-for-startups/logo-clay.jpg" alt="Clay"></a>
+  <a href="https://clickhouse.com/"><img src="assets/claude-code-guide-for-startups/logo-clickhouse.jpg" alt="ClickHouse"></a>
+  <a href="https://cognition.ai/"><img src="assets/claude-code-guide-for-startups/logo-cognition.jpg" alt="Cognition"></a>
+  <a href="https://www.commure.com/"><img src="assets/claude-code-guide-for-startups/logo-commure.jpg" alt="Commure"></a>
+  <a href="https://crosby.ai/"><img src="assets/claude-code-guide-for-startups/logo-crosby.jpg" alt="Crosby"></a>
+  <a href="https://emergent.sh/"><img src="assets/claude-code-guide-for-startups/logo-emergent.jpg" alt="Emergent"></a>
+  <a href="https://www.harvey.ai/"><img src="assets/claude-code-guide-for-startups/logo-harvey.jpg" alt="Harvey"></a>
+  <a href="https://www.heidihealth.com/"><img src="assets/claude-code-guide-for-startups/logo-heidi.jpg" alt="Heidi"></a>
+  <a href="https://higgsfield.ai/"><img src="assets/claude-code-guide-for-startups/logo-higgsfield.jpg" alt="Higgsfield"></a>
+  <a href="https://omni.co/"><img src="assets/claude-code-guide-for-startups/logo-omni.jpg" alt="Omni"></a>
+  <a href="https://www.parahelp.com/"><img src="assets/claude-code-guide-for-startups/logo-parahelp.jpg" alt="Parahelp"></a>
+  <a href="https://www.translucent.co/"><img src="assets/claude-code-guide-for-startups/logo-translucent.png" alt="Translucent"></a>
+  <a href="https://zingage.com/"><img src="assets/claude-code-guide-for-startups/logo-zingage.jpg" alt="Zingage"></a>
+</div>
+
+<div class="callout">
+  <strong>팁</strong> — 실무적인 다음 단계만 궁금하다면, 각 장의 핵심 기술 팁을 한 페이지로 모아 둔 <a href="#checklist">체크리스트</a>가 이 가이드 맨 끝에 있다.
+</div>
+
+<h2><span class="num">01</span>모두가 출시한다</h2>
+
+<p class="deck">에이전틱 코딩은 진입 장벽을 낮춘다. 그래서 <strong>문제를 이해하고 있는 사람</strong>이 그 문제를 고치는 첫 버전을 직접 출시할 수 있다.</p>
+
+<p>에이전틱 코딩은 비기술직 구성원이 제품을 만드는 진입 장벽을 낮춘다. Claude Code를 쓰면 특정 프로그래밍 언어에 능숙하지 않아도, IDE 사용법을 몰라도 동작하는 기능을 만들 수 있다.</p>
+
+<div class="q">
+  <img src="assets/claude-code-guide-for-startups/p-mads.jpeg" alt="Mads Lunau Liechti">
+  <div>
+    <p class="qt">"엔지니어들이 훨씬 더 많이 출시하게 된 것은 물론이고, (나 같은) 비기술직 인력까지 갑자기 UI 변경과 제품 개선을 출시하고 있었다."</p>
+    <p class="qa"><a href="https://www.linkedin.com/in/mads-lunau-liechti/">Mads Lunau Liechti</a> · 공동창업자, <a href="https://www.parahelp.com/">Parahelp</a></p>
+  </div>
+</div>
+
+<p>스타트업 창업자에게 이건 명백한 이점이다. 우선 이들은 덩치 큰 경쟁사만큼의 인력이 없으니 "전원 투입(all hands on deck)"이 기본이다. 하지만 창업자들이 노리는 건 단순한 처리 용량만이 아니다 — 이 비기술직 구성원들은 <strong>도메인 전문성</strong>을 함께 가져온다.</p>
+
+<div class="q">
+  <img src="assets/claude-code-guide-for-startups/p-ryan.jpeg" alt="Ryan Daniels">
+  <div>
+    <p class="qt">"Claude Code는 Crosby에서 변호사로 일한다는 것의 의미를 바꿨다. 변호사들이 제품에 대한 최고의 인사이트를 갖고 있다. 그들이 곧 사용자이기 때문이다."</p>
+    <p class="qa"><a href="https://www.linkedin.com/in/crosbyryan/">Ryan Daniels</a> · 공동창업자 겸 CEO, <a href="https://crosby.ai/">Crosby</a></p>
+  </div>
+</div>
+
+<p>Heidi의 공동창업자 겸 CEO인 Dr. Thomas Kelly에게서도 같은 얘기를 들었다.</p>
+
+<div class="q">
+  <img src="assets/claude-code-guide-for-startups/p-thomas.jpg" alt="Dr. Thomas Kelly">
+  <div>
+    <p class="qt">"우리에게 Claude Code는 <strong>전화 놀이(broken telephone) 문제</strong>를 해결해 줬다. 예전에는 아이디어를 가진 사람이 PM에게 말하고, PM이 디자이너에게, 디자이너가 엔지니어에게 전달하는 사이에 아이디어의 본질이 사라졌다. 출시될 때쯤이면 처음 생각과 닮지도 않았고, 몇 주가 걸렸다. Claude Code는 그 사슬을 접어 버린다. 문제를 실제로 이해하는 사람이 직접 PR을 낼 수 있고, 전문성이 필요한 부분에만 디자이너와 엔지니어를 부르면 된다."</p>
+    <p class="qa"><a href="https://www.linkedin.com/in/tomkeykong/">Dr. Thomas Kelly</a> · 공동창업자 겸 CEO, <a href="https://www.heidihealth.com/">Heidi</a></p>
+  </div>
+</div>
+
+<p>"모두가 출시한다"는 말은 링크드인 포스트로는 근사하다. 그런데 현실에서는 어떻게 굴러갈까? 마케팅 팀이 풀 리퀘스트를 승인한다는 뜻인가? 법무 팀이 플래키 테스트를 bisect 하는 세부 작업을 붙들고 있다는 뜻인가?</p>
+
+<p>돌아온 답은 이렇다 — <strong>분업은 여전히 존재한다.</strong> 마케터는 여전히 마케팅에, 개발자는 여전히 개발에 집중한다. 다만 <strong>아이디어를 동작하는 프로토타입으로 만드는 가장 중요한 첫 단계, 즉 0에서 1로 가는 구간이 모두에게 열려 있다.</strong></p>
+
+<p>또한 가장 효과적인 스타트업들은 이런 기여가 우연이나 개인의 의욕에 맡겨지지 않도록, <strong>체계적인 장치</strong>를 만들어 두고 있었다.</p>
+
+<h3>연결을 만들어라</h3>
+
+<p>직원들에게 AI를 쓰라고 기대치를 세우는 것과, 실제로 Claude Code와 필요한 도구에 접근할 수 있게 해 주는 것은 별개의 문제다.</p>
+
+<div class="q">
+  <img src="assets/claude-code-guide-for-startups/p-kareem.webp" alt="Kareem Amin">
+  <div>
+    <p class="qt">"우리는 [비기술직 직원의 기여로부터] 도망치는 게 아니라 오히려 그쪽으로 가고 있다. 우리 관점은 <strong>모든 직무가 엔지니어링 직무가 되고 있다</strong>는 것이다. 그 직무를 위한 소프트웨어를 직접 만들 수 있으니까. 그래서 우리는 뭔가 만지작거리길 좋아하고, 만드는 데 관심 있는 사람을 채용한다."</p>
+    <p class="qa"><a href="https://www.linkedin.com/in/kareemamin/">Kareem Amin</a> · 공동창업자 겸 CEO, <a href="https://www.clay.com/">Clay</a></p>
+  </div>
+</div>
+
+<p>Crosby에서는 변호사를 Claude Code로 데려간 게 아니라, <strong>Claude Code를 변호사에게로 가져갔다.</strong> 변호사들이 매일 익숙하게 쓰는 도구와 운영 체계에 Claude Code를 연결하는 방식이었다.</p>
+
+<div class="callout">
+  <strong>팁</strong> — Claude는 <strong>보이지 않는 것을 이해할 수 없다.</strong> Claude의 가치를 키우는 가장 효과적인 방법 중 하나는 진실의 원천(sources of truth)과 팀이 매일 쓰는 도구에 연결하는 것이다.
+  <a href="https://code.claude.com/docs/en/mcp">MCP</a>는 AI-도구 연동을 위한 오픈소스 표준으로, Claude Code에 여러분의 도구·데이터베이스·API 접근 권한을 준다.
+  팀이 어떤 도구에서 정보를 복사해 Claude에 붙여넣고 있는 자신을 발견할 때마다, 그 연결을 추가하는 걸 검토하라.
+  이미 성숙한 커맨드라인 도구가 있다면(<code>gh</code>, <code>kubectl</code>, <code>bq</code>, <code>psql</code> 등) <strong>CLI로 연결하는 편이 토큰 효율이 더 좋을 수 있다.</strong>
+</div>
+
+<figure>
+  <img src="assets/claude-code-guide-for-startups/mcp-connector-directory.png" alt="Claude Code 데스크톱의 MCP 커넥터 디렉터리 화면">
+  <figcaption>Claude Code 데스크톱의 MCP 커넥터 디렉터리.</figcaption>
+</figure>
+
+<h3>스탠드업 쇼케이스</h3>
+
+<p>어느 시점이 되면 아이디어는 <strong>우선순위에 오를 기회</strong>를 얻어야 한다. 그래야 조직의 자원이 그것을 시장에 내보내는 데 투입된다. 프로덕트 매니저에게는 그 경로가 분명하다 — 그게 그들의 일이니까. 하지만 비기술직 직원에게는 그만큼 분명하지 않다.</p>
+
+<p>Clay는 <strong>분기별 리뷰</strong>를 열어 프로토타입을 검토하고, 여기서 공식 로드맵에 진입할 수 있게 한다. Clay의 고투마켓(GTM) 팀원이 만든 자율 에이전트도 이렇게 나왔다. 이 에이전트는 웹사이트를 방문해 리드 캡처 폼을 작성하고, 응답까지 걸리는 시간을 재고, 그 경험을 평가한 뒤 성능 리포트를 생성한다.</p>
+
+<p>Omni는 <strong>Claude로 만든 프로토타입 전용 Slack 채널</strong>을 두고 있고, 시니어 기술 인력을 포함한 모두가 여기에 기여한다. 이들은 "모두가 출시한다"의 짝이 되는 원칙도 함께 실천한다 — <strong>"모두가 고객과 대화한다."</strong></p>
+
+<div class="q">
+  <img src="assets/claude-code-guide-for-startups/p-chris.jpeg" alt="Chris Merrick">
+  <div>
+    <p class="qt">엔지니어들이 고객 통화에 자연스럽게 끌리는 건 아니지만, Omni는 <strong>의도적으로</strong> 그들을 고객 앞에 세운다. 그래야 피드백 루프가 더 빨리 닫히기 때문이다.</p>
+    <p class="qa"><a href="https://www.linkedin.com/in/merrickchristopher/">Chris Merrick</a> · 공동창업자 겸 CTO, <a href="https://omni.co/">Omni</a></p>
+  </div>
+</div>
+
+<h3>스킬을 공유하라</h3>
+
+<p>"모두가 출시한다"와 "누더기(piecemeal)" 사이의 선은 얇을 수 있다. 누가 만들었든 기능 프로토타입은 결국 <strong>하나의 응집된 제품</strong>으로 통합되어야 한다. 여기서 <strong>스킬(skills)</strong>이 도움이 된다. 스킬은 팀의 표준과 맥락을 담아 둔 재사용 가능한 지시 파일로, 개발 과정이 점점 민주화되더라도 방향이 어긋나지 않게 잡아 준다.</p>
+
+<p>Heidi의 Dr. Thomas Kelly는 이렇게 말했다. "팀의 누구든 우리 디자인 시스템을 참조해 Claude Code로 제품 컴포넌트, 마케팅 자료, 덱 자료를 초안 잡을 수 있다. 제품에 닿는 AI는 훨씬 높은 기준을 통과해야 하는데, Claude Code가 그 기준을 더 정밀하게 맞추도록 도와준다."</p>
+
+<p>스킬은 신규 개발자와 비기술직 직원을 빠르게 온보딩시키는 데도 쓰인다.</p>
+
+<div class="q">
+  <img src="assets/claude-code-guide-for-startups/p-mukund.png" alt="Mukund Jha">
+  <div>
+    <p class="qt">"…우리는 Claude Code 스킬을 모아 둔 GitHub 저장소도 운영한다. 이게 <strong>공유 지식 베이스</strong> 역할을 해서, 데이터베이스(및 데이터 웨어하우스) 위치, 일부 스키마 정보, 전사적 맥락 같은 Emergent 고유 정보로 Claude Code 세션을 빠르게 부트스트랩한다. …여기서 완벽을 추구하기보다는, <strong>에이전트가 빠르게 검증하고 스스로 궤도를 수정할 수 있는 한 컨텍스트 파일이 조금 낡아 있어도 괜찮다</strong>고 본다."</p>
+    <p class="qa"><a href="https://www.linkedin.com/in/mukund-jha-a1596413/">Mukund Jha</a> · 공동창업자 겸 CEO, <a href="https://emergent.sh/">Emergent</a></p>
+  </div>
+</div>
+
+<div class="q">
+  <img src="assets/claude-code-guide-for-startups/p-jack.jpeg" alt="Jack O'Hara">
+  <div>
+    <p class="qt">"우리 엔지니어들은 Claude Code로 <strong>사내 전용 에이전트 마켓플레이스</strong>를 띄운다. 역할별로 정리되어 있어서 엔지니어링·딜리버리·세일즈가 각자 실제로 일하는 방식에 맞춰 만들어진 도구를 갖게 된다."</p>
+    <p class="qa"><a href="https://www.linkedin.com/in/jack-o-hara-/">Jack O'Hara</a> · 창업자 겸 CEO, <a href="https://www.translucent.co/">Translucent</a></p>
+  </div>
+</div>
+
+<div class="callout">
+  <strong>팁</strong> — 스킬은 <a href="https://code.claude.com/docs/en/plugin-marketplaces">디렉터리를 통해 전사적으로 공유</a>할 수 있다. 한 직원의 모범 사례가 즉시 다른 직원에게 전달된다.
+  저장소의 각 하위 디렉터리에는 <strong><code>CLAUDE.md</code></strong> 파일을 둬서, 그 디렉터리에 <em>매번</em> 적용되는 코딩 컨벤션을 담아라.
+  반면 <strong>필요할 때만 꺼내 쓰는 절차적 워크플로는 스킬</strong>로 만들어라.
+  더 자세한 내용은 <a href="https://claude.com/blog/steering-claude-code-skills-hooks-rules-subagents-and-more">Claude Code 조종하기: CLAUDE.md, 스킬, 훅, 서브에이전트를 언제 쓸 것인가</a>를 읽어 보라.
+</div>
+
+<h2><span class="num">02</span>지루한 일을 자동화한다</h2>
+
+<p class="deck">에이전트가 라이프사이클의 <strong>기계적인 80%</strong>를 맡는다. 그래야 엔지니어가 진짜로 판단이 필요한 케이스에 시간을 쓴다.</p>
+
+<p>산업혁명 이래 모든 회사가 기술로 효율을 얻으려 해 왔다. 하지만 이 스타트업들은 <strong>도입의 속도와 깊이</strong>에서 차별화됐다.</p>
+
+<p>이 창업자들은 AI를 자기 미션의 필수 구성요소로 본다. 상당수는 <strong>에이전트가 기계적인 80%를 맡고, 엔지니어는 진짜 판단이 필요한 케이스에 시간을 쓴다</strong>고 명시적으로 말한다.</p>
+
+<div class="q">
+  <img src="assets/claude-code-guide-for-startups/p-shachar.png" alt="Shachar Hirshberg">
+  <div>
+    <p class="qt">"모두가 AI 제품을 만들려고 경주 중이다. 그런데 <strong>회사가 실제로 굴러가는 방식 자체를 다시 만드는</strong> 곳은 훨씬 적다. 두 번째가 더 큰 잠금 해제다. Artemis Security는 <em>AI를 쓰는 회사</em>가 아니라 <em>AI 네이티브 회사</em>로 운영된다. 이게 우리 속도를 폭발적으로 끌어올리고, 고객이 머신 스피드로 공격을 막게 해 준다."</p>
+    <p class="qa"><a href="https://www.linkedin.com/in/shachar-hirshberg/">Shachar Hirshberg</a> · 공동창업자 겸 CEO, <a href="https://artemissecurity.com/">Artemis Security</a></p>
+  </div>
+</div>
+
+<p>구체적으로는 두 가지가 눈에 띄었다. 첫째, <strong>SDLC 전 단계에 AI가 더 촘촘히 통합</strong>되어 있었다. 둘째, 반복 작업을 처음부터 끝까지 맡도록 <strong>목적에 맞게 만들어진 에이전트</strong>가 더 많았다. 각각의 예를 보자.</p>
+
+<h3>AI 네이티브 SDLC</h3>
+
+<p>여기 소개된 스타트업 상당수는 팀이 에이전틱 코딩 프로세스에 빠르게 올라타도록 하는 수단을 구현해 뒀다. 예를 들어 Emergent의 Mukund는 이렇게 말했다. "입사 첫날, 신규 입사자는 Claude를 올바른 마크다운 파일로 가리키기만 하면 개발 환경 전체가 부트스트랩된다. 온보딩 중에 Claude가 깨졌거나 낡은 것을 발견하면 <strong>그 파일을 직접 업데이트한다.</strong>"</p>
+
+<div class="callout">
+  <strong>팁</strong> — <a href="https://code.claude.com/docs/en/code-review">Code Review</a>(리서치 프리뷰)는 Claude Code의 <strong>매니지드 멀티 에이전트 서비스</strong>다.
+  활성화한 저장소의 PR에 대해 자동 리뷰 패스를 돌린다. 지적 사항을 직접 고쳐서 푸시해도 되고,
+  (GitHub Actions를 설정해 뒀다면) 해당 지적에 <code>@Claude</code>로 코멘트를 달아 루프를 닫아도 된다.
+</div>
+
+<figure>
+  <img src="assets/claude-code-guide-for-startups/code-review-severity.png" alt="Code Review가 각 지적 사항에 심각도 등급을 붙인 화면">
+  <figcaption>Code Review는 각 지적 사항에 <strong>심각도(severity) 등급</strong>을 붙인다.</figcaption>
+</figure>
+
+<p>이 엔지니어들이 빠르게 온보딩되어야 하는 이유는, 팀이 그만큼 빠르게 출시하기 때문이다.</p>
+
+<div class="q">
+  <img src="assets/claude-code-guide-for-startups/p-tanay.png" alt="Tanay Tandon">
+  <div>
+    <p class="qt">"여기 엔지니어들은 <strong>에이전트 함대(agent fleets)를 지휘</strong>하고, 프로덕션 데이터 문제를 발견한 당일에 수정을 출시하며, 여러 PR을 동시에 띄워 놓고 굴린다. 한 엔지니어는 약 13개 티켓짜리 이니셔티브를 Claude 서브에이전트를 병렬로 돌려 진행했다. 각 서브에이전트가 티켓 하나와 그에 딸린 PR을 맡는 식이었다."</p>
+    <p class="qa"><a href="https://www.linkedin.com/in/tanaytandon/">Tanay Tandon</a> · CEO 겸 창업자, <a href="https://www.commure.com/">Commure</a></p>
+  </div>
+</div>
+
+<p>이 조직들에서 Claude Code는 코드를 <em>생성</em>하는 데 그치지 않고 <em>리뷰</em>도 한다. Heidi의 Dr. Kelly는 이렇게 말했다. "우리는 검증된 기술·컴플라이언스 프레임워크에 대조해 자동 코드 리뷰를 돌린다. 심각한 이슈를 표시하고, 무엇이든 출시되기 전에 제안된 변경을 <strong>적절한 리뷰어에게 라우팅</strong>한다."</p>
+
+<p>일부 조직은 코드 리뷰·테스트·CI를 위한 <strong>커스텀 에이전트</strong>도 직접 만들었다. 이 스타트업들은 단순히 코드를 배포하는 것보다 <strong>루프를 만드는 것</strong>에 상당한 주의를 기울였다.</p>
+
+<p>Translucent의 창업자 Jack은 이렇게 말했다. "내가 제일 좋아하는 [에이전트]는 'Translucent 코드 리뷰어'다. 변경 사항 전체로 <strong>부챗살처럼 퍼져(fan out)</strong> 여러 각도에서 리뷰한 뒤, 우리 시니어 엔지니어가 할 법한 방식으로 결과를 종합한다. 다만 어떤 개인보다도 빠르게."</p>
+
+<p>Clay는 Kareem의 말대로 "…버그 트리아지를 처리하는 에이전트를 만들었다. 1차 분류부터 수정을 위한 코드 변경 제안까지 담당한다."</p>
+
+<div class="callout">
+  <strong>팁</strong> — <a href="https://claude.com/product/tag">Claude Tag</a>(퍼블릭 베타)를 CI/CD 온콜 대응과 버그 트리아지의 일부로 편입하라.
+  <a href="https://claude.com/blog/agent-identity-access-model">Claude Tag는 자체 서비스 계정</a>을 갖는다.
+</div>
+
+<figure>
+  <img src="assets/claude-code-guide-for-startups/claude-tag-oncall.png" alt="Claude Tag가 Slack의 온콜 스레드를 집어 들고 채널 안에서 진행 상황을 보고하는 화면">
+  <figcaption>Claude Tag가 Slack의 온콜 스레드를 집어 들고, 채널 안에서 진행 상황을 보고한다.</figcaption>
+</figure>
+
+<div class="q">
+  <img src="assets/claude-code-guide-for-startups/p-alexey.jpeg" alt="Alexey Milovidov">
+  <div>
+    <p class="qt">이 경향이 가장 두드러진 곳은 <a href="https://clickhouse.com/">ClickHouse</a>였다. 공동창업자 겸 CTO인 Alexey Milovidov에 따르면, 이 데이터베이스 회사는 <strong>SDLC의 거의 모든 단계를 자율 루프로 전환</strong>했다. 플래키 테스트를 고치는 에이전트와 누락된 테스트 커버리지를 찾는 에이전트, 이 목적형 에이전트 둘이 현재 ClickHouse 저장소의 <strong>2위·3위 기여자</strong>다. 별개의 에이전트 계열이 운영(operations)을 담당하며, 팀은 그 에이전트들 자체를 만들고 개선하는 데도 Claude Code를 쓴다.</p>
+    <p class="qa">Alexey Milovidov · 공동창업자 겸 CTO, <a href="https://clickhouse.com/">ClickHouse</a></p>
+  </div>
+</div>
+
+<h3>에이전트로 프로세스를 가속하기</h3>
+
+<p>또 하나 일관된 패턴은, 이 스타트업들이 개발 속도를 높이는 데 Claude Code의 에이전틱 루프를 쓰는 데 그치지 않고, <strong>반복적이고 종종 지루한 프로세스를 가속하기 위한 에이전트</strong>도 만들고 있었다는 점이다.</p>
+
+<p>대체로 정형화된 업무를 넘겨서, 경쟁 우위·고객 관계·매출 성장에 더 많은 주의를 쏟기 위한 것이었다. Claude로 가속된 프로세스 중 가장 흔했던 것은 <strong>셀프서비스 데이터 분석</strong>이었다.</p>
+
+<p>거의 모든 회사가 신선한 데이터(비정형 데이터 포함)로 빠르게 의사결정을 내리는 프로세스를 갖추고 있었다. 스타트업의 삶에서 그토록 중요한 <strong>피벗</strong>을 뒷받침하는 장치다.</p>
+
+<p>예를 들어 Clay는 사내 분석 에이전트를 만들었고, Heidi는 Claude Code로 고객·임상의 피드백을 사용 데이터와 함께 분류해 제품 인사이트로 이어지는 신호를 끌어올린다.</p>
+
+<p>ClickHouse와 Omni는 이런 유형의 AI 데이터 분석을 <strong>제품 안에 패키징해서</strong> 출시하고 있으며, 모두 Claude로 구동된다.</p>
+
+<p>다른 예로는 서브에이전트로 수천 건의 법률 문서를 요약하는 것(Crosby), 여러 사이트에 걸쳐 청구 데이터를 훑어 이상치를 표시하는 것(Commure), 어떤 분석가 팀도 제때 잡아낼 수 없는 경고 신호를 찾아 병원 재무 데이터를 지속적으로 채굴하는 것(Translucent)이 있다.</p>
+
+<div class="callout">
+  <strong>팁</strong> — <a href="https://claude.com/blog/a-harness-for-every-task-dynamic-workflows-in-claude-code">다이내믹 워크플로(Dynamic workflows)</a>를 쓰면 여러 서브에이전트를 펼쳐서 대량의 데이터를 병렬로 분석하거나, 다른 에이전트의 작업을 <strong>적대적으로 리뷰(adversarial review)</strong>하게 할 수 있다.
+  Claude Opus나 Claude Fable 같은 모델을 쓸 때는 <em>"fan out multiple subagents"</em> 또는 <em>"use a workflow"</em>라고 말하면 된다.
+</div>
+
+<figure>
+  <img src="assets/claude-code-guide-for-startups/dynamic-workflows.png" alt="다이내믹 워크플로가 여러 서브에이전트로 작업을 펼치는 구조 다이어그램">
+  <figcaption>다이내믹 워크플로: 여러 서브에이전트로 작업을 펼쳐 병렬 처리한다.</figcaption>
+</figure>
+
+<h2><span class="num">03</span>믿되, 검증한다</h2>
+
+<p class="deck">결과를 <strong>모니터링하고 검증할 신뢰할 만한 수단</strong>이 없으면 어떤 프로세스도 자동화할 수 없다.</p>
+
+<p>이 규칙은 규칙 2(지루한 일을 자동화한다)에 반드시 따라붙는 짝이다. 결과를 모니터링하고 검증할 신뢰할 만한 수단이 없으면, 프로세스를 자동화할 수 없다.</p>
+
+<div class="q">
+  <img src="assets/claude-code-guide-for-startups/p-dan.jpg" alt="Dan Shiebler">
+  <div>
+    <p class="qt">Artemis Security의 공동창업자 Dan Shiebler는 배포 속도가 빨라진 것이 오직 다음 덕분에 가능했다고 말한다 — "우리가 <strong>테스트 인프라, 코드베이스 조직화, 팀 지식 시스템</strong>에 깊이 투자했기 때문이다. 그래야 에이전트가 처음부터 끝까지 출시할 수 있다. 이게 우리가 Claude와 함께 만든 플라이휠이다. 코드베이스·지식 베이스·팀을 올바른 방식으로 구조화하면, <strong>모든 기여가 복리로 쌓인다.</strong>"</p>
+    <p class="qa"><a href="https://www.linkedin.com/in/dan-shiebler-10219b42/">Dan Shiebler</a> · 공동창업자, <a href="https://artemissecurity.com/">Artemis Security</a></p>
+  </div>
+</div>
+
+<div class="q">
+  <img src="assets/claude-code-guide-for-startups/p-victor.jpg" alt="Victor Hunt">
+  <div>
+    <p class="qt">"초기에 우리는 Claude에게 완전한 자율성을 줬고, AI가 흔히 하는 일을 했다. <strong>그럴듯한 코드를 빠르게 출시했다.</strong> 문제는 그게 우리 아키텍처에서 <em>맞아 보이지만 실은 아닌</em> 방식으로 표류했다는 것이다. 그래서 우리는… 모든 불변식(invariant)을 적어 내려갔다. 우리가 문제를 어떻게 프레이밍하는지. 무슨 일이 있어도 참이어야 하는 것이 무엇인지. 자신만만한 답을 믿는 대신 <strong>어떻게 증명할 것인지</strong>. 이 팀이 사고하는 방식 <strong>567줄</strong>이다."</p>
+    <p class="qa"><a href="https://www.linkedin.com/in/victor-c-hunt">Victor Hunt</a> · 공동창업자 겸 CEO, <a href="https://zingage.com/">Zingage</a></p>
+  </div>
+</div>
+
+<div class="callout">
+  <strong>팁</strong> — <strong>바뀔 수 없는 것</strong>은 저장소 루트의 <code>CLAUDE.md</code>에 넣어라.
+  Claude는 모든 세션의 시작 시점에 이 파일을 읽는다. 그래서 아키텍처 규칙, 보안 경계, 협상 불가 항목이 <strong>모든 세션에 함께 따라간다.</strong>
+</div>
+
+<p>분명히 해 두자면, 이 스타트업들 중 어느 곳도 에이전트가 main에 머지하도록 두고 잘 되기를 바라는 식으로 일하지 않는다. 상당수는 고도로 규제된 산업에서 일하며 강력한 거버넌스 프레임워크를 요구받는다. <strong>Cainex</strong>는 에이전트와 결정론적 검사를 결합한 특히 좋은 사례다. 의료 기록을 읽어 병원 청구를 결정하는 코드를 생성하는 일이다.</p>
+
+<div class="q">
+  <img src="assets/claude-code-guide-for-startups/p-uriah.webp" alt="Uriah Israel">
+  <div>
+    <p class="qt">"의료 코딩에서 <strong>잘못된 코드는 오타가 아니다. 청구·컴플라이언스 사건이다.</strong> 그 사실 하나가 우리가 만드는 방식 전체를 지배한다."</p>
+    <p class="qa"><a href="https://www.linkedin.com/in/uriah-israel/">Uriah Israel</a> · 공동창업자 겸 CTO, <a href="https://www.cainex.com/">Cainex</a></p>
+  </div>
+</div>
+
+<p>Uriah가 설명한 루프는 이렇다. "Claude Code가 우리를 위해 돌리는 루프는 이렇다. 에이전트로 배치를 처리하고, 우리 감사자(auditor)들이 사내 앱에서 그 출력을 리뷰한다. <strong>그들은 코드만 보는 게 아니라 모델의 추론까지 본다.</strong> 그리고 둘 다에 코멘트를 단다. …모든 것이 버전 관리되고 감사 가능하다."</p>
+
+<p>"그다음 Claude Code가 이어받는다. 원래 예측과 모든 수정·코멘트를 데이터베이스에서 직접 읽는다. 각 수정에는 관련된 코드 종류가 태깅되어 있어서, Claude Code는 자기가 보고 있는 것이 <strong>진단 이슈인지, 시술 이슈인지, 다른 범주인지</strong> 알고, 그 특정 코딩을 규율하는 지침으로 곧장 갈 수 있다."</p>
+
+<p>"거기서부터 에이전트 지시문 중 <strong>그 실수를 만들어 낸 부분</strong>을 찾아 수정하거나, 정말 새로운 케이스라면 새 지침을 작성한다. 모든 변경은 버전 관리된 지시문 세트에 대해 이뤄지고, 실패했던 기록들에 대해 테스트된다. 우리가 강제하는 규칙은 이거다 — <strong>사례가 아니라 원칙을 고쳐라(fix the principle, not the example).</strong>"</p>
+
+<p>"그다음은 <strong>백테스트</strong>다. 한 기록에 허용 가능한 코딩이 여러 개일 수 있으니 단순 문자열 매칭이 아니다. 검사는 우리가 인정한 세트에 대한 <strong>의미론적 매칭</strong>과, '이게 진짜 오류인가 아니면 그냥 다른 유효한 경로인가'를 묻는 <strong>심판(judge)</strong>을 결합한다. 여기에 Claude Code가 자체 비교를 얹는다."</p>
+
+<p>"후보 변경을 <strong>골든 세트</strong>와 무작위 샘플에 걸쳐 돌려 보고, 무엇이든 출시되기 전에 회귀를 드러낸다. 돌아오는 것은 짧은 목록이다 — 제안된 편집, 해결하지 못한 기록들, 답을 원하는 질문들. 엔지니어는 <strong>기계적인 80%가 아니라 진짜 어려운 케이스</strong>에 시간을 쓴다."</p>
+
+<p>이 헬스케어 청구 특화 워크플로에서 창업자들이 일반화해 가져갈 수 있는 교훈이 여럿 있다.</p>
+
+<p>예를 들어 Cainex는 <strong>주제 전문가(SME)</strong>가 Claude의 추론을 정기적으로 리뷰하고 안내하도록 한다. 다만 이 전문가들은 <em>사례 하나하나를 고치기 위해</em> 있는 게 아니다. 그들의 지침은 <strong>자기개선 루프의 일부</strong>로 쓰인다. Uriah의 표현대로 "사례가 아니라 원칙을 고쳐라."</p>
+
+<div class="callout">
+  <strong>팁</strong> — <a href="https://claude.com/blog/building-verification-loops-in-claude-code-with-skills">스킬을 써서 에이전트가 충족해야 할 기준을 정의</a>할 수 있다.
+  더 자율적이거나 긴 호흡의 작업에는 <a href="https://code.claude.com/docs/en/workflows">루프(loops)</a> — 정지 조건이 충족될 때까지 작업 사이클을 반복하는 에이전트 — 를 활용하라.
+</div>
+
+<figure>
+  <img src="assets/claude-code-guide-for-startups/loops.png" alt="루프가 정지 조건이 충족될 때까지 작업 사이클을 반복하는 구조 다이어그램">
+  <figcaption>루프는 <strong>정지 조건</strong>이 충족될 때까지 작업 사이클을 반복한다.</figcaption>
+</figure>
+
+<p>다른 교훈은 <strong>강력한 평가용 "골든 세트"</strong>를 유지하는 데 쏟는 성실함이다. 골든 세트란 팀이 에이전트의 정확도를 검증하는 데 쓰는, 검증된 질문-답변 쌍의 묶음이다. 모든 스타트업은 핵심 유스케이스에 대해 <strong>여러 벌의 평가 세트</strong>를 유지하고 정기적으로 업데이트해야 한다. 그래야 드리프트를 방지하고 앞으로 나올 모델을 평가할 수 있다.</p>
+
+<div class="q">
+  <img src="assets/claude-code-guide-for-startups/p-alexm.webp" alt="Alex Mashrabov">
+  <div>
+    <p class="qt">"[Claude Code는] 우리가 <strong>모델 속도(model velocity)</strong>를 관리하는 방식도 완전히 바꿨다. 새 비디오·이미지 모델이 끊임없이 나온다. 각각은 배포 전에 새로운 스킬, 평가, 라우팅 로직, 프로덕션 테스트를 필요로 한다. Claude Code는 그 사이클을 <strong>며칠에서 몇 시간으로</strong> 압축했고, 프로덕션에서 이슈를 발견해 같은 세션 안에서 수정을 배포할 수 있게 해 줬다. …인력이 10배인 회사들과 경쟁할 때, 그 정도의 레버리지는 모든 것을 바꾼다."</p>
+    <p class="qa"><a href="https://www.linkedin.com/in/amashrabov">Alex Mashrabov</a> · 공동창업자 겸 CEO, <a href="https://higgsfield.ai/">Higgsfield</a></p>
+  </div>
+</div>
+
+<div class="callout">
+  <strong>팁</strong> — 팀이 에이전트를 처음 만들기 시작할 때는 수동 테스트, 도그푸딩, 직관의 조합만으로도 놀랄 만큼 멀리 갈 수 있다.
+  <strong>한계점은 보통</strong> 사용자들이 "변경 이후 에이전트가 더 나빠진 것 같다"고 보고하는데 팀은 추측하고 확인하는 것 말고는 검증할 방법이 없어 <strong>깜깜이 비행(flying blind)</strong>을 하게 될 때 온다.
+  이 상태에서는 진짜 회귀와 노이즈를 구분할 수도, 출시 전에 수백 개 시나리오에 대해 변경을 자동 테스트할 수도, 개선을 측정할 수도 없다.
+  더 자세한 내용은 <a href="https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents">AI 에이전트를 위한 평가(evals) 파헤치기</a>를 읽어 보라.
+</div>
+
+<p>Uriah가 마지막으로 짚은 점은, 이 프로세스가 <strong>품이 좀 든다</strong>는 것이다. "처음부터 이렇게 깔끔했던 건 아니다. 우리 첫 버전은 <strong>과적합(overfit)</strong>했다. 특정 케이스를 인코딩하는 방식으로 뭔가를 '고쳐' 버렸고, 우리는 더 똑똑해지는 대신 <strong>패치를 쌓아 가고 있었다.</strong> 그래서 일반 원칙을 강제하고, 하나의 변경에 들어갈 수 있는 구체 사례의 수 자체에 상한을 두는 쪽으로 접근을 바꿨다."</p>
+
+<div class="callout">
+  <strong>팁</strong> — AI 에이전트는 결정론적이지 않지만, 고도로 규제된 업무의 상당 부분은 <strong>매번 똑같은 방식</strong>으로 처리될 것을 요구한다. Claude Code에는 프런티어 지능과 결정론적 프로세스를 결합하도록 돕는 기능이 있다.
+  <a href="https://code.claude.com/docs/en/hooks">훅(Hooks)</a>은 Claude Code 라이프사이클의 고정된 지점에서 발화하는 사용자 정의 명령으로, <strong>하드 게이트</strong> 역할을 할 수 있다. 모델이 무엇을 결정하든 상관없이 <strong>매번 실행된다.</strong> 예를 들어 린트를 통과하지 못한 쓰기를 차단하거나, 커밋 전에 테스트 통과를 요구하거나, 무엇이든 샌드박스를 떠나기 전에 시크릿을 제거하는 데 쓸 수 있다.
+  <a href="https://code.claude.com/docs/en/workflows#orchestrate-subagents-at-scale-with-dynamic-workflows">다이내믹 워크플로</a>는 결정론적 순서 지정, 분리된 컨텍스트 윈도, 좁힌 목표로 서브에이전트를 오케스트레이션한다.
+  <code>/goal</code>은 Claude가 작업을 성급히 끝났다고 선언하거나, 리뷰할 때 자기 발견을 편애하거나, 원래 목표에서 표류할 수 있는 <strong>길고 복잡한 작업</strong>에 유용하다.
+</div>
+
+<h2><span class="num">04</span>다시 만들 것을 전제로 만든다</h2>
+
+<p class="deck">모델 역량이 팀 발밑에서 계속 움직인다. 그래서 <strong>영구적인 것으로 취급되는 것이 거의 없다.</strong></p>
+
+<p>이 AI 네이티브 스타트업 상당수는 <strong>끊임없는 재발명 상태</strong>에 있다.</p>
+
+<p>AI는 이들이 <em>무엇을 만드는가</em>의 중심이자 <em>어떻게 만드는가</em>의 중심에 있다. 모델 역량이 계속 진화하기 때문에, 획기적이었던 기능과 결정적이었던 스캐폴딩도 <strong>매몰 비용이 되는 순간 버려졌다.</strong> 많은 조직이 이 끊임없는 재구축을 <strong>경쟁 우위의 일부</strong>로 봤다.</p>
+
+<p>Kareem은 이렇게 말했다. "Clay에서 우리가 하는 건 이렇다. 만들고, 다시 만들고, 또다시 만든다. 그리고 <strong>네 번째로 만들 때</strong>가 되면 필요한 걸 전부 알게 되고 제대로 만들게 된다. 그래서 우리는 뭔가를 꼭 버리는 게 아니다. 그냥 다시 만드는 것이다. 이번에는 <strong>더 또렷하게.</strong>"</p>
+
+<p>Commure의 공동창업자 Tanay는 이렇게 말했다. "재구축은 새 경로가 출시됐을 때 끝나는 게 아니다. <strong>옛 경로가 사라졌을 때</strong> 끝난다. 예전에는 철거(teardown)가 항상 우선순위 싸움에서 졌다. 지루한 데다 기능이 하나도 안 나오니까." 그리고 이렇게 덧붙였다. "이제 Commure의 엔지니어 한 명이 Claude 스킬을 호출한다. <em>'이미 전원에게 릴리스된 모든 기능 플래그에 대해, 그 플래그와 관련 코드를 제거하는 PR을 열어라'</em> 같은 식으로. 그다음 엔지니어가 돌아온 결과를 리뷰한다. 예전에는 개발 사이클을 많이 잡아먹던 마이그레이션이 이제 <strong>계획 하나와 팬아웃</strong>으로 몇 시간 만에 끝난다."</p>
+
+<div class="callout">
+  <strong>팁</strong> — <a href="https://code.claude.com/docs/en/worktrees">git worktree</a>를 써서, 현재 버전은 그대로 둔 채 <strong>격리된 저장소 사본</strong>에서 재구축을 돌려라.
+  Claude Code가 대신 하나 띄워 줄 수 있다. v1 옆에 v2가 나란히 돌아가고, 양쪽에 평가를 돌린 뒤 <strong>새것이 이겼을 때만 머지</strong>하면 된다. 이게 "네 번 만들기"를 싸게 만들어 주는 장치다.
+</div>
+
+<figure>
+  <img src="assets/claude-code-guide-for-startups/worktrees.png" alt="하나의 저장소와 하나의 오브젝트 스토어에 세 개의 체크아웃이 붙어 있는 git worktree 구조 다이어그램">
+  <figcaption>저장소 하나, 오브젝트 스토어 하나 — 그리고 <strong>동시에 작업할 수 있는 세 개의 체크아웃</strong>, 각각 자기 브랜치 위에 있다.</figcaption>
+</figure>
+
+<p>연결된 각 worktree는 자기 브랜치가 체크아웃된 <strong>평범한 디렉터리</strong>다. 세 개 모두 <code>acme-web</code> 안에 있는 <strong>단 하나의 <code>.git</code> 오브젝트 스토어</strong>를 공유한다.</p>
+
+<p>Kareem은 Clay의 해자(moat) 일부를 <strong>끊임없이 재구축하고, 진화하고, 자기개선 루프를 만들어 내는 능력</strong>이라고 설명했다.</p>
+
+<p>"지금 어떤 회사든 해자는 <strong>자기개선적이어야 한다</strong>는 데 있다고 생각한다. 그래서 Clay는 <strong>자기학습형 레비뉴 엔진</strong>이다. 쓰면 쓸수록 우리는 당신의 최고 고객이 누구인지, 무슨 말을 해야 하는지, 무엇이 통했고 무엇이 안 통했는지 더 잘 알게 된다. 그리고 그건 시간에 따라 변한다." 그는 덧붙였다. "경주는 결국 <strong>누가 가장 빠르게 유통(distribution)에 도달하느냐</strong>다. …그래야 각 [고객]을 도울 수 있고, 그래야 자기개선할 수 있다."</p>
+
+<p>2026년 5월 <a href="https://www.youtube.com/live/OFDm3T7pVlc?si=Z_RENcJSqm8H79aj">Code with Claude 행사</a>에서, Harvey의 Head of Applied AI인 Niko Grupen은 새로운 모델 역량의 물결 — 창발적 추론, 에이전틱 자동화, 계획과 오케스트레이션 — 이 올 때마다 <strong>플랫폼 전체의 재아키텍처</strong>가 필요했다고 이야기했다.</p>
+
+<div class="q">
+  <img src="assets/claude-code-guide-for-startups/p-niko.webp" alt="Niko Grupen">
+  <div>
+    <p class="qt">"6개월 전에 우리 아키텍처가 어떻게 생겼냐고 물었다면, 지금과는 <strong>근본적으로 다른 답</strong>을 드렸을 것이다. 만약 우리가 '이건 갈아엎고 에이전트 네이티브로 가야 한다'고 말할 의지가 없었다면, 지금 우리 플랫폼에 있는 이 역량들은 아예 존재할 수 없었을 것이다."</p>
+    <p class="qa"><a href="https://www.linkedin.com/in/nikogrupen">Niko Grupen</a> · Head of Applied AI, <a href="https://www.harvey.ai/">Harvey</a></p>
+  </div>
+</div>
+
+<p>같은 행사에서 Cognition의 공동창업자 Walden Yan은 이렇게 말했다.</p>
+
+<div class="q">
+  <img src="assets/claude-code-guide-for-startups/p-walden.jpeg" alt="Walden Yan">
+  <div>
+    <p class="qt">"지금 AI를 만드는 삶의 방식은, <strong>오늘 만든 것이 6개월에서 1년 안에 폐기될 가능성이 매우 높다는 사실을 받아들이는 것</strong>이다. …[Devin]은 2년 전 우리가 갖고 있던 모델 세트로는 전혀 불가능했다. [하지만 우리가 건 베팅은] <em>오늘은 안 될지 몰라도, 곧 될 것</em>이라는 쪽이었다."</p>
+    <p class="qa"><a href="https://www.linkedin.com/in/waldenyan">Walden Yan</a> · 공동창업자, <a href="https://cognition.ai/">Cognition</a></p>
+  </div>
+</div>
+
+<div class="callout">
+  <strong>팁</strong> — 사소하지 않은 재작성에는 Claude Code를 <a href="https://code.claude.com/docs/en/permission-modes#analyze-before-you-edit-with-plan-mode">플랜 모드(plan mode)</a>로 시작하라(<code>--plan</code> 또는 <kbd>Shift+Tab</kbd>).
+  Claude가 코드베이스를 탐색하고 <strong>코드를 쓰기 전에</strong> 재구축 접근법을 제안한다. 승인하거나 방향을 틀면 된다.
+  아키텍처에서 표류하려는 재구축을 잡아내는 <strong>가장 값싼 지점</strong>이다.
+</div>
+
+<h2><span class="num">05</span>프로토타입, 도그푸딩, 프로덕션화</h2>
+
+<p class="deck">AI로 만드는 것이 이 스타트업들이 AI로 파괴적 제품을 만들도록 돕는다 — 이들 프로세스의 심장에 있는 <strong>플라이휠</strong>이다.</p>
+
+<p>이 스타트업들 상당수는 개발 프로세스의 심장에 핵심 플라이휠을 두고 있다. <strong>AI로 만드는 것</strong>이 <strong>AI로 파괴적인 제품을 만드는 것</strong>을 돕는다.</p>
+
+<p>개발자가 자기 에이전틱 코딩 실천을 발전시키면, 모델의 역량을 더 단단히 파악하게 되고 <strong>프런티어에서 하니스(harness) 설계가 어떻게 진화하는지</strong>에 대한 통찰을 얻는다. 그리고 그 영감을 자기 에이전트와 제품에 가져다 쓸 수 있다.</p>
+
+<p>Omni의 Chris는 이렇게 말했다. "우리는 [Anthropic의] <strong>파일 대(對) 임베딩</strong> 접근법에서 영감을 얻었고, 덕분에 우리 제품에서도 단순하게 가도 되겠다는 확신을 얻었다. RAG 파이프라인에서 왔을 많은 복잡도를 피했다." 그리고 이렇게 덧붙였다. "또한 Claude Code의 하니스가 사용자들이 <strong>병렬로</strong> 일을 처리하게 해 주는 것을 보고, 그 개념 일부를 우리 UI에 적용했다."</p>
+
+<p>이 플라이휠은 자기 제품의 성능에 계속 촉을 세우는 데도 도움이 된다.</p>
+
+<p>Emergent의 Mukund는 이렇게 말했다. "우리 앱 빌더도 뒤에서 Anthropic 모델을 쓰기 때문에, 제품에서 어떤 동작을 발견하면… Claude Code로 로컬에서 빠르게 디버깅해서 그게 <strong>모델 동작인지 하니스 이슈인지</strong> 판별할 수 있다. 이게 우리 트리아지 사이클 개선에 엄청나게 도움이 됐다."</p>
+
+<p>반복해서 들린 패턴은 이렇다 — <strong>Claude Code로 사내 에이전트를 만들고, 사내에서 써 보고(도그푸딩), 반응에 따라 고객용 제품으로 승격시킨다.</strong> 승격 시에는 주로 Claude API, SDK, 또는 Claude Managed Agents를 쓴다.</p>
+
+<p>ClickHouse의 Alexey는 이렇게 말했다. "우리는 [제품 안에] 팀이 직접 상호작용하는 자체 AI 에이전트를 만들었다. SQL 콘솔 안의 에이전트와 <strong>AI SRE</strong>가 그것이다. 그리고 이 에이전트들 자체를 만들고 개선하는 데 Claude Code를 쓴다. <strong>우리 고객의 AI 경험을 구동하는 도구가, 부분적으로는 AI로 만들어진 것이다.</strong>"</p>
+
+<h2 id="checklist">체크리스트</h2>
+
+<p>이 가이드는 넓은 범위를 다뤘다. 핵심 팁을 한 페이지에 모으면 다음과 같다.</p>
+
+<h4>1장: 모두가 출시한다</h4>
+<ul>
+  <li>Claude는 <strong>보이지 않는 것을 이해할 수 없다.</strong> <a href="https://code.claude.com/docs/en/mcp">MCP</a>나 CLI를 통해 진실의 원천과 팀이 매일 쓰는 도구에 연결하라.</li>
+  <li><a href="https://code.claude.com/docs/en/plugin-marketplaces">사내 플러그인 마켓플레이스</a>를 만들어, 한 직원의 모범 사례가 스킬을 통해 즉시 다른 직원에게 전달되게 하라.</li>
+  <li>저장소의 각 하위 디렉터리에 <code>CLAUDE.md</code>를 둬서, 그 디렉터리에 <em>매번</em> 적용되는 코딩 컨벤션을 담아라. <strong>필요할 때만 꺼내 쓰는 절차적 워크플로는 스킬</strong>로 만들어라.</li>
+</ul>
+
+<h4>2장: 지루한 일을 자동화한다</h4>
+<ul>
+  <li>저장소에 <a href="https://code.claude.com/docs/en/code-review">Code Review</a>(리서치 프리뷰)를 설정해 PR에 자동 리뷰 패스를 돌려라.</li>
+  <li><a href="https://claude.com/product/tag">Claude Tag</a>(퍼블릭 베타)를 CI/CD 온콜 대응과 버그 트리아지의 일부로 만들어라.</li>
+  <li><a href="https://claude.com/blog/a-harness-for-every-task-dynamic-workflows-in-claude-code">다이내믹 워크플로</a>로 여러 서브에이전트를 펼쳐 대량 데이터를 병렬 분석하거나, 다른 에이전트의 작업을 적대적으로 리뷰하게 하라.</li>
+</ul>
+
+<h4>3장: 믿되, 검증한다</h4>
+<ul>
+  <li><strong>바뀔 수 없는 것</strong>은 저장소 루트의 <code>CLAUDE.md</code>에 넣어라.</li>
+  <li>더 자율적이거나 긴 호흡의 작업에는 <a href="https://code.claude.com/docs/en/workflows">루프</a> — 정지 조건이 충족될 때까지 작업 사이클을 반복하는 에이전트 — 를 써라.</li>
+  <li><a href="https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents">에이전트 평가(evals)를 만들고 유지하는</a> 프로세스를 확립하라.</li>
+  <li><a href="https://code.claude.com/docs/en/hooks">훅</a>은 Claude Code 라이프사이클의 고정된 지점에서 발화하는 사용자 정의 명령으로, <strong>하드 게이트</strong>가 될 수 있다. 작업의 일부가 결정론적이어야 할 때 쓰라.</li>
+</ul>
+
+<h4>4장: 다시 만들 것을 전제로 만든다</h4>
+<ul>
+  <li><a href="https://code.claude.com/docs/en/worktrees">git worktree</a>로 현재 버전은 손대지 않은 채 격리된 저장소 사본에서 재구축을 돌려라. 이게 "네 번 만들기"를 싸게 만든다.</li>
+  <li>사소하지 않은 재작성에는 <a href="https://code.claude.com/docs/en/permission-modes#analyze-before-you-edit-with-plan-mode">플랜 모드</a>로 Claude Code를 시작하라(<code>/plan</code> 또는 <kbd>Shift+Tab</kbd>). Claude가 코드베이스를 탐색하고 코드를 쓰기 전에 재구축 접근법을 제안한다. 승인하거나 방향을 틀면 된다. <strong>아키텍처에서 표류하려는 재구축을 잡아내는 가장 값싼 지점이다.</strong></li>
+</ul>
+
+<h2>프런티어의 스타트업은 프런티어에서 만든다</h2>
+
+<p>여기 담긴 통찰은 프런티어에서 만들고 있는 <strong>동료들</strong>에게서 나왔다. 실용적이고 바로 적용할 만했기를 바란다. Claude 스타트업 커뮤니티는 영감과 모범 사례, 조언이 끊이지 않는 곳이다. 다음 방법으로 참여할 수 있다.</p>
+
+<ul>
+  <li><a href="https://claude.com/programs/startups">스타트업 뉴스레터를 구독하고 스타트업 프로그램에 참여하기</a></li>
+  <li><a href="https://academy.claude.com/code/webinars">예정된 Claude Code 웨비나를 북마크하기</a></li>
+  <li><a href="https://luma.com/claudecommunity">가까운 곳에서 열리는 행사에 참석하기</a></li>
+  <li><a href="https://www.reddit.com/r/ClaudeAI/">Reddit</a>과 <a href="https://discord.com/invite/6PPFFzqPDZ">Discord</a>에서 기여하기</li>
+  <li>초기 단계 회사라면 크레딧과 지원을 받을 수 있는 <a href="https://claude.com/programs/startups">Claude for Startups 프로그램</a>에 지원하기</li>
+</ul>
+
+<h3>Claude Code를 쓸 수 있는 곳</h3>
+
+<ul>
+  <li>데스크톱</li>
+  <li><a href="https://marketplace.visualstudio.com/items?itemName=anthropic.claude-code">VS Code</a></li>
+  <li><a href="https://plugins.jetbrains.com/plugin/27310-claude-code-beta-">JetBrains</a></li>
+  <li><a href="https://claude.ai/code">웹</a></li>
+  <li><a href="https://slack.com/oauth/v2/authorize?client_id=1601185624273.8899143856786&amp;scope=app_mentions:read,assistant:write,channels:history,channels:read,chat:write,files:read,files:write,groups:history,groups:read,im:history,im:read,im:write,mpim:history,reactions:write,users:read,users:read.email,commands,search:read.public&amp;user_scope=bookmarks:read,channels:history,channels:read,chat:write,emoji:read,files:read,groups:history,groups:read,groups:write,im:history,im:read,im:write,links:read,mpim:history,mpim:read,mpim:write,mpim:write.topic,pins:read,reactions:read,reactions:write,remote_files:read,team:read,users:read,users:read.email,search:read.public,search:read.private,search:read.im,search:read.mpim,search:read.files,search:read.users,canvases:read,canvases:write">Slack</a></li>
+</ul>
+
+<p>자세한 내용은 <a href="https://code.claude.com/docs/en/overview">문서</a>를 참고하라 · <a href="https://claude.ai/code">Claude Code 사용해 보기</a> · <a href="https://code.claude.com/docs/en/overview">개발자 문서</a> · <a href="https://claude.com/pricing#api">요금 보기</a> · <a href="https://claude.com/contact-sales">영업팀 문의</a></p>
+
+<h3>관련 글</h3>
+
+<ul>
+  <li><a href="https://claude.com/blog/ai-ci-cd-on-call">Claude on call: Claude Tag가 Anthropic의 CI/CD 장애 1차 대응자로 일하는 방법</a></li>
+  <li><a href="https://claude.com/blog/the-new-rules-of-context-engineering-for-claude-5-generation-models">Claude 5세대 모델을 위한 컨텍스트 엔지니어링의 새 규칙</a></li>
+  <li><a href="https://claude.com/blog/claude-models-explained-choosing-the-best-model-for-your-use-case">Claude 모델 해설: 유스케이스에 맞는 최적 모델 고르기</a></li>
+  <li><a href="https://claude.com/blog/building-verification-loops-in-claude-code-with-skills">스킬로 Claude Code에 검증 루프 만들기</a></li>
+</ul>
+
+<footer>
+  원문: <a href="https://claude.com/blog/claude-code-guide-for-startups">The Claude Code Guide For Startups by Anthropic</a> — claude.com/blog, 2026년 8월 20일.<br>
+  이 페이지는 원문을 읽고 한국어로 정리한 요약·해설이며, 이미지와 링크는 원문에서 가져왔습니다. 모든 권리는 원저작자(Anthropic)에게 있습니다.
+</footer>
+
+<script src="assets/store.js"></script>
+<script src="assets/posts.js"></script>
+<script src="assets/nav.js"></script>
+</body>
+</html>

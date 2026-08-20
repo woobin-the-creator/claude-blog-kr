@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "claude-code-guide-for-startups.html", date: "2026-08-20", main: "Claude blog", cat: "Claude Code",
+      title: "스타트업을 위한 Claude Code 가이드", nav: "스타트업을 위한 Claude Code 가이드 · 5가지 규칙" },
     { file: "anthropics-approach-to-teaching-and-learning-ai.html", date: "2026-08-20", main: "Claude blog", cat: "Product announcements",
       title: "AI를 가르치고 배우는 것에 대한 Anthropic의 접근법", nav: "Claude Academy · AI 교육 접근법" },
     { file: "turning-conversation-into-knowledge-how-slack-builds-human-agent-teams.html", date: "2026-08-19", main: "Claude blog", cat: "Enterprise AI",
