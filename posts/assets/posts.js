@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "the-ai-native-sdlc-playbook.html", date: "2026-08-21", main: "Claude blog", cat: "Enterprise AI",
+      title: "AI 네이티브 SDLC 플레이북", nav: "AI 네이티브 SDLC 플레이북 · 6스테이지 플레이" },
     { file: "bringing-claude-mythos-5-to-more-defenders.html", date: "2026-08-21", main: "Claude blog", cat: "Product announcements",
       title: "Claude Mythos 5의 사이버보안 역량을 더 많은 방어자에게", nav: "Mythos 5 사이버보안 역량 확대 · 0xDAF 펀드" },
     { file: "how-monday-com-transformed-its-platform-into-an-agent-first-product-where-humans-and-agents-collaborate.html", date: "2026-08-20", main: "Claude blog", cat: "Agents",
