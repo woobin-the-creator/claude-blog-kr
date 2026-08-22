@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>컴퓨터 사용·Skills API·Files API로 프로덕션 에이전트 만들기</title>
+<style>
+  :root { --fg:#1a1a1a; --muted:#666; --line:#e5e5e5; --accent:#c96442; --code-bg:#f6f6f4; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo",
+      "Malgun Gothic", sans-serif;
+    color: var(--fg); line-height: 1.75; max-width: 760px;
+    margin: 0 auto; padding: 48px 24px 96px; background:#fff;
+  }
+  header { border-bottom: 2px solid var(--line); padding-bottom: 24px; margin-bottom: 32px; }
+  h1 { font-size: 1.9rem; line-height: 1.35; margin: 0 0 12px; }
+  .subtitle { color:#333; font-size: 1.05rem; margin: 0 0 14px; line-height:1.6; }
+  .meta { color: var(--muted); font-size: 0.9rem; }
+  .meta .orig { display:block; margin-top:6px; }
+  .meta a { color: var(--accent); text-decoration: none; }
+  h2 { font-size: 1.4rem; margin: 44px 0 8px; padding-top: 8px; }
+  h2 .num { color: var(--accent); font-size: 0.85em; margin-right: 8px; }
+  h3 { font-size: 1.15rem; margin: 30px 0 8px; color:#000; }
+  h4 { font-size: 1.02rem; margin: 26px 0 6px; color:#000; }
+  p { margin: 0 0 16px; }
+  .lead { font-size: 1.05rem; color:#333; }
+  .deck { color:#555; font-style: italic; margin: 0 0 16px; }
+  a { color: var(--accent); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  blockquote { margin: 16px 0; padding: 8px 18px; border-left:3px solid var(--line);
+    color:#333; font-style: italic; }
+  hr { border: none; border-top: 1px solid var(--line); margin: 40px 0; }
+  code { background: var(--code-bg); padding: 2px 6px; border-radius: 4px;
+    font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 0.88em; }
+  pre { background: var(--code-bg); padding: 16px 18px; border-radius: 8px;
+    overflow-x: auto; border:1px solid var(--line); }
+  pre code { background: none; padding: 0; font-size: 0.85rem; line-height:1.5; }
+  figure { margin: 24px 0; }
+  figure img { width: 100%; height: auto; border:1px solid var(--line); border-radius: 8px;
+    background:#fff; }
+  figure.hero img { border:none; max-width: 210px; display:block; margin: 0 auto 8px; }
+  figcaption { color: var(--muted); font-size: 0.85rem; text-align: center;
+    margin-top: 10px; line-height: 1.5; }
+  figcaption a { color: var(--accent); }
+  .video { position: relative; width: 100%; aspect-ratio: 16 / 9; margin: 22px 0; }
+  .video iframe { position: absolute; inset: 0; width: 100%; height: 100%;
+    border: 0; border-radius: 8px; }
+  .callout { background:#faf6f4; border-left:3px solid var(--accent);
+    padding: 12px 16px; border-radius: 0 6px 6px 0; margin: 16px 0; }
+  .callout strong { color: var(--accent); }
+  .stats { display:flex; flex-wrap:wrap; gap:12px; margin: 20px 0 24px; }
+  .stat { flex:1 1 180px; border:1px solid var(--line); border-radius:8px; padding:14px 16px; }
+  .stat b { display:block; font-size:1.35rem; color:var(--accent); line-height:1.3; }
+  .stat span { color:var(--muted); font-size:0.86rem; }
+  .q { display:flex; gap:14px; align-items:flex-start; margin: 22px 0;
+    background:#fafafa; border:1px solid var(--line); border-radius:10px; padding:16px 18px; }
+  .q img { width:52px; height:52px; border-radius:50%; object-fit:cover; flex:0 0 52px;
+    border:1px solid var(--line); }
+  .q .qt { margin:0 0 8px; font-style:italic; color:#222; }
+  .q .qa { margin:0; font-size:0.86rem; color:var(--muted); }
+  .q .qa a { color:var(--accent); text-decoration:none; }
+  .logos { display:flex; flex-wrap:wrap; gap:10px; margin:16px 0 24px; }
+  .logos a { flex:0 0 auto; }
+  .logos img { height:44px; width:auto; border:1px solid var(--line); border-radius:6px;
+    background:#fff; padding:4px 8px; display:block; }
+  .rules { counter-reset: r; list-style:none; padding-left:0; }
+  .rules li { counter-increment: r; padding-left:36px; position:relative; }
+  .rules li::before { content: counter(r,decimal-leading-zero); position:absolute; left:0;
+    color:var(--accent); font-weight:700; }
+  footer { margin-top: 64px; padding-top: 20px; border-top:1px solid var(--line);
+    color: var(--muted); font-size: 0.82rem; }
+</style>
+<link rel="stylesheet" href="assets/nav.css">
+</head>
+<body>
+<header>
+  <h1>Claude Mythos 5의 사이버보안 역량을 더 많은 방어자에게</h1>
+  <p class="subtitle">Anthropic이 최전선(frontier) 모델의 <strong>방어 역량</strong>을 더 넓게 여는 네 가지 조치를 발표했다. <strong>Claude Mythos 5</strong>가 <strong>Claude Security</strong>에서 바로 쓸 수 있게 됐고, 보안 파트너사 제품에도 곧 들어간다. 여기에 오픈소스 보안을 위한 <strong>3,500만 달러 규모 펀드</strong>와 <strong>Cyber Verification Program 확대</strong>가 더해진다.</p>
+  <div class="meta">
+    2026년 8월 21일 · 읽는 데 약 5분
+    · 카테고리: <a href="https://claude.com/blog/category/announcements">Product announcements</a>
+    <span class="orig">원문: <a href="https://claude.com/blog/bringing-claude-mythos-5-to-more-defenders">Bringing the cybersecurity capabilities of Claude Mythos 5 to more defenders by Anthropic</a> (claude.com/blog)</span>
+  </div>
+</header>
+
+<figure class="hero">
+  <img src="assets/bringing-claude-mythos-5-to-more-defenders/hero.svg" alt="글의 대표 일러스트레이션">
+</figure>
+
+<div class="callout">
+  <strong>안내</strong> — 이 글은 원문의 축자 번역이 아니라, 원문을 읽고 핵심을 한국어로 정리한 <strong>요약·해설</strong>입니다.
+  원문의 모든 절(節)과 항목을 원문 순서 그대로 빠짐없이 다루고, 원문에 실린 이미지와 링크도 모두 그대로 옮겼습니다.
+  인용문은 짧게 발췌해 옮겼으며, 정확한 원문 표현은 위 원문 링크에서 확인하세요.
+</div>
+
+<h2>왜 지금 이 발표인가</h2>
+
+<p class="lead">지난 4월 Anthropic은 <a href="https://www.anthropic.com/glasswing">Project Glasswing</a>을 시작했다. 세상에서 가장 중요한 소프트웨어를 지키는 <strong>소수의 조직</strong>에게 당시 가장 강력한 모델(Claude Mythos Preview, 그리고 그 후속인 Claude Mythos 5)을 먼저 쥐여 주는 프로그램이었다. 목적은 시간을 버는 것이었다 — 비슷한 역량의 모델이 일반에 풀리거나 악의적 행위자의 손에 들어가기 <em>전에</em>, 방어자가 먼저 취약점을 찾아 고칠 수 있도록.</p>
+
+<p>다만 Anthropic의 목표는 처음부터 그보다 넓었다. <strong>안전하게 가능한 한 많은 방어자에게</strong> Mythos급 방어 역량을 넓히는 것. 그래서 <a href="https://www.anthropic.com/research/next-generation-constitutional-classifiers">안전 분류기(safety classifiers)</a>와 세이프가드를 계속 다듬어 왔다. 공격용 사이버 역량이 엉뚱한 손에 들어가지 않게 막으면서도 Mythos급 모델의 접근을 넓히기 위해서다. <a href="https://www.anthropic.com/news/claude-fable-5-mythos-5">Claude Fable 5</a>가 그 첫 걸음이었다 — 모델은 널리 열되, 이중 용도(dual-use) 사이버 작업은 차단하는 방식.</p>
+
+<p>이번 발표의 핵심 논리는 <strong>"모델 자체에 대한 직접 접근"과 "모델이 만들어 낸 방어 결과물에 대한 접근"을 분리</strong>하는 것이다. 위험이 가장 큰 지점은 사용자가 모델에 직접 접근할 때다. 악의적 행위자가 모델을 유해한 용도로 유도해 볼 수 있기 때문이다. 반대로 사용자가 받을 수 있는 것이 <strong>취약점 패치나 보안 알림 같은 특정 산출물뿐</strong>이라면 위험은 훨씬 낮아진다. 이번 조치들은 그 원리 위에서 설계됐다.</p>
+
+<h2>발표된 네 가지</h2>
+
+<ul>
+  <li><strong>방어자가 쓰는 도구 안으로 Claude Mythos 5를 넣는다.</strong> 사이버보안 기술·서비스 파트너들과 함께, 방어자가 이미 쓰고 있는 제품과 서비스에 Mythos 5를 통합하는 작업을 진행 중이다.</li>
+  <li><strong>Claude Security 스캔이 Claude Mythos 5로 돌아간다.</strong> Claude Enterprise 플랜 고객은 이제 가장 강력한 모델로 코드베이스의 보안 취약점을 스캔하고 패치를 제안받을 수 있다.</li>
+  <li><strong>오픈소스 보안에 3,500만 달러 크레딧.</strong> 새로 만든 <strong>Defender Advantage Fund(0xDAF)</strong>가 오픈소스 프로젝트의 취약점 패치, 스캔·패치 과정의 자동화, 새로운 보안 접근법 실험에 나서는 조직에 3,500만 달러 상당의 크레딧을 지원한다.</li>
+  <li><strong>Cyber Verification Program 확대.</strong> 이미 검증된 방어자에게 Opus·Sonnet 모델의 세이프가드를 완화해 주는 프로그램인데, 앞으로 몇 주 안에 Opus·Sonnet의 <strong>더 넓은 이중 용도 역량</strong>까지 포함하도록 확대하고, 이어서 Mythos급 접근도 열 예정이다.</li>
+</ul>
+
+<p>큰 방향은 그대로다. AI 모델이 점점 강력해지는 속도와 요구에 보안 조직이 적응할 수 있도록 돕는 것. Anthropic은 세이프가드, 접근 프로그램, 커뮤니티 지원을 계속 발전시켜 가장 강력한 모델을 넓은 범위의 사람과 조직에 <strong>안전하게</strong> 제공하겠다고 밝혔다.</p>
+
+<h2><span class="num">01</span> 기존 사이버 방어 도구 안에 Mythos를 넣기</h2>
+
+<p>병원, 전력·수도 같은 유틸리티, 금융 시스템, 그리고 소프트웨어 공급망을 지키는 팀들은 이미 <strong>보안 운영(security operations)·사고 대응(incident response)·위협 인텔리전스(threat intelligence)·탐지 엔지니어링(detection engineering)</strong>을 위한 제품과 서비스 묶음에 의존하고 있다. 그렇다면 최전선 역량을 이 방어자들에게 가장 빨리 전달하는 길은, <strong>그들이 이미 돌리고 있는 도구 안에</strong> Mythos급 모델을 넣는 것이다.</p>
+
+<p>많은 파트너사가 이미 <a href="https://claude.com/blog/how-our-partners-are-putting-opus-to-work-for-cybersecurity">Claude Opus 위에 사이버 제품을 만들어</a> 보안팀이 알림을 분류(triage)하고, 위협을 식별하고, 취약점을 더 빠르게 조치하도록 돕고 있다. Anthropic은 이제 이 파트너들, 그리고 더 많은 파트너와 함께 <strong>Claude Mythos 5를 그들의 제품·서비스에 탑재</strong>해 Mythos급 방어 결과를 고객에게 전달하도록 작업하고 있다.</p>
+
+<div class="callout">
+  <strong>핵심 설계</strong> — 최종 사용자는 Mythos와 <strong>직접 대화하지 않는다</strong>. 정해진 작업만 수행하도록 만들어진 전용 인터페이스를 통해 일하고, 그 제품이 제공하기로 되어 있는 <strong>특정 산출물만</strong> 받는다.
+</div>
+
+<p>예를 들어 취약점 조치 도구라면 출력물은 <strong>제안된 패치 목록</strong>이다. 그 목록은 Mythos가 만들지만, 사용자에게는 모델에게 "이 취약점의 익스플로잇을 만들어 달라"고 프롬프트를 넣을 경로 자체가 없다. Anthropic과 파트너사는 모델이 의도된 범위 안에 머무는지 확인하는 <strong>오남용 방지 장치</strong>도 함께 두고 있다.</p>
+
+<p>이 작업은 아직 초기 단계이고 시간이 지나며 확대될 예정이다. 보안 제품이나 서비스를 만들고 있고 Claude Mythos 5를 고객에게 제공하고 싶다면 <a href="https://claude.com/form/mythos-cyber-partner">여기에서 관심을 등록</a>할 수 있다.</p>
+
+<h2><span class="num">02</span> Enterprise 고객을 위한 Claude Security × Mythos 5</h2>
+
+<p>오늘부터 <a href="https://claude.com/product/claude-security">Claude Security</a> 스캔은 Claude Mythos 5로 돌아간다. Claude Security는 코드베이스에서 취약점을 스캔하고 <strong>사람이 검토할 패치를 제안</strong>하는 제품으로, 현재 Claude Enterprise 고객 대상 <strong>퍼블릭 베타</strong>다. Mythos 5 스캔은 별도 부가 상품 없이 <strong>기존 플랜의 일반 토큰 사용량으로 과금</strong>된다.</p>
+
+<p>사용 흐름은 이렇다.</p>
+
+<ol>
+  <li>Enterprise 관리자가 <a href="http://claude.ai/admin-settings/claude-code">관리자 콘솔</a>에서 Claude Security를 활성화한다.</li>
+  <li>사용자는 <a href="http://claude.ai/security">claude.ai/security</a>에서 Claude Mythos 5로 스캔할 저장소를 고른다.</li>
+  <li>Claude가 코드베이스를 스캔하고, 발견 항목마다 <a href="https://cwe.mitre.org/">CWE</a>(Common Weakness Enumeration) 분류, 확신도(confidence)와 심각도(severity) 등급, 그리고 <strong>제안 수정안</strong>을 함께 돌려준다.</li>
+  <li>그 다음 웹에서 Claude Code를 열어 수정을 적용할 수 있다.</li>
+</ol>
+
+<p>경계선이 분명하게 그어져 있다. <strong>대화형 패치 작업은 조직이 Claude Code에서 이미 접근 권한을 가진 모델</strong>을 쓴다. 즉 Mythos 스캔을 돌린다고 해서 Mythos 접근이 다른 표면(surface)으로 번지지 않는다. 그리고 <strong>모든 패치는 적용 전에 사람이 검토하고 승인해야 한다</strong>.</p>
+
+<p>정리하면 Claude Security는 <strong>내가 소유한 코드</strong>를 Mythos 5로 스캔하고, 원시 출력이 아니라 <strong>정제된 발견 내역</strong>을 돌려주되 모델 자체는 노출하지 않는다. 방어자는 Claude Mythos 5의 역량에 접근하지만, 그 모델이 오남용할 수 있는 사람에게까지 열리지는 않는다는 뜻이다.</p>
+
+<p>Claude Security에 대해 더 알고 싶다면 <a href="https://claude.com/resources/tutorials/getting-started-with-claude-security">시작하기 가이드</a>를 참고하라.</p>
+
+<h2><span class="num">03</span> 오픈소스 보안을 위한 Defender Advantage Fund</h2>
+
+<p>세상에서 가장 널리 쓰이는 프로그램 상당수가 오픈소스 소프트웨어 위에서 돌아간다. 그런데 이런 프로젝트는 <strong>자원봉사자나 비영리 재단</strong>이 관리하는 경우가 많고, 공격에 맞서 프로젝트를 종합적으로 방어할 자원이나 인력이 부족하기 쉽다.</p>
+
+<p>Project Glasswing을 통해 Anthropic이 이미 해 온 일은 이렇다 — 오픈소스 보안 조직에 <strong>400만 달러 직접 기부</strong>, 프로그램 참여 오픈소스 보안 재단에 크레딧 제공, 널리 쓰이는 프로젝트의 스캔·패치 지원, 그리고 <a href="https://akrites.org/">Akrites</a>·<a href="https://www.whitehouse.gov/releases/2026/07/white-house-launches-gold-eagle-initiative-for-unprecedented-cybersecurity-vulnerability-coordination/">Gold Eagle</a> 같은 협력적 취약점 수정 활동 지원.</p>
+
+<p>새로 만든 <strong>Defender Advantage Fund(0xDAF)</strong>는 그 위에 <strong>3,500만 달러 상당의 Claude 크레딧</strong>을 얹는다. 대상은 오픈소스 메인테이너가 소프트웨어를 보호하도록 돕는 조직들이며, 지원금은 세 갈래에 집중된다.</p>
+
+<ul class="rules">
+  <li>널리 쓰이는 프로젝트의 <strong>실제 살아 있는 취약점 패치</strong></li>
+  <li>다른 프로젝트가 그대로 따라 할 수 있는 방식으로 <strong>스캔·패치를 자동화</strong>하기</li>
+  <li>공격 <strong>유형(class) 전체</strong>에 내성을 갖도록 만드는, 더 야심 찬 보안 접근법을 프로젝트가 시도하도록 돕기</li>
+</ul>
+
+<p>시작은 <strong>소수의 큰 파일럿 그랜트</strong>다. 무엇이 실제로 작동하고 잘 확장되는지 먼저 배우겠다는 것이다. 초기 수혜 조직에 대한 상세 내용은 앞으로 몇 주 안에 공유될 예정이다.</p>
+
+<h2><span class="num">04</span> Cyber Verification Program 확대</h2>
+
+<p>지금까지 Cyber Verification Program은 Claude Opus·Sonnet 모델을 쓸 때 <strong>이중 용도 역량에 대한 접근</strong>을 조직에 제공해 왔다. 프로그램에 들어온 조직은 <strong>완화된 세이프가드</strong>를 적용받는다. 자신이 보호할 권한을 가진 시스템에서 정당한 보안 업무를 하는 팀이 불필요하게 차단당하는 일을 줄이기 위해서다.</p>
+
+<p>앞으로 몇 주에 걸쳐 이 프로그램은 <strong>Claude Mythos에 대한 세이프가드 적용 접근</strong>까지 넓히는 방향으로 진화한다. 구체적으로는,</p>
+
+<ul>
+  <li><strong>취약점 분류(triaging)와 검증(validation)</strong> 같은 방어 역량에 대한 접근이 <strong>Mythos급 모델</strong>로 확대된다.</li>
+  <li>사이버 방어자는 <strong>Opus·Sonnet급 모델에서 차단(block)을 덜 겪게</strong> 된다.</li>
+  <li>또한 미국 정부 파트너들과 협력해 <strong>Project Glasswing</strong>을 통한 Claude Mythos 접근도 계속 확대한다. 대상은 엄격한 보안 통제 요건을 충족하는 <strong>핵심 인프라 보호 주체</strong>다.</li>
+</ul>
+
+<p>확대에 대한 자세한 내용은 앞으로 몇 주 안에 공유된다. 그 사이, 정당한 사이버보안 업무를 수행하는 모든 보안팀에게 Opus·Sonnet 모델의 세이프가드 완화를 위해 프로그램에 <strong>지원할 것을 권한다</strong>. 이미 등록·승인된 조직이라면 따로 할 일은 없고, Anthropic이 업데이트를 알려 온다.</p>
+
+<h2>다음은</h2>
+
+<p>이 조치들은 최전선 모델의 <strong>방어 역량을 더 많은 사람과 조직에 열고</strong>, 오픈소스 커뮤니티가 자기 프로젝트를 공격에 견디도록 단단하게 만드는 것을 돕는 흐름의 연장선이다. Anthropic은 정부 파트너, 여러 조직, 오픈소스 메인테이너, 그리고 더 넓은 산업계와 계속 협력해 <strong>오늘날의 고성능 AI 모델이 요구하는 회복력 있는 사이버 인프라</strong>를 만들어 가겠다고 밝혔다.</p>
+
+<h3>지금 할 수 있는 것</h3>
+
+<ul>
+  <li><a href="https://support.claude.com/en/articles/14604842-real-time-cyber-safeguards-on-claude-opus-and-sonnet">Cyber Verification Program</a>에 지원하기.</li>
+  <li>Mythos로 사이버 제품·서비스를 만들고 싶다면 <a href="https://claude.com/form/mythos-cyber-partner">관심 등록하기</a>.</li>
+  <li>Claude Security는 Enterprise 고객 대상 퍼블릭 베타다. 관리자는 <a href="http://claude.ai/admin-settings/claude-code">관리자 콘솔</a>에서 활성화할 수 있고, 전체 사용법은 <a href="https://claude.com/resources/tutorials/getting-started-with-claude-security">시작하기 가이드</a>에 있다.</li>
+</ul>
+
+<p><a href="https://claude.com/pricing#api">요금 보기</a> · <a href="https://claude.com/contact-sales">영업팀 문의</a></p>
+
+<h3>관련 글</h3>
+
+<ul>
+  <li><a href="https://claude.com/blog/self-service-data-analytics-in-slack-how-anthropic-deploys-claude-tag-for-ad-hoc-questions">Slack에서의 셀프서비스 데이터 분석: Anthropic은 임의 질문에 Claude Tag를 어떻게 배포하는가</a></li>
+  <li><a href="https://claude.com/blog/computer-use-skills-api-files-api">컴퓨터 사용·Skills API·Files API로 프로덕션 에이전트 만들기</a></li>
+  <li><a href="https://claude.com/blog/anthropics-approach-to-teaching-and-learning-ai">AI를 가르치고 배우는 것에 대한 Anthropic의 접근법</a></li>
+  <li><a href="https://claude.com/blog/claude-managed-agents-updates">Claude Managed Agents 신규 기능: 자체 호스팅 샌드박스와 MCP 터널</a></li>
+</ul>
+
+<footer>
+  원문: <a href="https://claude.com/blog/bringing-claude-mythos-5-to-more-defenders">Bringing the cybersecurity capabilities of Claude Mythos 5 to more defenders by Anthropic</a> — claude.com/blog, 2026년 8월 21일.<br>
+  이 페이지는 원문을 읽고 한국어로 정리한 요약·해설이며, 이미지와 링크는 원문에서 가져왔습니다. 모든 권리는 원저작자(Anthropic)에게 있습니다.
+</footer>
+
+<script src="assets/store.js"></script>
+<script src="assets/posts.js"></script>
+<script src="assets/nav.js"></script>
+</body>
+</html>
