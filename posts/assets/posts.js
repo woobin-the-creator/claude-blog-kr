@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "claudes-memory-works-everywhere-and-you-decide-whats-in-it.html", date: "2026-08-25", main: "Claude blog", cat: "Product announcements",
+      title: "Claude의 메모리는 이제 어디서나 작동하고, 무엇을 담을지는 당신이 정한다", nav: "Claude 메모리 통합 · Cowork+채팅 단일 메모리" },
     { file: "bain-company-joins-the-claude-partner-network-as-a-global-premier-partner.html", date: "2026-08-25", main: "Claude blog", cat: "Enterprise AI",
       title: "Bain & Company, Claude 파트너 네트워크에 Global Premier 파트너로 합류", nav: "Bain & Company · Global Premier 파트너 합류" },
     { file: "the-ai-native-sdlc-playbook.html", date: "2026-08-21", main: "Claude blog", cat: "Enterprise AI",
