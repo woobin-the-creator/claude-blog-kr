@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "bain-company-joins-the-claude-partner-network-as-a-global-premier-partner.html", date: "2026-08-25", main: "Claude blog", cat: "Enterprise AI",
+      title: "Bain & Company, Claude 파트너 네트워크에 Global Premier 파트너로 합류", nav: "Bain & Company · Global Premier 파트너 합류" },
     { file: "the-ai-native-sdlc-playbook.html", date: "2026-08-21", main: "Claude blog", cat: "Enterprise AI",
       title: "AI 네이티브 SDLC 플레이북", nav: "AI 네이티브 SDLC 플레이북 · 6스테이지 플레이" },
     { file: "bringing-claude-mythos-5-to-more-defenders.html", date: "2026-08-21", main: "Claude blog", cat: "Product announcements",
