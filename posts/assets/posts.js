@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "claude-in-chrome-generally-available.html", date: "2026-08-26", main: "Claude blog", cat: "Product announcements",
+      title: "Claude in Chrome 정식 출시", nav: "Claude in Chrome 정식 출시 · 프롬프트 인젝션 방어" },
     { file: "how-an-anthropic-field-marketer-uses-claude-code-to-send-weekly-personalized-updates-to-every-sales-rep.html", date: "2026-08-24", main: "Claude blog", cat: "Claude Code",
       title: "Anthropic \uD544\uB4DC \uB9C8\uCF00\uD130\uB294 Claude Code\uB85C \uC5B4\uB5BB\uAC8C \uB9E4\uC8FC \uC601\uC5C5 \uB2F4\uB2F9\uC790 \uC804\uC6D0\uC5D0\uAC8C \uB9DE\uCDA4 \uC5C5\uB370\uC774\uD2B8\uB97C \uBCF4\uB0B4\uB294\uAC00", nav: "\uD544\uB4DC \uB9C8\uCF00\uD305 \u00B7 \uC601\uC5C5 \uB2F4\uB2F9\uC790\uBCC4 \uC6D4\uC694\uC77C \uBE0C\uB9AC\uD551 \uC790\uB3D9\uD654" },
     { file: "claudes-memory-works-everywhere-and-you-decide-whats-in-it.html", date: "2026-08-25", main: "Claude blog", cat: "Product announcements",
