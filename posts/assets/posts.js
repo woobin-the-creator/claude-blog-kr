@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "how-warp-builds-self-improving-agents-on-claude.html", date: "2026-08-26", main: "Claude blog", cat: "Agents",
+      title: "Warp\uB294 Claude \uC704\uC5D0\uC11C \uC2A4\uC2A4\uB85C \uAC1C\uC120\uB418\uB294 \uC5D0\uC774\uC804\uD2B8\uB97C \uC5B4\uB5BB\uAC8C \uB9CC\uB4DC\uB294\uAC00", nav: "Warp \u00B7 \uC790\uAE30\uAC1C\uC120 \uC5D0\uC774\uC804\uD2B8 \uB8E8\uD504" },
     { file: "cowork-built-in-browser.html", date: "2026-08-26", main: "Claude blog", cat: "Product announcements",
       title: "Cowork\uC5D0 \uBE0C\uB77C\uC6B0\uC800\uAC00 \uB0B4\uC7A5\uB410\uB2E4", nav: "Cowork \uB0B4\uC7A5 \uBE0C\uB77C\uC6B0\uC800 \u00B7 Claude\uAC00 \uC790\uAE30 \uBE0C\uB77C\uC6B0\uC800\uB97C \uC5F4\uB2E4" },
     { file: "claude-in-chrome-generally-available.html", date: "2026-08-26", main: "Claude blog", cat: "Product announcements",
