@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "cowork-built-in-browser.html", date: "2026-08-26", main: "Claude blog", cat: "Product announcements",
+      title: "Cowork\uC5D0 \uBE0C\uB77C\uC6B0\uC800\uAC00 \uB0B4\uC7A5\uB410\uB2E4", nav: "Cowork \uB0B4\uC7A5 \uBE0C\uB77C\uC6B0\uC800 \u00B7 Claude\uAC00 \uC790\uAE30 \uBE0C\uB77C\uC6B0\uC800\uB97C \uC5F4\uB2E4" },
     { file: "claude-in-chrome-generally-available.html", date: "2026-08-26", main: "Claude blog", cat: "Product announcements",
       title: "Claude in Chrome 정식 출시", nav: "Claude in Chrome 정식 출시 · 프롬프트 인젝션 방어" },
     { file: "how-an-anthropic-field-marketer-uses-claude-code-to-send-weekly-personalized-updates-to-every-sales-rep.html", date: "2026-08-24", main: "Claude blog", cat: "Claude Code",
