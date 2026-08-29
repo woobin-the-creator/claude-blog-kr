@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "how-anthropic-employees-use-claude-tag.html", date: "2026-08-28", main: "Claude blog", cat: "Enterprise AI",
+      title: "Anthropic 직원들은 Claude Tag를 어떻게 쓰는가", nav: "Anthropic 직원의 Claude Tag 활용 3선" },
     { file: "claude-for-teachers-now-available-for-schools-and-districts.html", date: "2026-08-28", main: "Claude blog", cat: "Product announcements",
       title: "Claude for Teachers, 이제 학교·교육구 단위로 쓸 수 있다", nav: "Claude for Teachers · 학교·교육구 무료 Enterprise" },
     { file: "how-warp-builds-self-improving-agents-on-claude.html", date: "2026-08-26", main: "Claude blog", cat: "Agents",

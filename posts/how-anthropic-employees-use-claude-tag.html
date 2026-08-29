@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anthropic 직원들은 Claude Tag를 어떻게 쓰는가</title>
+<style>
+  :root { --fg:#1a1a1a; --muted:#666; --line:#e5e5e5; --accent:#c96442; --code-bg:#f6f6f4; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo",
+      "Malgun Gothic", sans-serif;
+    color: var(--fg); line-height: 1.75; max-width: 760px;
+    margin: 0 auto; padding: 48px 24px 96px; background:#fff;
+  }
+  header { border-bottom: 2px solid var(--line); padding-bottom: 24px; margin-bottom: 32px; }
+  h1 { font-size: 1.9rem; line-height: 1.35; margin: 0 0 12px; }
+  .subtitle { color:#333; font-size: 1.05rem; margin: 0 0 14px; line-height:1.6; }
+  .meta { color: var(--muted); font-size: 0.9rem; }
+  .meta .orig { display:block; margin-top:6px; }
+  .meta a { color: var(--accent); text-decoration: none; }
+  h2 { font-size: 1.4rem; margin: 44px 0 8px; padding-top: 8px; }
+  h2 .num { color: var(--accent); font-size: 0.85em; margin-right: 8px; }
+  h3 { font-size: 1.15rem; margin: 30px 0 8px; color:#000; }
+  h4 { font-size: 1.02rem; margin: 26px 0 6px; color:#000; }
+  p { margin: 0 0 16px; }
+  .lead { font-size: 1.05rem; color:#333; }
+  .deck { color:#555; font-style: italic; margin: 0 0 16px; }
+  a { color: var(--accent); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  blockquote { margin: 16px 0; padding: 8px 18px; border-left:3px solid var(--line);
+    color:#333; font-style: italic; }
+  hr { border: none; border-top: 1px solid var(--line); margin: 40px 0; }
+  code { background: var(--code-bg); padding: 2px 6px; border-radius: 4px;
+    font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 0.88em; }
+  pre { background: var(--code-bg); padding: 16px 18px; border-radius: 8px;
+    overflow-x: auto; border:1px solid var(--line); }
+  pre code { background: none; padding: 0; font-size: 0.85rem; line-height:1.5; }
+  figure { margin: 24px 0; }
+  figure img { width: 100%; height: auto; border:1px solid var(--line); border-radius: 8px;
+    background:#fff; }
+  figure.hero img { border:none; max-width: 210px; display:block; margin: 0 auto 8px; }
+  figcaption { color: var(--muted); font-size: 0.85rem; text-align: center;
+    margin-top: 10px; line-height: 1.5; }
+  figcaption a { color: var(--accent); }
+  .video { position: relative; width: 100%; aspect-ratio: 16 / 9; margin: 22px 0; }
+  .video iframe { position: absolute; inset: 0; width: 100%; height: 100%;
+    border: 0; border-radius: 8px; }
+  .callout { background:#faf6f4; border-left:3px solid var(--accent);
+    padding: 12px 16px; border-radius: 0 6px 6px 0; margin: 16px 0; }
+  .callout strong { color: var(--accent); }
+  .stats { display:flex; flex-wrap:wrap; gap:12px; margin: 20px 0 24px; }
+  .stat { flex:1 1 180px; border:1px solid var(--line); border-radius:8px; padding:14px 16px; }
+  .stat b { display:block; font-size:1.35rem; color:var(--accent); line-height:1.3; }
+  .stat span { color:var(--muted); font-size:0.86rem; }
+  .q { display:flex; gap:14px; align-items:flex-start; margin: 22px 0;
+    background:#fafafa; border:1px solid var(--line); border-radius:10px; padding:16px 18px; }
+  .q img { width:52px; height:52px; border-radius:50%; object-fit:cover; flex:0 0 52px;
+    border:1px solid var(--line); }
+  .q .qt { margin:0 0 8px; font-style:italic; color:#222; }
+  .q .qa { margin:0; font-size:0.86rem; color:var(--muted); }
+  .q .qa a { color:var(--accent); text-decoration:none; }
+  .logos { display:flex; flex-wrap:wrap; gap:10px; margin:16px 0 24px; }
+  .logos a { flex:0 0 auto; }
+  .logos img { height:44px; width:auto; border:1px solid var(--line); border-radius:6px;
+    background:#fff; padding:4px 8px; display:block; }
+  .rules { counter-reset: r; list-style:none; padding-left:0; }
+  .rules li { counter-increment: r; padding-left:36px; position:relative; }
+  .rules li::before { content: counter(r,decimal-leading-zero); position:absolute; left:0;
+    color:var(--accent); font-weight:700; }
+  footer { margin-top: 64px; padding-top: 20px; border-top:1px solid var(--line);
+    color: var(--muted); font-size: 0.82rem; }
+  table { border-collapse: collapse; width: 100%; margin: 20px 0; font-size: 0.92rem; }
+  th, td { border: 1px solid var(--line); padding: 10px 12px; text-align: left;
+    vertical-align: top; line-height: 1.6; }
+  th { background: var(--code-bg); font-weight: 600; }
+  td:first-child { white-space: nowrap; font-weight: 600; width: 92px; }
+  .tbl-wrap { overflow-x: auto; }
+</style>
+<link rel="stylesheet" href="assets/nav.css">
+</head>
+<body>
+<header>
+  <h1>Anthropic 직원들은 Claude Tag를 어떻게 쓰는가</h1>
+  <p class="subtitle">Slack 스레드를 고객용 자료로 바꾸고, 흩어진 요청과 이슈를 한 장으로 취합하고, 법무 검토를 30분으로 줄인다. 공통점은 <strong>일이 이미 벌어지고 있는 자리에서 그대로 처리한다</strong>는 것.</p>
+  <div class="meta">
+    2026년 8월 28일 · 읽는 데 약 5분 · 글쓴이 Aleksandra Todorova
+    · 카테고리: <a href="https://claude.com/blog/category/enterprise-ai">Enterprise AI</a>
+    · 제품: <a href="https://claude.com/product/tag">Claude Tag</a>
+    <span class="orig">원문: <a href="https://claude.com/blog/how-anthropic-employees-use-claude-tag">How Anthropic employees use Claude Tag by Anthropic</a> (claude.com/blog)</span>
+  </div>
+</header>
+
+<figure class="hero">
+  <img src="assets/how-anthropic-employees-use-claude-tag/hero.svg" alt="글의 대표 일러스트레이션 — 코드·채팅·텍스트 오브젝트">
+</figure>
+
+<div class="callout">
+  <strong>안내</strong> — 이 글은 원문의 축자 번역이 아니라, 원문을 읽고 핵심을 한국어로 정리한 <strong>요약·해설</strong>입니다.
+  원문의 모든 섹션을 원문 순서 그대로 빠짐없이 다루고, 원문에 실린 이미지와 링크도 모두 그대로 옮겼습니다.
+  정확한 원문 표현은 위 원문 링크에서 확인하세요.
+</div>
+
+<p class="lead">한 줄 요약: <strong>Anthropic 사내에서 실제로 굴러간 Claude Tag 워크플로 3개 — 마케팅 자료 생성, 요청·이슈 취합, 법무 검토 — 를 실제 프롬프트와 함께 공개한 글이다.</strong> 셋 다 공통 구조가 있다. 사람이 "무엇을 찾을지·무엇이 매치인지·결과물이 어떤 모양이어야 하는지"를 앞에서 정의하고, Claude는 백그라운드에서 훑고, 사람은 남은 시간을 <strong>판단이 필요한 부분</strong>에 쓴다.</p>
+
+<h2>Claude Tag가 뭔지부터</h2>
+
+<p><a href="https://www.anthropic.com/news/introducing-claude-tag">Claude Tag</a>는 Slack 같은 채팅 도구 안으로 Claude를 들여놓는 제품이다. 동료를 부르듯 스레드에서 <code>@Claude</code>를 멘션하면, 그 대화의 맥락을 그대로 집어 들고, 일을 마친 뒤, 답이나 결과물을 <strong>같은 스레드에 다시 올린다</strong>. 멘션 없이도 <a href="https://claude.com/blog/claude-tag-now-reads-even-more-of-the-room">대화를 따라 읽으면서</a> 접근 가능한 컨텍스트·메모리·미리 받아둔 상시 지시(standing instructions)를 근거로 <strong>언제 끼어들지를 스스로 판단</strong>하기도 한다.</p>
+
+<p>지난 몇 달간 Anthropic 내부 팀들은 이걸로 공유 채널에서 <a href="https://claude.com/blog/self-service-data-analytics-in-slack-how-anthropic-deploys-claude-tag-for-ad-hoc-questions">데이터 분석을 셀프서비스로</a> 돌리고, 지원 티켓을 처리하고, 까다로운 버그의 <a href="https://www.anthropic.com/news/introducing-claude-tag">근본 원인</a>을 찾는 데 써왔다.</p>
+
+<p>Anthropic은 사내 사례에서 뽑아낸 <a href="https://claude.com/docs/claude-tag/users/use-cases">Claude Tag 유스케이스 예시</a>를 열두 개 넘게 정리해뒀다 — 구체적인 프롬프트와 세팅 방법까지 포함해서. 이 글은 그중 세 가지를 프롬프트와 함께 자세히 보여준다.</p>
+
+<h2><span class="num">01</span> Slack 스레드를 완성된 문서로 바꾸기</h2>
+
+<p>어떤 기능 출시 때, 한 영업 담당자가 <strong>비기술 인력·고객·잠재 고객에게 그 기능을 설명할 자료</strong>를 요청했다. 프로덕트 마케팅팀의 Hema Thanki는 그 요청에서 이어진 Slack 스레드를 <strong>45분 만에 검토 가능한 문서</strong>로 만들었다.</p>
+
+<p>그 스레드는 메시지가 15개를 넘겼고, 여러 사람이 제안과 추가 요구를 얹었고, "실제로 필요한 게 뭔지 / 기존 기술 문서로 충분한 건 아닌지"를 두고 약간의 긴장까지 있었다. Hema는 그 모호함을 먼저 정리하려 들지 않았다. 그냥 스레드에 Claude를 태그했다.</p>
+
+<blockquote>@Claude, 이 Slack 스레드를 쭉 읽고 [요청자]가 원하는 원페이저를 만들어줘.</blockquote>
+
+<figure>
+  <img src="assets/how-anthropic-employees-use-claude-tag/slack-thread-onepager.png" alt="Slack 스레드에서 Claude를 태그해 마케팅 자료 생성을 요청하는 화면">
+  <figcaption>Slack 스레드를 근거로 마케팅 자료를 만들어 달라고 Claude에게 요청하는 장면. 이 이미지는 유스케이스를 보여주기 위해 생성된 것으로, 실제 정보가 담겨 있지 않다.</figcaption>
+</figure>
+
+<p>Claude는 <strong>약 2분 만에 2페이지 초안</strong>을 냈다. 기능이 무엇을 하는지 쉬운 말로, 왜 도입해야 하는지 비즈니스 논거, 구현에 뭐가 필요한지, 그리고 더 자세한 내용을 담은 부록까지.</p>
+
+<p>다음 단계가 이 사례의 핵심이다. Hema는 결과물을 그대로 쓰지 않고 <strong>Claude에게 스스로 검증을 시켰다</strong>.</p>
+
+<blockquote>@Claude, 이 문서에 있는 내용이 전부 사실이고 정확해?</blockquote>
+
+<p>그러자 Claude는 문서의 주장들을 두 갈래로 갈랐다 — <strong>공개 문서로 확인된 것</strong>과 <strong>자기가 만들어낸 프레이밍</strong>. 그리고 후자는 프로덕트 리드의 승인이 필요하다고 플래그를 달았다. Hema가 관련 내용이 담긴 공식 자료 두 건을 넘겨주자, Claude는 그 자료의 승인된 표현에 맞춰 한 섹션을 다시 썼다.</p>
+
+<figure>
+  <img src="assets/how-anthropic-employees-use-claude-tag/followup-in-slack.png" alt="Slack에서 Claude에게 후속 지시를 내리는 화면">
+  <figcaption>Claude에 대한 후속 지시도 Slack 안에서 이뤄진다. 이 이미지는 유스케이스를 보여주기 위해 생성된 것으로, 실제 정보가 담겨 있지 않다.</figcaption>
+</figure>
+
+<p>그 시점에 Hema는 <strong>잘린 스레드 때문에 프레이밍이 한쪽으로 기울었다</strong>는 걸 알아챘고, 더 온전한 맥락을 붙여 넣었다. 그렇게 Claude와 주고받으며 총 4개 버전을 거쳤다. 최초 요청으로부터 <strong>약 45분 뒤</strong>, 문서는 해당 기능의 프로덕트 리드에게 검토용으로 전달됐다.</p>
+
+<div class="callout">
+  <strong>포인트</strong> — 조사하고 초안 쓰는 데 몇 시간을 쓰는 대신, Hema의 시간은 <strong>정확성을 따지고, 출처를 대주고, 무엇을 넣을지 결정하는 데</strong> 갔다. 전부 사람의 판단이 필요한 일이고, 그래서 결과물이 더 좋아졌다.
+</div>
+
+<p>Hema는 스레드에서 브리프를 뽑는 것 말고도 일상 업무 전반에 Claude Tag를 쓴다. Claude와 둘만 있는 <strong>프라이빗 Slack 채널</strong>을 하나 두고, 요청마다 스레드를 따로 파서 동료 태그하듯 Claude를 멘션한다. 그 채널에서 Claude는 그가 붙여넣거나 첨부한 것을 읽고, Slack 워크스페이스와 공개 문서를 검색하고, <strong>백그라운드에서 일하면서 진행 체크리스트를 계속 갱신해 올린다</strong>.</p>
+
+<p>접근 범위는 의도적으로 좁혀져 있다. Claude는 <a href="https://claude.com/blog/agent-identity-access-model">권한을 부여받은</a> 채널과 문서 안에서만 움직이고, 필요한 리소스에 접근할 수 없으면 그 사실을 알려준다.</p>
+
+<h2><span class="num">02</span> Slack 곳곳에 흩어진 요청 취합하고 후속 처리하기</h2>
+
+<p>새 기능이 출시되면 영업 담당자는 보통 그 기능을 요청했던 담당 고객에게 알린다. 문제는 그 요청들이 Slack이나 제품 피드백 허브에 <strong>몇 달치 히스토리에 걸쳐 흩어져 있다</strong>는 것. 프로덕트 전략·운영팀의 Steph Soderborg는 곧 출시될 기능에 대한 요청을 전부 모으고 <strong>고객을 대신해 요청했던 담당자 각각에게 직접 알리는 일을 약 26분</strong>에 끝냈다.</p>
+
+<p>시작은 Claude에게 보낸 메시지 하나였다. 여기에 <strong>검색 대상 · 무엇을 매치로 볼지에 대한 한 문장 정의 · 원하는 출력 형식의 실제 예시</strong>(이전 출시 때 쓴 7행짜리 목록)를 함께 붙였다.</p>
+
+<blockquote>@Claude 우리가 곧 [새 기능]을 GA 한다. Slack을 검색해서 … 고객을 위해 이 기능을 요청했던 사람을 전부 찾아줘 … Slack 핸들과 팀, 요청한 계정, 그리고 그 요청의 Slack 링크를 포함해서.</blockquote>
+
+<p>Claude는 여러 채널과 워크스페이스 전반에 걸쳐 <strong>검색 변형을 20가지쯤</strong> 돌렸다. 제품 피드백 허브는 직접 접근이 막혀 있어서, 대신 <strong>Slack의 상호 참조를 통해 허브 항목을 끌어냈다</strong>. 여기에 다른 사내 어시스턴트가 앞서 올려둔 1차 목록까지 합쳐서 중복을 제거했다. 취합된 목록은 <strong>약 26분 뒤</strong>에 나왔고, 계정 24개가량이 담겼다. 요청자 한 명당 한 줄로, Slack 핸들·팀·계정·원본 요청 링크가 들어갔다.</p>
+
+<figure>
+  <img src="assets/how-anthropic-employees-use-claude-tag/feature-request-roundup.png" alt="특정 기능을 요청했던 사람 목록을 만들어 달라고 Claude에게 요청하는 Slack 화면">
+  <figcaption>Slack에서 특정 기능을 요청했던 사람을 전부 찾아 목록으로 만들어 달라고 Claude에게 요청하는 장면. 이 이미지는 유스케이스를 보여주기 위해 생성된 것으로, 실제 정보가 담겨 있지 않다.</figcaption>
+</figure>
+
+<p>그다음 Steph는 <strong>혼자서는 손댈 여력이 없었을 더 큰 취합 작업</strong>을 Claude에게 맡겼다. 원하는 건 지난 한 주 동안 엔터프라이즈 고객이 보고한 <strong>모든 제품 문제의 전경</strong>이었다 — 무엇이 망가졌고, 무엇은 이미 고쳐졌고, 어떤 보고들이 사실 같은 근본 원인을 가리키는지.</p>
+
+<p>Claude에게 인시던트·에스컬레이션·지원·제품 피드백을 다루는 Slack 채널을 전부 읽으라고 지시했고, <strong>약 50분 뒤</strong> Claude는 제품 영역별로 정리된 리포트를 올렸다. 원시 발견 사항 약 120건을 <strong>미해결 23건 + 해결 완료 14건</strong>으로 압축한 것이었고, 각 이슈마다 요약과 출처 스레드 링크가 붙었다. Steph가 "네 작업을 다시 점검해 봐"라고 하자, <strong>이슈 15개를 더 찾아냈다</strong>.</p>
+
+<div class="stats">
+  <div class="stat"><b>26분</b><span>기능 요청자 24개 계정 취합</span></div>
+  <div class="stat"><b>50분</b><span>주간 이슈 리포트 (미해결 23 + 해결 14)</span></div>
+  <div class="stat"><b>~1주</b><span>사람이 직접 했다면 걸렸을 풀타임 시간</span></div>
+</div>
+
+<p>Steph는 이 정도 양의 정보를 훑고, 분석하고, 종합하려면 <strong>최소 일주일 풀타임</strong>이 필요했거나, 아니면 애초에 영영 안 됐을 일이라고 본다. 대신 Claude Tag로는 요청을 다듬는 데 몇 분을 쓰고, 나머지는 Claude가 백그라운드에서 처리했다.</p>
+
+<p>Steph 역시 프라이빗 채널에서 Claude와 일한다. 그리고 <strong>지시를 앞에서 한 번에 다 준다</strong> — 어디를 검색할지, 무엇이 매치인지, 그리고 대개는 출력 형식 예시까지. Claude는 워크스페이스를 검색하고, 초대받은 채널을 읽고, 진행 상황을 올린다. 피드백 허브가 접근을 막으면 <strong>접근 가능한 문서·채널을 통해 관련 정보를 우회 수집하거나, 아예 그 채널에 대한 접근 권한을 요청</strong>한다.</p>
+
+<h2><span class="num">03</span> 법무 문서 검토 속도 올리기</h2>
+
+<p>Anthropic 법무팀은 블로그·랜딩 페이지·이메일 등 <strong>외부에 공개되는 모든 자료를 사전 검토</strong>한다. 제품 출시 직전 며칠이면 마케팅팀이 촉박한 마감으로 수십 건의 자산을 검토 큐에 밀어 넣는다. 여기에 평소 흐르는 물량까지 겹친다 — 한 문단짜리 소셜 카피부터 2,500단어 블로그 초안, 탭이 열 몇 개 달린 기획 문서, 여러 접점에 걸쳐 변형이 여럿인 이메일 시리즈까지.</p>
+
+<p>법무팀 프로덕트 카운슬 Molly Villagra는 <strong>Claude Tag가 모든 마케팅 자산을 먼저 훑는 전용 Slack 채널</strong>을 만들었다. 결과적으로 마케팅 법무 검토 회신 시간이 <strong>하루(혹은 그 이상)에서 자산당 30분</strong>으로 줄었다.</p>
+
+<p>법무 검토를 요청하려면 마케터가 그 채널에 문서 링크를 올리면 된다. 그 채널에는 <strong>엔지니어링 배경이 전혀 없는</strong> Molly가 직접 세팅한 규칙과 지시가 들어 있다. Claude는 법무가 봐야 할 이슈(근거 없는 마케팅 주장 같은 것)를 잡아낼 뿐 아니라, <strong>사내 Slack·내부 지식 인덱스·공개 웹에 접근할 수 있기 때문에 마케팅 문안의 사실관계까지 검증</strong>한다. 플래그가 있으면 항목별로 <strong>어떻게 고치면 되는지 구체적 지시와 함께</strong> 나열하고, 요청자와 직접 주고받으며 해결한다. 법무 사인오프가 남은 건만 적절한 프로덕트 카운슬을 태그해서 빠르게 검토받게 한다.</p>
+
+<figure>
+  <img src="assets/how-anthropic-employees-use-claude-tag/legal-review-channel.png" alt="전용 Slack 채널에 문서 링크를 올려 법무 검토를 요청하는 화면">
+  <figcaption>마케터는 전용 Slack 채널에 문서 링크를 올려 법무 검토를 요청한다. 이 이미지는 유스케이스를 보여주기 위해 생성된 것으로, 실제 정보가 담겨 있지 않다.</figcaption>
+</figure>
+
+<p>최근 뉴스레터 검토에서 Claude는 항목 3개를 플래그했다. 그리고 <strong>몇 분 뒤, 시키지도 않았는데</strong> 사내 문서에서 필요한 정보를 찾아 그중 하나를 스스로 해소했다. Molly는 이걸 기본 동작으로 만들고 싶어서 마케팅 법무 검토 채널에서 <code>@Claude</code>를 태그했다.</p>
+
+<blockquote>네가 잡은 세 항목은 좋은 지적이야. 그런데 그 셋 다 네가 직접 검증할 수 있는 것들이야. 앞으로 플래그를 달 때 그것들을 실시간으로 검증해 볼래?</blockquote>
+
+<p>Molly의 요청에 따라 Claude Tag는 <strong>이 새 지시를 앞으로의 모든 검토에 적용될 지시 세트에 추가</strong>했다. 채널에서 받은 피드백으로 실시간으로 나아지는 구조가 된 것이다.</p>
+
+<p>이 피드백 루프에서 Molly는 한 걸음 더 나갔다. 새로운 루틴을 만들어, <strong>매주 금요일 그 주의 카운슬 피드백을 검토하고 공용 지시문 업데이트안을 만들어 자기 승인을 받도록</strong> Claude에게 지시한 것이다.</p>
+
+<h2>정리하면</h2>
+
+<p>위 세 워크플로는 모두 Anthropic 직원의 <strong>몇 시간에서 며칠에 이르는 작업 시간을 아끼고 있고</strong>, 무엇보다 <strong>예전이라면 아예 시작조차 못 했을 프로젝트를 가능하게</strong> 만든다. 원문은 이렇게 되묻는다 — 당신 팀이라면 어떤 워크플로나 프로젝트를 Claude에게 가장 먼저 넘기겠는가?</p>
+
+<div class="callout">
+  <strong>세 사례의 공통 패턴</strong> — ① 프라이빗 채널을 하나 두고 스레드 단위로 요청한다 ② 검색 범위·매치 정의·출력 형식 예시를 <strong>앞에서 한 번에</strong> 준다 ③ 결과를 그대로 쓰지 않고 <strong>"이거 다 사실 맞아?"로 자기 검증을 시킨다</strong> ④ 피드백을 그때그때 <strong>상시 지시로 승격</strong>시켜 다음 실행부터 반영되게 한다.
+</div>
+
+<h2>가용성</h2>
+
+<p>Claude Tag는 현재 <strong>퍼블릭 베타</strong>이며, <strong>Team·Enterprise 플랜</strong>에서 <strong>Anthropic 자사(first-party) 서비스</strong>로 제공된다. 워크스페이스에 설정하려면 <a href="https://claude.ai/admin-settings/claude-tag">claude.ai/admin-settings/claude-tag</a>, 더 알아보려면 <a href="https://claude.com/docs/claude-tag">claude.com/docs/claude-tag</a>.</p>
+
+<div class="callout">
+  <strong>원문 면책</strong> — 이 글의 소요 시간은 특정 작업에 대한 개별 직원의 경험이며, 결과는 작업 종류·연결된 도구·Claude Tag 설정 방식에 따라 달라진다. 또한 <strong>모든 이미지는 유스케이스를 보여주기 위해 생성된 것</strong>으로, 실제 이름이나 정보를 담고 있지 않다.
+</div>
+
+<hr>
+
+<h2>참고 링크</h2>
+
+<ul>
+  <li><a href="https://claude.com/product/tag">Claude Tag</a> — 제품 페이지</li>
+  <li><a href="https://www.anthropic.com/news/introducing-claude-tag">Introducing Claude Tag</a> — 최초 발표</li>
+  <li><a href="https://claude.com/docs/claude-tag/users/use-cases">Claude Tag 유스케이스 예시</a> — 프롬프트·세팅 포함 12개 이상</li>
+  <li><a href="https://claude.com/docs/claude-tag">claude.com/docs/claude-tag</a> · <a href="https://claude.ai/admin-settings/claude-tag">워크스페이스 설정</a></li>
+  <li><a href="https://claude.com/blog/claude-tag-now-reads-even-more-of-the-room">Claude Tag가 이제 분위기를 더 많이 읽는다</a> (<a href="claude-tag-now-reads-even-more-of-the-room.html">한글 정리</a>)</li>
+  <li><a href="https://claude.com/blog/self-service-data-analytics-in-slack-how-anthropic-deploys-claude-tag-for-ad-hoc-questions">Slack에서의 셀프서비스 데이터 분석</a> (<a href="self-service-data-analytics-in-slack-how-anthropic-deploys-claude-tag-for-ad-hoc-questions.html">한글 정리</a>)</li>
+  <li><a href="https://claude.com/blog/agent-identity-access-model">에이전트 아이덴티티·접근 모델</a> (<a href="agent-identity-access-model.html">한글 정리</a>) — Claude의 접근 범위가 어떻게 정해지는가</li>
+  <li><a href="https://claude.com/pricing#api">See pricing</a> · <a href="https://claude.com/contact-sales">Contact sales</a></li>
+  <li><a href="https://claude.com/blog/category/enterprise-ai">Enterprise AI</a> — 이 글의 카테고리</li>
+</ul>
+
+<footer>
+  원문: <a href="https://claude.com/blog/how-anthropic-employees-use-claude-tag">How Anthropic employees use Claude Tag by Anthropic</a> — claude.com/blog, 2026년 8월 28일, 글쓴이 Aleksandra Todorova.<br>
+  이 페이지는 원문을 읽고 한국어로 정리한 요약·해설이며, 이미지와 링크는 원문에서 가져왔습니다. 모든 권리는 원저작자(Anthropic)에게 있습니다.
+</footer>
+
+<script src="assets/store.js"></script>
+<script src="assets/posts.js"></script>
+<script src="assets/nav.js"></script>
+</body>
+</html>
