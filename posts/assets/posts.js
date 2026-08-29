@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "claude-for-teachers-now-available-for-schools-and-districts.html", date: "2026-08-28", main: "Claude blog", cat: "Product announcements",
+      title: "Claude for Teachers, 이제 학교·교육구 단위로 쓸 수 있다", nav: "Claude for Teachers · 학교·교육구 무료 Enterprise" },
     { file: "how-warp-builds-self-improving-agents-on-claude.html", date: "2026-08-26", main: "Claude blog", cat: "Agents",
       title: "Warp\uB294 Claude \uC704\uC5D0\uC11C \uC2A4\uC2A4\uB85C \uAC1C\uC120\uB418\uB294 \uC5D0\uC774\uC804\uD2B8\uB97C \uC5B4\uB5BB\uAC8C \uB9CC\uB4DC\uB294\uAC00", nav: "Warp \u00B7 \uC790\uAE30\uAC1C\uC120 \uC5D0\uC774\uC804\uD2B8 \uB8E8\uD504" },
     { file: "cowork-built-in-browser.html", date: "2026-08-26", main: "Claude blog", cat: "Product announcements",
