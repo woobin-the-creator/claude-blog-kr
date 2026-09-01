@@ -15,10 +15,12 @@ async function main() {
   const w = dom.window;
   w.URL.createObjectURL = () => "blob:stub"; w.URL.revokeObjectURL = () => {};
   w.CBK_POSTS = [
-    { file: "ai-era-durable-skills.html", date: "2026-06-26", main: "AI 인사이트", cat: "역량·커리어", title: "RAG는 죽지 않았다", nav: "내구성 역량" },
-    { file: "opus46.html", date: "2026-05-01", main: "제품", cat: "모델", title: "Opus 4.6", nav: "Opus 4.6" }
+    { file: "ai-era-durable-skills.html", slug: "ai-era-durable-skills", date: "2026-06-26", main: "AI 인사이트", cat: "역량·커리어", title: "RAG는 죽지 않았다", nav: "내구성 역량" },
+    { file: "opus46.html", slug: "opus46", date: "2026-05-01", main: "제품", cat: "모델", title: "Opus 4.6", nav: "Opus 4.6" }
   ];
-  w.CBK_postBySlug = (k) => w.CBK_POSTS.find(p => p.file === k || p.file.replace(/\.html$/, "") === String(k).replace(/\.html$/, "")) || null;
+  w.CBK_postBySlug = (k) => w.CBK_POSTS.find(p => p.file === k || p.slug === String(k).replace(/\.html$/, "")) || null;
+  w.CBK_onCatalog = (fn) => fn(w.CBK_POSTS);
+  w.CBK_currentSlug = () => "ai-era-durable-skills";
 
   // load store then nav
   for (const src of [storeSrc, navSrc]) {
@@ -73,6 +75,8 @@ async function main() {
   const w2 = dom2.window;
   w2.URL.createObjectURL = () => "x"; w2.URL.revokeObjectURL = () => {};
   w2.CBK_POSTS = w.CBK_POSTS; w2.CBK_postBySlug = w.CBK_postBySlug;
+  w2.CBK_onCatalog = (fn) => fn(w2.CBK_POSTS);
+  w2.CBK_currentSlug = () => "ai-era-durable-skills";   // dom2 의 URL 과 같은 글이어야 저장된 평가가 복원된다
   w2.localStorage.setItem("cbk:data:v1", w.localStorage.getItem("cbk:data:v1"));
   for (const src of [storeSrc, navSrc]) { const s = w2.document.createElement("script"); s.textContent = src; w2.document.body.appendChild(s); }
   ok("reload: like reflects saved rating", w2.document.getElementById("cbk-like").classList.contains("on"));

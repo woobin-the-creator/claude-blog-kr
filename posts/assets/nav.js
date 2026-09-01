@@ -1,12 +1,25 @@
 /* Shared sidebar nav + breadcrumb + per-post bookmark/notes UI.
- * Post catalog lives in posts.js (window.CBK_POSTS) — load it before this file.
+ * Post catalog lives in catalog.js (window.CBK_POSTS + CBK_onCatalog) — load it before this file.
  * Requires store.js (window.CBK) for bookmarks; degrades gracefully if absent. */
 (function () {
   var POSTS = window.CBK_POSTS || [];
 
+  /* 이 파일은 posts/ 안(레거시 79개)과 저장소 루트(Task 5 의 post.html / 404.html)
+   * 양쪽에서 로드된다. 루트에서 서빙될 때 "../index.html" 은 사이트 밖을 가리키므로
+   * 링크 접두사를 한 곳에서 계산한다. post.html 은 이 파일 로드 전에
+   * window.CBK_AT_ROOT = true 를 세팅한다. */
+  var BASE = window.CBK_AT_ROOT ? "" : "../";
+
+  /* posts/ 안에서는 예전처럼 파일 상대 링크, 루트에서는 post.html?slug= 로 건다. */
+  function hrefFor(file) {
+    if (!window.CBK_AT_ROOT) return file;
+    return "post.html?slug=" + encodeURIComponent(String(file).replace(/\.html$/, ""));
+  }
+
   var CBK = window.CBK || null;
-  var current = location.pathname.split("/").pop();
-  var slug = CBK ? CBK.slugOf(current) : current.replace(/\.html$/, "");
+  var slug = window.CBK_currentSlug ? window.CBK_currentSlug()
+           : (location.pathname.split("/").pop() || "").replace(/\.html$/, "");
+  var current = slug + ".html";
 
   /* ---------- sidebar ---------- */
   function buildItems() {
@@ -14,7 +27,7 @@
       var active = p.file === current ? " active" : "";
       var star = (CBK && CBK.isBookmarked(CBK.slugOf(p.file))) ? "★ " : "";
       return (
-        '<li><a class="nav-link' + active + '" href="' + p.file + '">' +
+        '<li><a class="nav-link' + active + '" href="' + hrefFor(p.file) + '">' +
           star + (p.nav || p.title) +
           '<span class="nav-date">' + p.date + "</span>" +
         "</a></li>"
@@ -36,8 +49,8 @@
   var nav = document.createElement("nav");
   nav.id = "site-nav";
   nav.innerHTML =
-    '<a class="nav-brand" href="../index.html">Claude 블로그 한글 번역</a>' +
-    '<a class="nav-home" href="../index.html">← 메인으로</a>' +
+    '<a class="nav-brand" href="' + BASE + 'index.html">Claude 블로그 한글 번역</a>' +
+    '<a class="nav-home" href="' + BASE + 'index.html">← 메인으로</a>' +
     '<div class="nav-heading">다른 글</div>' +
     "<ul>" + buildItems() + "</ul>" +
     buildTools();
@@ -59,9 +72,11 @@
   }
 
   /* ---------- breadcrumb (메인 › 서브 › 제목) ---------- */
-  var meta = window.CBK_postBySlug ? window.CBK_postBySlug(current) : null;
-  var header = document.querySelector("header");
-  if (meta && header) {
+  function buildCrumb() {
+    var meta = window.CBK_postBySlug ? window.CBK_postBySlug(slug) : null;
+    var header = document.querySelector("header");
+    if (!meta || !header) return;
+    if (document.querySelector(".post-crumb")) return;   // 갱신 시 중복 삽입 방지
     function enc(s) { return encodeURIComponent(s); }
     function esc(s) {
       return String(s).replace(/[&<>"]/g, function (c) {
@@ -72,13 +87,16 @@
     crumb.className = "post-crumb";
     crumb.setAttribute("aria-label", "breadcrumb");
     crumb.innerHTML =
-      '<a href="../index.html#m=' + enc(meta.main) + '">' + esc(meta.main) + "</a>" +
+      '<a href="' + BASE + 'index.html#m=' + enc(meta.main) + '">' + esc(meta.main) + "</a>" +
       '<span class="post-crumb-sep">›</span>' +
-      '<a href="../index.html#m=' + enc(meta.main) + "&c=" + enc(meta.cat) + '">' + esc(meta.cat) + "</a>" +
+      '<a href="' + BASE + 'index.html#m=' + enc(meta.main) + "&c=" + enc(meta.cat) + '">' + esc(meta.cat) + "</a>" +
       '<span class="post-crumb-sep">›</span>' +
       '<span class="post-crumb-cur">' + esc(meta.title) + "</span>";
     header.parentNode.insertBefore(crumb, header);
   }
+
+  if (window.CBK_onCatalog) window.CBK_onCatalog(function () { refreshSidebar(); buildCrumb(); });
+  else { refreshSidebar(); buildCrumb(); }
 
   /* ---------- per-post bookmark + note bar ---------- */
   if (!CBK) return;
