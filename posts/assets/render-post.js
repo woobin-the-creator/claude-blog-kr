@@ -19,9 +19,16 @@
     return m ? decodeURIComponent(m[1]) : "";
   }
 
+  /* 메시지는 #post-error-msg 가 있으면 거기에 쓴다. 404.html 이 그 옆에
+     "← 메인으로" 링크를 정적으로 달아두기 때문에, #post-error 를 통째로
+     textContent 로 덮으면 그 탈출구가 같이 지워진다. */
   function fail(msg) {
     var e = document.getElementById("post-error");
-    if (e) { e.textContent = msg; e.hidden = false; }
+    if (e) {
+      var m = document.getElementById("post-error-msg");
+      if (m) m.textContent = msg; else e.textContent = msg;
+      e.hidden = false;
+    }
     var b = document.getElementById("post-body");
     if (b) b.innerHTML = "";
   }

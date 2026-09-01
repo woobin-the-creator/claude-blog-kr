@@ -7,16 +7,30 @@
   /* 이 파일은 posts/ 안(레거시 79개)과 저장소 루트(Task 5 의 post.html / 404.html)
    * 양쪽에서 로드된다. 루트에서 서빙될 때 "../index.html" 은 사이트 밖을 가리키므로
    * 링크 접두사를 한 곳에서 계산한다. post.html 은 이 파일 로드 전에
-   * window.CBK_AT_ROOT = true 를 세팅한다. */
-  var BASE = window.CBK_AT_ROOT ? "" : "../";
+   * window.CBK_AT_ROOT = true 를 세팅한다.
+   *
+   * CBK_AT_ROOT 만으로는 부족하다: 404.html 은 GitHub Pages 가 없는 경로에
+   * 돌려주는 파일이라 주소창이 /claude-blog-kr/posts/<slug>.html 인 채로 실행된다.
+   * 그 상태에서 BASE 를 "" 로 두면 index.html 이 /claude-blog-kr/posts/index.html
+   * 로 풀려 또 404 로 떨어지고(그리고 slug "index" 로 렌더를 시도한다) 방문자가
+   * 사이트 밖으로 나갈 길이 없다. 그래서 "루트에서 서빙된다"(CBK_AT_ROOT)와
+   * "링크를 어디 기준으로 걸어야 하나"(CBK_SITE_BASE)를 분리한다.
+   *   post.html  → CBK_SITE_BASE 미설정. 주소가 /claude-blog-kr/post.html 이라
+   *                상대경로가 이미 맞고, 로컬 파일로 열 때도 깨지지 않는다.
+   *   404.html   → CBK_SITE_BASE = "/claude-blog-kr/". 주소가 임의 깊이라 절대경로만 안전하다. */
+  var SITE = window.CBK_SITE_BASE || "";
+  var BASE = window.CBK_AT_ROOT ? SITE : "../";
   /* assets/ 자체도 마찬가지다. posts/ 안에서는 "assets/…", 루트에서 서빙될 때는
    * post.html 이 세팅한 CBK_ASSET_BASE("posts/" 또는 "/claude-blog-kr/posts/")를 앞에 붙인다. */
   var ASSETS = (window.CBK_ASSET_BASE || "") + "assets/";
 
-  /* posts/ 안에서는 예전처럼 파일 상대 링크, 루트에서는 post.html?slug= 로 건다. */
+  /* posts/ 안에서는 예전처럼 파일 상대 링크, 루트에서는 post.html?slug= 로 건다.
+     404 폴백에서는 SITE 를 붙여야 한다 — 안 붙이면 /claude-blog-kr/posts/post.html?slug=x
+     라는 없는 경로가 되고, 404 가 쿼리스트링을 먼저 읽는 덕에 "동작하는 것처럼" 보일 뿐
+     HTTP 상태는 계속 404 다. */
   function hrefFor(file) {
     if (!window.CBK_AT_ROOT) return file;
-    return "post.html?slug=" + encodeURIComponent(String(file).replace(/\.html$/, ""));
+    return SITE + "post.html?slug=" + encodeURIComponent(String(file).replace(/\.html$/, ""));
   }
 
   var CBK = window.CBK || null;

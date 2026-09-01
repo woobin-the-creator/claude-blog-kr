@@ -316,6 +316,15 @@ A separate commit means the archive lands in history before the deletion commit,
 git rm posts/*.html
 # Task 4 가 로드만 끊어두고 남겨둔 옛 카탈로그. 이관 스크립트가 이 파일을
 # 카탈로그 소스로 읽기 때문에 그때는 지울 수 없었다. 이관이 끝난 지금 지운다.
+#
+# !! 먼저 wiki/rank.mjs 를 고칠 것 !!
+# wiki/rank.mjs:21 의 loadCatalog() 가 이 파일을 기본 인자로 읽는다
+# (`path.join(ROOT, "posts/assets/posts.js")`). 이관과 무관한 상시 파이프라인이라
+# 그냥 지우면 위키 랭킹이 조용히 죽는다. 지우기 전에 카탈로그 소스를 바꿔라 —
+# 이 태스크 Step 5 가 만드는 content/*.md 프론트매터를 읽는 쪽이 자연스럽다
+# (네트워크가 필요 없고 스냅샷과 함께 갱신된다). cbk_posts_list() 를 직접 부르는
+# 방법도 되지만 위키 배치에 네트워크 의존이 새로 생긴다.
+#   grep -rn "posts/assets/posts.js" scripts/ wiki/ tests/ .pipeline/   # expect 0 hits before deleting
 git rm posts/assets/posts.js
 ls posts/assets | wc -l          # expect the same count as before this task — assets are untouched
 git status --porcelain | grep -c '^D  posts/assets'   # expect 0

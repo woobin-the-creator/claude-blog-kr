@@ -69,6 +69,77 @@ The same file also rewrites the script tags by exact string match at lines 22-25
 html = html.replace('<script src="posts/assets/catalog.js"></script>', '<script>' + postsStub + '</script>');
 ```
 
+Finally, add the **link regression block** to `tests/nav.test.js`, just above its `console.log`. `nav.js` was written when it only ever ran inside `posts/`, so every link in it is `posts/`-relative; this block pins all six link kinds at all three serving locations (inside `posts/`, root `post.html`, and the `/claude-blog-kr/` 404 fallback). Without the `at404` half, the `CBK_SITE_BASE` bug in Step 3 is invisible — the sidebar links *look* right and silently resolve to paths that only work because the 404 handler reads the query string first.
+
+```js
+  // --- 루트에서 서빙될 때(post.html / 404.html) 링크가 사이트 밖을 가리키지 않는다 ---
+  // nav.js 는 원래 posts/ 안에서만 돌던 파일이라 "../index.html", "../library.html",
+  // "assets/cbk.css" 가 하드코딩돼 있었다. post.html 은 저장소 루트에서 서빙되므로
+  // 그대로 두면 전부 깨진다. CBK_AT_ROOT / CBK_ASSET_BASE 로 접두사를 바꾼다.
+  async function bootNav(atRoot, url, assetBase, siteBase) {
+    const d = new JSDOM(html, { url, runScripts: "dangerously" });
+    const win = d.window;
+    win.URL.createObjectURL = () => "x"; win.URL.revokeObjectURL = () => {};
+    if (atRoot) {
+      win.CBK_AT_ROOT = true;
+      win.CBK_ASSET_BASE = assetBase;
+      if (siteBase) win.CBK_SITE_BASE = siteBase;   // 404.html 만 세팅한다
+    }
+    win.CBK_POSTS = w.CBK_POSTS; win.CBK_postBySlug = w.CBK_postBySlug;
+    win.CBK_onCatalog = (fn) => fn(win.CBK_POSTS);
+    win.CBK_currentSlug = () => "ai-era-durable-skills";
+    for (const src of [storeSrc, navSrc]) {
+      const s = win.document.createElement("script"); s.textContent = src; win.document.body.appendChild(s);
+    }
+    return win.document;
+  }
+  const href = (d, sel) => (d.querySelector(sel) || {}).getAttribute
+    ? d.querySelector(sel).getAttribute("href") : null;
+
+  const inPosts = await bootNav(false, "https://x.test/posts/ai-era-durable-skills.html");
+  eq("posts/: brand link unchanged", href(inPosts, ".nav-brand"), "../index.html");
+  eq("posts/: library link unchanged", href(inPosts, ".nav-library"), "../library.html");
+  eq("posts/: sidebar link is the bare filename", href(inPosts, "#site-nav ul a"), "ai-era-durable-skills.html");
+  eq("posts/: stylesheet path unchanged",
+     href(inPosts, 'link[rel="stylesheet"]'), "assets/cbk.css");
+
+  const atRoot = await bootNav(true, "https://x.test/post.html?slug=ai-era-durable-skills", "posts/");
+  eq("root: brand link stays inside the site", href(atRoot, ".nav-brand"), "index.html");
+  eq("root: library link stays inside the site", href(atRoot, ".nav-library"), "library.html");
+  eq("root: sidebar links go through post.html",
+     href(atRoot, "#site-nav ul a"), "post.html?slug=ai-era-durable-skills");
+  eq("root: stylesheet resolves under posts/",
+     href(atRoot, 'link[rel="stylesheet"]'), "posts/assets/cbk.css");
+  eq("root: breadcrumb link stays inside the site",
+     href(atRoot, ".post-crumb a"), "index.html#m=" + encodeURIComponent("AI 인사이트"));
+
+  // 404.html 은 GitHub Pages 가 /claude-blog-kr/posts/<slug>.html 주소를 그대로 둔 채
+  // 돌려주는 파일이다. 여기서 BASE 를 "" 로 두면 index.html 이
+  // /claude-blog-kr/posts/index.html 로 풀려 또 404 로 떨어지고, 그 404 는 slug
+  // "index" 로 렌더를 시도해 "글을 찾을 수 없습니다: index" 를 띄운다 —
+  // 옛 북마크로 들어온 방문자가 사이트 밖으로 나갈 길이 없어진다.
+  // 그래서 CBK_AT_ROOT(어디서 서빙되나)와 CBK_SITE_BASE(링크 기준이 어디냐)를 분리한다.
+  const at404 = await bootNav(true, "https://x.test/claude-blog-kr/posts/opus46.html",
+                              "/claude-blog-kr/posts/", "/claude-blog-kr/");
+  eq("404 fallback: stylesheet uses the absolute Pages base",
+     href(at404, 'link[rel="stylesheet"]'), "/claude-blog-kr/posts/assets/cbk.css");
+  eq("404 fallback: brand link goes to the site root, not /posts/index.html",
+     href(at404, ".nav-brand"), "/claude-blog-kr/index.html");
+  eq("404 fallback: home link goes to the site root",
+     href(at404, ".nav-home"), "/claude-blog-kr/index.html");
+  eq("404 fallback: library link goes to the site root",
+     href(at404, ".nav-library"), "/claude-blog-kr/library.html");
+  eq("404 fallback: sidebar links resolve to the real post.html, not a path under /posts/",
+     href(at404, "#site-nav ul a"), "/claude-blog-kr/post.html?slug=ai-era-durable-skills");
+  eq("404 fallback: breadcrumb link goes to the site root",
+     href(at404, ".post-crumb a"), "/claude-blog-kr/index.html#m=" + encodeURIComponent("AI 인사이트"));
+  eq("404 fallback: bar library link goes to the site root",
+     href(at404, ".cbk-library"), "/claude-blog-kr/library.html");
+  // post.html 은 /claude-blog-kr/post.html 로 서빙되므로 상대경로가 이미 맞다.
+  // 여기에 SITE_BASE 를 박으면 로컬 파일로 열 때 깨지므로 세팅하지 않는 것이 맞다.
+  eq("root without a site base: links stay relative", href(atRoot, ".nav-brand"), "index.html");
+```
+
 - [ ] **Step 2: Run the tests to verify they fail**
 
 ```bash
@@ -91,8 +162,19 @@ Change the header comment and the two catalog reads at lines 1-9:
   /* 이 파일은 posts/ 안(레거시 79개)과 저장소 루트(Task 5 의 post.html / 404.html)
    * 양쪽에서 로드된다. 루트에서 서빙될 때 "../index.html" 은 사이트 밖을 가리키므로
    * 링크 접두사를 한 곳에서 계산한다. post.html 은 이 파일 로드 전에
-   * window.CBK_AT_ROOT = true 를 세팅한다. */
-  var BASE = window.CBK_AT_ROOT ? "" : "../";
+   * window.CBK_AT_ROOT = true 를 세팅한다.
+   *
+   * CBK_AT_ROOT 만으로는 부족하다: 404.html 은 GitHub Pages 가 없는 경로에
+   * 돌려주는 파일이라 주소창이 /claude-blog-kr/posts/<slug>.html 인 채로 실행된다.
+   * 그 상태에서 BASE 를 "" 로 두면 index.html 이 /claude-blog-kr/posts/index.html
+   * 로 풀려 또 404 로 떨어지고(그리고 slug "index" 로 렌더를 시도한다) 방문자가
+   * 사이트 밖으로 나갈 길이 없다. 그래서 "루트에서 서빙된다"(CBK_AT_ROOT)와
+   * "링크를 어디 기준으로 걸어야 하나"(CBK_SITE_BASE)를 분리한다.
+   *   post.html  → CBK_SITE_BASE 미설정. 주소가 /claude-blog-kr/post.html 이라
+   *                상대경로가 이미 맞고, 로컬 파일로 열 때도 깨지지 않는다.
+   *   404.html   → CBK_SITE_BASE = "/claude-blog-kr/". 주소가 임의 깊이라 절대경로만 안전하다. */
+  var SITE = window.CBK_SITE_BASE || "";
+  var BASE = window.CBK_AT_ROOT ? SITE : "../";
 
   var CBK = window.CBK || null;
   var slug = window.CBK_currentSlug ? window.CBK_currentSlug()
@@ -120,10 +202,13 @@ Then replace every hardcoded `"../index.html"` in this file with `BASE + "index.
 The sidebar's per-post links have the same problem. `buildItems()` at `nav.js:17` emits `href="' + p.file + '"`, which is relative to `posts/`; from the repo root that resolves to `/<slug>.html`, which is not a real path and does not match `404.html`'s `/posts/<slug>.html` recovery pattern either. Add one more helper next to `BASE` and use it in `buildItems`:
 
 ```js
-  /* posts/ 안에서는 예전처럼 파일 상대 링크, 루트에서는 post.html?slug= 로 건다. */
+  /* posts/ 안에서는 예전처럼 파일 상대 링크, 루트에서는 post.html?slug= 로 건다.
+     404 폴백에서는 SITE 를 붙여야 한다 — 안 붙이면 /claude-blog-kr/posts/post.html?slug=x
+     라는 없는 경로가 되고, 404 가 쿼리스트링을 먼저 읽는 덕에 "동작하는 것처럼" 보일 뿐
+     HTTP 상태는 계속 404 다. */
   function hrefFor(file) {
     if (!window.CBK_AT_ROOT) return file;
-    return "post.html?slug=" + encodeURIComponent(String(file).replace(/\.html$/, ""));
+    return SITE + "post.html?slug=" + encodeURIComponent(String(file).replace(/\.html$/, ""));
   }
 ```
 
@@ -131,7 +216,7 @@ The sidebar's per-post links have the same problem. `buildItems()` at `nav.js:17
         '<li><a class="nav-link' + active + '" href="' + hrefFor(p.file) + '">' +
 ```
 
-`window.CBK_AT_ROOT` is set by Task 5's `post.html` and `404.html` before `nav.js` loads; on the 79 legacy pages it is undefined, so their behaviour is byte-identical to today. Task 5's test asserts both link forms.
+`window.CBK_AT_ROOT` is set by Task 5's `post.html` and `404.html` before `nav.js` loads; on the 79 legacy pages it is undefined, so their behaviour is byte-identical to today. `window.CBK_SITE_BASE` is set by `404.html` **only** — `post.html` deliberately leaves it undefined, because it really is served at `/claude-blog-kr/post.html` and hardcoding a base there would break opening the file locally. Task 5's test asserts both link forms, and `tests/nav.test.js` asserts all six link kinds (brand, home, library ×2, sidebar, breadcrumb) at all three serving locations.
 
 `current` was previously the raw filename from the URL and is used at line 14 (`p.file === current ? " active" : ""`) and line 62 (`CBK_postBySlug(current)`). Deriving it from the slug keeps both working when the page is `post.html?slug=…` (Task 5).
 
