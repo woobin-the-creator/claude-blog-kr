@@ -7,7 +7,7 @@
 
 **Interfaces:**
 - Consumes: `cbk_post_upsert(p_key, p_slug, p_title, p_nav, p_main, p_cat, p_date, p_body_html, p_body_md, p_style_css, p_author)` from Task 1.
-- Produces: `scripts/migrate-posts.mjs` exports `extractPost(html, entry, pagesBase)` → `{ slug, title, nav, main, cat, date, body_html, style_css, body_md, author }`. Task 8 (`publish.mjs`) and Task 12 (`snapshot.mjs`) both import `extractPost`'s sibling helper `absolutizeAssets(html, slug, pagesBase)`, so export both.
+- Produces: `scripts/migrate-posts.mjs` exports `extractPost(html, entry, pagesBase)` → `{ slug, title, nav, main, cat, date, body_html, style_css, body_md, author }`. Task 8 (`publish.mjs`) and Task 12 (`snapshot.mjs`) both import `extractPost`'s sibling helper `absolutizeAssets(html, slug, pagesBase)`, so export both. `main()` is exported as well, so the test can drive the `--dry` path in-process and assert it never calls `fetch` — that no-network guarantee is what the human STOP AND ASK below rests on.
 
 **Background the implementer needs:**
 
@@ -87,6 +87,31 @@ function ok(n, c) { if (c) pass++; else { fail++; console.log("  ✗ FAIL:", n);
   ok("body keeps its <footer>", /<footer>/.test(row.body_html));
   ok("body_md is null for migrated translations", row.body_md === null);
 
+  // --- --dry 는 절대 네트워크를 건드리지 않는다 ---
+  // 사람이 승인하는 STOP AND ASK 가 이 보장 위에 서 있다. Task 8 이 이 파일을
+  // import 하므로, 여기서 회귀하면 사람 승인 없이 실서비스에 쓰게 된다.
+  let fetchCalls = 0;
+  const realFetch = globalThis.fetch;
+  const realArgv = process.argv;
+  const realWrite = process.stdout.write.bind(process.stdout);
+  const realErr = console.error;
+  let ndjsonLines = 0;
+  globalThis.fetch = function () { fetchCalls++; return Promise.reject(new Error("--dry must not fetch")); };
+  process.argv = [realArgv[0], ROOT + "/scripts/migrate-posts.mjs", "--dry"];
+  process.stdout.write = function (chunk) { ndjsonLines += String(chunk).split("\n").length - 1; return true; };
+  console.error = function () {};
+  let dryErr = null;
+  try { await mod.main(); } catch (e) { dryErr = e; }
+  finally {
+    globalThis.fetch = realFetch;
+    process.argv = realArgv;
+    process.stdout.write = realWrite;
+    console.error = realErr;
+  }
+  ok("--dry runs without throwing" + (dryErr ? " — " + dryErr.message : ""), dryErr === null);
+  ok("--dry never calls fetch", fetchCalls === 0);
+  ok("--dry emits one NDJSON line per post", ndjsonLines === 79);
+
   console.log("migrate-posts: " + pass + " passed, " + fail + " failed");
   process.exit(fail ? 1 : 0);
 })();
@@ -131,7 +156,9 @@ export function loadCatalog(file) {
   return ctx.window.CBK_POSTS || [];
 }
 
-/* src="assets/…" / href="assets/…" → Pages 절대 URL. 이미 절대면 건드리지 않는다. */
+/* src="assets/…" / href="assets/…" → Pages 절대 URL. 이미 절대면 건드리지 않는다.
+ * slug 는 지금 쓰이지 않는다 — Task 8(publish.mjs) / Task 12(snapshot.mjs) 가
+ * 이 시그니처로 호출하므로 호환을 위해 인자만 남겨둔다. */
 export function absolutizeAssets(html, slug, pagesBase) {
   return html.replace(/(src|href|poster)="assets\//g, '$1="' + pagesBase + '/posts/assets/');
 }
@@ -140,11 +167,11 @@ export function absolutizeAssets(html, slug, pagesBase) {
 export function extractPost(html, entry, pagesBase) {
   const slug = entry.file.replace(/\.html$/, "");
 
-  const styleM = html.match(/<style>([\s\S]*?)<\/style>/i);
+  const styleM = html.match(/<style\b[^>]*>([\s\S]*?)<\/style>/i);
   const style_css = styleM ? styleM[1].trim() : "";
 
   const bodyStart = html.indexOf("<body>");
-  if (bodyStart === -1) throw new Error("no <body> in " + entry.file);
+  if (bodyStart === -1) throw new Error(entry.file + " 에 <body> 가 없습니다");
   let body = html.slice(bodyStart + "<body>".length);
 
   const scriptAt = body.search(/<script\b/i);
@@ -166,12 +193,17 @@ export function extractPost(html, entry, pagesBase) {
 }
 
 /* ---- CLI ---- */
+/* 설정은 모듈 스코프에서 한 번만 읽는다. rpc() 가 158번 불리는데 그때마다
+ * 파일을 다시 읽고 정규식을 돌릴 이유가 없다. */
+let CFG = null;
 function cfg() {
+  if (CFG) return CFG;
   const src = fs.readFileSync(ROOT + "/posts/assets/cbk-config.js", "utf8");
   const url = (src.match(/supabaseUrl:\s*"([^"]*)"/) || [])[1];
   const key = (src.match(/supabaseAnonKey:\s*"([^"]*)"/) || [])[1];
-  if (!url || !key) throw new Error("could not parse posts/assets/cbk-config.js");
-  return { url: url.replace(/\/+$/, ""), key };
+  if (!url || !key) throw new Error("posts/assets/cbk-config.js 에서 Supabase 설정을 읽지 못했습니다");
+  CFG = { url: url.replace(/\/+$/, ""), key };
+  return CFG;
 }
 
 async function rpc(fn, body) {
@@ -185,7 +217,7 @@ async function rpc(fn, body) {
   return r.status === 204 ? null : r.json();
 }
 
-async function main() {
+export async function main() {
   const dry = process.argv.includes("--dry");
   const catalog = loadCatalog(ROOT + "/posts/assets/posts.js");
   const rows = catalog.map(e =>
@@ -198,13 +230,21 @@ async function main() {
         body_bytes: r.body_html.length, style_bytes: r.style_css.length
       }) + "\n");
     }
-    console.error(rows.length + " posts ready (dry run, nothing uploaded)");
+    console.error(rows.length + "건 준비 완료 (드라이런 — 아무것도 업로드하지 않았습니다)");
     return;
   }
 
   const key = process.env.CBK_SYNC_KEY;
   if (!key) { console.error("CBK_SYNC_KEY 가 없습니다"); process.exit(1); }
-  await rpc("cbk_owner_claim", { p_key: key });
+  // cbk_owner_claim 은 false 를 HTTP 200 으로 돌려준다. 버리면 첫 포스트에서
+  // "RPC cbk_post_upsert 400: not the owner" 로 죽고, 진짜 원인이 안 보인다.
+  const owned = await rpc("cbk_owner_claim", { p_key: key });
+  if (owned !== true) {
+    console.error("이 sync_key 는 이 사이트의 소유자가 아닙니다 — 다른 키가 이미 cbk_owner 를 선점했습니다.");
+    console.error("Supabase SQL 에디터에서 `delete from public.cbk_owner where id = 1;` 로 지운 뒤,");
+    console.error("그 사이 들어온 글이 없는지 cbk_posts 를 확인하고 다시 실행하세요.");
+    process.exit(1);
+  }
 
   let n = 0;
   for (const r of rows) {
@@ -221,7 +261,7 @@ async function main() {
   for (const r of rows) {
     await rpc("cbk_review_finish", { p_key: key, p_slug: r.slug, p_status: "done", p_error: null });
   }
-  console.error("done: " + n + " posts");
+  console.error("완료: " + n + "건 업로드");
 }
 
 if (process.argv[1] && process.argv[1].endsWith("migrate-posts.mjs")) {

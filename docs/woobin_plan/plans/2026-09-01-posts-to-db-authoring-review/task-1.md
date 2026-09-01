@@ -9,7 +9,7 @@
 - Consumes: nothing. This is the first task.
 - Produces: the RPC surface every later task calls.
   - `cbk_posts_list()` → `setof cbk_post_meta` — **public**, no key. Columns: `slug, title, nav, main, cat, date, author, rev, updated_at` — this is the column order the `cbk_posts_list` SQL in Step 3 returns; keep the two in sync. No body (keeps the catalog payload small).
-  - `cbk_post_get(p_slug text)` → `setof cbk_posts` — **public**, no key. Full row including `body_html`.
+  - `cbk_post_get(p_slug text)` → `returns table (slug, title, nav, main, cat, date, author, rev, updated_at, body_html, body_md, style_css, review_status)` — **public**, no key. Body included; `review_error` is **deliberately excluded** — Task 9 fills that column with a spawned agent's failure output, which can carry local filesystem paths, and this function is callable by any anonymous visitor. It is an explicit column list, not `setof cbk_posts`, so that adding a column to the table never silently widens the public payload.
   - `cbk_post_upsert(p_key text, p_slug text, p_title text, p_nav text, p_main text, p_cat text, p_date date, p_body_html text, p_body_md text, p_style_css text, p_author text)` → `cbk_posts` — owner-gated. Bumps `rev` and sets `review_status='pending'` **only when `body_html` actually changed**.
   - `cbk_post_delete(p_key text, p_slug text)` → `void` — owner-gated.
   - `cbk_review_claim(p_key text, p_slug text)` → `setof cbk_posts` — owner-gated. `pending` → `running`. Returns nothing if the post is not claimable.
@@ -84,6 +84,7 @@ function ok(n, c) { if (c) pass++; else { fail++; console.log("  ✗ FAIL:", n);
   const one = await db.query("select * from cbk_post_get('my-first')");
   ok("cbk_post_get returns body_html", one.rows[0].body_html === "<p>본문</p>");
   ok("cbk_post_get returns style_css", one.rows[0].style_css === "body{color:#111}");
+  ok("cbk_post_get hides review_error from public readers", !("review_error" in one.rows[0]));
 
   // --- editing the body bumps rev and re-arms review ---
   await db.query("select cbk_review_finish('OWNERKEY123456789','my-first','done',null)");
@@ -113,7 +114,7 @@ function ok(n, c) { if (c) pass++; else { fail++; console.log("  ✗ FAIL:", n);
 
   let badKind = false;
   try { await db.query("select * from cbk_review_add('OWNERKEY123456789','my-first',2,'nonsense','high','q','c','s')"); }
-  catch (e) { badKind = true; }
+  catch (e) { badKind = /cbk_reviews_kind_chk/.test(e.message); }
   ok("cbk_review_add rejects an unknown kind", badKind);
 
   const rl = await db.query("select * from cbk_reviews_list('OWNERKEY123456789','my-first')");
@@ -141,6 +142,19 @@ function ok(n, c) { if (c) pass++; else { fail++; console.log("  ✗ FAIL:", n);
   ok("RLS enabled on all three tables", rls.rows.length === 3 && rls.rows.every(r => r.relrowsecurity === true));
   const pol = await db.query("select count(*)::int as n from pg_policies where tablename in ('cbk_posts','cbk_reviews','cbk_owner')");
   ok("no policies exist (direct access fully blocked)", pol.rows[0].n === 0);
+
+  // --- 권한 표면: revoke/grant 블록을 지우거나 anon 에 테이블 권한을 주면 여기서 깨진다 ---
+  async function fpriv(role, sig) {
+    return (await db.query("select has_function_privilege($1,$2,'execute') as v", [role, sig])).rows[0].v;
+  }
+  async function tpriv(role, tbl, priv) {
+    return (await db.query("select has_table_privilege($1,$2,$3) as v", [role, tbl, priv])).rows[0].v;
+  }
+  ok("anon cannot execute cbk_hash_key", (await fpriv("anon", "public.cbk_hash_key(text)")) === false);
+  ok("anon cannot execute cbk_assert_owner", (await fpriv("anon", "public.cbk_assert_owner(text)")) === false);
+  ok("anon has no direct select on cbk_posts", (await tpriv("anon", "public.cbk_posts", "select")) === false);
+  ok("anon has no direct insert on cbk_reviews", (await tpriv("anon", "public.cbk_reviews", "insert")) === false);
+  ok("anon can execute cbk_posts_list", (await fpriv("anon", "public.cbk_posts_list()")) === true);
 
   console.log("posts-schema: " + pass + " passed, " + fail + " failed");
   process.exit(fail ? 1 : 0);
@@ -282,10 +296,20 @@ language sql security definer set search_path = public as $$
    order by p.date desc, p.slug;
 $$;
 
-create or replace function public.cbk_post_get(p_slug text)
-returns setof public.cbk_posts
+-- review_error 는 공개 읽기에서 뺀다: Task 9 의 첨삭 에이전트 실패 출력이 들어가는
+-- 칸이라 로컬 경로가 섞일 수 있는데, 이 함수는 키 없이 누구나 부른다.
+drop function if exists public.cbk_post_get(text);
+create function public.cbk_post_get(p_slug text)
+returns table (
+  slug text, title text, nav text, main text, cat text,
+  date date, author text, rev integer, updated_at timestamptz,
+  body_html text, body_md text, style_css text, review_status text
+)
 language sql security definer set search_path = public as $$
-  select * from public.cbk_posts where slug = p_slug;
+  select p.slug, p.title, p.nav, p.main, p.cat, p.date, p.author, p.rev, p.updated_at,
+         p.body_html, p.body_md, p.style_css, p.review_status
+    from public.cbk_posts p
+   where p.slug = p_slug;
 $$;
 
 -- 7) 발행/수정. 본문이 실제로 바뀐 경우에만 rev 를 올리고 첨삭을 재무장한다.
@@ -355,7 +379,8 @@ begin
   select * into r from public.cbk_posts
     where slug = p_slug
       and (review_status = 'pending'
-           or (review_status = 'running' and review_at < now() - interval '1 hour'))
+           or (review_status = 'running'
+               and (review_at is null or review_at < now() - interval '1 hour')))
     for update skip locked;
   if not found then return; end if;
 
@@ -394,7 +419,8 @@ begin
   return query
     select * from public.cbk_posts
      where review_status = 'pending'
-        or (review_status = 'running' and review_at < now() - interval '1 hour')
+        or (review_status = 'running'
+            and (review_at is null or review_at < now() - interval '1 hour'))
      order by updated_at;
 end;
 $$;

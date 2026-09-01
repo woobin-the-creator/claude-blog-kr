@@ -120,10 +120,20 @@ language sql security definer set search_path = public as $$
    order by p.date desc, p.slug;
 $$;
 
-create or replace function public.cbk_post_get(p_slug text)
-returns setof public.cbk_posts
+-- review_error 는 공개 읽기에서 뺀다: Task 9 의 첨삭 에이전트 실패 출력이 들어가는
+-- 칸이라 로컬 경로가 섞일 수 있는데, 이 함수는 키 없이 누구나 부른다.
+drop function if exists public.cbk_post_get(text);
+create function public.cbk_post_get(p_slug text)
+returns table (
+  slug text, title text, nav text, main text, cat text,
+  date date, author text, rev integer, updated_at timestamptz,
+  body_html text, body_md text, style_css text, review_status text
+)
 language sql security definer set search_path = public as $$
-  select * from public.cbk_posts where slug = p_slug;
+  select p.slug, p.title, p.nav, p.main, p.cat, p.date, p.author, p.rev, p.updated_at,
+         p.body_html, p.body_md, p.style_css, p.review_status
+    from public.cbk_posts p
+   where p.slug = p_slug;
 $$;
 
 -- 7) 발행/수정. 본문이 실제로 바뀐 경우에만 rev 를 올리고 첨삭을 재무장한다.
@@ -193,7 +203,8 @@ begin
   select * into r from public.cbk_posts
     where slug = p_slug
       and (review_status = 'pending'
-           or (review_status = 'running' and review_at < now() - interval '1 hour'))
+           or (review_status = 'running'
+               and (review_at is null or review_at < now() - interval '1 hour')))
     for update skip locked;
   if not found then return; end if;
 
@@ -232,7 +243,8 @@ begin
   return query
     select * from public.cbk_posts
      where review_status = 'pending'
-        or (review_status = 'running' and review_at < now() - interval '1 hour')
+        or (review_status = 'running'
+            and (review_at is null or review_at < now() - interval '1 hour'))
      order by updated_at;
 end;
 $$;

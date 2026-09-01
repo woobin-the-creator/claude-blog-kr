@@ -49,6 +49,7 @@ function ok(n, c) { if (c) pass++; else { fail++; console.log("  ✗ FAIL:", n);
   const one = await db.query("select * from cbk_post_get('my-first')");
   ok("cbk_post_get returns body_html", one.rows[0].body_html === "<p>본문</p>");
   ok("cbk_post_get returns style_css", one.rows[0].style_css === "body{color:#111}");
+  ok("cbk_post_get hides review_error from public readers", !("review_error" in one.rows[0]));
 
   // --- editing the body bumps rev and re-arms review ---
   await db.query("select cbk_review_finish('OWNERKEY123456789','my-first','done',null)");
@@ -78,7 +79,7 @@ function ok(n, c) { if (c) pass++; else { fail++; console.log("  ✗ FAIL:", n);
 
   let badKind = false;
   try { await db.query("select * from cbk_review_add('OWNERKEY123456789','my-first',2,'nonsense','high','q','c','s')"); }
-  catch (e) { badKind = true; }
+  catch (e) { badKind = /cbk_reviews_kind_chk/.test(e.message); }
   ok("cbk_review_add rejects an unknown kind", badKind);
 
   const rl = await db.query("select * from cbk_reviews_list('OWNERKEY123456789','my-first')");
@@ -106,6 +107,19 @@ function ok(n, c) { if (c) pass++; else { fail++; console.log("  ✗ FAIL:", n);
   ok("RLS enabled on all three tables", rls.rows.length === 3 && rls.rows.every(r => r.relrowsecurity === true));
   const pol = await db.query("select count(*)::int as n from pg_policies where tablename in ('cbk_posts','cbk_reviews','cbk_owner')");
   ok("no policies exist (direct access fully blocked)", pol.rows[0].n === 0);
+
+  // --- 권한 표면: revoke/grant 블록을 지우거나 anon 에 테이블 권한을 주면 여기서 깨진다 ---
+  async function fpriv(role, sig) {
+    return (await db.query("select has_function_privilege($1,$2,'execute') as v", [role, sig])).rows[0].v;
+  }
+  async function tpriv(role, tbl, priv) {
+    return (await db.query("select has_table_privilege($1,$2,$3) as v", [role, tbl, priv])).rows[0].v;
+  }
+  ok("anon cannot execute cbk_hash_key", (await fpriv("anon", "public.cbk_hash_key(text)")) === false);
+  ok("anon cannot execute cbk_assert_owner", (await fpriv("anon", "public.cbk_assert_owner(text)")) === false);
+  ok("anon has no direct select on cbk_posts", (await tpriv("anon", "public.cbk_posts", "select")) === false);
+  ok("anon has no direct insert on cbk_reviews", (await tpriv("anon", "public.cbk_reviews", "insert")) === false);
+  ok("anon can execute cbk_posts_list", (await fpriv("anon", "public.cbk_posts_list()")) === true);
 
   console.log("posts-schema: " + pass + " passed, " + fail + " failed");
   process.exit(fail ? 1 : 0);

@@ -47,6 +47,31 @@ function ok(n, c) { if (c) pass++; else { fail++; console.log("  ✗ FAIL:", n);
   ok("body keeps its <footer>", /<footer>/.test(row.body_html));
   ok("body_md is null for migrated translations", row.body_md === null);
 
+  // --- --dry 는 절대 네트워크를 건드리지 않는다 ---
+  // 사람이 승인하는 STOP AND ASK 가 이 보장 위에 서 있다. Task 8 이 이 파일을
+  // import 하므로, 여기서 회귀하면 사람 승인 없이 실서비스에 쓰게 된다.
+  let fetchCalls = 0;
+  const realFetch = globalThis.fetch;
+  const realArgv = process.argv;
+  const realWrite = process.stdout.write.bind(process.stdout);
+  const realErr = console.error;
+  let ndjsonLines = 0;
+  globalThis.fetch = function () { fetchCalls++; return Promise.reject(new Error("--dry must not fetch")); };
+  process.argv = [realArgv[0], ROOT + "/scripts/migrate-posts.mjs", "--dry"];
+  process.stdout.write = function (chunk) { ndjsonLines += String(chunk).split("\n").length - 1; return true; };
+  console.error = function () {};
+  let dryErr = null;
+  try { await mod.main(); } catch (e) { dryErr = e; }
+  finally {
+    globalThis.fetch = realFetch;
+    process.argv = realArgv;
+    process.stdout.write = realWrite;
+    console.error = realErr;
+  }
+  ok("--dry runs without throwing" + (dryErr ? " — " + dryErr.message : ""), dryErr === null);
+  ok("--dry never calls fetch", fetchCalls === 0);
+  ok("--dry emits one NDJSON line per post", ndjsonLines === 79);
+
   console.log("migrate-posts: " + pass + " passed, " + fail + " failed");
   process.exit(fail ? 1 : 0);
 })();
