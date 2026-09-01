@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>글 · Claude 블로그 한글 번역</title>
+<style id="post-style"></style>
+<style>
+  /* 글이 로드되기 전/실패했을 때만 보이는 최소 골격. 본문 스타일은 위 #post-style 이 담당한다. */
+  body { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+         color:#1a1a1a; line-height:1.75; max-width:760px; margin:0 auto; padding:48px 24px 96px; background:#fff; }
+  #post-error { color:#a33; padding:24px 0; }
+</style>
+</head>
+<body>
+<p id="post-error" hidden></p>
+<div id="post-body"></div>
+<script>window.CBK_AT_ROOT = true; window.CBK_ASSET_BASE = "posts/";</script>
+<script src="posts/assets/cbk-config.js"></script>
+<script src="posts/assets/render-post.js"></script>
+</body>
+</html>
