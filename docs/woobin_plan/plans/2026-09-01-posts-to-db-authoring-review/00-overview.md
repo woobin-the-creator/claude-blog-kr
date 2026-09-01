@@ -20,7 +20,8 @@
 - **Free-tier budget:** DB goes read-only above 500 MB. All 79 existing post bodies total 1.5 MB (avg 19 KB, max 60 KB) — text is safe. Existing media (79 MB, 300 files under `posts/assets/<slug>/`) stays on GitHub Pages and is **not** uploaded to Supabase Storage.
 - **Korean is the user-facing language.** All UI copy, error messages, and commit messages that a human reads stay in Korean, matching `youtube.html` and `library.html`.
 - **Tests are registered in `tests/package.json`'s `test` script** and must run under plain `node` with no test runner.
-- Run tests from the `tests/` directory: `cd tests && npm test`.
+- Run tests from the `tests/` directory: `cd tests && npm test`. `tests/node_modules` is not checked in — run `npm install` there once before the first test run.
+- **`npm test` dirties the working tree.** `tests/wiki.test.mjs` rewrites the tracked files `wiki/index.md`, `wiki/log.md`, `wiki/profile.json`, `wiki/profile.md` with a fresh timestamp every run. Always `git checkout -- wiki/` before staging, or that churn lands in your commit. Verified in Layer A.
 
 ## Tasks
 
