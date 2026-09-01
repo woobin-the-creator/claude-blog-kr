@@ -527,7 +527,7 @@ git commit -m "feat(db): cbk_posts + cbk_reviews 스키마와 소유자 게이�
 
 > ### STOP AND ASK — 사람이 해야 하는 배포 단계
 >
-> **구현 에이전트는 이 태스크를 여기서 멈추고 오케스트레이터에게 보고한다. Task 2 로 넘어가지 않는다.**
+> **구현 에이전트는 이 SQL 을 실행하지 않는다.** 커밋까지 마치고 Task 2 의 *코드 작업*(스크립트 + pglite 테스트)은 계속 진행해도 된다 — 그건 실서비스 DB 를 건드리지 않는다. 다만 **레이어 A 를 마칠 때 아래 내용을 오케스트레이터에게 반드시 보고한다.**
 >
 > `supabase/schema-posts.sql` 은 저장소에 커밋될 뿐, 어떤 스크립트도 이 SQL 을 실서비스 Supabase 에 실행하지 않는다. 사람이 직접 해야 한다:
 >
@@ -536,7 +536,7 @@ git commit -m "feat(db): cbk_posts + cbk_reviews 스키마와 소유자 게이�
 >
 > 2번이 늦어지면 그 사이 아무나 anon 키로 소유자를 선점할 수 있고(anon 키는 `posts/assets/cbk-config.js` 에 공개되어 있다), 복구하려면 `delete from public.cbk_owner where id = 1;` 를 수동으로 실행해야 한다. 그래서 이건 "note" 가 아니라 **차단 지점**이다.
 >
-> 사람이 "스키마 실행 완료 + claim true 확인" 을 보고하기 전에는 Task 2 의 실제 업로드를 시작하지 않는다.
+> 사람이 "스키마 실행 완료 + claim true 확인" 을 보고하기 전에는 **실제 업로드(Task 2 말미의 STOP AND ASK)** 를 시작하지 않는다. 그 업로드는 어차피 Task 4 와 Task 5 사이에 사람이 돌린다.
 >
 > (Task 6 의 첫 발행도 `cbk_owner_claim` 을 부르지만, 그건 위 선점 창을 열어둔 채 기다리는 것이므로 이 단계를 대체하지 못한다.)
 
