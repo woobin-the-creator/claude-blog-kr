@@ -30,7 +30,7 @@
 | 1 | Posts + reviews schema and RPCs | `supabase/schema-posts.sql`, `tests/posts-schema.test.js` | `cd tests && node posts-schema.test.js` |
 | 2 | Migrate 79 existing posts into the DB | `scripts/migrate-posts.mjs`, `tests/migrate-posts.test.js` | `cd tests && node migrate-posts.test.js` |
 | 3 | DB-backed catalog with localStorage cache | `posts/assets/catalog.js`, `tests/catalog.test.js` | `cd tests && node catalog.test.js` |
-| 4 | Rewire catalog consumers, delete `posts.js` | `index.html`, `library.html`, `posts/assets/nav.js`, `tests/nav.test.js`, `tests/library.test.js` | `cd tests && node nav.test.js && node library.test.js` |
+| 4 | Rewire catalog consumers, stop loading `posts.js` | `index.html`, `library.html`, `posts/assets/nav.js`, `tests/nav.test.js`, `tests/library.test.js` | `cd tests && node nav.test.js && node library.test.js` |
 | 5 | Post renderer + old-URL fallback | `post.html`, `404.html`, `posts/assets/render-post.js`, `tests/post-page.test.js` | `cd tests && node post-page.test.js` |
 | 6 | Markdown editor that publishes instantly | `write.html`, `posts/assets/write.js`, `posts/assets/markdown.js`, `tests/write-page.test.js` | `cd tests && node write-page.test.js` |
 | 7 | Image upload to Supabase Storage | `supabase/storage-post-media.sql`, `write.html`, `tests/storage-policy.test.js` | `cd tests && node storage-policy.test.js` |
@@ -43,7 +43,7 @@
 ## Ordering
 
 - **Layer A (DB foundation): 1 → 2.** Task 2 executes the schema from Task 1 against pglite, so it needs Task 1's exact RPC signatures.
-- **Layer B (read path): 3 → 4 → 5.** Task 3 defines `window.CBK_onCatalog`; Tasks 4 and 5 both consume it. Task 4 and Task 5 both touch nothing of each other's files, but Task 4 deletes `posts/assets/posts.js`, which Task 5's fallback must not reference — keep them ordered.
+- **Layer B (read path): 3 → 4 → 5.** Task 3 defines `window.CBK_onCatalog`; Tasks 4 and 5 both consume it. Task 4 and Task 5 both touch nothing of each other's files, but Task 4 stops every page from loading `posts/assets/posts.js`, which Task 5's fallback must not reference — keep them ordered. The file itself survives until Task 12: `scripts/migrate-posts.mjs` reads it as the catalog source for the one-time migration, which happens between Tasks 4 and 5.
 - **Layer C (write path): 6 → 7.** Task 7 adds an upload button inside the editor Task 6 creates; both modify `write.html`.
 - **Layer D (pipeline): 8.** Depends on Task 1 only. Could run parallel to Layers B/C, but it shares no files with them and its own completion check is self-contained.
 - **Layer E (review): 9 → 10 → 11.** Task 9 spawns the command Task 10 defines; Task 11 renders what Task 10 writes. Task 11 modifies `write.html` (Layer C) and `post.html` (Layer B), so it must come after both.

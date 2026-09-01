@@ -5,7 +5,7 @@
 - Modify: `library.html:164-171` (script tags + `var POSTS`)
 - Modify: `posts/assets/nav.js:1-9` (catalog source + current slug), `posts/assets/nav.js:36-59` (build + refresh)
 - Modify: all 79 `posts/*.html` — one `<script src>` swap
-- Delete: `posts/assets/posts.js`
+- Stop loading (but do NOT delete): `posts/assets/posts.js` — the migration script still reads it; Task 12 deletes it
 - Modify: `tests/nav.test.js:17-21` and `tests/nav.test.js:75`, `tests/library.test.js:12-20`
 
 **Interfaces:**
@@ -47,8 +47,10 @@ In `tests/nav.test.js`, replace the `w.CBK_POSTS = [...]` / `w.CBK_postBySlug = 
 ```js
   w2.CBK_POSTS = w.CBK_POSTS; w2.CBK_postBySlug = w.CBK_postBySlug;
   w2.CBK_onCatalog = (fn) => fn(w2.CBK_POSTS);
-  w2.CBK_currentSlug = () => "opus46";
+  w2.CBK_currentSlug = () => "ai-era-durable-skills";   // dom2 의 URL 과 같은 글이어야 저장된 평가가 복원된다
 ```
+
+The slug **must** be `ai-era-durable-skills`, matching `dom2`'s URL — the three assertions after this block check that slug's saved rating and reason. Any other slug makes them fail.
 
 In `tests/library.test.js` the catalog stub is **not JS in the test file** — it is a template-literal string (`const postsStub = \`…\`` at lines 12-20) that gets injected into the JSDOM document, with `$` and backslashes already escaped (`/\\.html$/`). The new stubs must go **inside that string literal**, in ES5 style, not next to it:
 
@@ -97,6 +99,16 @@ Change the header comment and the two catalog reads at lines 1-9:
            : (location.pathname.split("/").pop() || "").replace(/\.html$/, "");
   var current = slug + ".html";
 ```
+
+`nav.js` also loads its own stylesheet and links the library with `posts/`-relative paths, which break the same way. Add a second helper next to `BASE`:
+
+```js
+  /* assets/ 자체도 마찬가지다. posts/ 안에서는 "assets/…", 루트에서 서빙될 때는
+   * post.html 이 세팅한 CBK_ASSET_BASE("posts/" 또는 "/claude-blog-kr/posts/")를 앞에 붙인다. */
+  var ASSETS = (window.CBK_ASSET_BASE || "") + "assets/";
+```
+
+and fix these three too — `nav.js:106` `link.href = "assets/cbk.css"` becomes `ASSETS + "cbk.css"`, and the two `"../library.html"` links (`nav.js:42` in the sidebar, `nav.js:132` in the rating bar) become `BASE + "library.html"`. Miss these and the root-served pages render the bookmark/rating bar unstyled with a dead 보관함 link.
 
 Then replace every hardcoded `"../index.html"` in this file with `BASE + "index.html"`. There are **four** occurrences — `nav.js:39` (`.nav-brand`), `nav.js:40` (`← 메인으로`), and the two inside the breadcrumb below (`nav.js:75`, `nav.js:77`):
 
@@ -232,12 +244,14 @@ Order matters: `catalog.js` reads `window.CBK_CONFIG` at parse time, so `cbk-con
 
 If the "expect 79 / expect 0" counts do not all match, **stop and fix the sed before committing** — a wrong count here means some legacy posts silently lose their sidebar.
 
-- [ ] **Step 7: Delete `posts.js` and run the tests**
+- [ ] **Step 7: Stop loading `posts.js` — but do NOT delete it yet**
 
 ```bash
-git rm posts/assets/posts.js
+grep -rl 'assets/posts\.js' --include='*.html' . | wc -l    # expect 0 — nothing loads it any more
 cd tests && node nav.test.js && node library.test.js && node catalog.test.js
 ```
+
+**Do not run `git rm posts/assets/posts.js` in this task.** `scripts/migrate-posts.mjs:90` and `tests/migrate-posts.test.js:21` both read that file as the catalog source for the migration — deleting it here breaks Step 8's `npm test` in this very task, and breaks the human migration that this task's own STOP AND ASK schedules for immediately afterwards. The file stops being *served* here (no HTML references it) and gets deleted in Task 12, next to `git rm posts/*.html`, once the migration has already consumed it.
 
 Expected: all three pass.
 

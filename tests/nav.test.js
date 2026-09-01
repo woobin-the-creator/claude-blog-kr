@@ -83,6 +83,47 @@ async function main() {
   ok("reload: reason box open (has reason)", w2.document.getElementById("cbk-reason-wrap").hidden === false);
   eq("reload: reason text restored", w2.document.getElementById("cbk-reason").value, "사례가 구체적이라 바로 적용 가능");
 
+  // --- 루트에서 서빙될 때(post.html / 404.html) 링크가 사이트 밖을 가리키지 않는다 ---
+  // nav.js 는 원래 posts/ 안에서만 돌던 파일이라 "../index.html", "../library.html",
+  // "assets/cbk.css" 가 하드코딩돼 있었다. post.html 은 저장소 루트에서 서빙되므로
+  // 그대로 두면 전부 깨진다. CBK_AT_ROOT / CBK_ASSET_BASE 로 접두사를 바꾼다.
+  async function bootNav(atRoot, url, assetBase) {
+    const d = new JSDOM(html, { url, runScripts: "dangerously" });
+    const win = d.window;
+    win.URL.createObjectURL = () => "x"; win.URL.revokeObjectURL = () => {};
+    if (atRoot) { win.CBK_AT_ROOT = true; win.CBK_ASSET_BASE = assetBase; }
+    win.CBK_POSTS = w.CBK_POSTS; win.CBK_postBySlug = w.CBK_postBySlug;
+    win.CBK_onCatalog = (fn) => fn(win.CBK_POSTS);
+    win.CBK_currentSlug = () => "ai-era-durable-skills";
+    for (const src of [storeSrc, navSrc]) {
+      const s = win.document.createElement("script"); s.textContent = src; win.document.body.appendChild(s);
+    }
+    return win.document;
+  }
+  const href = (d, sel) => (d.querySelector(sel) || {}).getAttribute
+    ? d.querySelector(sel).getAttribute("href") : null;
+
+  const inPosts = await bootNav(false, "https://x.test/posts/ai-era-durable-skills.html");
+  eq("posts/: brand link unchanged", href(inPosts, ".nav-brand"), "../index.html");
+  eq("posts/: library link unchanged", href(inPosts, ".nav-library"), "../library.html");
+  eq("posts/: sidebar link is the bare filename", href(inPosts, "#site-nav ul a"), "ai-era-durable-skills.html");
+  eq("posts/: stylesheet path unchanged",
+     href(inPosts, 'link[rel="stylesheet"]'), "assets/cbk.css");
+
+  const atRoot = await bootNav(true, "https://x.test/post.html?slug=ai-era-durable-skills", "posts/");
+  eq("root: brand link stays inside the site", href(atRoot, ".nav-brand"), "index.html");
+  eq("root: library link stays inside the site", href(atRoot, ".nav-library"), "library.html");
+  eq("root: sidebar links go through post.html",
+     href(atRoot, "#site-nav ul a"), "post.html?slug=ai-era-durable-skills");
+  eq("root: stylesheet resolves under posts/",
+     href(atRoot, 'link[rel="stylesheet"]'), "posts/assets/cbk.css");
+  eq("root: breadcrumb link stays inside the site",
+     href(atRoot, ".post-crumb a"), "index.html#m=" + encodeURIComponent("AI 인사이트"));
+
+  const at404 = await bootNav(true, "https://x.test/claude-blog-kr/posts/opus46.html", "/claude-blog-kr/posts/");
+  eq("404 fallback: stylesheet uses the absolute Pages base",
+     href(at404, 'link[rel="stylesheet"]'), "/claude-blog-kr/posts/assets/cbk.css");
+
   console.log("\n=== nav.js: " + pass + " passed, " + fail + " failed ===");
   process.exit(fail ? 1 : 0);
 }

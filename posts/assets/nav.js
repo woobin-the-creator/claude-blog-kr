@@ -9,6 +9,9 @@
    * 링크 접두사를 한 곳에서 계산한다. post.html 은 이 파일 로드 전에
    * window.CBK_AT_ROOT = true 를 세팅한다. */
   var BASE = window.CBK_AT_ROOT ? "" : "../";
+  /* assets/ 자체도 마찬가지다. posts/ 안에서는 "assets/…", 루트에서 서빙될 때는
+   * post.html 이 세팅한 CBK_ASSET_BASE("posts/" 또는 "/claude-blog-kr/posts/")를 앞에 붙인다. */
+  var ASSETS = (window.CBK_ASSET_BASE || "") + "assets/";
 
   /* posts/ 안에서는 예전처럼 파일 상대 링크, 루트에서는 post.html?slug= 로 건다. */
   function hrefFor(file) {
@@ -39,7 +42,7 @@
     var favCount = CBK.bookmarkedSlugs().length;
     return (
       '<div class="nav-tools">' +
-        '<a class="nav-library" href="../library.html">📑 보관함' +
+        '<a class="nav-library" href="' + BASE + 'library.html">📑 보관함' +
           (favCount ? ' <span class="nav-count">' + favCount + "</span>" : "") +
         "</a>" +
       "</div>"
@@ -103,7 +106,7 @@
 
   var link = document.createElement("link");
   link.rel = "stylesheet";
-  link.href = "assets/cbk.css";
+  link.href = ASSETS + "cbk.css";
   document.head.appendChild(link);
 
   var faved = CBK.isBookmarked(slug);
@@ -129,7 +132,7 @@
     "</span>" +
     '<span id="cbk-reason-status" class="cbk-status"></span>' +
     '<span id="cbk-sync-status" class="cbk-status"></span>' +
-    '<a class="cbk-library" href="../library.html">📑 보관함</a>' +
+    '<a class="cbk-library" href="' + BASE + 'library.html">📑 보관함</a>' +
     '<div id="cbk-reason-wrap" class="cbk-reason-wrap"' + (reasonOpen ? "" : " hidden") + ">" +
       '<textarea id="cbk-reason" class="cbk-reason" ' +
         'placeholder="왜 이렇게 평가했나요? — 이 이유가 나중에 취향 학습에 쓰입니다."></textarea>' +

@@ -314,6 +314,9 @@ A separate commit means the archive lands in history before the deletion commit,
 
 ```bash
 git rm posts/*.html
+# Task 4 가 로드만 끊어두고 남겨둔 옛 카탈로그. 이관 스크립트가 이 파일을
+# 카탈로그 소스로 읽기 때문에 그때는 지울 수 없었다. 이관이 끝난 지금 지운다.
+git rm posts/assets/posts.js
 ls posts/assets | wc -l          # expect the same count as before this task — assets are untouched
 git status --porcelain | grep -c '^D  posts/assets'   # expect 0
 ```
