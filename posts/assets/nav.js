@@ -1,12 +1,42 @@
 /* Shared sidebar nav + breadcrumb + per-post bookmark/notes UI.
- * Post catalog lives in posts.js (window.CBK_POSTS) — load it before this file.
+ * Post catalog lives in catalog.js (window.CBK_POSTS + CBK_onCatalog) — load it before this file.
  * Requires store.js (window.CBK) for bookmarks; degrades gracefully if absent. */
 (function () {
   var POSTS = window.CBK_POSTS || [];
 
+  /* 이 파일은 posts/ 안(레거시 79개)과 저장소 루트(Task 5 의 post.html / 404.html)
+   * 양쪽에서 로드된다. 루트에서 서빙될 때 "../index.html" 은 사이트 밖을 가리키므로
+   * 링크 접두사를 한 곳에서 계산한다. post.html 은 이 파일 로드 전에
+   * window.CBK_AT_ROOT = true 를 세팅한다.
+   *
+   * CBK_AT_ROOT 만으로는 부족하다: 404.html 은 GitHub Pages 가 없는 경로에
+   * 돌려주는 파일이라 주소창이 /claude-blog-kr/posts/<slug>.html 인 채로 실행된다.
+   * 그 상태에서 BASE 를 "" 로 두면 index.html 이 /claude-blog-kr/posts/index.html
+   * 로 풀려 또 404 로 떨어지고(그리고 slug "index" 로 렌더를 시도한다) 방문자가
+   * 사이트 밖으로 나갈 길이 없다. 그래서 "루트에서 서빙된다"(CBK_AT_ROOT)와
+   * "링크를 어디 기준으로 걸어야 하나"(CBK_SITE_BASE)를 분리한다.
+   *   post.html  → CBK_SITE_BASE 미설정. 주소가 /claude-blog-kr/post.html 이라
+   *                상대경로가 이미 맞고, 로컬 파일로 열 때도 깨지지 않는다.
+   *   404.html   → CBK_SITE_BASE = "/claude-blog-kr/". 주소가 임의 깊이라 절대경로만 안전하다. */
+  var SITE = window.CBK_SITE_BASE || "";
+  var BASE = window.CBK_AT_ROOT ? SITE : "../";
+  /* assets/ 자체도 마찬가지다. posts/ 안에서는 "assets/…", 루트에서 서빙될 때는
+   * post.html 이 세팅한 CBK_ASSET_BASE("posts/" 또는 "/claude-blog-kr/posts/")를 앞에 붙인다. */
+  var ASSETS = (window.CBK_ASSET_BASE || "") + "assets/";
+
+  /* posts/ 안에서는 예전처럼 파일 상대 링크, 루트에서는 post.html?slug= 로 건다.
+     404 폴백에서는 SITE 를 붙여야 한다 — 안 붙이면 /claude-blog-kr/posts/post.html?slug=x
+     라는 없는 경로가 되고, 404 가 쿼리스트링을 먼저 읽는 덕에 "동작하는 것처럼" 보일 뿐
+     HTTP 상태는 계속 404 다. */
+  function hrefFor(file) {
+    if (!window.CBK_AT_ROOT) return file;
+    return SITE + "post.html?slug=" + encodeURIComponent(String(file).replace(/\.html$/, ""));
+  }
+
   var CBK = window.CBK || null;
-  var current = location.pathname.split("/").pop();
-  var slug = CBK ? CBK.slugOf(current) : current.replace(/\.html$/, "");
+  var slug = window.CBK_currentSlug ? window.CBK_currentSlug()
+           : (location.pathname.split("/").pop() || "").replace(/\.html$/, "");
+  var current = slug + ".html";
 
   /* ---------- sidebar ---------- */
   function buildItems() {
@@ -14,7 +44,7 @@
       var active = p.file === current ? " active" : "";
       var star = (CBK && CBK.isBookmarked(CBK.slugOf(p.file))) ? "★ " : "";
       return (
-        '<li><a class="nav-link' + active + '" href="' + p.file + '">' +
+        '<li><a class="nav-link' + active + '" href="' + hrefFor(p.file) + '">' +
           star + (p.nav || p.title) +
           '<span class="nav-date">' + p.date + "</span>" +
         "</a></li>"
@@ -26,7 +56,7 @@
     var favCount = CBK.bookmarkedSlugs().length;
     return (
       '<div class="nav-tools">' +
-        '<a class="nav-library" href="../library.html">📑 보관함' +
+        '<a class="nav-library" href="' + BASE + 'library.html">📑 보관함' +
           (favCount ? ' <span class="nav-count">' + favCount + "</span>" : "") +
         "</a>" +
       "</div>"
@@ -36,8 +66,8 @@
   var nav = document.createElement("nav");
   nav.id = "site-nav";
   nav.innerHTML =
-    '<a class="nav-brand" href="../index.html">Claude 블로그 한글 번역</a>' +
-    '<a class="nav-home" href="../index.html">← 메인으로</a>' +
+    '<a class="nav-brand" href="' + BASE + 'index.html">Claude 블로그 한글 번역</a>' +
+    '<a class="nav-home" href="' + BASE + 'index.html">← 메인으로</a>' +
     '<div class="nav-heading">다른 글</div>' +
     "<ul>" + buildItems() + "</ul>" +
     buildTools();
@@ -59,9 +89,11 @@
   }
 
   /* ---------- breadcrumb (메인 › 서브 › 제목) ---------- */
-  var meta = window.CBK_postBySlug ? window.CBK_postBySlug(current) : null;
-  var header = document.querySelector("header");
-  if (meta && header) {
+  function buildCrumb() {
+    var meta = window.CBK_postBySlug ? window.CBK_postBySlug(slug) : null;
+    var header = document.querySelector("header");
+    if (!meta || !header) return;
+    if (document.querySelector(".post-crumb")) return;   // 갱신 시 중복 삽입 방지
     function enc(s) { return encodeURIComponent(s); }
     function esc(s) {
       return String(s).replace(/[&<>"]/g, function (c) {
@@ -72,20 +104,23 @@
     crumb.className = "post-crumb";
     crumb.setAttribute("aria-label", "breadcrumb");
     crumb.innerHTML =
-      '<a href="../index.html#m=' + enc(meta.main) + '">' + esc(meta.main) + "</a>" +
+      '<a href="' + BASE + 'index.html#m=' + enc(meta.main) + '">' + esc(meta.main) + "</a>" +
       '<span class="post-crumb-sep">›</span>' +
-      '<a href="../index.html#m=' + enc(meta.main) + "&c=" + enc(meta.cat) + '">' + esc(meta.cat) + "</a>" +
+      '<a href="' + BASE + 'index.html#m=' + enc(meta.main) + "&c=" + enc(meta.cat) + '">' + esc(meta.cat) + "</a>" +
       '<span class="post-crumb-sep">›</span>' +
       '<span class="post-crumb-cur">' + esc(meta.title) + "</span>";
     header.parentNode.insertBefore(crumb, header);
   }
+
+  if (window.CBK_onCatalog) window.CBK_onCatalog(function () { refreshSidebar(); buildCrumb(); });
+  else { refreshSidebar(); buildCrumb(); }
 
   /* ---------- per-post bookmark + note bar ---------- */
   if (!CBK) return;
 
   var link = document.createElement("link");
   link.rel = "stylesheet";
-  link.href = "assets/cbk.css";
+  link.href = ASSETS + "cbk.css";
   document.head.appendChild(link);
 
   var faved = CBK.isBookmarked(slug);
@@ -111,7 +146,7 @@
     "</span>" +
     '<span id="cbk-reason-status" class="cbk-status"></span>' +
     '<span id="cbk-sync-status" class="cbk-status"></span>' +
-    '<a class="cbk-library" href="../library.html">📑 보관함</a>' +
+    '<a class="cbk-library" href="' + BASE + 'library.html">📑 보관함</a>' +
     '<div id="cbk-reason-wrap" class="cbk-reason-wrap"' + (reasonOpen ? "" : " hidden") + ">" +
       '<textarea id="cbk-reason" class="cbk-reason" ' +
         'placeholder="왜 이렇게 평가했나요? — 이 이유가 나중에 취향 학습에 쓰입니다."></textarea>' +

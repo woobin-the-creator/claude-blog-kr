@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude 블로그 한글 번역</title>
+<style id="post-style"></style>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+         color:#1a1a1a; line-height:1.75; max-width:760px; margin:0 auto; padding:48px 24px 96px; background:#fff; }
+  #post-error { color:#a33; padding:24px 0; }
+  #post-error a { color:#c96442; }
+</style>
+</head>
+<body>
+<!-- GitHub Pages 는 없는 경로에 이 파일을 준다(주소는 그대로 유지된다).
+     예전 링크 /posts/<slug>.html 이 여기로 떨어지면 그 슬러그로 글을 렌더한다. -->
+<p id="post-error" hidden><span id="post-error-msg"></span> <a href="/claude-blog-kr/">← 메인으로</a></p>
+<div id="post-body"></div>
+<!-- CBK_SITE_BASE: 이 파일은 주소창이 /claude-blog-kr/posts/<slug>.html 인 채로 실행된다.
+     그래서 링크 기준을 상대경로가 아니라 Pages 베이스로 못박아야 사이트 밖으로 안 나간다. -->
+<script>window.CBK_AT_ROOT = true; window.CBK_SITE_BASE = "/claude-blog-kr/"; window.CBK_ASSET_BASE = "/claude-blog-kr/posts/";</script>
+<script src="/claude-blog-kr/posts/assets/cbk-config.js"></script>
+<script src="/claude-blog-kr/posts/assets/render-post.js"></script>
+</body>
+</html>

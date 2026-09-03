@@ -16,11 +16,13 @@ window.CBK_POSTS = [
   { file:"c.html", date:"2026-04-01", main:"엔지니어링", cat:"도구", title:"C 글", nav:"C" }
 ];
 window.CBK_postBySlug = function(k){ k=String(k).replace(/\\.html$/,""); return window.CBK_POSTS.find(function(p){return p.file.replace(/\\.html$/,"")===k;})||null; };
+window.CBK_onCatalog = function(fn){ fn(window.CBK_POSTS); };
+window.CBK_currentSlug = function(){ return ""; };
 `;
 
 // inline the external scripts
 html = html.replace('<script src="posts/assets/cbk-config.js"></script>', '<script>/* no sync config */</script>');
-html = html.replace('<script src="posts/assets/posts.js"></script>', '<script>' + postsStub + '</script>');
+html = html.replace('<script src="posts/assets/catalog.js"></script>', '<script>' + postsStub + '</script>');
 html = html.replace('<script src="posts/assets/store.js"></script>', '<script>' + storeSrc + '</script>');
 
 async function main() {

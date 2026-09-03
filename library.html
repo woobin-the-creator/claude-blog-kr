@@ -162,12 +162,12 @@
   <footer>비공식 번역본 · 데이터는 기본적으로 이 브라우저에만 저장됩니다. 다른 기기로 옮기려면 위의 동기화 코드나 내보내기/가져오기를 쓰세요.</footer>
 
   <script src="posts/assets/cbk-config.js"></script>
-  <script src="posts/assets/posts.js"></script>
+  <script src="posts/assets/catalog.js"></script>
   <script src="posts/assets/store.js"></script>
   <script>
   (function () {
     var CBK = window.CBK;
-    /* Post catalog comes from posts/assets/posts.js (window.CBK_POSTS) — single source. */
+    /* Post catalog comes from posts/assets/catalog.js (window.CBK_POSTS) — single source. */
     var POSTS = window.CBK_POSTS || [];
 
     var listEl = document.getElementById("list");
@@ -436,7 +436,8 @@
       if (sync.getKey()) { setMsg("자동 동기화 중…", ""); sync.auto(); } // 페이지 열면 바로 받아오기
     })();
 
-    render();
+    if (window.CBK_onCatalog) window.CBK_onCatalog(function () { render(); });
+    else render();
   })();
   </script>
 </body>
