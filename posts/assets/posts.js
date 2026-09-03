@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "the-anatomy-of-effective-commerce-agents.html", date: "2026-09-02", main: "Claude blog", cat: "Agents",
+      title: "효과적인 커머스 에이전트의 해부학", nav: "커머스 에이전트 해부학 · 스킬·캐싱·안전·평가" },
     { file: "claude-for-commerce-agents.html", date: "2026-09-02", main: "Claude blog", cat: "Agents",
       title: "Claude로 커머스 에이전트 만들기", nav: "커머스 에이전트 블루프린트 · 쇼핑·머천트 에이전트" },
     { file: "how-anthropic-employees-use-claude-tag.html", date: "2026-08-28", main: "Claude blog", cat: "Enterprise AI",
