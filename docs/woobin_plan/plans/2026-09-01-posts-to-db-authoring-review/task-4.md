@@ -336,7 +336,7 @@ grep -rl 'assets/posts\.js' --include='*.html' . | wc -l    # expect 0 — nothi
 cd tests && node nav.test.js && node library.test.js && node catalog.test.js
 ```
 
-**Do not run `git rm posts/assets/posts.js` in this task.** `scripts/migrate-posts.mjs:90` and `tests/migrate-posts.test.js:21` both read that file as the catalog source for the migration — deleting it here breaks Step 8's `npm test` in this very task, and breaks the human migration that this task's own STOP AND ASK schedules for immediately afterwards. The file stops being *served* here (no HTML references it) and gets deleted in Task 12, next to `git rm posts/*.html`, once the migration has already consumed it.
+**Do not run `git rm posts/assets/posts.js` in this task.** `scripts/migrate-posts.mjs:90` and `tests/migrate-posts.test.js:21` both read that file as the catalog source for the migration — deleting it here breaks Step 8's `npm test` and the automated legacy-data synchronization. The file stops being *served* here (no HTML references it) and gets deleted in Task 12, next to `git rm posts/*.html`, once the migration has already consumed it. The production workflow skips this one-time synchronization automatically after `posts.js` is removed.
 
 Expected: all three pass.
 
@@ -355,16 +355,6 @@ git add index.html library.html posts/assets/nav.js posts/*.html tests/
 git commit -m "refactor(catalog): posts.js 제거, 인덱스·보관함·사이드바를 DB 카탈로그로 전환"
 ```
 
-> ### STOP AND ASK — 이 태스크와 Task 5 사이의 실이관
+> ### Automated cutover prerequisite — do not stop
 >
-> **레이어 B 는 여기서 멈춘다. 구현 에이전트가 마이그레이션을 실행하지 않는다.**
->
-> Task 4 까지 마치면 사이트는 DB 카탈로그를 읽는데 DB 에는 아직 행이 없다 — 인덱스·보관함·사이드바가 전부 비어 보인다. 이걸 채우는 건 사람이 한 번 돌리는 실이관이다:
->
-> ```bash
-> CBK_SYNC_KEY=<내 24자 sync_key> node scripts/migrate-posts.mjs
-> ```
->
-> 실행 전제: Task 1 의 STOP AND ASK(스키마 실행 + `cbk_owner_claim` true)가 끝나 있어야 한다. 실행 후 검증·롤백 절차는 **Task 2 말미의 STOP AND ASK 블록**에 있다(79건 확인, 빈 제목 0건 확인).
->
-> 사람이 "79건 확인" 을 보고하기 전에는 Task 5 를 시작하지 않는다.
+> Before the DB-backed catalog reaches `main`, run the repository's Supabase deployer. It applies the schema, seeds the owner, synchronizes all 79 rows, and verifies production. Task 5 may continue immediately; the production workflow enforces the same order at deployment time.

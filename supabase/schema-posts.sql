@@ -302,7 +302,7 @@ $$;
 
 -- 10) 공개 역할엔 함수 실행 권한만. 테이블 직접 권한은 없다.
 revoke all on function public.cbk_hash_key(text)                                     from public;
-revoke all on function public.cbk_owner_claim(text)                                  from public;
+revoke all on function public.cbk_owner_claim(text)                                  from public, anon, authenticated;
 revoke all on function public.cbk_assert_owner(text)                                 from public;
 revoke all on function public.cbk_posts_list()                                       from public;
 revoke all on function public.cbk_post_get(text)                                     from public;
@@ -315,7 +315,6 @@ revoke all on function public.cbk_review_add(text,text,integer,text,text,text,te
 revoke all on function public.cbk_reviews_list(text, text)                           from public;
 revoke all on function public.cbk_review_set_status(text, bigint, text)              from public;
 
-grant execute on function public.cbk_owner_claim(text)                                to anon, authenticated;
 grant execute on function public.cbk_posts_list()                                     to anon, authenticated;
 grant execute on function public.cbk_post_get(text)                                   to anon, authenticated;
 grant execute on function public.cbk_post_upsert(text,text,text,text,text,text,date,text,text,text,text) to anon, authenticated;
@@ -331,11 +330,6 @@ grant execute on function public.cbk_review_set_status(text, bigint, text)      
 -- PostgREST 스키마 캐시 갱신
 notify pgrst, 'reload schema';
 
--- !! 선점 경쟁 주의 !!
--- anon 키는 저장소에 공개되어 있고 cbk_owner_claim 은 "처음 부른 키가 주인" 이다.
--- 이 스키마를 배포한 순간부터 소유자 행이 비어 있는 동안은 누구든 claim 할 수 있다.
--- 따라서 **같은 SQL 에디터 세션에서 위 스크립트 바로 다음에 이어서** 실행할 것:
---     select public.cbk_owner_claim('<내 24자 sync_key>');
--- 반환값이 true 여야 한다. false 면 이미 남이 선점한 것이므로
---     delete from public.cbk_owner where id = 1;
--- 로 지우고 다시 claim 한 뒤, 그 사이에 들어온 글이 없는지 cbk_posts 를 확인한다.
+-- cbk_owner_claim 은 브라우저 역할에 공개하지 않는다. 자동 배포기가 Management API의
+-- 관리자 세션에서 파라미터 바인딩으로만 호출한다. 스키마 적용과 owner seed 사이에도
+-- 공개 선점 창이 생기지 않는다.

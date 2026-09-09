@@ -48,8 +48,8 @@ function ok(n, c) { if (c) pass++; else { fail++; console.log("  ✗ FAIL:", n);
   ok("body_md is null for migrated translations", row.body_md === null);
 
   // --- --dry 는 절대 네트워크를 건드리지 않는다 ---
-  // 사람이 승인하는 STOP AND ASK 가 이 보장 위에 서 있다. Task 8 이 이 파일을
-  // import 하므로, 여기서 회귀하면 사람 승인 없이 실서비스에 쓰게 된다.
+  // 자동 배포기는 실행 전에 이 경로를 검증한다. Task 8 이 이 파일을 import 하므로,
+  // 여기서 회귀하면 검증 명령이 실서비스를 건드릴 수 있다.
   let fetchCalls = 0;
   const realFetch = globalThis.fetch;
   const realArgv = process.argv;

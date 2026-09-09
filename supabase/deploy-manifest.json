@@ -1,0 +1,21 @@
+{
+  "projectRef": "vroxtztoezsmkrmszgml",
+  "migrations": [
+    {
+      "id": "20260801000000_sync_items_baseline",
+      "path": "supabase/schema.sql"
+    },
+    {
+      "id": "20260801001000_youtube_queue_baseline",
+      "path": "supabase/schema-youtube-queue.sql"
+    },
+    {
+      "id": "20260901000000_posts_and_reviews",
+      "path": "supabase/schema-posts.sql"
+    },
+    {
+      "id": "20260908000000_posts_realtime",
+      "path": "supabase/migrations/20260908000000_posts_realtime.sql"
+    }
+  ]
+}

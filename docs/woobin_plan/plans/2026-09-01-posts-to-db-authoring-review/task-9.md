@@ -4,7 +4,7 @@
 - Create: `.pipeline/listener.mjs`
 - Create: `.pipeline/package.json`
 - Create: `.pipeline/com.cbk.listener.plist`
-- Create: `supabase/realtime-posts.sql`
+- Existing deployment migration: `supabase/migrations/20260908000000_posts_realtime.sql`
 - Create: `tests/listener.test.js`
 - Modify: `.pipeline/.env.example`, `tests/package.json`
 
@@ -168,9 +168,9 @@ cd tests && node listener.test.js
 
 Expected: FAIL — `Cannot find module '.../.pipeline/listener.mjs'`
 
-- [ ] **Step 3: Add the Realtime publication SQL**
+- [ ] **Step 3: Confirm the automated Realtime migration**
 
-Create `supabase/realtime-posts.sql`:
+`supabase/migrations/20260908000000_posts_realtime.sql` is already registered in `supabase/deploy-manifest.json`. Keep the operation idempotent; do not add a dashboard step or a second SQL file:
 
 ```sql
 -- Realtime 이 cbk_posts 변경을 흘려보내도록 publication 에 넣는다.
@@ -178,13 +178,17 @@ Create `supabase/realtime-posts.sql`:
 -- RLS 가 켜져 있고 정책이 없어서 anon 으로는 이벤트가 하나도 안 온다.
 -- service_role 키는 .pipeline/.env(gitignore됨)에만 둔다.
 
-alter publication supabase_realtime add table public.cbk_posts;
+do $$ begin
+  if not exists (select 1 from pg_publication_tables where pubname='supabase_realtime' and schemaname='public' and tablename='cbk_posts') then
+    alter publication supabase_realtime add table public.cbk_posts;
+  end if;
 
 -- 링크 요청 큐도 같은 리스너가 받는다(폴링 워커를 없애기 위해).
-alter publication supabase_realtime add table public.cbk_yt_queue;
+  if to_regclass('public.cbk_yt_queue') is not null and not exists (select 1 from pg_publication_tables where pubname='supabase_realtime' and schemaname='public' and tablename='cbk_yt_queue') then
+    alter publication supabase_realtime add table public.cbk_yt_queue;
+  end if;
+end $$;
 ```
-
-If either table is already in the publication Supabase raises `relation is already member of publication`; that is safe to ignore when running by hand.
 
 - [ ] **Step 4: Write the listener**
 
@@ -440,16 +444,16 @@ Expected: the first command prints the ignoring rule; the second prints `0`.
 Add `listener.test.js` to `tests/package.json`'s `test` script and a `test:listener` entry.
 
 ```bash
-git add .pipeline/listener.mjs .pipeline/package.json .pipeline/package-lock.json .pipeline/com.cbk.listener.plist .pipeline/.env.example supabase/realtime-posts.sql tests/listener.test.js tests/package.json
+git add .pipeline/listener.mjs .pipeline/package.json .pipeline/package-lock.json .pipeline/com.cbk.listener.plist .pipeline/.env.example tests/listener.test.js tests/package.json
 git commit -m "feat(listener): 폴링 대신 Realtime으로 깨어나 첨삭 에이전트를 스폰하는 상주 리스너"
 ```
 
-> ### STOP AND ASK — 리스너를 실제로 띄우는 건 사람이 한다
+> ### Automated listener setup — do not stop for Supabase
 >
-> 이 태스크는 코드와 plist 를 커밋하는 데서 끝난다. **구현 에이전트는 `launchctl load` 를 실행하지 않고, `.pipeline/.env` 를 편집하지도 않는다.** 아래는 전부 사람 몫이다:
+> After Task 10 exists, the authorized agent performs these steps:
 >
-> 1. **service role key 입력** — Supabase 대시보드 → Settings → API → `service_role` 키를 복사해 `.pipeline/.env` 에 `SUPABASE_SERVICE_KEY=` 로 넣는다. 이 키는 RLS 를 통째로 우회하므로 `.pipeline/.env`(gitignore 대상) 밖으로 나가면 안 된다. 에이전트에게 값을 불러주지도 말 것 — 대화 기록에 남는다.
-> 2. **Realtime 활성화** — 대시보드 → Database → Replication 에서 `cbk_posts` 와 `cbk_yt_queue` 를 `supabase_realtime` 퍼블리케이션에 넣는다(`supabase/realtime-posts.sql` 과 같은 내용을 SQL 에디터에서 실행해도 된다).
-> 3. **launchd 등록** — `launchctl bootstrap gui/$(id -u) .pipeline/com.cbk.listener.plist` 후 `.pipeline/log/` 에 `realtime: SUBSCRIBED` 가 찍히는지 확인한다.
+> 1. Run `node scripts/supabase-admin.mjs sync-listener-secret`. It retrieves the project-scoped server key and writes it to the gitignored `.pipeline/.env` without printing it.
+> 2. Run the Supabase deployer; Realtime publication membership is a tracked migration.
+> 3. Run `launchctl bootstrap gui/$(id -u) .pipeline/com.cbk.listener.plist` and verify `.pipeline/log/` contains `realtime: SUBSCRIBED`.
 >
 > 3번을 하기 전에 **Task 10 이 먼저 끝나 있어야 한다.** 리스너가 스폰하는 명령이 Task 10 에서 정의되므로, 순서를 뒤집으면 첫 catch-up 이 존재하지 않는 프롬프트로 에이전트를 돌린다. 레이어 E 를 전부 마친 뒤에 한 번에 띄운다.

@@ -478,7 +478,7 @@ $$;
 
 -- 10) 공개 역할엔 함수 실행 권한만. 테이블 직접 권한은 없다.
 revoke all on function public.cbk_hash_key(text)                                     from public;
-revoke all on function public.cbk_owner_claim(text)                                  from public;
+revoke all on function public.cbk_owner_claim(text)                                  from public, anon, authenticated;
 revoke all on function public.cbk_assert_owner(text)                                 from public;
 revoke all on function public.cbk_posts_list()                                       from public;
 revoke all on function public.cbk_post_get(text)                                     from public;
@@ -491,7 +491,6 @@ revoke all on function public.cbk_review_add(text,text,integer,text,text,text,te
 revoke all on function public.cbk_reviews_list(text, text)                           from public;
 revoke all on function public.cbk_review_set_status(text, bigint, text)              from public;
 
-grant execute on function public.cbk_owner_claim(text)                                to anon, authenticated;
 grant execute on function public.cbk_posts_list()                                     to anon, authenticated;
 grant execute on function public.cbk_post_get(text)                                   to anon, authenticated;
 grant execute on function public.cbk_post_upsert(text,text,text,text,text,text,date,text,text,text,text) to anon, authenticated;
@@ -507,14 +506,9 @@ grant execute on function public.cbk_review_set_status(text, bigint, text)      
 -- PostgREST 스키마 캐시 갱신
 notify pgrst, 'reload schema';
 
--- !! 선점 경쟁 주의 !!
--- anon 키는 저장소에 공개되어 있고 cbk_owner_claim 은 "처음 부른 키가 주인" 이다.
--- 이 스키마를 배포한 순간부터 소유자 행이 비어 있는 동안은 누구든 claim 할 수 있다.
--- 따라서 **같은 SQL 에디터 세션에서 위 스크립트 바로 다음에 이어서** 실행할 것:
---     select public.cbk_owner_claim('<내 24자 sync_key>');
--- 반환값이 true 여야 한다. false 면 이미 남이 선점한 것이므로
---     delete from public.cbk_owner where id = 1;
--- 로 지우고 다시 claim 한 뒤, 그 사이에 들어온 글이 없는지 cbk_posts 를 확인한다.
+-- cbk_owner_claim 은 브라우저 역할에 공개하지 않는다. 자동 배포기가 Management API의
+-- 관리자 세션에서 파라미터 바인딩으로만 호출한다. 스키마 적용과 owner seed 사이에도
+-- 공개 선점 창이 생기지 않는다.
 ```
 
 - [ ] **Step 4: Run the test to verify it passes**
@@ -551,19 +545,8 @@ git add supabase/schema-posts.sql tests/posts-schema.test.js tests/package.json
 git commit -m "feat(db): cbk_posts + cbk_reviews 스키마와 소유자 게이트 RPC 추가"
 ```
 
-> ### STOP AND ASK — 사람이 해야 하는 배포 단계
+> ### Automated deployment — do not stop
 >
-> **구현 에이전트는 이 SQL 을 실행하지 않는다.** 커밋까지 마치고 Task 2 의 *코드 작업*(스크립트 + pglite 테스트)은 계속 진행해도 된다 — 그건 실서비스 DB 를 건드리지 않는다. 다만 **레이어 A 를 마칠 때 아래 내용을 오케스트레이터에게 반드시 보고한다.**
->
-> `supabase/schema-posts.sql` 은 저장소에 커밋될 뿐, 어떤 스크립트도 이 SQL 을 실서비스 Supabase 에 실행하지 않는다. 사람이 직접 해야 한다:
->
-> 1. Supabase 대시보드 → SQL Editor 에 `supabase/schema-posts.sql` 전문을 붙여넣고 실행한다.
-> 2. **같은 세션에서 곧바로** `select public.cbk_owner_claim('<내 24자 sync_key>');` 를 실행하고 `true` 가 반환되는지 확인한다.
->
-> 2번이 늦어지면 그 사이 아무나 anon 키로 소유자를 선점할 수 있고(anon 키는 `posts/assets/cbk-config.js` 에 공개되어 있다), 복구하려면 `delete from public.cbk_owner where id = 1;` 를 수동으로 실행해야 한다. 그래서 이건 "note" 가 아니라 **차단 지점**이다.
->
-> 사람이 "스키마 실행 완료 + claim true 확인" 을 보고하기 전에는 **실제 업로드(Task 2 말미의 STOP AND ASK)** 를 시작하지 않는다. 그 업로드는 어차피 Task 4 와 Task 5 사이에 사람이 돌린다.
->
-> (Task 6 의 첫 발행도 `cbk_owner_claim` 을 부르지만, 그건 위 선점 창을 열어둔 채 기다리는 것이므로 이 단계를 대체하지 못한다.)
+> `supabase/schema-posts.sql` is registered in `supabase/deploy-manifest.json`. Run `node scripts/supabase-admin.mjs deploy` for an authorized local deployment, or let `.github/workflows/deploy-supabase.yml` apply it after merge. The deployer calls `cbk_owner_claim` through the Management API with a bound parameter; browser roles cannot execute that function. Continue directly to Task 2 after the tests pass.
 
 **Why `style_css` is a column and not one shared file:** the 79 existing posts do not share a stylesheet. Hashing each file's `<style>` block yields many distinct values (the largest group is 24 posts; there are more than a dozen groups). Merging them into one `post.css` would silently restyle most of the archive, and selector collisions would be invisible until someone opened an old post. Carrying each post's own CSS in its row is lossless and costs nothing — the blocks are ~2 KB each.

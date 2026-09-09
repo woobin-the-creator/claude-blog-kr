@@ -8,7 +8,7 @@
 - Modify: `index.html` (add a link to the editor), `tests/package.json`
 
 **Interfaces:**
-- Consumes: `cbk_post_upsert(...)` and `cbk_owner_claim(p_key)` from Task 1; `CBK.sync.getKey()` from `posts/assets/store.js:262`; `window.CBK_catalogRefresh` from Task 3.
+- Consumes: `cbk_post_upsert(...)` from Task 1; `CBK.sync.getKey()` from `posts/assets/store.js:262`; `window.CBK_catalogRefresh` from Task 3.
 - Produces:
   - `window.CBK_md(src)` -> HTML string. Pure function, no DOM.
   - `write.html` DOM contract used by Tasks 7 and 11: `#w-slug`, `#w-title`, `#w-nav`, `#w-main`, `#w-cat`, `#w-date`, `#w-body` (textarea), `#w-preview`, `#w-publish`, `#w-msg`, and the tab buttons `[data-tab="edit"]` / `[data-tab="review"]` with panels `#tab-edit` / `#tab-review`.
@@ -19,7 +19,7 @@ There is no build step and no npm dependency in the browser, so the markdown ren
 
 **Escape HTML before applying inline rules**, otherwise a post containing a script tag publishes an XSS onto the live site. The user is the only author, but the rendered output is public and the same function will later render text that came back from an agent.
 
-The secret is the existing `sync_key` — read it with `CBK.sync.getKey()`, never prompt for a second credential. On the first publish, call `cbk_owner_claim` before `cbk_post_upsert`; it is idempotent and seeds the owner row so the human never has to run SQL by hand.
+The secret is the existing `sync_key` — read it with `CBK.sync.getKey()`, never prompt for a second credential. The automated deployment seeds the owner before the page is deployed; `cbk_owner_claim` is intentionally unavailable to browser roles.
 
 Autosave the draft to `localStorage["cbk:draft:v1"]` on every keystroke, so closing the tab does not lose work. This is a plain local draft, not a server-side one — publishing is instant, so there is no need for a server draft state.
 
@@ -72,7 +72,6 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     const fn = String(u).split("/rpc/")[1];
     const body = JSON.parse((init && init.body) || "{}");
     calls.push({ fn, body });
-    if (fn === "cbk_owner_claim") return Promise.resolve({ ok: true, status: 200, json: () => Promise.resolve(true) });
     if (fn === "cbk_post_upsert") return Promise.resolve({ ok: true, status: 200, json: () => Promise.resolve({ slug: body.p_slug, rev: 1 }) });
     return Promise.resolve({ ok: true, status: 200, json: () => Promise.resolve([]) });
   };
@@ -117,9 +116,8 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   doc.getElementById("w-slug").value = "my-first";
   doc.getElementById("w-publish").click();
   await sleep(50);
-  const claim = calls.find(c => c.fn === "cbk_owner_claim");
   const up = calls.find(c => c.fn === "cbk_post_upsert");
-  ok("owner is claimed before publishing", !!claim && !!up && calls.indexOf(claim) < calls.indexOf(up));
+  ok("publishing never calls the admin-only owner claim", !calls.some(c => c.fn === "cbk_owner_claim"));
   ok("publish sent the sync key", up.body.p_key === "OWNERKEY123456789");
   ok("publish sent author=me", up.body.p_author === "me");
   ok("publish sent rendered html", /<h2>안녕<\/h2>/.test(up.body.p_body_html));
@@ -328,7 +326,7 @@ Create `write.html`. Model the page chrome on `youtube.html` — same header tre
 7. `publish()` —
    - Read the fields. Validate `slug` against `/^[a-z0-9][a-z0-9-]{0,120}$/`; on failure set `#w-msg` to `슬러그는 영문 소문자·숫자·하이픈만 쓸 수 있습니다.` with class `err` and **return before any fetch**.
    - Validate that title is non-empty: `제목을 입력하세요.`
-   - Disable the button, then `rpc("cbk_owner_claim", { p_key: syncKey })` **first**, then `rpc("cbk_post_upsert", ...)` with `p_key`, `p_slug`, `p_title`, `p_nav` (falling back to the title), `p_main`, `p_cat`, `p_date`, `p_body_html: window.CBK_md(body)`, `p_body_md: body`, `p_style_css: ""`, `p_author: "me"`.
+   - Disable the button, then call `rpc("cbk_post_upsert", ...)` with `p_key`, `p_slug`, `p_title`, `p_nav` (falling back to the title), `p_main`, `p_cat`, `p_date`, `p_body_html: window.CBK_md(body)`, `p_body_md: body`, `p_style_css: ""`, `p_author: "me"`. Never call the admin-only `cbk_owner_claim` from browser code.
    - On success: set `#w-msg` innerHTML to `발행됐습니다 · <a href="post.html?slug=SLUG">글 보기</a>` (substituting the real slug) with class `ok`, `localStorage.removeItem("cbk:draft:v1")`, and call `window.CBK_catalogRefresh()` so the index picks it up.
    - On failure: `#w-msg` gets `발행 실패: ` plus the error message, class `err`. If the message contains `not the owner`, use `이 사이트의 소유자 키가 아닙니다.` instead.
    - Re-enable the button in both cases.

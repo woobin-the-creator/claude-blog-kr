@@ -8,7 +8,7 @@
 - Modify: `tests/package.json`
 
 **Interfaces:**
-- Consumes: `cbk_post_upsert(...)`, `cbk_owner_claim(p_key)` from Task 1; `absolutizeAssets(html, slug, pagesBase)` and `PAGES_BASE` from `scripts/migrate-posts.mjs` (Task 2).
+- Consumes: `cbk_post_upsert(...)` from Task 1; `absolutizeAssets(html, slug, pagesBase)` and `PAGES_BASE` from `scripts/migrate-posts.mjs` (Task 2).
 - Produces: `scripts/publish.mjs` as **the single entry point for putting a post into the site.** Both translation skills and the Task 9 listener shell out to it. CLI contract:
   - `node scripts/publish.mjs <html-file> --slug <slug> --title <t> --main <m> --cat <c> [--nav <n>] [--date YYYY-MM-DD] [--author ai|me] [--dry]`
   - Prints exactly one line on success: `PUBLISHED <slug>`
@@ -197,7 +197,6 @@ async function main() {
 
   const key = process.env.CBK_SYNC_KEY;
   if (!key) throw new Error("CBK_SYNC_KEY is not set");
-  await rpc("cbk_owner_claim", { p_key: key });
   await rpc("cbk_post_upsert", {
     p_key: key, p_slug: row.slug, p_title: row.title, p_nav: row.nav,
     p_main: row.main, p_cat: row.cat, p_date: row.date,

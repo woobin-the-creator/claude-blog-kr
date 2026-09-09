@@ -17,6 +17,7 @@
 - **The only secret in the browser is the 24-char `sync_key`**, read via `CBK.sync.getKey()` from localStorage key `cbk:sync_key:v1`. Never add an API token, PAT, or service-role key to any file under version control.
 - **Supabase access is RPC-only.** Every new table gets `enable row level security` with no policies; `anon`/`authenticated` receive `grant execute` on functions only. Follow `supabase/schema.sql` verbatim as the style reference.
 - **Every write RPC must call `cbk_assert_owner(p_key)`** (Task 1). Read RPCs for post bodies are public and take no key. Review RPCs are owner-gated.
+- **Production Supabase changes are automatic.** Add immutable SQL files to `supabase/deploy-manifest.json`; `.github/workflows/deploy-supabase.yml` applies them on `main`, seeds the owner through the Management API, synchronizes legacy data, and verifies production invariants. Never send an implementer to SQL Editor.
 - **Free-tier budget:** DB goes read-only above 500 MB. All 79 existing post bodies total 1.5 MB (avg 19 KB, max 60 KB) — text is safe. Existing media (79 MB, 300 files under `posts/assets/<slug>/`) stays on GitHub Pages and is **not** uploaded to Supabase Storage.
 - **Korean is the user-facing language.** All UI copy, error messages, and commit messages that a human reads stay in Korean, matching `youtube.html` and `library.html`.
 - **Tests are registered in `tests/package.json`'s `test` script** and must run under plain `node` with no test runner.
@@ -33,7 +34,7 @@
 | 4 | Rewire catalog consumers, stop loading `posts.js` | `index.html`, `library.html`, `posts/assets/nav.js`, `tests/nav.test.js`, `tests/library.test.js` | `cd tests && node nav.test.js && node library.test.js` |
 | 5 | Post renderer + old-URL fallback | `post.html`, `404.html`, `posts/assets/render-post.js`, `tests/post-page.test.js` | `cd tests && node post-page.test.js` |
 | 6 | Markdown editor that publishes instantly | `write.html`, `posts/assets/write.js`, `posts/assets/markdown.js`, `tests/write-page.test.js` | `cd tests && node write-page.test.js` |
-| 7 | Image upload to Supabase Storage | `supabase/storage-post-media.sql`, `write.html`, `tests/storage-policy.test.js` | `cd tests && node storage-policy.test.js` |
+| 7 | Image upload to Supabase Storage | `supabase/migrations/20260908001000_storage_post_media.sql`, `write.html`, `tests/storage-policy.test.js` | `cd tests && node storage-policy.test.js` |
 | 8 | `publish.mjs` + rewire translation pipelines | `scripts/publish.mjs`, `.pipeline/run.sh`, `.pipeline/youtube_worker.sh`, `tests/publish.test.js` | `cd tests && node publish.test.js` |
 | 9 | Resident Realtime listener | `.pipeline/listener.mjs`, `.pipeline/com.cbk.listener.plist`, `tests/listener.test.js` | `cd tests && node listener.test.js` |
 | 10 | Review agent contract + submit CLI | `scripts/review-submit.mjs`, `.pipeline/review-prompt.md`, `tests/review-submit.test.js` | `cd tests && node review-submit.test.js` |
@@ -54,19 +55,11 @@
 
 The spec's Goals say "큐 테이블과 폴링 워커를 은퇴시킨다". This plan retires **the polling** everywhere (Task 9 replaces it with Realtime) but **keeps the `cbk_yt_queue` table**, folding its trigger into the same listener as a second subscription. Reason: Realtime events are not durable — if the Mac is asleep when a row is written, the event is gone. A table that stores pending state is what makes the listener's startup catch-up query possible (Task 9, Step 4). Deleting the table would mean losing URL requests submitted while the Mac was off, which is worse than the problem being solved. The 6-step publishing path and the per-feature worker are both gone either way.
 
-## Human checkpoints (구현 에이전트는 여기서 멈춘다)
+## Automated operations and the remaining destructive gate
 
-이 플랜은 사람 승인 없이 넘어가면 안 되는 지점이 다섯 군데 있다. 각 태스크 파일 안에 `STOP AND ASK` 블록으로 박혀 있고, 여기 모아둔다:
+Supabase 작업에는 사람 체크포인트가 없다. 프로젝트 범위의 Management API token은 macOS Keychain과 GitHub Actions secret에만 보관한다. 로컬에서는 `node scripts/supabase-admin.mjs deploy`, 병합 뒤에는 `Deploy Supabase` workflow가 같은 manifest를 적용한다. `cbk_owner_claim`은 브라우저 역할에 공개하지 않으며 관리 세션만 호출하므로 선점 창도 없다. Realtime publication과 이후 Storage SQL도 migration으로 배포한다. 로컬 리스너의 서버 키는 `node scripts/supabase-admin.mjs sync-listener-secret`으로 gitignored `.pipeline/.env`에 넣는다.
 
-| 시점 | 무엇을 | 왜 사람이 |
-|---|---|---|
-| Task 1 끝 | Supabase SQL 에디터에서 `schema-posts.sql` 실행 + **같은 세션에서 바로** `cbk_owner_claim('<sync_key>')` | anon 키가 공개돼 있어 claim 전까지 소유권 선점 창이 열려 있다 |
-| Task 4 → Task 5 사이 | `CBK_SYNC_KEY=… node scripts/migrate-posts.mjs` 실이관 + 79건 검증 | 실서비스 DB 에 쓰는 유일한 배치. 검증·롤백 절차는 Task 2 말미 |
-| Task 9 끝 (레이어 E 완료 후) | `.pipeline/.env` 에 `SUPABASE_SERVICE_KEY` 입력, Realtime 퍼블리케이션 등록, `launchctl bootstrap` | service role 키는 RLS 를 통째로 우회한다 — 에이전트에게 값을 주지 않는다 |
-| Task 12 Step 4~5 | 스냅샷 79개가 **실제 본문을 담고** 있는지 검증 + 스냅샷 단독 커밋 | `wc -l` 만으로는 빈 파일 79개도 통과한다 |
-| Task 12 Step 6 | `git rm posts/*.html` 승인 | 되돌리기 가장 비싼 지점. 스냅샷 커밋 해시 + 검증 결과 + 라이브 URL 3건을 보고받고 승인 |
-
-Task 12 Step 7 의 워커 launchd 타이머 plist 제거(`~/Library/LaunchAgents`)도 저장소 밖이라 사람이 한다 — 다만 되돌리기 쉬우므로 차단 지점은 아니다.
+Task 12의 스냅샷 본문 검증은 자동 테스트로 유지한다. `git rm posts/*.html`은 Supabase 조작이 아니라 대량 영구 삭제이므로, 스냅샷 커밋과 라이브 URL 검증이 성공한 뒤에만 수행한다.
 
 ## Explicitly out of scope
 

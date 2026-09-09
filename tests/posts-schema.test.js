@@ -116,6 +116,7 @@ function ok(n, c) { if (c) pass++; else { fail++; console.log("  ✗ FAIL:", n);
     return (await db.query("select has_table_privilege($1,$2,$3) as v", [role, tbl, priv])).rows[0].v;
   }
   ok("anon cannot execute cbk_hash_key", (await fpriv("anon", "public.cbk_hash_key(text)")) === false);
+  ok("anon cannot execute cbk_owner_claim", (await fpriv("anon", "public.cbk_owner_claim(text)")) === false);
   ok("anon cannot execute cbk_assert_owner", (await fpriv("anon", "public.cbk_assert_owner(text)")) === false);
   ok("anon has no direct select on cbk_posts", (await tpriv("anon", "public.cbk_posts", "select")) === false);
   ok("anon has no direct insert on cbk_reviews", (await tpriv("anon", "public.cbk_reviews", "insert")) === false);

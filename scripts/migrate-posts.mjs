@@ -104,15 +104,8 @@ export async function main() {
 
   const key = process.env.CBK_SYNC_KEY;
   if (!key) { console.error("CBK_SYNC_KEY 가 없습니다"); process.exit(1); }
-  // cbk_owner_claim 은 false 를 HTTP 200 으로 돌려준다. 버리면 첫 포스트에서
-  // "RPC cbk_post_upsert 400: not the owner" 로 죽고, 진짜 원인이 안 보인다.
-  const owned = await rpc("cbk_owner_claim", { p_key: key });
-  if (owned !== true) {
-    console.error("이 sync_key 는 이 사이트의 소유자가 아닙니다 — 다른 키가 이미 cbk_owner 를 선점했습니다.");
-    console.error("Supabase SQL 에디터에서 `delete from public.cbk_owner where id = 1;` 로 지운 뒤,");
-    console.error("그 사이 들어온 글이 없는지 cbk_posts 를 확인하고 다시 실행하세요.");
-    process.exit(1);
-  }
+  // owner seed는 scripts/supabase-admin.mjs가 Management API의 관리자 세션에서 한다.
+  // cbk_owner_claim은 브라우저 역할에 공개하지 않아 선점 경쟁 자체를 없앴다.
 
   let n = 0;
   for (const r of rows) {

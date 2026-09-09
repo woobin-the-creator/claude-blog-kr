@@ -7,7 +7,7 @@
 
 **Interfaces:**
 - Consumes: `cbk_post_upsert(p_key, p_slug, p_title, p_nav, p_main, p_cat, p_date, p_body_html, p_body_md, p_style_css, p_author)` from Task 1.
-- Produces: `scripts/migrate-posts.mjs` exports `extractPost(html, entry, pagesBase)` → `{ slug, title, nav, main, cat, date, body_html, style_css, body_md, author }`. Task 8 (`publish.mjs`) and Task 12 (`snapshot.mjs`) both import `extractPost`'s sibling helper `absolutizeAssets(html, slug, pagesBase)`, so export both. `main()` is exported as well, so the test can drive the `--dry` path in-process and assert it never calls `fetch` — that no-network guarantee is what the human STOP AND ASK below rests on.
+- Produces: `scripts/migrate-posts.mjs` exports `extractPost(html, entry, pagesBase)` → `{ slug, title, nav, main, cat, date, body_html, style_css, body_md, author }`. Task 8 (`publish.mjs`) and Task 12 (`snapshot.mjs`) both import `extractPost`'s sibling helper `absolutizeAssets(html, slug, pagesBase)`, so export both. `main()` is exported as well, so the test can drive the `--dry` path in-process and assert it never calls `fetch` before the automated production migration runs.
 
 **Background the implementer needs:**
 
@@ -88,8 +88,8 @@ function ok(n, c) { if (c) pass++; else { fail++; console.log("  ✗ FAIL:", n);
   ok("body_md is null for migrated translations", row.body_md === null);
 
   // --- --dry 는 절대 네트워크를 건드리지 않는다 ---
-  // 사람이 승인하는 STOP AND ASK 가 이 보장 위에 서 있다. Task 8 이 이 파일을
-  // import 하므로, 여기서 회귀하면 사람 승인 없이 실서비스에 쓰게 된다.
+  // 자동 배포기는 실행 전에 이 경로를 검증한다. Task 8 이 이 파일을 import 하므로,
+  // 여기서 회귀하면 검증 명령이 실서비스를 건드릴 수 있다.
   let fetchCalls = 0;
   const realFetch = globalThis.fetch;
   const realArgv = process.argv;
@@ -236,15 +236,8 @@ export async function main() {
 
   const key = process.env.CBK_SYNC_KEY;
   if (!key) { console.error("CBK_SYNC_KEY 가 없습니다"); process.exit(1); }
-  // cbk_owner_claim 은 false 를 HTTP 200 으로 돌려준다. 버리면 첫 포스트에서
-  // "RPC cbk_post_upsert 400: not the owner" 로 죽고, 진짜 원인이 안 보인다.
-  const owned = await rpc("cbk_owner_claim", { p_key: key });
-  if (owned !== true) {
-    console.error("이 sync_key 는 이 사이트의 소유자가 아닙니다 — 다른 키가 이미 cbk_owner 를 선점했습니다.");
-    console.error("Supabase SQL 에디터에서 `delete from public.cbk_owner where id = 1;` 로 지운 뒤,");
-    console.error("그 사이 들어온 글이 없는지 cbk_posts 를 확인하고 다시 실행하세요.");
-    process.exit(1);
-  }
+  // owner seed는 scripts/supabase-admin.mjs가 Management API의 관리자 세션에서 한다.
+  // cbk_owner_claim은 브라우저 역할에 공개하지 않아 선점 경쟁 자체를 없앴다.
 
   let n = 0;
   for (const r of rows) {
@@ -297,35 +290,7 @@ git add scripts/migrate-posts.mjs tests/migrate-posts.test.js tests/package.json
 git commit -m "feat(migrate): 기존 79개 포스트를 cbk_posts 로 옮기는 이관 스크립트"
 ```
 
-> ### STOP AND ASK — 실데이터 이관은 사람이 승인한다
+> ### Automated production migration — do not stop
 >
-> **구현 에이전트는 `scripts/migrate-posts.mjs` 를 실서비스 대상으로 실행하지 않는다.** 이 태스크에서 허용되는 실행은 `--dry` 뿐이다. 커밋까지 마친 뒤 멈추고 오케스트레이터에게 보고한다.
->
-> 실업로드는 Task 1 의 STOP AND ASK(스키마 실행 + `cbk_owner_claim` true 확인)가 끝난 뒤, **Task 4 와 Task 5 사이에** 사람이 직접 돌린다:
->
-> ```bash
-> CBK_SYNC_KEY=<내 24자 sync_key> node scripts/migrate-posts.mjs
-> ```
->
-> **업로드 직후 검증(사람이 확인하고 결과를 보고한다):**
->
-> ```bash
-> curl -sS "$CBK_SUPABASE_URL/rest/v1/rpc/cbk_posts_list" \
->   -H "apikey: $CBK_SUPABASE_ANON" -H "Content-Type: application/json" \
->   -d '{}' | jq 'length'          # 79 가 나와야 한다
->
-> curl -sS "$CBK_SUPABASE_URL/rest/v1/rpc/cbk_posts_list" \
->   -H "apikey: $CBK_SUPABASE_ANON" -H "Content-Type: application/json" \
->   -d '{}' | jq '[.[] | select(.title == null or .title == "")] | length'   # 0 이어야 한다
-> ```
->
-> 개수가 79 가 아니거나 빈 제목이 있으면 **다음 태스크로 넘어가지 말고** 롤백한다:
->
-> ```bash
-> # 잘못 올라간 slug 를 하나씩 지운다 (전량 롤백이면 --dry 목록의 79개 slug 전부)
-> curl -sS "$CBK_SUPABASE_URL/rest/v1/rpc/cbk_post_delete" \
->   -H "apikey: $CBK_SUPABASE_ANON" -H "Content-Type: application/json" \
->   -d '{"p_key":"<sync_key>","p_slug":"<slug>"}'
-> ```
->
+> The `Deploy Supabase` workflow applies the schema, seeds the owner, runs `scripts/migrate-posts.mjs`, and then runs `node scripts/supabase-admin.mjs verify`. The verification requires at least 79 posts, no empty titles, no short migrated bodies, an owner count of one, blocked public owner claim, and Realtime publication membership. A local authorized agent may run the same three commands without SQL Editor.
 > 스크립트는 slug upsert 이므로 재실행이 안전하다 — 부분 실패 시 원인을 고치고 통째로 다시 돌려도 중복 행이 생기지 않는다.

@@ -1,7 +1,7 @@
 ### Task 7: Image upload to Supabase Storage
 
 **Files:**
-- Create: `supabase/storage-post-media.sql`
+- Create: `supabase/migrations/20260908001000_storage_post_media.sql`
 - Create: `tests/storage-policy.test.js`
 - Modify: `write.html` (upload control inside `#tab-edit`)
 - Modify: `tests/package.json`
@@ -33,7 +33,7 @@ let pass = 0, fail = 0;
 function ok(n, c) { if (c) pass++; else { fail++; console.log("  x FAIL:", n); } }
 
 (async () => {
-  const sql = fs.readFileSync(ROOT + "/supabase/storage-post-media.sql", "utf8");
+  const sql = fs.readFileSync(ROOT + "/supabase/migrations/20260908001000_storage_post_media.sql", "utf8");
 
   ok("bucket is named post-media", /'post-media'/.test(sql));
   ok("bucket is public for reads", /public\s*=?\s*true|,\s*true\s*\)/.test(sql));
@@ -79,11 +79,11 @@ function ok(n, c) { if (c) pass++; else { fail++; console.log("  x FAIL:", n); }
 cd tests && node storage-policy.test.js
 ```
 
-Expected: FAIL — `ENOENT ... supabase/storage-post-media.sql`
+Expected: FAIL — `ENOENT ... supabase/migrations/20260908001000_storage_post_media.sql`
 
 - [ ] **Step 3: Write the storage SQL**
 
-Create `supabase/storage-post-media.sql`:
+Create `supabase/migrations/20260908001000_storage_post_media.sql` and register it in `supabase/deploy-manifest.json`:
 
 ```sql
 -- Claude Blog KR — 내가 쓴 글에 붙일 이미지 버킷
@@ -232,8 +232,8 @@ Expected: both pass. Task 6's test does not stub the Storage endpoint, but it ne
 Add `storage-policy.test.js` to `tests/package.json`'s `test` script and a `test:storage` entry.
 
 ```bash
-git add supabase/storage-post-media.sql write.html tests/storage-policy.test.js tests/package.json
+git add supabase/migrations/20260908001000_storage_post_media.sql supabase/deploy-manifest.json write.html tests/storage-policy.test.js tests/package.json
 git commit -m "feat(media): 내 글에 붙일 이미지용 post-media 버킷과 에디터 업로드"
 ```
 
-**Deployment note:** `supabase/storage-post-media.sql` has to be run once in the Supabase SQL editor, same as Task 1's schema. Mention it in the commit body.
+**Deployment note:** make this an immutable migration under `supabase/migrations/`, register it in `supabase/deploy-manifest.json`, and let `Deploy Supabase` apply it. Do not use SQL Editor.
