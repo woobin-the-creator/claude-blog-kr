@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "description": "검증 테스트: 평가(좋아요/싫어요/이유) 저장 + LLM Wiki 파이프라인",
   "scripts": {
-    "test": "node store.test.js && node catalog.test.js && node nav.test.js && node library.test.js && node post-page.test.js && node schema.test.js && node posts-schema.test.js && node migrate-posts.test.js && node supabase-admin.test.js && node yt-queue.test.js && node yt-page.test.js && node authoring.test.js && node review-runtime.test.js && node snapshot.test.js && node wiki.test.mjs",
+    "test": "node store.test.js && node catalog.test.js && node nav.test.js && node library.test.js && node post-page.test.js && node schema.test.js && node posts-schema.test.js && node migrate-posts.test.js && node supabase-admin.test.js && node yt-queue.test.js && node yt-page.test.js && node authoring.test.js && node review-runtime.test.js && node review-ui.test.js && node snapshot.test.js && node wiki.test.mjs",
     "test:store": "node store.test.js",
     "test:catalog": "node catalog.test.js",
     "test:nav": "node nav.test.js",

@@ -4,6 +4,10 @@
   var btn = document.getElementById('w-publish'), loading = document.getElementById('w-loading');
   var match = /[?&]slug=([^&#]+)/.exec(location.search), slug = match ? decodeURIComponent(match[1]) : '';
   var rev = 0, ready = !slug, saving = false, draftKey = 'cbk:draft:v1' + (slug ? ':' + slug : '');
+  if (!slug && /[?&]new=1(?:&|$)/.test(location.search)) {
+    try { var previous = localStorage.getItem(draftKey); if (previous) { localStorage.setItem(draftKey + ':previous', previous); localStorage.removeItem(draftKey); } } catch (ignore) {}
+    history.replaceState(null,'','write.html');
+  }
   ids.forEach(function (id) { fields[id] = document.getElementById('w-' + id); });
   function message(text, cls) { msg.textContent = text; msg.className = cls || ''; }
   function rpc(fn, body) {
