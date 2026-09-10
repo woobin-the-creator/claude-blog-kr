@@ -11,6 +11,12 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "reducing-cost-and-improving-performance-with-claude-platform.html", date: "2026-09-08", main: "Claude blog", cat: "Agents",
+      title: "Claude Platform으로 비용은 줄이고 성능은 끌어올리기", nav: "비용 절감·성능 향상 · 캐싱·지시문·effort" },
+    { file: "the-anatomy-of-effective-commerce-agents.html", date: "2026-09-02", main: "Claude blog", cat: "Agents",
+      title: "효과적인 커머스 에이전트의 해부학", nav: "커머스 에이전트 해부학 · 스킬·캐싱·안전·평가" },
+    { file: "claude-for-commerce-agents.html", date: "2026-09-02", main: "Claude blog", cat: "Agents",
+      title: "Claude로 커머스 에이전트 만들기", nav: "커머스 에이전트 블루프린트 · 쇼핑·머천트 에이전트" },
     { file: "how-anthropic-employees-use-claude-tag.html", date: "2026-08-28", main: "Claude blog", cat: "Enterprise AI",
       title: "Anthropic 직원들은 Claude Tag를 어떻게 쓰는가", nav: "Anthropic 직원의 Claude Tag 활용 3선" },
     { file: "claude-for-teachers-now-available-for-schools-and-districts.html", date: "2026-08-28", main: "Claude blog", cat: "Product announcements",
