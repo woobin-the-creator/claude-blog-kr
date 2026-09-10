@@ -1,0 +1,34 @@
+name: Nightly post snapshot
+on:
+  schedule:
+    - cron: '30 19 * * *' # 한국 시간 04:30, GitHub 일정 실행은 지연될 수 있음
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: post-snapshot
+  cancel-in-progress: false
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Export and verify every post
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: node scripts/snapshot.mjs
+      - name: Commit content changes only
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- content
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'snapshot: 포스트 야간 백업'
+          git pull --rebase origin main
+          git push origin HEAD:main

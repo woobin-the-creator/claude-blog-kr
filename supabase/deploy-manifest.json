@@ -16,6 +16,10 @@
     {
       "id": "20260908000000_posts_realtime",
       "path": "supabase/migrations/20260908000000_posts_realtime.sql"
+    },
+    {
+      "id": "20260911000000_authoring_review",
+      "path": "supabase/migrations/20260911000000_authoring_review.sql"
     }
   ]
 }

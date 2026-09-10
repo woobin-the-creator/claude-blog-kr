@@ -1,0 +1,1 @@
+{"name":"cbk-pipeline","private":true,"type":"module","dependencies":{"@supabase/supabase-js":"^2.57.0"}}

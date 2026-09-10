@@ -10,13 +10,19 @@
   body { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
          color:#1a1a1a; line-height:1.75; max-width:760px; margin:0 auto; padding:48px 24px 96px; background:#fff; }
   #post-error { color:#a33; padding:24px 0; }
+  #post-review-badge { margin:0 0 20px; padding:10px 14px; border:1px solid #767676; border-radius:5px; }
+  #post-review-badge a { color:#a74729; }
+  #post-body img { max-width:100%; height:auto; }
+  #post-body pre { overflow:auto; }
 </style>
 </head>
 <body>
 <p id="post-error" hidden></p>
+<div id="post-review-badge" hidden></div>
 <div id="post-body"></div>
 <script>window.CBK_AT_ROOT = true; window.CBK_ASSET_BASE = "posts/";</script>
 <script src="posts/assets/cbk-config.js"></script>
+<script src="posts/assets/reviews.js"></script>
 <script src="posts/assets/render-post.js"></script>
 </body>
 </html>

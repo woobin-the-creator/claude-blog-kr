@@ -1,0 +1,133 @@
+---
+slug: "spotify-agents-20m-lines"
+title: "Spotify는 2,000만 줄 코드베이스에서 에이전트를 어떻게 굴리는가 — 니클라스 구스타브손"
+nav: "Spotify 2,000만 줄 에이전트"
+main: "Claude Youtube"
+cat: "Agents"
+date: "2026-07-03"
+author: "ai"
+rev: 1
+style_css: ":root { --fg:#1a1a1a; --muted:#666; --line:#e5e5e5; --accent:#c96442; --code-bg:#f6f6f4; }\n  * { box-sizing: border-box; }\n  body {\n    font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", \"Apple SD Gothic Neo\",\n      \"Malgun Gothic\", sans-serif;\n    color: var(--fg); line-height: 1.75; max-width: 760px;\n    margin: 0 auto; padding: 48px 24px 96px; background:#fff;\n  }\n  header { border-bottom: 2px solid var(--line); padding-bottom: 24px; margin-bottom: 32px; }\n  h1 { font-size: 1.9rem; line-height: 1.35; margin: 0 0 12px; }\n  .meta { color: var(--muted); font-size: 0.9rem; }\n  .meta .orig { display:block; margin-top:6px; }\n  .meta a { color: var(--accent); text-decoration: none; }\n  h2 { font-size: 1.4rem; margin: 44px 0 8px; padding-top: 8px; }\n  h3 { font-size: 1.15rem; margin: 30px 0 8px; color:#000; }\n  p { margin: 0 0 16px; }\n  a { color: var(--accent); }\n  ul { margin: 0 0 16px; padding-left: 22px; }\n  li { margin-bottom: 8px; }\n  blockquote { margin: 16px 0; padding: 8px 18px; border-left:3px solid var(--line);\n    color:#333; }\n  blockquote .ko { display:block; margin-top:6px; font-style: normal; color:#555;\n    font-size:0.94rem; }\n  hr { border: none; border-top: 1px solid var(--line); margin: 40px 0; }\n  code { background: var(--code-bg); padding: 2px 6px; border-radius: 4px;\n    font-family: \"SF Mono\", Menlo, Consolas, monospace; font-size: 0.88em; }\n  pre { background: var(--code-bg); padding: 16px 18px; border-radius: 8px;\n    overflow-x: auto; border:1px solid var(--line); }\n  pre code { background: none; padding: 0; font-size: 0.85rem; line-height:1.5; }\n  figure { margin: 24px 0; }\n  figure img { width: 100%; height: auto; border:1px solid var(--line); border-radius: 8px;\n    background:#fff; }\n  figcaption { color: var(--muted); font-size: 0.85rem; text-align: center;\n    margin-top: 10px; line-height: 1.5; }\n  figcaption a { color: var(--accent); }\n  .video { position: relative; width: 100%; aspect-ratio: 16 / 9; margin: 22px 0; }\n  .video iframe { position: absolute; inset: 0; width: 100%; height: 100%;\n    border: 0; border-radius: 8px; }\n  .callout { background:#faf6f4; border-left:3px solid var(--accent);\n    padding: 12px 16px; border-radius: 0 6px 6px 0; margin: 16px 0; }\n  .callout strong { color: var(--accent); }\n  .takeaway { background:#f6f6f4; border-radius:8px; padding:16px 20px; margin:28px 0; }\n  .takeaway h2 { margin-top:0; }\n  footer { margin-top: 64px; padding-top: 20px; border-top:1px solid var(--line);\n    color: var(--muted); font-size: 0.82rem; }"
+has_markdown: false
+markdown_length: 0
+html_length: 5632
+---
+
+<!-- rendered HTML -->
+<header>
+  <h1>Spotify는 2,000만 줄 코드베이스에서 에이전트를 어떻게 굴리는가 — 니클라스 구스타브손</h1>
+  <div class="meta">
+    2026-07-03 · 카테고리: Agents
+    <span class="orig">출처 영상:
+      <a href="https://youtu.be/9DHZLw5653E">How Spotify runs agents across 20M+ lines of code, with Niklas Gustavsson</a>
+      (YouTube · 한국어 정리본)</span>
+  </div>
+</header>
+
+<!-- Optional: embed the source video at the top.
+<div class="video"><iframe src="https://www.youtube.com/embed/9DHZLw5653E"
+  title="How Spotify runs agents across 20M+ lines of code, with Niklas Gustavsson"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+  allowfullscreen></iframe></div> -->
+
+<p>Anthropic에서 Claude Code를 이끄는 보리스 셔니(Boris Cherny)가 Spotify의 수석 아키텍트이자 엔지니어링 부사장 니클라스 구스타브손(Niklas Gustavsson)을 만나, 2,000만 줄이 넘는 코드베이스에서 AI 에이전트를 실제로 어떻게 굴리는지 대담을 나눴다. 화려한 데모 없이 두 사람의 대화만으로 채워지지만, "코드를 잘 짜는 회사가 아니라 에이전트가 잘 돌아가도록 판을 깔아둔 회사가 빨라진다"는 한 가지 메시지가 전편을 관통한다.</p>
+
+<p>이 글은 슬라이드·코드 화면이 전혀 없는 인터뷰 영상이라, 원본에는 임베드할 정보성 시각 자료가 없다. 대신 대화에서 나온 수치와 주장, 그리고 니클라스의 핵심 발언을 그대로 옮겨 정리했다.</p>
+
+<h2>IDE를 안 쓰게 된 두 달</h2>
+
+<p>니클라스는 분자생물학에서 엔지니어링으로 넘어와 30년 가까이 개발을 해온 사람이다. 그런 그가 최근 겪은 변화의 속도를 이렇게 표현한다. 처음엔 그저 똑똑한 자동완성 정도로 여겼는데, 두어 달 만에 작업 방식 자체가 완전히 바뀌어 있었다는 것이다.</p>
+
+<blockquote>
+  "two months later I found myself not using an IDE anymore"
+  <span class="ko">두 달쯤 지나고 보니, 저는 더 이상 IDE를 안 쓰고 있더군요.</span>
+</blockquote>
+
+<p>그는 이 변화를 "30년 동안 본 적 없는 종류의 변화"라고 못 박았다. 전환점은 Claude 3.5였다. 그전까지 모델은 '똑똑한 자동완성'에 가까웠지만, 이때부터 실제 현업의 복잡한 문제를 어느 정도 자율적으로 풀어내기 시작했다고 회고한다. 도구가 손을 거들어주는 단계에서, 문제를 대신 처리해주는 단계로 넘어간 순간이다.</p>
+
+<h2>터미널 여러 개로 2,000만 줄을 헤집는 하루</h2>
+
+<p>지금 니클라스의 작업 환경은 IDE 창 하나가 아니라 여러 개의 터미널 세션이다. 각 세션에서 Claude 에이전트를 띄워, Spotify의 거대한 모노레포(monorepo, 단일 저장소) 곳곳을 병렬로 탐색하고 수정하게 한다. 이 코드베이스는 2,000만 줄이 넘는다. 사람이 통째로 머릿속에 담을 수 없는 규모를, 에이전트를 여러 갈래로 풀어 나눠 다루는 방식이다.</p>
+
+<h2>Honk가 태어난 이유: 코드가 사람보다 7배 빨리 자란다</h2>
+
+<p>Spotify가 사내 자동화 도구 <strong>Honk</strong>를 만든 배경에는 단순한 관찰 하나가 있었다. 코드베이스가 엔지니어 수보다 훨씬 빠르게 커지고 있었다는 것.</p>
+
+<blockquote>
+  "our codebase was growing much much faster than the number of engineers"
+  <span class="ko">우리 코드베이스는 엔지니어 수보다 훨씬, 훨씬 빠르게 커지고 있었어요.</span>
+</blockquote>
+
+<p>그 격차가 대략 7배였다고 한다. 코드는 계속 불어나는데 이를 유지·보수할 사람 손은 그 속도를 못 따라간다. 그래서 Honk는 사람이 하기엔 지루하지만 반드시 해야 하는 일 — 라이브러리 버전 업데이트, API 마이그레이션 같은 '재미없는 유지보수' — 을 대신 처리하도록 설계됐다.</p>
+
+<h2>결정론적 스크립트에서 LLM으로</h2>
+
+<p>처음 Honk는 정해진 규칙대로 코드를 바꾸는 결정론적(deterministic) 스크립트에 기댔다. 하지만 실제 코드의 표면은 케이스가 너무 다양해서, 규칙 기반 변환은 조금만 복잡해져도 무너졌다. 여기서 LLM으로 넘어가자, 문맥에 따라 미묘하게 달라지는 코드 변경(mutation)까지 유연하게 소화할 수 있게 됐다. '규칙을 다 적어두는' 접근에서 '맥락을 이해시키는' 접근으로의 전환이다.</p>
+
+<h2>아키텍처와 검증 루프: 빨라지려면 여기에 투자하라</h2>
+
+<p>Honk는 <strong>Claude Agent SDK</strong>를 Kubernetes 위에서 돌린다. 핵심은 화려한 생성 능력이 아니라 <strong>검증 루프(verification loop)</strong>다. 에이전트가 만든 코드는 Linux와 macOS 양쪽에서 CI 빌드를 돌려, 실제로 의도대로 동작하는지 확인한 뒤에야 통과된다. 보리스는 많은 기업이 바로 이 지점을 과소평가한다고 짚는다.</p>
+
+<blockquote>
+  "companies under-invest in how well that verification loop works"
+  <span class="ko">기업들은 그 검증 루프가 얼마나 잘 도는지에 투자를 너무 적게 합니다.</span>
+</blockquote>
+
+<p>검증이 촘촘할수록 사람이 일일이 들여다보지 않아도 되고, 그래서 결국 더 빨라진다는 논리다. 에이전트를 빠르게 굴리는 힘은 생성 쪽이 아니라 '틀렸는지 잡아내는 쪽'에서 나온다.</p>
+
+<h2>자동 머지, 그리고 하루 4,500번의 배포</h2>
+
+<p>Spotify는 AI가 작성한 PR을 <strong>자동 머지(auto-merge)</strong>한다. 품질을 지키는 관행 자체를 자동화해두었기 때문에 가능한 일이다. 그 결과 하루에 약 <strong>4,500회</strong>의 프로덕션 배포가 일어난다. 사람이 매 PR을 손으로 검토해 합치는 구조로는 나올 수 없는 숫자다.</p>
+
+<h2>수치로 본 성과: PR의 73%가 AI 작성</h2>
+
+<p>니클라스가 제시한 지표는 구체적이다. PR 빈도가 약 75% 개선됐고, 이제 Spotify 전체 PR 중 상당수가 AI의 손에서 나온다.</p>
+
+<blockquote>
+  "73ish percent of PRs are directly attributed to being AI authored"
+  <span class="ko">이제 PR의 73% 정도가 AI가 작성한 것으로 직접 집계됩니다.</span>
+</blockquote>
+
+<h2>엔지니어링 리더에게 주는 조언: 기초에 투자하라</h2>
+
+<p>그렇다면 다른 조직은 무엇부터 해야 할까. 니클라스의 답은 '더 화려한 에이전트'가 아니라 '더 탄탄한 기초'다. 테스트 자동화와 코드베이스 표준화에 대한 투자가 그 어느 때보다 중요해졌다는 것. 이 기초가 곧 에이전트의 성능으로 직결되기 때문이다.</p>
+
+<blockquote>
+  "the more consistency we have, the better our agents work"
+  <span class="ko">일관성이 높을수록, 우리 에이전트는 더 잘 동작합니다.</span>
+</blockquote>
+
+<p>사람에게 좋은 코드 위생(테스트, 표준, 일관성)이 에이전트에게는 더더욱 결정적이라는 통찰이다. 어질러진 코드베이스에서는 사람도 에이전트도 헤맨다.</p>
+
+<h2>프로토타이핑의 민주화</h2>
+
+<p>마지막 주제는 접근성이다. AI 덕분에 Spotify에서는 엔지니어가 아닌 사람도 자연어만으로 동작하는 소프트웨어 프로토타입을 만들 수 있게 됐다. 공동 CEO를 포함해 누구든 아이디어를 던지면, 몇 주가 아니라 몇 시간 만에 실제로 굴러가는 시제품이 나온다.</p>
+
+<blockquote>
+  "allow anyone to take their idea and have Claude then go implement that"
+  <span class="ko">누구든 자기 아이디어를 가져오면, Claude가 그걸 구현하도록 할 수 있게 된 거죠.</span>
+</blockquote>
+
+<h2>핵심 정리</h2>
+
+<ul>
+  <li><strong>도구가 아니라 일하는 방식이 바뀌었다.</strong> 니클라스는 두 달 만에 IDE를 버리고 여러 터미널 속 Claude 에이전트로 옮겨갔다.</li>
+  <li><strong>Honk는 격차에서 태어났다.</strong> 코드베이스가 엔지니어 수보다 약 7배 빨리 자라자, 지루한 유지보수를 자동화하려 만들었다.</li>
+  <li><strong>규칙 기반에서 LLM으로.</strong> 결정론적 스크립트로는 복잡한 코드 표면을 못 다뤄, 문맥을 이해하는 LLM으로 전환했다.</li>
+  <li><strong>속도의 열쇠는 검증 루프.</strong> Linux·macOS CI로 검증을 촘촘히 하니 AI PR을 자동 머지할 수 있었고, 하루 4,500회 배포에 도달했다.</li>
+  <li><strong>기초가 곧 에이전트 성능.</strong> 테스트 자동화와 표준화·일관성에 투자할수록 에이전트가 더 잘 동작한다 — 현재 PR의 약 73%가 AI 작성이다.</li>
+</ul>
+
+<!-- BODY guidance (the assembler injects your /tmp/<slug>-body.html here):
+     - Intro (왜 중요한가, 2–3문장).
+     - <h2> per section + paragraphs.
+     - Frames: <figure><img src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/<slug>/<frame>.jpg" alt="…">
+         <figcaption>설명</figcaption></figure>  (relative path; never base64).
+     - Quotes: <blockquote>English original ≤15 words<span class="ko">한국어 옮김</span></blockquote>
+     - On-screen code: <pre><code>…</code></pre>
+     - Close: <div class="takeaway"><h2>핵심 정리</h2><ul>…3–5개…</ul></div> -->
+
+<footer>
+  이 글은 위 YouTube 영상을 보고 한국어로 정리한 비공식 요약·해설입니다.
+  직접 인용은 짧게 옮겼으며, 정확한 내용과 뉘앙스는 원본 영상을 함께 보세요.
+</footer>
