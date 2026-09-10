@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "t-rowe-price-brings-more-of-claude-to-its-investment-process.html", date: "2026-09-10", main: "Claude blog", cat: "Enterprise AI",
+      title: "T. Rowe Price, 투자 프로세스 전반에 Claude를 더 깊이 들인다", nav: "T. Rowe Price · 투자 프로세스에 Claude 확대" },
     { file: "reducing-cost-and-improving-performance-with-claude-platform.html", date: "2026-09-08", main: "Claude blog", cat: "Agents",
       title: "Claude Platform으로 비용은 줄이고 성능은 끌어올리기", nav: "비용 절감·성능 향상 · 캐싱·지시문·effort" },
     { file: "the-anatomy-of-effective-commerce-agents.html", date: "2026-09-02", main: "Claude blog", cat: "Agents",
