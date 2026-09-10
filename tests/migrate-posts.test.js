@@ -19,7 +19,7 @@ function ok(n, c) { if (c) pass++; else { fail++; console.log("  ✗ FAIL:", n);
 
   // --- catalog loads from the real posts.js ---
   const catalog = loadCatalog(ROOT + "/posts/assets/posts.js");
-  ok("catalog has 79 entries", catalog.length === 79);
+  ok("catalog retains at least the 79 baseline entries", catalog.length >= 79);
   ok("catalog entries carry file/date/main/cat/title/nav",
      catalog.every(e => e.file && e.date && e.main && e.cat && e.title && e.nav));
 
@@ -70,7 +70,21 @@ function ok(n, c) { if (c) pass++; else { fail++; console.log("  ✗ FAIL:", n);
   }
   ok("--dry runs without throwing" + (dryErr ? " — " + dryErr.message : ""), dryErr === null);
   ok("--dry never calls fetch", fetchCalls === 0);
-  ok("--dry emits one NDJSON line per post", ndjsonLines === 79);
+  ok("--dry emits one NDJSON line per post", ndjsonLines === catalog.length);
+
+  const { PGlite } = require('@electric-sql/pglite');
+  const db = new PGlite();
+  await db.exec(`create table cbk_posts (
+    slug text primary key, title text, nav text, main text, cat text, date date,
+    body_html text, body_md text, style_css text, author text, review_status text);`);
+  const query = async (sql, params) => (await db.query(sql, params)).rows;
+  ok("first import inserts a legacy post", await mod.importMissingPosts(query, [row]) === 1);
+  await db.query("update cbk_posts set body_html = 'edited in DB', review_status = 'pending'");
+  ok("repeat import inserts nothing", await mod.importMissingPosts(query, [row]) === 0);
+  const preserved = (await db.query('select body_html, review_status from cbk_posts')).rows[0];
+  ok("repeat import preserves body edits and review state",
+    preserved.body_html === 'edited in DB' && preserved.review_status === 'pending');
+  await db.close();
 
   console.log("migrate-posts: " + pass + " passed, " + fail + " failed");
   process.exit(fail ? 1 : 0);

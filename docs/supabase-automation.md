@@ -11,7 +11,7 @@ Agents do not use the Supabase SQL Editor. Production schema changes are immutab
 1. install dependencies and run the complete test suite;
 2. apply unapplied SQL files through the project-scoped Management API token;
 3. seed or verify the owner key through a bound SQL parameter;
-4. synchronize the 79 legacy posts while their source files exist;
+4. insert missing legacy posts while their source files exist, preserving existing DB bodies and review state;
 5. verify row counts, body integrity, owner exclusivity, permissions, migration history, and Realtime publication membership.
 
 The workflow never runs on `pull_request`, so unmerged code cannot read production secrets. Concurrent production runs are serialized.
@@ -24,6 +24,10 @@ Two encrypted GitHub repository secrets are required:
 - `CBK_SYNC_KEY`: the existing owner key.
 
 On the resident Mac, the PAT lives in Keychain under service `claude-blog-kr.supabase-access-token`, account `vroxtztoezsmkrmszgml`. `scripts/supabase-admin.mjs` reads it without printing it. `CBK_SYNC_KEY` remains in the gitignored `.pipeline/.env`.
+
+The configured token expires on **2027-09-09**. Renew it before expiration and replace both the Keychain value and the GitHub secret. The token cannot renew itself with its current permissions. Schema and data operations require no dashboard interaction while it remains valid.
+
+Legacy catalog/HTML pushes also trigger deployment, so new file-based translations are imported during the transition. Existing DB posts are never overwritten by this importer; edits to those posts must use the owner-gated write RPC. The editor, publication pipeline and AI review listener in the larger plan remain follow-up implementation work.
 
 Never put either value in a command argument, log, tracked file, issue, or pull request.
 
@@ -40,6 +44,8 @@ To refresh the resident listener's server-side key without visiting the dashboar
 ```bash
 node scripts/supabase-admin.mjs sync-listener-secret
 ```
+
+The current PAT receives 403 when revealing new secret keys. The command falls back to the accessible legacy service_role key and never stores a masked secret. This was verified with a read-only Data API call. See `docs/troubleshooting.md` for the reproduction and eventual new-key migration requirement. The listener itself is not implemented or running yet.
 
 To retry the production workflow after a transient platform failure:
 

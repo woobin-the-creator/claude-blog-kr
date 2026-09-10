@@ -47,6 +47,20 @@ function ok(name, condition) {
     })
   });
   ok("listener setup prefers the new server-side secret key", serverKey === "server-secret");
+  const urls = [];
+  const fallbackKey = await mod.fetchProjectSecretKey({
+    token: "scoped-token", projectRef: "project-ref",
+    fetchImpl: async url => {
+      urls.push(url);
+      if (url.endsWith('?reveal=true')) return { ok: false, status: 403 };
+      return { ok: true, status: 200, text: async () => JSON.stringify([
+        { type: 'secret', api_key: 'masked-not-usable' },
+        { type: 'legacy', name: 'service_role', api_key: 'legacy-server-key' }
+      ]) };
+    }
+  });
+  ok("403 reveal falls back to the readable legacy key, never a masked secret",
+    urls.length === 2 && fallbackKey === 'legacy-server-key');
 
   const tx = mod.migrationTransaction("2026_test", "abc", "select 1;");
   ok("migration and history write share a transaction", /^begin;[\s\S]*insert into public\.cbk_schema_migrations[\s\S]*commit;$/.test(tx));

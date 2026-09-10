@@ -86,16 +86,24 @@ export function apiClient({ token, projectRef, fetchImpl = fetch }) {
 
 export async function fetchProjectSecretKey({ token, projectRef, fetchImpl = fetch }) {
   if (!token) throw new Error("SUPABASE_ACCESS_TOKEN 이 없습니다");
-  const response = await fetchImpl(
+  let response = await fetchImpl(
     API_BASE + "/" + encodeURIComponent(projectRef) + "/api-keys?reveal=true",
     { headers: { Authorization: "Bearer " + token } }
   );
+  // 일부 scoped PAT에서는 reveal이 403이지만 기존 service_role 조회는 허용된다.
+  // 일반 목록의 새 secret key는 마스킹되어 있으므로 서버 키로 저장하면 안 된다.
+  const legacyOnly = response.status === 403;
+  if (legacyOnly) {
+    response = await fetchImpl(API_BASE + "/" + encodeURIComponent(projectRef) + "/api-keys", {
+      headers: { Authorization: "Bearer " + token }
+    });
+  }
   const text = await response.text();
   let payload = null;
   try { payload = text ? JSON.parse(text) : null; } catch (_) {}
   if (!response.ok) throw new Error("Supabase API key 조회 실패: " + response.status);
   const keys = Array.isArray(payload) ? payload : [];
-  const selected = keys.find(key => key.type === "secret") ||
+  const selected = (!legacyOnly && keys.find(key => key.type === "secret")) ||
     keys.find(key => key.name === "service_role");
   if (!selected || !selected.api_key) throw new Error("서버용 Supabase secret key를 찾지 못했습니다");
   return selected.api_key;

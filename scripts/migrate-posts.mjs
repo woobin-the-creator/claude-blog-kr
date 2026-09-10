@@ -1,16 +1,17 @@
 #!/usr/bin/env node
-/* 기존 posts/*.html 79개를 cbk_posts 로 이관한다.
+/* 기존 posts/*.html을 cbk_posts 로 이관한다. 이미 있는 글은 보존한다.
  *
  * 미디어(posts/assets/<slug>/, 79MB)는 옮기지 않는다 — GitHub Pages 에 그대로 두고
  * 본문의 상대 경로만 절대 URL 로 바꾼다.
  *
  *   node scripts/migrate-posts.mjs --dry        # 무엇이 올라갈지 NDJSON 으로 출력
- *   CBK_SYNC_KEY=... node scripts/migrate-posts.mjs   # 실제 업로드
+ *   node scripts/migrate-posts.mjs   # Keychain/환경변수 인증으로 실제 이관
  */
 import fs from "node:fs";
 import path from "node:path";
 import vm from "node:vm";
 import { fileURLToPath } from "node:url";
+import { apiClient, loadManifest, localSecret, seedOwner } from "./supabase-admin.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 export const PAGES_BASE = "https://woobin-the-creator.github.io/claude-blog-kr";
@@ -61,30 +62,6 @@ export function extractPost(html, entry, pagesBase) {
 }
 
 /* ---- CLI ---- */
-/* 설정은 모듈 스코프에서 한 번만 읽는다. rpc() 가 158번 불리는데 그때마다
- * 파일을 다시 읽고 정규식을 돌릴 이유가 없다. */
-let CFG = null;
-function cfg() {
-  if (CFG) return CFG;
-  const src = fs.readFileSync(ROOT + "/posts/assets/cbk-config.js", "utf8");
-  const url = (src.match(/supabaseUrl:\s*"([^"]*)"/) || [])[1];
-  const key = (src.match(/supabaseAnonKey:\s*"([^"]*)"/) || [])[1];
-  if (!url || !key) throw new Error("posts/assets/cbk-config.js 에서 Supabase 설정을 읽지 못했습니다");
-  CFG = { url: url.replace(/\/+$/, ""), key };
-  return CFG;
-}
-
-async function rpc(fn, body) {
-  const c = cfg();
-  const r = await fetch(c.url + "/rest/v1/rpc/" + fn, {
-    method: "POST",
-    headers: { apikey: c.key, Authorization: "Bearer " + c.key, "Content-Type": "application/json" },
-    body: JSON.stringify(body)
-  });
-  if (!r.ok) throw new Error("RPC " + fn + " " + r.status + ": " + (await r.text()));
-  return r.status === 204 ? null : r.json();
-}
-
 export async function main() {
   const dry = process.argv.includes("--dry");
   const catalog = loadCatalog(ROOT + "/posts/assets/posts.js");
@@ -102,27 +79,29 @@ export async function main() {
     return;
   }
 
-  const key = process.env.CBK_SYNC_KEY;
-  if (!key) { console.error("CBK_SYNC_KEY 가 없습니다"); process.exit(1); }
-  // owner seed는 scripts/supabase-admin.mjs가 Management API의 관리자 세션에서 한다.
-  // cbk_owner_claim은 브라우저 역할에 공개하지 않아 선점 경쟁 자체를 없앴다.
+  const manifest = loadManifest();
+  const query = apiClient({ token: localSecret("SUPABASE_ACCESS_TOKEN"), projectRef: manifest.projectRef });
+  await seedOwner(query, localSecret("CBK_SYNC_KEY"));
+  const inserted = await importMissingPosts(query, rows);
+  console.error("완료: " + inserted + "건 추가, " + (rows.length - inserted) + "건 기존 DB 내용 유지");
+}
 
-  let n = 0;
-  for (const r of rows) {
-    await rpc("cbk_post_upsert", {
-      p_key: key, p_slug: r.slug, p_title: r.title, p_nav: r.nav,
-      p_main: r.main, p_cat: r.cat, p_date: r.date,
-      p_body_html: r.body_html, p_body_md: r.body_md,
-      p_style_css: r.style_css, p_author: r.author
-    });
-    n++;
-    console.error("[" + n + "/" + rows.length + "] " + r.slug);
-  }
-  // 이관분은 이미 검수된 번역이라 첨삭 대상이 아니다. pending 을 전부 내린다.
-  for (const r of rows) {
-    await rpc("cbk_review_finish", { p_key: key, p_slug: r.slug, p_status: "done", p_error: null });
-  }
-  console.error("완료: " + n + "건 업로드");
+// 재실행·동시 발행 시에도 DB의 본문, 판본, 첨삭 상태를 덮어쓰지 않는다.
+// 최초 삽입과 done 상태 기록은 한 문장으로 처리한다.
+export async function importMissingPosts(query, posts) {
+  const result = await query(`
+    insert into public.cbk_posts
+      (slug, title, nav, main, cat, date, body_html, body_md, style_css, author, review_status)
+    select slug, title, nav, main, cat, date, body_html, body_md, style_css, author, 'done'
+    from jsonb_to_recordset($1::jsonb) as p(
+      slug text, title text, nav text, main text, cat text, date date,
+      body_html text, body_md text, style_css text, author text)
+    on conflict (slug) do nothing
+    returning slug
+  `, [JSON.stringify(posts)]);
+  const inserted = Array.isArray(result) ? result : (result?.result || result?.data);
+  if (!Array.isArray(inserted)) throw new Error("이관 결과 형식이 올바르지 않습니다");
+  return inserted.length;
 }
 
 if (process.argv[1] && process.argv[1].endsWith("migrate-posts.mjs")) {

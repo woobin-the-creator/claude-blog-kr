@@ -7,6 +7,8 @@ on:
       - 'supabase/**'
       - 'scripts/supabase-admin.mjs'
       - 'scripts/migrate-posts.mjs'
+      - 'posts/assets/posts.js'
+      - 'posts/*.html'
       - '.github/workflows/deploy-supabase.yml'
   workflow_dispatch:
 
@@ -45,7 +47,7 @@ jobs:
           test -n "$CBK_SYNC_KEY" || { echo "CBK_SYNC_KEY secret is missing"; exit 1; }
       - name: Apply immutable migrations and seed owner
         run: node scripts/supabase-admin.mjs deploy
-      - name: Synchronize the 79 legacy posts
+      - name: Import missing legacy posts without overwriting DB edits
         if: ${{ hashFiles('posts/assets/posts.js') != '' }}
         run: node scripts/migrate-posts.mjs
       - name: Verify production invariants
