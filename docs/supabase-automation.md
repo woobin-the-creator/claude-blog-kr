@@ -27,7 +27,7 @@ On the resident Mac, the PAT lives in Keychain under service `claude-blog-kr.sup
 
 The configured token expires on **2027-09-09**. Renew it before expiration and replace both the Keychain value and the GitHub secret. The token cannot renew itself with its current permissions. Schema and data operations require no dashboard interaction while it remains valid.
 
-Legacy catalog/HTML pushes also trigger deployment, so new file-based translations are imported during the transition. Existing DB posts are never overwritten by this importer; edits to those posts must use the owner-gated write RPC. The editor, publication pipeline and AI review listener in the larger plan remain follow-up implementation work.
+Legacy catalog/HTML pushes also trigger deployment, so new file-based translations are imported during the transition. Existing DB posts are never overwritten by this importer. The editor now uses revision-checked `cbk_post_save`; the resident AI review listener and nightly GitHub snapshot are described in `docs/authoring-review.md`. Translation publication pipeline replacement remains follow-up work.
 
 Never put either value in a command argument, log, tracked file, issue, or pull request.
 
@@ -45,7 +45,7 @@ To refresh the resident listener's server-side key without visiting the dashboar
 node scripts/supabase-admin.mjs sync-listener-secret
 ```
 
-The current PAT receives 403 when revealing new secret keys. The command falls back to the accessible legacy service_role key and never stores a masked secret. This was verified with a read-only Data API call. See `docs/troubleshooting.md` for the reproduction and eventual new-key migration requirement. The listener itself is not implemented or running yet.
+The current PAT receives 403 when revealing new secret keys. The command falls back to the accessible legacy service_role key and never stores a masked secret. This was verified with a read-only Data API call. See `docs/troubleshooting.md` for the reproduction and eventual new-key migration requirement. The listener uses that server key for Realtime only; review model subprocesses never receive it.
 
 To retry the production workflow after a transient platform failure:
 

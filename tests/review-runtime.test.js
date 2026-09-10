@@ -1,0 +1,24 @@
+const assert=require('node:assert/strict');
+const tick=()=>new Promise(r=>setTimeout(r,20));
+(async()=>{
+ const {makeListener,reviewCommand,parseReviewOutput,agentEnvironment}=await import('../.pipeline/listener.mjs');
+ const {validateFindings}=await import('../scripts/review-submit.mjs');
+ assert.equal(validateFindings([]).errors.length,0);assert.ok(validateFindings([{kind:'style',severity:'low',comment:'c'}]).errors.length);
+ assert.throws(()=>parseReviewOutput('{"result":"REVIEW_DONE a 0"}'));
+ assert.throws(()=>parseReviewOutput('{"is_error":true,"structured_output":{"findings":[]}}'));
+ assert.deepEqual(parseReviewOutput('{"structured_output":{"findings":[]}}'),[]);
+ assert.equal(agentEnvironment({HOME:'/x',CBK_SYNC_KEY:'secret',SUPABASE_SERVICE_KEY:'secret',ANTHROPIC_API_KEY:'paid'}).CBK_SYNC_KEY,undefined);
+ assert.ok(!reviewCommand().args.includes('--dangerously-skip-permissions'));
+ const calls=[],spawned=[],resolvers=[];
+ let rev=1;
+ const rpc=async(fn,b)=>{calls.push({fn,b});if(fn==='cbk_review_pending')return [{slug:'a'},{slug:'b'}];if(fn==='cbk_review_start')return [{slug:b.p_slug,rev:rev++,review_token:'token'}];if(fn==='cbk_review_complete')return true;};
+ const L=makeListener({rpc,key:'k',spawn:p=>{spawned.push(p.slug);return new Promise((res,rej)=>resolvers.push({res,rej}));}});
+ await L.catchUp();await tick();assert.deepEqual(spawned,['a']);
+ L.onPostEvent({slug:'a',review_status:'pending'});await tick();assert.equal(spawned.length,1);
+ resolvers[0].res([]);await tick();assert.deepEqual(spawned,['a','b']);
+ resolvers[1].rej(new Error('failed'));await tick();assert.deepEqual(spawned,['a','b','a']);
+ resolvers[2].res([]);await tick();assert.deepEqual(L.inFlight(),[]);
+ assert.ok(calls.some(c=>c.fn==='cbk_review_complete' && c.b.p_error));
+ assert.ok(calls.filter(c=>c.fn==='cbk_review_complete').every(c=>c.b.p_token==='token' && Number.isInteger(c.b.p_rev)));
+ console.log('review-runtime: 14 passed, 0 failed');
+})().catch(e=>{console.error(e);process.exit(1);});

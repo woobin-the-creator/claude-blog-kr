@@ -57,6 +57,7 @@
     <button type="button" id="fav-filter">★ 즐겨찾기만 보기</button>
     <a class="library-link" href="library.html">📑 내 보관함<span id="lib-count" class="count" hidden></span></a>
     <a class="library-link" href="youtube.html">🔗 링크 큐</a>
+    <a class="library-link" href="write.html">글쓰기</a>
   </div>
 
   <div class="cat-filter">
@@ -171,7 +172,7 @@
 
         var li = document.createElement("li");
         var html =
-          '<a href="posts/' + p.file + '">' +
+          '<a href="post.html?slug=' + encodeURIComponent(p.slug || p.file.replace(/\.html$/, '')) + '">' +
             (fav ? '<span class="star">★ </span>' : "") + esc(p.title) +
           "</a>" +
           '<span class="date">' + p.date +

@@ -59,6 +59,11 @@
 
     var body = document.getElementById("post-body");
     if (body) body.innerHTML = p.body_html || "";
+    if (body && p.author === "me") {
+      var heading = document.createElement("h1");
+      heading.textContent = p.title;
+      body.insertBefore(heading, body.firstChild);
+    }
 
     document.title = p.title || slug;
     document.documentElement.setAttribute("data-slug", p.slug);
