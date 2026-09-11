@@ -1,0 +1,68 @@
+---
+slug: "t-rowe-price-brings-more-of-claude-to-its-investment-process"
+title: "T. Rowe Price, 투자 프로세스 전반에 Claude를 더 깊이 들인다"
+nav: "T. Rowe Price · 투자 프로세스에 Claude 확대"
+main: "Claude blog"
+cat: "Enterprise AI"
+date: "2026-09-10"
+author: "ai"
+rev: 1
+style_css: ":root { --fg:#1a1a1a; --muted:#666; --line:#e5e5e5; --accent:#c96442; --code-bg:#f6f6f4; }\n  * { box-sizing: border-box; }\n  body {\n    font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", \"Apple SD Gothic Neo\",\n      \"Malgun Gothic\", sans-serif;\n    color: var(--fg); line-height: 1.75; max-width: 760px;\n    margin: 0 auto; padding: 48px 24px 96px; background:#fff;\n  }\n  header { border-bottom: 2px solid var(--line); padding-bottom: 24px; margin-bottom: 32px; }\n  h1 { font-size: 1.9rem; line-height: 1.35; margin: 0 0 12px; }\n  .meta { color: var(--muted); font-size: 0.9rem; }\n  .meta .orig { display:block; margin-top:6px; }\n  .meta a { color: var(--accent); text-decoration: none; }\n  h2 { font-size: 1.4rem; margin: 44px 0 8px; padding-top: 8px; }\n  h3 { font-size: 1.15rem; margin: 30px 0 8px; color:#000; }\n  p { margin: 0 0 16px; }\n  a { color: var(--accent); }\n  ul, ol { margin: 0 0 16px; padding-left: 22px; }\n  li { margin-bottom: 8px; }\n  blockquote { margin: 16px 0; padding: 8px 18px; border-left:3px solid var(--line);\n    color:#333; font-style: italic; }\n  hr { border: none; border-top: 1px solid var(--line); margin: 40px 0; }\n  code { background: var(--code-bg); padding: 2px 6px; border-radius: 4px;\n    font-family: \"SF Mono\", Menlo, Consolas, monospace; font-size: 0.88em; }\n  figure { margin: 24px 0; }\n  figure img { width: 100%; height: auto; border:1px solid var(--line); border-radius: 8px;\n    background:#fff; }\n  figure.hero img { border:none; max-width: 210px; display:block; margin: 0 auto 8px; }\n  figcaption { color: var(--muted); font-size: 0.85rem; text-align: center;\n    margin-top: 10px; line-height: 1.5; }\n  figcaption a { color: var(--accent); }\n  .callout { background:#faf6f4; border-left:3px solid var(--accent);\n    padding: 12px 16px; border-radius: 0 6px 6px 0; margin: 16px 0; }\n  .callout strong { color: var(--accent); }\n  footer { margin-top: 64px; padding-top: 20px; border-top:1px solid var(--line);\n    color: var(--muted); font-size: 0.82rem; }"
+has_markdown: false
+markdown_length: 0
+html_length: 2682
+---
+
+<!-- rendered HTML -->
+<header>
+  <h1>T. Rowe Price, 투자 프로세스 전반에 Claude를 더 깊이 들인다</h1>
+  <div class="meta">
+    2026년 9월 10일 · 카테고리: 엔터프라이즈 AI · 읽는 시간 5분
+    <span class="orig">원문:
+      <a href="https://claude.com/blog/t-rowe-price-brings-more-of-claude-to-its-investment-process">T. Rowe Price brings more of Claude to its investment process</a>
+      (한글 번역본)</span>
+  </div>
+</header>
+
+<figure class="hero"><img src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/t-rowe-price-brings-more-of-claude-to-its-investment-process/hero.svg" alt="T. Rowe Price × Anthropic 협업을 나타내는 일러스트"></figure>
+
+<p>글로벌 자산운용사 T. Rowe Price가 투자 조직 전반에 걸쳐 Claude 활용을 확대한다고 발표했다. 포트폴리오 매니저와 애널리스트는 리서치 업무에 Claude와 Claude Cowork를 쓰고, 개발자들은 Claude Code로 투자 도구를 직접 만든다.</p>
+
+<h2>T. Rowe Price는 Claude를 어떻게 쓰는가</h2>
+<p>T. Rowe Price는 투자 프로세스의 세 영역에 Claude를 배치하고 있다.</p>
+<ul>
+  <li><strong>리서치:</strong> 투자 전문가들이 Cowork로 복잡한 정보를 종합해, 분석과 토론에 쓸 시간을 더 확보한다</li>
+  <li><strong>다단계 프로세스:</strong> 일관성과 관리·감독이 필요한 지식 집약적 작업을 팀 단위로 Cowork와 협업해 처리한다</li>
+  <li><strong>도구 구축:</strong> 개발자들이 Claude Code를 활용해 투자팀과 운영팀을 지원하는 도구를 만들고 개선한다</li>
+</ul>
+<p>이번 도입은 T. Rowe Price가 지난 8월 발표한 AI 리더십 체계 아래에서 이뤄진다. 이 체계는 투자(Investments) 부문과 글로벌 유통(Global Distribution) 부문 각각에 AI 리더를 두고, T. Rowe Price Labs가 전사적으로 AI 애플리케이션을 평가하고 확장하는 역할을 맡는 구조다.</p>
+
+<blockquote>
+  "대부분의 엔터프라이즈 AI 도입은 백오피스에서 시작한다. T. Rowe Price는 종목을 고르는 사람들에서부터 시작했다."
+  <footer style="margin:8px 0 0; padding:0; border:none; font-size:0.85rem; color:var(--muted); font-style:normal;">
+    — Peter Nolan, Anthropic
+  </footer>
+</blockquote>
+
+<blockquote>
+  "Claude는 우리 투자 전문가들이 더 넓게, 더 깊이 파고들 수 있게 해준다."
+  <footer style="margin:8px 0 0; padding:0; border:none; font-size:0.85rem; color:var(--muted); font-style:normal;">
+    — Eric Veiel, T. Rowe Price 사장
+  </footer>
+</blockquote>
+
+<h2>다음 단계</h2>
+<p>이번 확대는 교육, 인재 육성, 책임 있는 사용 가이드라인 마련 등 T. Rowe Price의 더 폭넓은 AI 노력과 함께 진행된다. T. Rowe Price는 투자, 회사 운영, 고객 서비스 전반에 AI를 적용하는 데 있어 자산운용 업계를 선도하는 것을 목표로 하고 있다.</p>
+<p class="callout">T. Rowe Price의 투자 리서치 프로세스는 거의 90년 가까이 고객에게 서비스를 제공해 온 역사를 갖고 있다.</p>
+
+<p><strong>더 알아보기:</strong></p>
+<ul>
+  <li><a href="https://www.prnewswire.com/news-releases/t-rowe-price-works-with-anthropic-to-bring-claude-to-more-of-its-investment-process-302875582.html">T. Rowe Price · Anthropic 공동 보도자료 (PR Newswire)</a></li>
+  <li><a href="https://claude.com/product/claude-code">Claude Code</a> · <a href="https://claude.com/product/cowork">Claude Cowork</a></li>
+  <li><a href="https://support.claude.com/en/articles/9797531-what-is-the-enterprise-plan">Claude Enterprise 소개</a></li>
+</ul>
+
+<footer>
+  이 글은 Claude 공식 블로그 원문을 한국어로 옮긴 비공식 번역본입니다.
+  내용의 정확한 의미는 위 원문 링크를 함께 참고하세요.
+</footer>
