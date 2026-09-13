@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "what-1-000-small-business-owners-taught-us-about-ai.html", date: "2026-09-10", main: "Claude blog", cat: "Enterprise AI",
+      title: "1,000명의 소상공인이 우리에게 가르쳐 준 AI 이야기", nav: "소상공인 1,000명이 가르쳐 준 AI · SMB 투어 5가지 교훈" },
     { file: "t-rowe-price-brings-more-of-claude-to-its-investment-process.html", date: "2026-09-10", main: "Claude blog", cat: "Enterprise AI",
       title: "T. Rowe Price, 투자 프로세스 전반에 Claude를 더 깊이 들인다", nav: "T. Rowe Price · 투자 프로세스에 Claude 확대" },
     { file: "reducing-cost-and-improving-performance-with-claude-platform.html", date: "2026-09-08", main: "Claude blog", cat: "Agents",
