@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "how-healthcare-organizations-use-claude-tag.html", date: "2026-09-14", main: "Claude blog", cat: "Enterprise AI",
+      title: "의료 기관은 Claude Tag를 어떻게 활용하고 있나", nav: "의료 기관의 Claude Tag 활용 · Insight Health·Tennr·Medallion" },
     { file: "deploying-ai-from-pilot-to-production.html", date: "2026-09-14", main: "Claude blog", cat: "Enterprise AI",
       title: "파일럿에서 프로덕션으로 AI 배포하기: CIO와 기술 리더를 위한 실전 청사진", nav: "파일럿→프로덕션 AI 배포 · Accenture 공동 가이드" },
     { file: "claude-for-financial-advisors.html", date: "2026-09-14", main: "Claude blog", cat: "Product announcements",
