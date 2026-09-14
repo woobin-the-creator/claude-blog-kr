@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "claude-for-financial-advisors.html", date: "2026-09-14", main: "Claude blog", cat: "Product announcements",
+      title: "Claude for Financial Advisors", nav: "Claude for Financial Advisors · 금융 자문가용 커넥터·스킬" },
     { file: "agentic-coding-is-straining-ci-heres-how-we-scaled-test-impact-analysis-at-anthropic.html", date: "2026-09-14", main: "Claude blog", cat: "Claude Code",
       title: "에이전틱 코딩이 CI를 짓누르고 있다. Anthropic은 테스트 영향 분석을 이렇게 확장했다", nav: "CI 확장 · 테스트 영향 분석 재설계" },
     { file: "what-1-000-small-business-owners-taught-us-about-ai.html", date: "2026-09-10", main: "Claude blog", cat: "Enterprise AI",
