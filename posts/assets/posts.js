@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "agentic-coding-is-straining-ci-heres-how-we-scaled-test-impact-analysis-at-anthropic.html", date: "2026-09-14", main: "Claude blog", cat: "Claude Code",
+      title: "에이전틱 코딩이 CI를 짓누르고 있다. Anthropic은 테스트 영향 분석을 이렇게 확장했다", nav: "CI 확장 · 테스트 영향 분석 재설계" },
     { file: "what-1-000-small-business-owners-taught-us-about-ai.html", date: "2026-09-10", main: "Claude blog", cat: "Enterprise AI",
       title: "1,000명의 소상공인이 우리에게 가르쳐 준 AI 이야기", nav: "소상공인 1,000명이 가르쳐 준 AI · SMB 투어 5가지 교훈" },
     { file: "t-rowe-price-brings-more-of-claude-to-its-investment-process.html", date: "2026-09-10", main: "Claude blog", cat: "Enterprise AI",
