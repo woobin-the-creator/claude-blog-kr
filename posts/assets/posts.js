@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "building-an-ai-native-revenue-organization.html", date: "2026-09-15", main: "Claude blog", cat: "Enterprise AI",
+      title: "AI 네이티브 매출 조직 만들기", nav: "AI 네이티브 매출 조직 · 영업 조직 Claude 도입 가이드" },
     { file: "how-healthcare-organizations-use-claude-tag.html", date: "2026-09-14", main: "Claude blog", cat: "Enterprise AI",
       title: "의료 기관은 Claude Tag를 어떻게 활용하고 있나", nav: "의료 기관의 Claude Tag 활용 · Insight Health·Tennr·Medallion" },
     { file: "deploying-ai-from-pilot-to-production.html", date: "2026-09-14", main: "Claude blog", cat: "Enterprise AI",
