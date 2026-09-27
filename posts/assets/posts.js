@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "build-plugins-for-claude.html", date: "2026-09-25", main: "Claude blog", cat: "Product announcements",
+      title: "디렉터리 제출 포털로 Claude 플러그인 만들기", nav: "Claude 플러그인 만들기 · 디렉터리 제출 포털 공개" },
     { file: "salesforce-in-claude.html", date: "2026-09-15", main: "Claude blog", cat: "Enterprise AI",
       title: "Claude 안의 Salesforce (Salesforce in Claude)", nav: "Salesforce in Claude · 영업용 플러그인 베타 출시" },
     { file: "building-an-ai-native-revenue-organization.html", date: "2026-09-15", main: "Claude blog", cat: "Enterprise AI",
