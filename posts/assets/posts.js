@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "how-coderabbit-power-digital-and-thoughtspot-scale-with-snowflake-and-vercel-on-claude-marketplace.html", date: "2026-09-23", main: "Claude blog", cat: "Enterprise AI",
+      title: "CodeRabbit, Power Digital, ThoughtSpot은 Claude Marketplace에서 Snowflake와 Vercel을 어떻게 확장했나", nav: "Claude Marketplace 고객 사례 · Snowflake·Vercel 약정 확장" },
     { file: "cowork-is-now-claude.html", date: "2026-09-16", main: "Claude blog", cat: "Product announcements",
       title: "Claude Cowork와 채팅, 이제 하나의 Claude로", nav: "Cowork+채팅 통합 · Docs·Slides·Design 대화 안에서" },
     { file: "claude-tag-now-supports-personal-connectors-in-channels.html", date: "2026-09-24", main: "Claude blog", cat: "Product announcements",
