@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "how-to-prepare-for-ai-driven-code-modernization-projects.html", date: "2026-09-23", main: "Claude blog", cat: "Claude Code",
+      title: "AI 주도 코드 현대화 프로젝트, 어떻게 준비할 것인가", nav: "AI 코드 현대화 준비 · 타깃·인증서·승격 정책 6단계" },
     { file: "how-coderabbit-power-digital-and-thoughtspot-scale-with-snowflake-and-vercel-on-claude-marketplace.html", date: "2026-09-23", main: "Claude blog", cat: "Enterprise AI",
       title: "CodeRabbit, Power Digital, ThoughtSpot은 Claude Marketplace에서 Snowflake와 Vercel을 어떻게 확장했나", nav: "Claude Marketplace 고객 사례 · Snowflake·Vercel 약정 확장" },
     { file: "cowork-is-now-claude.html", date: "2026-09-16", main: "Claude blog", cat: "Product announcements",
