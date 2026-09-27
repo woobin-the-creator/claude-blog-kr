@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "working-at-the-frontier-how-balyasny-asset-management-evaluates-and-governs-claude-fable-5.html", date: "2026-09-17", main: "Claude blog", cat: "Enterprise AI",
+      title: "프런티어에서 일하기: Balyasny Asset Management는 Claude Fable 5를 어떻게 평가하고 관리하는가", nav: "BAM × Claude Fable 5 · 수천 개 금융 과제 평가와 BAMAgent 거버넌스" },
     { file: "projects-redesigned.html", date: "2026-09-17", main: "Claude blog", cat: "Product announcements",
       title: "프로젝트 새 단장: 폴더에서 대화로", nav: "프로젝트 새 단장 · 스레드+코디네이터, Claude Code 베타" },
     { file: "how-to-prepare-for-ai-driven-code-modernization-projects.html", date: "2026-09-23", main: "Claude blog", cat: "Claude Code",
