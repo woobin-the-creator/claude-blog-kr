@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "claude-marketplace.html", date: "2026-09-23", main: "Claude blog", cat: "Product announcements",
+      title: "Claude Marketplace: 플러그인·커넥터, 제품·에이전트, 서비스 파트너를 한곳에", nav: "Claude Marketplace · 플러그인·제품·파트너 통합 출시" },
     { file: "claude-for-small-business-launches-new-workflows-integrations-and-training-programs.html", date: "2026-09-15", main: "Claude blog", cat: "Product announcements",
       title: "Claude for Small Business, 새 워크플로·통합·교육 프로그램 출시", nav: "Claude for Small Business · 워크플로 43개·통합 27개·가을 워크숍" },
     { file: "build-plugins-for-claude.html", date: "2026-09-25", main: "Claude blog", cat: "Product announcements",
