@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "claude-opus-5-5-built-for-coding-sessions-that-use-more-context.html", date: "2026-09-24", main: "Claude blog", cat: "Claude Code",
+      title: "코딩 세션은 더 길어지고 더 많은 컨텍스트를 쓴다. Claude Opus 5.5는 그 점을 염두에 두고 만들어졌다", nav: "Opus 5.5 · 긴 코딩 세션·캐시 비용 최적화" },
     { file: "claude-marketplace.html", date: "2026-09-23", main: "Claude blog", cat: "Product announcements",
       title: "Claude Marketplace: 플러그인·커넥터, 제품·에이전트, 서비스 파트너를 한곳에", nav: "Claude Marketplace · 플러그인·제품·파트너 통합 출시" },
     { file: "claude-for-small-business-launches-new-workflows-integrations-and-training-programs.html", date: "2026-09-15", main: "Claude blog", cat: "Product announcements",

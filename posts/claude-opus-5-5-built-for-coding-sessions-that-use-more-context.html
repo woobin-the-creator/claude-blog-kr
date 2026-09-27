@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>코딩 세션은 더 길어지고 더 많은 컨텍스트를 쓴다. Claude Opus 5.5는 그 점을 염두에 두고 만들어졌다</title>
+<style>
+  :root { --fg:#1a1a1a; --muted:#666; --line:#e5e5e5; --accent:#c96442; --code-bg:#f6f6f4; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo",
+      "Malgun Gothic", sans-serif;
+    color: var(--fg); line-height: 1.75; max-width: 760px;
+    margin: 0 auto; padding: 48px 24px 96px; background:#fff;
+  }
+  header { border-bottom: 2px solid var(--line); padding-bottom: 24px; margin-bottom: 32px; }
+  h1 { font-size: 1.9rem; line-height: 1.35; margin: 0 0 12px; }
+  .meta { color: var(--muted); font-size: 0.9rem; }
+  .meta .orig { display:block; margin-top:6px; }
+  .meta a { color: var(--accent); text-decoration: none; }
+  h2 { font-size: 1.4rem; margin: 44px 0 8px; padding-top: 8px; }
+  h3 { font-size: 1.15rem; margin: 30px 0 8px; color:#000; }
+  p { margin: 0 0 16px; }
+  a { color: var(--accent); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  blockquote { margin: 16px 0; padding: 8px 18px; border-left:3px solid var(--line);
+    color:#333; font-style: italic; }
+  hr { border: none; border-top: 1px solid var(--line); margin: 40px 0; }
+  code { background: var(--code-bg); padding: 2px 6px; border-radius: 4px;
+    font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 0.88em; }
+  figure { margin: 24px 0; }
+  figure img { width: 100%; height: auto; border:1px solid var(--line); border-radius: 8px;
+    background:#fff; }
+  figure.hero img { border:none; max-width: 210px; display:block; margin: 0 auto 8px; }
+  .quotes { display:grid; gap:18px; margin: 20px 0 8px; }
+  .quote { border:1px solid var(--line); border-radius: 10px; padding: 18px 20px; }
+  .quote img.logo { height: 26px; width:auto; display:block; margin-bottom: 12px; }
+  .quote p { margin: 0 0 10px; color:#333; }
+  .quote cite { display:block; font-style: normal; color: var(--muted); font-size: 0.85rem; }
+  figcaption { color: var(--muted); font-size: 0.85rem; text-align: center;
+    margin-top: 10px; line-height: 1.5; }
+  figcaption a { color: var(--accent); }
+  .video { position: relative; width: 100%; padding-top: 56.25%; margin: 24px 0 8px;
+    border-radius: 8px; overflow: hidden; background:#000; }
+  .video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .callout { background:#faf6f4; border-left:3px solid var(--accent);
+    padding: 12px 16px; border-radius: 0 6px 6px 0; margin: 16px 0; }
+  .callout strong { color: var(--accent); }
+  .lede { color:#333; font-size: 1.05rem; }
+  footer { margin-top: 64px; padding-top: 20px; border-top:1px solid var(--line);
+    color: var(--muted); font-size: 0.82rem; }
+</style>
+<link rel="stylesheet" href="assets/nav.css">
+</head>
+<body>
+<header>
+  <h1>코딩 세션은 더 길어지고 더 많은 컨텍스트를 쓴다. Claude Opus 5.5는 그 점을 염두에 두고 만들어졌다</h1>
+  <div class="meta">
+    2026년 9월 24일 · 읽는 시간 5분 · 글쓴이: Michael Segner
+    · 카테고리: <a href="https://claude.com/blog/category/claude-code">Claude Code</a>,
+    <a href="https://claude.com/blog/category/enterprise-ai">Enterprise AI</a>
+    · 제품: <a href="https://claude.com/product/claude-code">Claude Code</a>,
+    <a href="https://claude.com/solutions/enterprise">Claude Enterprise</a>
+    <span class="orig">원문:
+      <a href="https://claude.com/blog/claude-opus-5-5-built-for-coding-sessions-that-use-more-context">Coding sessions are longer and use more context. Claude Opus 5.5 is built with that in mind. by Anthropic</a>
+      (한글 번역본)</span>
+  </div>
+</header>
+
+<figure class="hero"><img src="assets/claude-opus-5-5-built-for-coding-sessions-that-use-more-context/hero.svg" alt="Claude Opus 5.5 일러스트"></figure>
+
+<p class="lede"><em>최신 Opus 모델은 요즘 개발자들이 코딩하는 방식에 맞춰 비용을 최적화하도록 가격이 책정되고 훈련되었다.</em></p>
+
+<p>우리는 Claude Opus 5.5가 토큰 단위로 과금되는 일반적인 워크로드에서 Opus 5보다 <a href="https://www.anthropic.com/claude-opus-5-5">약 40% 저렴하게</a> 실행된다고 추정한다. 개발자에게는 그 절감이 정확히 <em>어떻게</em> 쌓이는지가 중요하다.</p>
+
+<p>토큰 단위로 요금을 내고 있다면, 더 오래 실행되고 컨텍스트가 더 큰 세션에서 가장 큰 비용 차이를 보게 될 것이다. 바로 지난 6개월 동안 부쩍 늘어난 유형의 Claude Code 세션이다.</p>
+
+<p>이 글에서는 요즘(그리고 아마 앞으로도) 개발자들이 코딩하는 방식에 대해 Opus 5.5가 비용 효율적인 이유를 그 작동 원리 차원에서 깊이 들여다본다.</p>
+
+<h2>Claude Code 사용 추세</h2>
+
+<p>우리는 2026년 3월부터 9월까지 개발자들이 Claude Code를 어떻게 사용해 왔는지 집계 데이터를 뽑아 보았다. 모델 역량이 좋아지면서 개발자들은 에이전트를 점점 더 정교한 방식으로 배치하고 있다. 세션당 프롬프트 수는 꾸준했지만, 몇 가지 흥미로운 행동이 발견되었다.</p>
+
+<ul>
+  <li>Claude는 프롬프트 하나당 3.3배 더 오래 작업하며, 프롬프트당 모델 호출은 40% 넘게 늘었다. 중단(interruption)은 68% 줄었다.</li>
+  <li>개발자가 도구 서버를 연결하거나 스킬을 사용할 가능성은 약 2배가 됐고, 프롬프트에 텍스트를 붙여넣을 가능성은 3분의 1 줄었다.</li>
+  <li>요청당 컨텍스트는 2.6배 늘었다. 입력 대 출력 토큰 비율은 189:1에서 324:1로 옮겨 갔다.</li>
+</ul>
+
+<figure>
+  <img src="assets/claude-opus-5-5-built-for-coding-sessions-that-use-more-context/claude-code-trends.png" alt="Claude Code 사용 추세(2026년 3월~9월). 프롬프트당 작업: 3.3배 더 오래 작업, 모델 호출 약 50% 증가, 중단 68% 감소. 개발자가 컨텍스트를 가져오는 방식: 도구 서버 연결·스킬 사용 약 2배, 텍스트 붙여넣기 3분의 1 감소. 컨텍스트: 요청당 2.6배, 입력 대 출력 토큰 비율 189:1에서 324:1로">
+  <figcaption>Claude Code, 2026년 3월~9월.</figcaption>
+</figure>
+
+<p>이 모든 것은 개발자들이 더 열심히 일하고 더 많은 정보를 가진 Claude를 더 크고 더 열린 과제로 향하게 하고 있음을 가리킨다. 이런 유형의 세션에서는 컨텍스트 엔지니어링(context engineering)의 경제적 영향이 복리로 불어난다.</p>
+
+<p>간단히 말해 Claude가 더 많은 토큰을 읽는다. 따라서 <a href="https://claude.com/blog/the-new-rules-of-context-engineering-for-claude-5-generation-models">제공하는 컨텍스트가 전부 꼭 필요한 것인지</a>, 그리고 <a href="https://claude.com/blog/maximizing-the-value-of-your-claude-code-sessions">그 컨텍스트의 최대한 많은 부분이 캐시에서 읽히는지</a> 확인해야 한다.</p>
+
+<h2>길고 컨텍스트가 무거운 세션에서 Opus 5.5가 비용 효율적인 이유</h2>
+
+<p>오래 실행되고 컨텍스트가 무거운 세션을 더 비용 효율적으로 만드는 변화는 세 가지다. 가격, 모델 행동, 그리고 Claude Code 하네스(harness)의 변화다. 하나씩 살펴보자.</p>
+
+<h3>캐시는 싸다</h3>
+
+<p>토큰 단위로 과금되는 사용에 대해 우리는 입력·출력 토큰 비용을 20% 내렸고, <em>캐시된 토큰을 읽는 가격은 60% 내렸다</em>. 후자의 인하가 중요한 이유는, 에이전틱 작업과 코딩 작업 비용의 대부분을 캐시 읽기가 차지하기 때문이다.</p>
+
+<p>그리고 방금 이야기했듯 요청당 컨텍스트는 6개월 만에 대략 2.6배 늘었으니, 절감은 올바른 방향으로 흘러가고 있다. 토큰 단위로 과금되는 사용자에게 같은 가격 변화는 6개월 전보다 오늘의 Claude Code 트래픽에서 더 많이 절감된다. 이제 청구서의 더 많은 부분이 다시 읽히는 컨텍스트이기 때문이다.</p>
+
+<p>이 글의 게시 시점 기준으로, Opus 5.5의 캐시된 토큰 가격은 경쟁 모델의 5분의 1이면서도 성능은 그들을 앞선다.</p>
+
+<figure>
+  <img src="assets/claude-opus-5-5-built-for-coding-sessions-that-use-more-context/cached-token-price.png" alt="Claude Opus 5.5와 GPT-6 Astra 비교. 100만 토큰당 가격(낮을수록 좋음): 입력 $4.00 대 $10.00(60% 저렴), 출력 $20.00 대 $50.00(60% 저렴), 캐시 읽기 $0.20 대 $1.00(80% 저렴). 평가(높을수록 좋음): Terminal-Bench 4.0 66.4% 대 57.9%, FrontierCode v1.1 54.4% 대 53.3%, GDPval-AA v2.1 1846 대 1542, AutomationBench 40.0% 대 41.4%, Terminal-Bench-Science 0.1 58.7% 대 64.6%">
+  <figcaption>출처: anthropic.com/claude-opus-5-5 및 OpenAI API 가격(표준 등급, 짧은 컨텍스트), 2026년 9월 22일. 별도 표기가 없으면 Opus 5.5는 max effort. Terminal-Bench 4.0: Opus 5.5는 xhigh, Astra는 high로 각 모델의 최고 점수. Astra의 Terminal-Bench 점수는 OpenAI 보고 기준, AutomationBench 점수는 Zapier 기준.</figcaption>
+</figure>
+
+<h3>Claude Code가 캐시를 더 잘 활용한다</h3>
+
+<p>이것은 Opus 5.5 자체보다는, 지난 6개월간 Claude Code에 추가한 여러 기능의 결과에 가깝다. 방금 살펴본 코딩 세션 추세를 보면 캐시 미스(cache miss) 비율이 더 높아졌으리라 예상하겠지만, 실제로는 그 반대다. <strong>캐시를 놓치는 입력이 50% 넘게 줄었다.</strong></p>
+
+<p>예를 들어, 로그인 갱신 같은 작은 생채기로 의도치 않게 캐시가 깨지는 일을 더 어렵게 만들었다. 대화 도중 지시문을 추가하거나 도구를 온디맨드로 로드하는 것 같은 더 큰 동작으로 캐시가 깨지는 것도 더 어렵게 만들었다. Opus 5.5와 Fable 5.1 같은 최신 모델에서는 이제 캐시를 초기화하지 않고도 세션 중에 effort 수준을 바꿀 수 있다.</p>
+
+<p>더 오래 실행되는 세션과 위임된 세션에서도 캐시를 더 유용하게 만들었다. API 키와 클라우드 제공자를 쓰는 개발자도 이제 1시간 캐시 수명(구독자에게는 이미 있었다)을 설정할 수 있고, 포크된(forked) 서브에이전트는 같은 컨텍스트 비용을 다시 내는 대신 부모의 캐시에서 시작한다.</p>
+
+<h3>같은 과제를 더 적은 턴으로</h3>
+
+<p>Opus 5.5는 같은 과제를 끝내는 데 다른 모델보다 더 적은 턴이 필요할 수 있다. Zeta Labs는 Opus 5보다 과제당 턴 수와 도구 호출이 줄었으면서도, 비용은 거의 절반이었고 가장 어려운 과제의 완료 건수는 두 배였다.</p>
+
+<p>모든 과제에서 이렇게 되지는 않는다. <a href="https://claude.com/blog/what-a-task-costs-on-opus-5-5">Opus 5.5에서 과제 하나의 비용</a>이라는 글에서 Addy는 이렇게 썼다. "범위가 잘 잡힌 과제에서는 두 모델이 거의 같은 턴 수로 끝나며, 얻는 것은 가격 인하뿐이다. 격차는 열린 과제에서 가장 클 것이다. 모델이 잘못된 아이디어에 여러 턴을 쓸 수 있는 곳이다. 어떤 코드베이스에나 통하는 단 하나의 숫자는 없으니, 직접 측정하라."</p>
+
+<p>다시 말해, 단순하고 짧고 기계적인 과제는 같은 턴 수가 들지만, 더 길고 어려운 과제에서는 Opus 5.5가 잘못된 접근에 토큰을 태우는 일을 피할 여지가 더 크다. 줄어든 턴 하나는 캐시된 토큰보다도 비용 효율이 더 높다.</p>
+
+<p>또 하나 짚어 둘 점은, 특히 Claude가 사람이 지켜보지 않거나 중단 없이 더 오래 일하게 되면서, Opus 5.5가 Opus 5보다 30% 넘게 빠르게 출력을 생성한다는 것이다. 이것이 캐시 적중률을 높이거나 토큰을 덜 쓰게 하지는 않지만, 긴 실행에서 기다리는 시간이 줄어든다는 뜻이다.</p>
+
+<h2>캐시 읽기를 지켜라</h2>
+
+<p>에이전틱 코딩이 성숙해지면서, 조직은 개발자에게 비용을 따지지 말고 확장하라고 요구하던 데서 효율적으로 확장하라고 요구하는 쪽으로 옮겨 갔다. Claude Code에서 <code>/usage</code>를 실행해 사용량 중 캐시 읽기가 얼마나 되는지 확인하자. 그리고 그 숫자를 지키자.</p>
+
+<ul>
+  <li>세션 중간에 모델을 바꾸기보다 세션 시작 시점에 모델을 고르고,</li>
+  <li>자리를 비운 뒤가 아니라 비우기 전에 컴팩트(compact)하고,</li>
+  <li>API 키나 클라우드 제공자를 쓰고 있다면 긴 세션에는 <a href="https://code.claude.com/docs/en/prompt-caching#choose-the-ttl-yourself">1시간 캐시 수명</a>을 설정하자.</li>
+</ul>
+
+<p>이런 습관이 복리로 쌓이는 열려 있고 컨텍스트가 무거운 작업에 Opus 5.5를 향하게 하고, 실제 계산된 숫자는 <a href="https://claude.com/blog/what-a-task-costs-on-opus-5-5">Opus 5.5에서 과제 하나의 비용</a>에서 확인하자.</p>
+
+<div class="callout">
+  <strong>Claude로 조직의 운영 방식을 바꿔 보세요.</strong>
+  <a href="https://claude.com/pricing#api">요금 보기</a> ·
+  <a href="https://claude.com/contact-sales">영업팀 문의</a>
+</div>
+
+<footer>
+  이 글은 Claude 공식 블로그 원문을 한국어로 옮긴 비공식 번역본입니다.
+  내용의 정확한 의미는 위 원문 링크를 함께 참고하세요.
+</footer>
+<script src="assets/store.js"></script>
+<script src="assets/posts.js"></script>
+<script src="assets/nav.js"></script>
+</body>
+</html>
