@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "projects-redesigned.html", date: "2026-09-17", main: "Claude blog", cat: "Product announcements",
+      title: "프로젝트 새 단장: 폴더에서 대화로", nav: "프로젝트 새 단장 · 스레드+코디네이터, Claude Code 베타" },
     { file: "how-to-prepare-for-ai-driven-code-modernization-projects.html", date: "2026-09-23", main: "Claude blog", cat: "Claude Code",
       title: "AI 주도 코드 현대화 프로젝트, 어떻게 준비할 것인가", nav: "AI 코드 현대화 준비 · 타깃·인증서·승격 정책 6단계" },
     { file: "how-coderabbit-power-digital-and-thoughtspot-scale-with-snowflake-and-vercel-on-claude-marketplace.html", date: "2026-09-23", main: "Claude blog", cat: "Enterprise AI",
