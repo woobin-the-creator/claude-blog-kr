@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "cowork-is-now-claude.html", date: "2026-09-16", main: "Claude blog", cat: "Product announcements",
+      title: "Claude Cowork와 채팅, 이제 하나의 Claude로", nav: "Cowork+채팅 통합 · Docs·Slides·Design 대화 안에서" },
     { file: "claude-tag-now-supports-personal-connectors-in-channels.html", date: "2026-09-24", main: "Claude blog", cat: "Product announcements",
       title: "Claude Tag, 이제 채널에서 개인 커넥터를 지원합니다", nav: "Claude Tag · 채널에서 개인 커넥터 지원" },
     { file: "claude-opus-5-5-built-for-coding-sessions-that-use-more-context.html", date: "2026-09-24", main: "Claude blog", cat: "Claude Code",
