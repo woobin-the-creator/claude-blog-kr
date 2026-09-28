@@ -1,0 +1,449 @@
+---
+slug: "claude-for-small-business-launches-new-workflows-integrations-and-training-programs"
+title: "Claude for Small Business, 새 워크플로·통합·교육 프로그램 출시"
+nav: "Claude for Small Business · 워크플로 43개·통합 27개·가을 워크숍"
+main: "Claude blog"
+cat: "Product announcements"
+date: "2026-09-15"
+author: "ai"
+rev: 1
+style_css: ":root { --fg:#1a1a1a; --muted:#666; --line:#e5e5e5; --accent:#c96442; --code-bg:#f6f6f4; }\n  * { box-sizing: border-box; }\n  body {\n    font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", \"Apple SD Gothic Neo\",\n      \"Malgun Gothic\", sans-serif;\n    color: var(--fg); line-height: 1.75; max-width: 760px;\n    margin: 0 auto; padding: 48px 24px 96px; background:#fff;\n  }\n  header { border-bottom: 2px solid var(--line); padding-bottom: 24px; margin-bottom: 32px; }\n  h1 { font-size: 1.9rem; line-height: 1.35; margin: 0 0 12px; }\n  .meta { color: var(--muted); font-size: 0.9rem; }\n  .meta .orig { display:block; margin-top:6px; }\n  .meta a { color: var(--accent); text-decoration: none; }\n  h2 { font-size: 1.4rem; margin: 44px 0 8px; padding-top: 8px; }\n  h3 { font-size: 1.15rem; margin: 30px 0 8px; color:#000; }\n  p { margin: 0 0 16px; }\n  a { color: var(--accent); }\n  ul, ol { margin: 0 0 16px; padding-left: 22px; }\n  li { margin-bottom: 8px; }\n  blockquote { margin: 16px 0; padding: 8px 18px; border-left:3px solid var(--line);\n    color:#333; font-style: italic; }\n  blockquote cite { display:block; margin-top:6px; font-style: normal; font-weight:600; font-size:0.9em; }\n  hr { border: none; border-top: 1px solid var(--line); margin: 40px 0; }\n  code { background: var(--code-bg); padding: 2px 6px; border-radius: 4px;\n    font-family: \"SF Mono\", Menlo, Consolas, monospace; font-size: 0.88em; }\n  figure { margin: 24px 0; }\n  figure img { width: 100%; height: auto; border:1px solid var(--line); border-radius: 8px;\n    background:#fff; }\n  figure.hero img { border:none; max-width: 210px; display:block; margin: 0 auto 8px; }\n  figcaption { color: var(--muted); font-size: 0.85rem; text-align: center;\n    margin-top: 10px; line-height: 1.5; }\n  figcaption a { color: var(--accent); }\n  .video { position: relative; width: 100%; padding-top: 56.25%; margin: 24px 0 8px;\n    border-radius: 8px; overflow: hidden; background:#000; }\n  .video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }\n  .vcap { font-size: 0.85rem; color: var(--muted); margin: 0 0 32px; }\n  .callout { background:#faf6f4; border-left:3px solid var(--accent);\n    padding: 12px 16px; border-radius: 0 6px 6px 0; margin: 16px 0; }\n  .callout strong { color: var(--accent); }\n  .lede { color:#333; font-size: 1.05rem; }\n\n  /* \"Claude와 함께하는 한 주\" 위젯 (원문 sb-* 컴포넌트를 단순화해 재현) */\n  .week { border:1px solid var(--line); border-radius: 14px; padding: 22px 24px 16px; margin: 0 0 36px; }\n  .week .k { font-size: 0.72rem; letter-spacing: .12em; text-transform: uppercase; font-weight: 600;\n    color: var(--muted); margin: 0 0 14px; }\n  .week ol { list-style: none; margin: 0; padding: 0; }\n  .week li { position: relative; display: grid; grid-template-columns: 120px minmax(0,1fr); gap: 14px;\n    margin: 0; padding: 0 0 16px 22px; }\n  .week li::before { content:\"\"; position:absolute; left:0; top:9px; width:10px; height:10px;\n    border-radius:50%; background: var(--accent); }\n  .week li::after { content:\"\"; position:absolute; left:4.5px; top:22px; bottom:0; width:1px; background: var(--line); }\n  .week li:last-child { padding-bottom: 0; } .week li:last-child::after { display:none; }\n  .week .when { font-size: 0.85rem; font-weight: 600; color: var(--muted); padding-top: 2px; }\n  .week a { color: var(--fg); text-decoration: none; font-weight: 600;\n    border-bottom: 1px solid var(--line); }\n  .week a:hover { border-color: var(--fg); }\n  .week .what { display:block; font-size: 0.9rem; color: #555; margin-top: 3px; }\n  @media (max-width: 560px) { .week li { grid-template-columns: minmax(0,1fr); gap: 2px; } }\n\n  .band { border-radius: 14px; padding: 20px 24px; display: grid; grid-template-columns: auto minmax(0,1fr);\n    gap: 20px; align-items: center; margin: 56px 0 20px; color:#141413; }\n  .band .cal { width: 68px; border-radius: 10px; overflow: hidden; background:#fff;\n    box-shadow: 0 0 0 1px rgba(20,20,19,.1); text-align:center; }\n  .band .cal-d { display:block; background: var(--accent); color:#fff; font-size: 0.68rem;\n    letter-spacing: .14em; font-weight: 700; line-height: 1; padding: 6px 0; }\n  .band .cal-n { display:block; font-size: 1.7rem; line-height:1; padding: 10px 0 12px; font-variant-numeric: tabular-nums; }\n  .band .eye { display:block; font-size: 0.75rem; letter-spacing: .1em; text-transform: uppercase;\n    font-weight: 600; color:#5e5d59; margin: 0 0 4px; }\n  .band h2 { margin: 0; padding: 0; font-size: 1.5rem; font-weight: 500; line-height: 1.2; }\n\n  .how { background:#f0eee6; color:#141413; border-radius: 12px; margin: 0 0 22px; overflow:hidden; }\n  .how .sec { padding: 16px 20px; border-top: 1px solid rgba(20,20,19,.1); }\n  .how .sec:first-child { border-top: 0; }\n  .how .lbl { font-size: 0.7rem; letter-spacing: .12em; text-transform: uppercase; font-weight: 700;\n    color:#9c4a30; margin: 0 0 8px; }\n  .how .row { display:flex; flex-wrap: wrap; gap: 8px 16px; align-items:center; padding: 8px 0; }\n  .how .tag { font-size: 0.7rem; letter-spacing: .08em; text-transform: uppercase; font-weight: 600;\n    color:#5e5d59; margin-right: 6px; }\n  .how .q { display:inline-block; background:#fff; border-radius: 12px 12px 12px 4px; padding: 6px 12px;\n    box-shadow: 0 0 0 1px rgba(20,20,19,.08); }\n  .how code { background:#fff; border:1px solid #dedcd1; }\n  .how .rnote, .how .intro { font-size: 0.9rem; color:#3d3d3a; margin: 6px 0 0; }\n  .how details summary { cursor:pointer; list-style: none; display:flex; align-items:center; gap: 10px; }\n  .how details summary::-webkit-details-marker { display:none; }\n  .how .cnt { margin-left:auto; font-size: 0.85rem; color:#5e5d59; }\n  .pills { display:flex; flex-wrap:wrap; gap: 6px; margin: 10px 0 0; padding: 0; list-style:none; }\n  .pills li { margin:0; padding: 3px 10px; font-size: 0.82rem; background:#fff; border:1px solid #dedcd1;\n    border-radius: 999px; }\n  .none { background:#e8e6dc; font-size: 0.92rem; }\n  .none b { font-weight: 600; }\n\n  .note { background:#141413; color:#faf9f5; border-radius: 12px; padding: 16px 20px; margin: 0 0 22px; }\n  .note .nb { display:block; font-size: 0.7rem; letter-spacing: .12em; text-transform: uppercase;\n    font-weight: 700; color:#e59a7f; margin: 0 0 4px; }\n\n  .story { background:#e8e6dc; color:#141413; border-radius: 12px; padding: 22px 24px; margin: 0 0 22px; }\n  .story .lbl { font-size: 0.7rem; letter-spacing: .12em; text-transform: uppercase; font-weight: 700;\n    color:#7a3a25; margin: 0 0 8px; }\n  .story .who { font-size: 1.3rem; line-height: 1.2; margin: 0 0 2px; }\n  .story .role { font-size: 0.85rem; color:#4d4c48; margin: 0 0 16px; }\n  .story .stats { display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 10px; margin: 0 0 16px; }\n  .story .stat { background: rgba(255,255,255,.65); border-radius: 10px; padding: 12px 14px; font-size: 0.88rem; color:#3d3d3a; }\n  .story .num { display:block; font-size: 1.7rem; line-height: 1.05; color:#141413; margin: 0 0 4px; }\n  .story .body { font-size: 0.97rem; color:#2b2a27; }\n  .story .body p:last-child { margin-bottom: 0; }\n  @media (max-width: 560px) { .story .stats { grid-template-columns: minmax(0,1fr); } }\n\n  /* 파트너 인용 카드 */\n  .partners { display:grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; margin: 20px 0 32px; }\n  .pcard { border:1px solid var(--line); border-radius: 12px; padding: 20px; display:flex; flex-direction:column; }\n  .pcard .logo { height: 32px; margin-bottom: 14px; }\n  .pcard .logo img { height: 100%; width: auto; max-width: 160px; object-fit: contain; object-position: left; }\n  .pcard p { font-size: 0.95rem; flex: 1 1 auto; }\n  .pcard .who { font-size: 0.82rem; color: var(--muted); margin-top: 8px; }\n\n  footer { margin-top: 64px; padding-top: 20px; border-top:1px solid var(--line);\n    color: var(--muted); font-size: 0.82rem; }"
+has_markdown: false
+markdown_length: 0
+html_length: 35869
+---
+
+<!-- rendered HTML -->
+<header>
+  <h1>Claude for Small Business, 새 워크플로·통합·교육 프로그램 출시</h1>
+  <div class="meta">
+    2026년 9월 15일 · 읽는 시간 5분
+    · 카테고리: <a href="https://claude.com/blog/category/announcements">Product announcements</a>
+    <span class="orig">원문:
+      <a href="https://claude.com/blog/claude-for-small-business-launches-new-workflows-integrations-and-training-programs">Claude for Small Business launches new workflows, integrations, and training programs</a>
+      (한글 번역본)</span>
+  </div>
+</header>
+
+<figure class="hero"><img src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/claude-for-small-business-launches-new-workflows-integrations-and-training-programs/hero.svg" alt="Claude for Small Business 일러스트"></figure>
+
+<p class="lede"><a href="http://claude.com/plugins/small-business">Claude for Small Business</a>에 이제 43개의 워크플로(workflow)와, Shopify·Salesforce·TikTok·Atlassian·Zoom·Xero·Gusto·Square·Stripe·Zapier 등 소상공인이 이미 쓰고 있는 도구와의 새 통합(integration) 27개가 들어 있습니다. 새 워크플로는 Claude의 역할을 백오피스 운영에서 사업 성장으로 넓히며, 시작에 도움이 필요한 사업주를 위한 가을 무료 오프라인 워크숍과 파트너 웨비나 일정도 함께 공개됩니다.</p>
+
+<p>우리는 지난 5월 <a href="https://www.anthropic.com/news/claude-for-small-business">Claude for Small Business</a>를 출시했습니다. 사업주가 의존하는 도구 안에 Claude를 넣어 주는 커넥터(connector)와 바로 실행할 수 있는 워크플로 묶음이었습니다. 이후 설치 횟수는 90만 회를 넘었습니다. 처음부터 함께해 주었고 지금도 함께하는 파트너 Intuit QuickBooks, PayPal, HubSpot, Canva, Docusign, Google Workspace, Microsoft 365에 감사드립니다. 봄에 진행한 Claude SMB 투어에서는 10개 도시의 1,000명 넘는 사업주가 Claude가 다음에 맡아 주길 바라는 일을 <a href="https://claude.com/blog/what-1-000-small-business-owners-taught-us-about-ai">직접 들려주었습니다</a>. 약 3분의 1은 리드(lead) 생성, 인바운드 문의 응대, 제안서 작성 같은 사업 성장 지원을 요청했습니다. 일상적인 보고 업무를 대신 처리해 주길 바라는 분들도 많았습니다. 이번 릴리스는 그 요청들을 중심으로 만들었습니다.</p>
+
+<p>투어는 이번 가을 미국 10개 도시의 무료 워크숍으로 돌아옵니다. 공인 Claude SMB 트레이너(Approved Claude SMB Trainer)로 교육받은 150개 이상의 조직이 각자의 지역 사회에서 750회 넘는 워크숍을 열고, 14개 통합 파트너가 자사 커넥터를 다루는 무료 웨비나를 진행합니다.</p>
+
+<p>Claude SMB 투어 첫 일정에서 소상공인 리더들이 우리에게 들려준 이야기입니다.</p>
+
+<blockquote>“예전에 120시간 걸리던 일이 이제 5분이면 끝납니다. 시간이 너무 많이 남아서 이제는 가족과 더 많은 시간을 보내고, 좋아하는 일을 하고, 늘 미뤄 두었던 사업의 다른 부분에도 손을 대고 있습니다.”
+<cite>— Pedro Rubio, Blackfyre GovCon 창립자 겸 CEO, 워싱턴 D.C.</cite></blockquote>
+
+<blockquote>“저는 Claude를 소상공인을 위한 평준화 도구(equalizer)라고 봅니다. 이제 100명, 200명 규모 회사가 하는 일을 우리도 할 수 있습니다. 40명 규모로 성장 중인 우리에게는 그렇게 되찾은 시간을 고객과 조직 문화에 쓰는 것이죠.”
+<cite>— Cara Roellgen, KBSO Consulting 전략·혁신 디렉터, 인디애나주 카멜</cite></blockquote>
+
+<blockquote>“매일 아침 6시에 CRM을 훑어서 할 일 목록을 전부 가져오고, 우선순위를 매긴 뒤, ‘오늘 해야 할 일과 가장 중요한 우선순위는 이것’이라는 이메일을 보내 줍니다. 우리는 이걸 ‘데일리 브리핑’이라고 부릅니다.”
+<cite>— Garrett French, Driller Design Co. 대표, 오클라호마주 털사</cite></blockquote>
+
+<blockquote>“지난 한 달 반 동안 Claude로 전문적인 제안서를 만들어 2만 달러를 벌었습니다. 그게 사업을 따오는 일이고, 실제로 제 통장에 돈이 들어왔습니다. 어떻습니까?”
+<cite>— Dan Ninerell, Modern Classical Chefs 창립자, 뉴저지주 사우스저지</cite></blockquote>
+
+<blockquote>“우리는 [Claude에게] 최종 목표가 무엇인지 말해 줍니다. 그러면 가서 테스트를 하고, 90%는 제대로 해냅니다. 우리는 5명짜리 회사인데, 이걸로 꽤 많은 일을 해냈다고 생각합니다.”
+<cite>— Bill Hood, TruckingMBA 공동 창립자, 테네시주 채터누가</cite></blockquote>
+
+<blockquote>“우리에게 가장 도움이 되는 건 통합입니다. 우리는 Slack을 쓰는데, Slack으로 Claude와 대화합니다. Intuit QuickBooks와도 연동됩니다. 우리가 여기저기서 정보 조각을 찾아다닐 필요 없이 모든 곳에서 모든 것을 끌어와 줍니다. 전부 한곳에 있는 거죠.”
+<cite>— Kati Jo Hodges, Premier Geotech and Testing 운영 디렉터, 루이지애나주 배턴루지</cite></blockquote>
+
+<h2>Claude for Small Business와 함께하는 한 주</h2>
+
+<p>오늘날 소상공인들이 실제로 Claude를 쓰는 방식에서 영감을 받아, Claude로 사업을 운영하고 키우는 사업주의 한 주를 그려 보았습니다.</p>
+
+<nav class="week" aria-label="Claude와 함께하는 한 주">
+  <div class="k">Claude와 함께하는 당신의 한 주</div>
+  <ol>
+    <li><div class="when">일요일 저녁 8시</div><div><a href="#sb-sun">설치와 온보딩</a><span class="what">이미 쓰는 도구를 연결하고 첫 작업을 고릅니다.</span></div></li>
+    <li><div class="when">월요일 아침 7시</div><div><a href="#sb-brief">주간 브리프</a><span class="what">현금, 매출, 파이프라인, 연체 청구서를 한 페이지에.</span></div></li>
+    <li><div class="when">월요일 밤 9시 40분</div><div><a href="#sb-leads">인바운드 리드 응대</a><span class="what">영업시간 이후 문의를 선별하고, 답하고, 기록합니다.</span></div></li>
+    <li><div class="when">수요일</div><div><a href="#sb-proposals">제안서 작성</a><span class="what">음성 메모가 견적이 붙은 브랜드 제안서가 됩니다.</span></div></li>
+    <li><div class="when">목요일</div><div><a href="#sb-marketing">막힌 마케팅 캠페인 풀기</a><span class="what">다음 주 게시물과 리뷰 답글을 승인만 하면 되게 준비합니다.</span></div></li>
+    <li><div class="when">월말</div><div><a href="#sb-close">장부 마감</a><span class="what">대사(reconcile)된 계정과 회계사에게 넘길 마감 패킷.</span></div></li>
+  </ol>
+</nav>
+
+<!-- 일요일 -->
+<div class="band" id="sb-sun" style="background:#dbe5ef">
+  <div class="cal" aria-hidden="true"><span class="cal-d">SUN</span><span class="cal-n">01</span></div>
+  <div><span class="eye">일요일 저녁 8시</span><h2>설치와 온보딩</h2></div>
+</div>
+
+<p>Claude for Small Business는 Claude가 파일과 연결된 도구를 직접 다루는 데스크톱 앱, Claude Cowork에서 실행됩니다. 플러그인을 설치하고 Claude에게 “설정을 도와줘(help me get set up)”라고 말하거나 <code>/smb-onboard</code>를 실행한 뒤, 이미 쓰는 도구를 연결하고 작업을 하나 고르면 됩니다. 플러그인은 각 워크플로를 원하는 일정에 맞춰 실행되도록 설정할 수도 있습니다.</p>
+
+<div class="note"><span class="nb">주도권은 당신에게</span>기본적으로 Claude는 작업을 해 두고, 무언가를 보내거나 게시하거나 결제하기 전에 당신의 승인을 기다립니다.</div>
+
+<div class="how">
+  <div class="sec">
+    <div class="lbl">실행하기</div>
+    <div class="row">
+      <div><span class="tag">말하기</span><span class="q">“help me get set up”</span></div>
+      <div><span class="tag">또는 입력</span><code>/smb-onboard</code></div>
+    </div>
+  </div>
+</div>
+
+<!-- 월요일 아침 -->
+<div class="band" id="sb-brief" style="background:#f1d9cc">
+  <div class="cal" aria-hidden="true"><span class="cal-d">MON</span><span class="cal-n">02</span></div>
+  <div><span class="eye">월요일 아침 7시</span><h2>주간 브리프</h2></div>
+</div>
+
+<p>현금 상황, 지난주 매출과 그 전주 비교, 파이프라인에서 움직인 것, 연체된 청구서, 그리고 이번 주에 당신의 손이 꼭 필요한 세 가지. 스프레드시트를 열기도 전에 이 모든 것이 한 페이지에 정리되어 있습니다.</p>
+
+<div class="how">
+  <div class="sec">
+    <div class="lbl">실행하기</div>
+    <div class="row">
+      <div><span class="tag">말하기</span><span class="q">“give me my Monday brief”</span></div>
+      <div><span class="tag">또는 입력</span><code>/monday-brief</code></div>
+    </div>
+    <p class="rnote">설정 중에 “weekly”로 지정하면 매주 월요일 같은 시각에 실행되며, 아티팩트(artifact)나 웹사이트 형태의 상시 대시보드로 내보내는 옵션도 있습니다.</p>
+  </div>
+  <details class="sec">
+    <summary><span class="lbl">함께 쓰는 도구</span><span class="cnt">커넥터 37개</span></summary>
+    <p class="intro">37개 파트너 커넥터 모두 사용할 수 있습니다.</p>
+    <ul class="pills">
+      <li>Airwallex</li><li>Apollo</li><li>Atlassian</li><li>Canva</li><li>Clay</li><li>Docusign</li><li>Emergent</li><li>Expensify</li><li>Gmail</li><li>Google Calendar</li><li>Google Drive</li><li>Gusto</li><li>HubSpot</li><li>Intuit Mailchimp</li><li>Intuit QuickBooks</li><li>Microsoft 365</li><li>monday.com</li><li>MYOB</li><li>NetSuite</li><li>Notion</li><li>PayPal</li><li>Ramp</li><li>RingCentral</li><li>Salesforce</li><li>Shopify</li><li>Slack</li><li>Square</li><li>Stripe</li><li>TikTok Ads</li><li>Trello</li><li>Wix</li><li>Xero</li><li>Zapier</li><li>Zoho Books</li><li>Zoho CRM</li><li>Zoho Desk</li><li>Zoom</li>
+    </ul>
+  </details>
+  <div class="sec none"><b>커넥터가 없다면?</b> 스프레드시트를 업로드하면 Claude가 공유한 자료만으로 브리프와 보고서를 만들어 줍니다.</div>
+</div>
+
+<div class="story">
+  <div class="lbl">사업주 이야기</div>
+  <div class="who">Mothership Coffee Roasters</div>
+  <div class="role">Juanny Romero, 창립자 겸 CEO · 라스베이거스</div>
+  <div class="stats">
+    <div class="stat"><span class="num">22%</span>매장 마진. 더 촘촘해진 근무 편성·발주·재고 보고 덕이 크다고 평가</div>
+    <div class="stat"><span class="num">6</span>개 카페를 하나의 통합 뷰에서 운영</div>
+  </div>
+  <div class="body"><p>Mothership Coffee Roasters의 창립자 겸 CEO Juanny Romero는 라스베이거스에서 카페 6곳과 도매·케이터링 사업을 운영합니다. 숫자는 POS, Intuit QuickBooks, Slack, 이메일에 흩어져 있었고 주 단위로 한눈에 보는 화면이 없었습니다. 이들을 Claude에 연결하고, Claude를 경영진의 예측·주간 계획 작업 공간으로 삼은 뒤, 지금은 6개 매장 전부를 하나의 통합 뷰에서 운영합니다. 매장 마진은 22%로 올랐는데, 더 촘촘해진 근무 편성·발주·재고 보고 덕이 크다고 그는 말합니다.</p></div>
+</div>
+
+<div class="video"><iframe src="https://www.youtube-nocookie.com/embed/yxeHQvby5JY" title="Claude for Small Business: Monday Brief" loading="lazy" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>
+<p class="vcap"><a href="https://youtu.be/yxeHQvby5JY" target="_blank" rel="noopener">Claude for Small Business: Monday Brief</a></p>
+
+<!-- 월요일 밤 -->
+<div class="band" id="sb-leads" style="background:#e3e8d9">
+  <div class="cal" aria-hidden="true"><span class="cal-d">MON</span><span class="cal-n">03</span></div>
+  <div><span class="eye">월요일 밤 9시 40분</span><h2>인바운드 리드 응대</h2></div>
+</div>
+
+<p>영업이 끝난 뒤 웹사이트, 이메일, 채팅으로 케이터링 문의가 들어옵니다. Claude가 문의를 선별하고, 캘린더에서 실제로 비어 있는 시간 두 개를 담아 답장 초안을 쓰고, CRM에 기록합니다. 이 워크플로를 자동으로 돌리도록 허용해 두었다면 화요일 아침에 이미 예약이 잡혀 있는 것을 보게 되고, 그렇지 않다면 답장이 당신의 승인을 기다리고 있습니다.</p>
+
+<div class="how">
+  <div class="sec">
+    <div class="lbl">실행하기</div>
+    <div class="row">
+      <div><span class="tag">말하기</span><span class="q">“answer new leads as they come in”</span></div>
+      <div><span class="tag">또는 입력</span><code>/speed-to-lead</code></div>
+    </div>
+    <p class="rnote">당신이 정한 일정으로 돌아가는 상시 워크플로입니다.</p>
+  </div>
+  <details class="sec">
+    <summary><span class="lbl">함께 쓰는 도구</span><span class="cnt">커넥터 15개</span></summary>
+    <ul class="pills">
+      <li>Apollo</li><li>Clay</li><li>Emergent</li><li>Gmail</li><li>Google Calendar</li><li>HubSpot</li><li>Intuit Mailchimp</li><li>Microsoft 365</li><li>monday.com</li><li>Notion</li><li>RingCentral</li><li>Salesforce</li><li>Trello</li><li>Zoho CRM</li><li>Zoom</li>
+    </ul>
+  </details>
+  <div class="sec none"><b>커넥터가 없다면?</b> 문의를 Claude에게 전달하면 직접 보낼 수 있는 답장 초안을 받을 수 있고, Claude가 스프레드시트 CRM에 리드를 관리해 줍니다.</div>
+</div>
+
+<div class="story">
+  <div class="lbl">사업주 이야기</div>
+  <div class="who">Bambi Baby</div>
+  <div class="role">Josh Weiss, COO</div>
+  <div class="stats">
+    <div class="stat"><span class="num">$60,000</span>도구 도입 첫 4일간 이 도구에서 비롯된 매출</div>
+    <div class="stat"><span class="num">18%</span>파일럿 2주 차에 온라인 매출 중 매장 방문에서 새로 기인한 비율</div>
+  </div>
+  <div class="body"><p>가족이 운영하는 유아차·카시트 소매점 Bambi Baby에서는 매장 방문객 4명 중 3명이 이름이나 이메일을 남기지 않고 떠났습니다. 개발자가 아닌 COO Josh Weiss는 Claude로 ‘스캔해서 위시리스트에 담기’ 방식의 리드 수집 도구와 그 뒤의 후속 연락 흐름을 만들었습니다. 도구 도입 첫 4일 동안 6만 달러의 매출이 이 도구에서 비롯되었습니다. 두 매장에서 파일럿을 시작한 지 2주 만에 온라인 매출의 18%가 매장 방문에서 새로 기인한 것으로 집계되었습니다.</p></div>
+</div>
+
+<div class="video"><iframe src="https://www.youtube-nocookie.com/embed/D2FcNf2v9KY" title="Claude for Small Business: Speed to Lead" loading="lazy" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>
+<p class="vcap"><a href="https://youtu.be/D2FcNf2v9KY" target="_blank" rel="noopener">Claude for Small Business: Speed to Lead</a></p>
+
+<!-- 수요일 -->
+<div class="band" id="sb-proposals" style="background:#efe6d3">
+  <div class="cal" aria-hidden="true"><span class="cal-d">WED</span><span class="cal-n">04</span></div>
+  <div><span class="eye">수요일</span><h2>제안서 작성</h2></div>
+</div>
+
+<p>현장을 둘러본 뒤 사무실로 돌아오는 길에 2분짜리 음성 메모를 녹음합니다. 자리에 앉을 때쯤이면 과거 작업을 바탕으로 견적이 매겨진 브랜드 제안서가 수정을 기다리고 있습니다. 승인하면 서명을 받으러 발송됩니다.</p>
+
+<div class="how">
+  <div class="sec">
+    <div class="lbl">실행하기</div>
+    <div class="row">
+      <div><span class="tag">말하기</span><span class="q">“turn this into a proposal”</span></div>
+      <div><span class="tag">또는 입력</span><code>/proposal-builder</code></div>
+    </div>
+    <p class="rnote">먼저 메모, 사진, RFP(제안요청서)를 첨부하거나 통화 녹취록을 불러옵니다.</p>
+  </div>
+  <details class="sec">
+    <summary><span class="lbl">함께 쓰는 도구</span><span class="cnt">커넥터 17개</span></summary>
+    <ul class="pills">
+      <li>Apollo</li><li>Atlassian Confluence</li><li>Canva</li><li>Docusign</li><li>Google Drive</li><li>Microsoft 365</li><li>MYOB</li><li>NetSuite</li><li>Notion</li><li>PayPal</li><li>Intuit QuickBooks</li><li>Square</li><li>Stripe</li><li>Trello</li><li>Xero</li><li>Zoho Books</li><li>Zoom</li>
+    </ul>
+  </details>
+  <div class="sec none"><b>커넥터가 없다면?</b> 메모, 사진, 그리고 템플릿으로 삼을 과거 제안서를 업로드하면 Claude가 그것을 바탕으로 제안서를 만들고 견적을 매깁니다. 서명 요청은 직접 보내면 됩니다.</div>
+</div>
+
+<div class="story">
+  <div class="lbl">사업주 이야기</div>
+  <div class="who">KANE</div>
+  <div class="role">Michael Kazantzis, Joni Kazantzis, 공동 창립자 · 뉴저지주 프린스턴</div>
+  <div class="stats">
+    <div class="stat"><span class="num">몇 주 → 몇 분</span>거래 범위 산정부터 서명용 작업기술서(SOW) 발송까지</div>
+  </div>
+  <div class="body"><p>뉴저지주 프린스턴의 크리에이티브·성장 에이전시 KANE은 거래 하나마다 범위 산정, 견적, 제안서 작성, 계약에 몇 주씩 쓰곤 했습니다. 공동 창립자 Michael Kazantzis와 Joni Kazantzis는 회의 노트에서 적합도를 점수화하고, 자사의 과거 프로젝트를 바탕으로 견적을 내고, 제안서 초안을 쓰고, 고객이 승낙하면 몇 분 안에 작업기술서를 서명용으로 내보내는 Claude 파이프라인을 만들었습니다. “몇 주씩 걸리던 프로세스 전체가 이제 하루 중 몇 분 안에 거의 끝납니다. 고객들도 그걸 알아차릴 정도예요.” Michael Kazantzis의 말입니다.</p></div>
+</div>
+
+<div class="video"><iframe src="https://www.youtube-nocookie.com/embed/ZV3oKch1t_I" title="Claude for Small Business: Proposal Builder" loading="lazy" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>
+<p class="vcap"><a href="https://youtu.be/ZV3oKch1t_I" target="_blank" rel="noopener">Claude for Small Business: Proposal Builder</a></p>
+
+<!-- 목요일 -->
+<div class="band" id="sb-marketing" style="background:#e9dfe9">
+  <div class="cal" aria-hidden="true"><span class="cal-d">THU</span><span class="cal-n">05</span></div>
+  <div><span class="eye">목요일</span><h2>막힌 마케팅 캠페인 풀기</h2></div>
+</div>
+
+<p>다음 주 게시물이 당신의 목소리로, 브랜드에 맞는 그래픽과 함께 초안으로 작성되고, 각 채널에 필요한 모든 형식으로 잘려서 승인 대기 상태로 준비됩니다. 지난주 채널별 매출은 마케팅 성과와 함께 한 페이지에 정리되고, 이번 주 새 리뷰에는 답글 초안이 달려 당신의 승인을 기다립니다.</p>
+
+<div class="how">
+  <div class="sec">
+    <div class="lbl">실행하기</div>
+    <div class="row">
+      <div><span class="tag">말하기</span><span class="q">“plan next week's content”</span></div>
+      <div><span class="tag">또는 입력</span><code>/social-content-engine</code></div>
+    </div>
+    <p class="rnote">게시 캘린더를 계속 채워 둡니다.</p>
+    <p class="rnote">숫자와 리뷰는 주간 일정으로 실행됩니다.</p>
+    <div class="row"><div><span class="tag">입력</span><code>/marketing-monday</code></div></div>
+  </div>
+  <details class="sec">
+    <summary><span class="lbl">함께 쓰는 도구</span><span class="cnt">커넥터 16개</span></summary>
+    <ul class="pills">
+      <li>Apollo</li><li>Canva</li><li>Clay</li><li>Gmail</li><li>HubSpot</li><li>Intuit Mailchimp</li><li>monday.com</li><li>Notion</li><li>PayPal</li><li>Shopify</li><li>Square</li><li>Stripe</li><li>TikTok</li><li>Trello</li><li>Zoho CRM</li><li>Zoho Desk</li>
+    </ul>
+  </details>
+  <div class="sec none"><b>커넥터가 없다면?</b> Claude가 캘린더, 캡션, 디자인 브리프 초안을 쓰고, 내보낸 매출 자료와 붙여 넣은 리뷰로 주간 페이지를 만들어 줍니다.</div>
+</div>
+
+<div class="story">
+  <div class="lbl">사업주 이야기</div>
+  <div class="who">Rebel Cheese</div>
+  <div class="role">Kirsten Maitland, 공동 창립자 겸 CEO · 오스틴</div>
+  <div class="body"><p>공동 창립자 겸 CEO Kirsten Maitland가 세운 Rebel Cheese는 오스틴의 식물성 치즈 제조사로, 레스토랑 한 곳에서 시작해 Shark Tank 출연 뒤 전국 단위 이커머스 사업으로 성장했습니다. 브랜드의 목소리는 그의 머릿속에만 있어서 본인의 근무 시간 이상으로 확장될 수 없었습니다. 데이터 보안 측면에서 Claude를 검증한 뒤, 그는 자신의 글로 보이스 스킬(voice skill)을 학습시키고 이메일과 소셜 도구에 연결했습니다. 이제 팀원이 모든 문장을 창립자에게 거치지 않고도 브랜드에 맞는 캠페인 초안을 씁니다. “저는 Claude 안에서 삽니다. 수요를 따라잡으려고 컴퓨터 두 대에서 여러 인스턴스를 동시에 돌리고 있어요.” 그의 말입니다.</p></div>
+</div>
+
+<div class="video"><iframe src="https://www.youtube-nocookie.com/embed/z8sq-2SB35w" title="Claude for Small Business: Social Content Engine" loading="lazy" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>
+<p class="vcap"><a href="https://youtu.be/z8sq-2SB35w" target="_blank" rel="noopener">Claude for Small Business: Social Content Engine</a></p>
+
+<!-- 월말 -->
+<div class="band" id="sb-close" style="background:#d9e6e3">
+  <div class="cal" aria-hidden="true"><span class="cal-d">END</span><span class="cal-n">06</span></div>
+  <div><span class="eye">월말</span><h2>장부 마감</h2></div>
+</div>
+
+<p>Claude가 매출 정산, 카드 지출, 급여 등 돈이 오가는 모든 곳과 장부를 대사합니다. 불일치를 거래 건 단위까지 짚어내고, 쉬운 말로 쓴 손익계산서(P&amp;L)를 작성하고, 회계사에게 넘길 마감 패킷을 만듭니다. POS에 커넥터가 없어서 어떤 계정이 끝내 깔끔하게 맞지 않는다면, Claude가 Zapier를 통해 연결하거나 커넥터를 직접 만들며, 담당 회계 직원이 손으로 하던 조정은 다음 달 마감의 저장된 단계가 됩니다.</p>
+
+<div class="how">
+  <div class="sec">
+    <div class="lbl">실행하기</div>
+    <div class="row">
+      <div><span class="tag">말하기</span><span class="q">“close September”</span></div>
+      <div><span class="tag">또는 입력</span><code>/close-month</code></div>
+    </div>
+  </div>
+  <div class="sec">
+    <div class="lbl">빈틈이 있을 때</div>
+    <div class="row">
+      <div><span class="tag">말하기</span><span class="q">“connect my POS”</span></div>
+      <div><span class="tag">또는 입력</span><code>/build-connector</code></div>
+    </div>
+    <div class="row">
+      <div><span class="tag">말하기</span><span class="q">“make this part of the close”</span></div>
+      <div><span class="tag">또는 입력</span><code>/build-agent</code></div>
+    </div>
+  </div>
+  <details class="sec">
+    <summary><span class="lbl">함께 쓰는 도구</span><span class="cnt">커넥터 14개</span></summary>
+    <ul class="pills">
+      <li>Expensify</li><li>Google Drive</li><li>Gusto</li><li>MYOB</li><li>NetSuite</li><li>PayPal</li><li>Intuit QuickBooks</li><li>Ramp</li><li>Shopify</li><li>Square</li><li>Stripe</li><li>Xero</li><li>Zapier</li><li>Zoho Books</li>
+    </ul>
+  </details>
+  <div class="sec none"><b>커넥터가 없다면?</b> 은행과 결제 처리사 명세서를 업로드하면 Claude가 그것을 바탕으로 마감합니다.</div>
+</div>
+
+<div class="story">
+  <div class="lbl">사업주 이야기</div>
+  <div class="who">HireEffect</div>
+  <div class="role">Chris Scott, COO · Jennifer Scott, 창립자 겸 CEO · 댈러스</div>
+  <div class="stats">
+    <div class="stat"><span class="num">16</span>건. 1만 3천 달러 불일치의 원인으로 골라낸 거래</div>
+    <div class="stat"><span class="num">10초</span>예전에는 2시간 걸리던 월간 보고 작업</div>
+  </div>
+  <div class="body">
+    <p>전국의 소상공인을 위해 회계, 급여, 인사 업무를 대행하는 댈러스의 HireEffect에는 2년 반치 장부와 수만 건의 PayPal 거래 속에 1만 3천 달러의 불일치가 묻혀 있는 고객이 있었습니다. COO Chris Scott은 Claude로 원인이 된 정확히 16건의 거래를 골라냈습니다. “말 그대로 건초더미에서 바늘 찾기였어요. 이게 없었다면 절대 못 찾았을 겁니다.” 창립자 겸 CEO Jennifer Scott의 말입니다.</p>
+    <p>이들은 또 QuickBooks와 CRM을 포함한 서로 다른 5개 시스템을 아우르는 통제된 보고 대시보드를 만들어, 2시간 걸리던 월간 작업을 10초로 줄였습니다. 회계 디렉터는 고객 손익계산서를 논의 포인트가 미리 표시된 시각 요약으로 바꿔 주는 자신만의 스킬을 직접 만들었습니다.</p>
+  </div>
+</div>
+
+<div class="video"><iframe src="https://www.youtube-nocookie.com/embed/sD1_ERv4nDM" title="Claude for Small Business: Close the Month" loading="lazy" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>
+<p class="vcap"><a href="https://youtu.be/sD1_ERv4nDM" target="_blank" rel="noopener">Claude for Small Business: Close the Month</a></p>
+
+<p>워크플로와 통합의 <a href="https://academy.claude.com/tutorials/how-to-install-the-claude-for-small-business-plugin" target="_blank">전체 목록</a>을 확인하세요.</p>
+
+<h2>파트너의 이야기</h2>
+
+<p class="vcap" style="margin-bottom:8px">원문에서는 아래 파트너 인용이 슬라이더(carousel)로 표시됩니다. 여기서는 카드로 펼쳐 놓았습니다.</p>
+
+<div class="partners">
+  <div class="pcard">
+    <div class="logo"><img src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/claude-for-small-business-launches-new-workflows-integrations-and-training-programs/shopify-light.svg" alt="Shopify"></div>
+    <p>“Claude for Small Business 안의 Shopify로, 판매자는 한 주를 계획하는 바로 그곳에서 상점을 운영합니다. 실시간 매출과 재고를 보고, 베스트셀러가 품절되기 전에 재발주 초안을 받고, 상품 카탈로그를 다음 주 캠페인으로 바꿉니다. 반복 업무가 손을 떠나니 성장에 집중할 수 있습니다.”</p>
+    <div class="who">Archie Abrams, 제품 부사장(VP Product)</div>
+  </div>
+  <div class="pcard">
+    <div class="logo"><img src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/claude-for-small-business-launches-new-workflows-integrations-and-training-programs/stripe-light.svg" alt="Stripe"></div>
+    <p>“Claude for Small Business 안의 Stripe로, 우리는 소상공인이 현금 흐름 모니터링과 청구서 후속 조치부터 새로운 성장 기회 발굴까지 일상적인 재무 업무를 더 많이 위임하면서도 모든 결정의 주도권은 계속 쥘 수 있도록 돕고 있습니다.”</p>
+    <div class="who">Maia Josebachvili, AI 최고매출책임자(Chief Revenue Officer of AI)</div>
+  </div>
+  <div class="pcard">
+    <div class="logo"><img src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/claude-for-small-business-launches-new-workflows-integrations-and-training-programs/zoom-light.svg" alt="Zoom"></div>
+    <p>“소상공인을 운영한다는 것은 대화를 끊임없이 일로 옮기는 것입니다. CRM을 업데이트하고, 프로젝트를 시작하고, 청구서를 내보내는 일이죠. Claude for Small Business 안의 Zoom과 Bonsai로, Zoom이 오간 말을 담아내고 Bonsai가 그것을 사업주의 승인만 남은 일로 바꿉니다. 사업주는 통화 요약이 아니라 후속 실행을 얻습니다.”</p>
+    <div class="who">Ross Mayfield, AI 파트너십 제품 총괄(Head of Product, AI Partnerships)</div>
+  </div>
+  <div class="pcard">
+    <div class="logo"><img src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/claude-for-small-business-launches-new-workflows-integrations-and-training-programs/gusto-light.svg" alt="Gusto"></div>
+    <p>“소상공인이라면 급여와 규정 준수는 매번 정확해야 하고, 거기에 이르기까지 사업에 쓰고 싶은 시간이 몇 시간씩 잡아먹힌다는 걸 잘 아실 겁니다. 이제 Claude for Small Business가 Gusto와 함께 그 준비를 처리합니다. 급여 지급을 감당할 현금이 있는지 확인하고, 근무 시간을 가져오고, 이상한 점을 표시하고, 실행 대기 상태로 올려 둡니다. 어떤 조치든 실행되기 전에 검토하고 승인하는 것은 여전히 당신입니다.”</p>
+    <div class="who">Chris Cosgrove, 제품 총괄(Head of Product)</div>
+  </div>
+  <div class="pcard">
+    <div class="logo"><img src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/claude-for-small-business-launches-new-workflows-integrations-and-training-programs/atlassian-light.svg" alt="Atlassian"></div>
+    <p>“소상공인 사업주는 온갖 역할을 다 맡는데, 일을 정리하는 역할이 가장 무거울 때가 많습니다. Claude for Small Business 안의 Jira, Confluence, Loom, Trello로 그 무게가 덜어집니다. Claude와 Atlassian 커넥터가 한 주를 계획하고, 캠페인을 추적하고, 사업주가 반복하는 작업을 다시 만들 필요 없는 워크플로로 바꿉니다. 그 시간은 고객과 함께 쓰는 편이 낫죠.”</p>
+    <div class="who">Tamar Yehoshua, 최고제품·AI책임자(Chief Product and AI Officer)</div>
+  </div>
+  <div class="pcard">
+    <div class="logo"><img src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/claude-for-small-business-launches-new-workflows-integrations-and-training-programs/tiktok-light.webp" alt="TikTok"></div>
+    <p>“TikTok은 언제나 규모에 상관없이 어떤 사업이든 창의성과 발견을 실제 성장으로 바꿀 수 있는 곳이었습니다. TikTok 비즈니스 도구가 Claude for Small Business에 통합되면서, 사업주는 한 번의 대화로 아이디어에서 실제 집행되는 TikTok 캠페인까지 가고, 캠페인이 어떤 성과를 냈는지 이해하고, 다음에 어디에 어떻게 더 힘을 실을지 알 수 있습니다.”</p>
+    <div class="who">David Kaufman, 글로벌 수익화 제품 파트너십 총괄(Global Head of Monetization Product Partnerships)</div>
+  </div>
+  <div class="pcard">
+    <div class="logo"><img src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/claude-for-small-business-launches-new-workflows-integrations-and-training-programs/xero-light.svg" alt="Xero"></div>
+    <p>“Xero는 소상공인과 그들의 회계사가 어디에서 일하든 신뢰할 수 있는 재무 데이터를 전하는 데 집중합니다. Claude for Small Business 안의 Xero로, 사업주는 대화 안에서 바로 자신의 숫자에 대한 실시간 단일 정보원(source of truth)을 갖게 되어, 더 잘 알고 결정하고 자문가와 더 깊은 대화를 나눌 수 있습니다.”</p>
+    <div class="who">Akankshu Dhawan, 제품·기술 수석부사장(SVP Product and Tech)</div>
+  </div>
+  <div class="pcard">
+    <div class="logo"><img src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/claude-for-small-business-launches-new-workflows-integrations-and-training-programs/hubspot-light.svg" alt="HubSpot"></div>
+    <p>“소상공인에게 필요한 것은 더 많은 도구가 아니라 더 많은 시간, 더 많은 리드, 그리고 그 일이 실제로 성과를 움직이고 있다는 더 큰 확신입니다. Claude for Small Business 안의 HubSpot으로 모든 새 리드가 응답되고, 후속 조치되고, CRM에 기록되므로 사업주는 운영이 아니라 고객에 집중할 수 있습니다.”</p>
+    <div class="who">Kipp Bodnar, 최고마케팅책임자(Chief Marketing Officer)</div>
+  </div>
+  <div class="pcard">
+    <div class="logo"><img src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/claude-for-small-business-launches-new-workflows-integrations-and-training-programs/clay-light.svg" alt="Clay"></div>
+    <p>“소상공인에게 아웃바운드의 어려운 부분은 누구에게 연락해야 하고 그들이 왜 관심을 가질지 아는 것입니다. Clay는 Claude for Small Business 안에서 그 숙제를 대신합니다. 잠재 고객을 찾고, 당신의 최고 고객들과 비교해 점수를 매기고, 무엇으로 말문을 열지 알려 줍니다. 누구에게 연락할지는 사업주가 결정합니다.”</p>
+    <div class="who">Kareem Amin, 공동 창립자 겸 CEO</div>
+  </div>
+  <div class="pcard">
+    <div class="logo"><img src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/claude-for-small-business-launches-new-workflows-integrations-and-training-programs/zapier-light.svg" alt="Zapier"></div>
+    <p>“소상공인은 거대한 기술 팀을 가진 대기업과 경쟁하기 어려울 때가 많습니다. Claude for Small Business 안의 Zapier로 우리는 그 격차를 줄이도록 돕습니다. 사업주는 네이티브 커넥터가 없는 앱을 포함해 이미 쓰는 앱들을 연결하고, 그 워크플로를 실제로 돌릴 수 있습니다.”</p>
+    <div class="who">Dan Slagen, 최고마케팅·AI전환책임자(Chief Marketing and AI Transformation Officer)</div>
+  </div>
+  <div class="pcard">
+    <div class="logo"><img src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/claude-for-small-business-launches-new-workflows-integrations-and-training-programs/expensify-light.svg" alt="Expensify"></div>
+    <p>“영수증, 경비 정산, 카드 명세서는 소상공인의 장부가 무너지는 지점입니다. Claude for Small Business 안의 Expensify는 거래가 들어오는 순간 코드를 붙이고 대조하며, 정책을 벗어난 것을 문제가 되기 전에 잡아내고, 월말에 바로 마감할 수 있는 장부를 건네줍니다. 비즈니스 재무는 스프레드시트가 아니라 대화가 되어 가고 있습니다. 바로 이런 모습입니다.”</p>
+    <div class="who">Nick Tooker, 파트너십 총괄(Head of Partnerships)</div>
+  </div>
+  <div class="pcard">
+    <div class="logo"><img src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/claude-for-small-business-launches-new-workflows-integrations-and-training-programs/zoho-light.png" alt="Zoho"></div>
+    <p>“많은 소상공인이 이미 영업, 재무, 고객 지원을 Zoho에서 운영합니다. Claude for Small Business 안의 Zoho CRM, Zoho Books, Zoho Desk로, 사업주는 질문 하나로 세 시스템을 모두 아우르는 답을 얻습니다. 어떤 거래가 정체되어 있는지, 어떤 청구서가 연체인지, 오늘 답해야 할 티켓은 무엇인지. 그만큼 고객을 돌보고 꿈꾸던 사업을 만드는 데 더 많은 시간을 쓸 수 있습니다.”</p>
+    <div class="who">Anand Nergunam, 매출 성장 글로벌 부사장(Global Vice President, Revenue Growth)</div>
+  </div>
+  <div class="pcard">
+    <div class="logo"><img src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/claude-for-small-business-launches-new-workflows-integrations-and-training-programs/monday-light.svg" alt="monday.com"></div>
+    <p>“회의 후 액션 아이템, 전화할 리드 선별, 월말 마감에서 드러난 것들. Claude는 팀이 작업과 우선순위를 정하도록 돕지만, 그다음에는 누군가가 실제로 그것을 실행해야 합니다. Claude for Small Business의 monday.com 커넥터는 이 항목들 각각을 모든 맥락과 함께 보드에 올리고, 알맞은 담당자를 지정하고, 진행 상황을 추적해 팀 전체가 목표 달성을 확인할 수 있게 합니다.”</p>
+    <div class="who">Sergei Liakhovetsky, 연구개발 부사장(VP R&amp;D)</div>
+  </div>
+  <div class="pcard">
+    <div class="logo"><img src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/claude-for-small-business-launches-new-workflows-integrations-and-training-programs/ringcentral-light.svg" alt="RingCentral"></div>
+    <p>“소상공인은 대화로 돌아가고, 모든 통화·문자·채팅에는 사업주가 다시 찾아볼 시간이 없는 맥락이 담겨 있습니다. Claude for Small Business와 함께하는 RingCentral이 그것을 바꿉니다. 우리는 당신이 이미 일하는 곳에서 대화 데이터를 접근하고 활용할 수 있게 만들어, 상호작용의 맥락을 다음 단계로 바꿉니다. 영업시간 이후의 음성 메시지나 채팅 메시지는 아침이 되면 답장 초안이 붙은 검증된 리드가 되고, 갱신 통화 전에 고객의 전체 이력이 화면에 떠 있습니다. 모든 RingCentral 고객이 이것을 누립니다.”</p>
+    <div class="who">Kira Makagon, 사장 겸 COO</div>
+  </div>
+  <div class="pcard">
+    <div class="logo"><img src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/claude-for-small-business-launches-new-workflows-integrations-and-training-programs/apollo-light.svg" alt="Apollo"></div>
+    <p>“리드 생성, 아웃리치, 파이프라인 관리는 예전에는 GTM(go-to-market) 팀 전체가 필요한 일이었습니다. 이제 사업주는 누구에게 파는지 한 번만 설명하면, Claude for Small Business 안의 Apollo GTM 엔진이 순위가 매겨진 잠재 고객 목록을 만들고, 승인을 받을 아웃리치 초안을 쓰고, 파이프라인을 계속 채워 줍니다. 모두 한 번의 대화 안에서요.”</p>
+    <div class="who">Matt Curl, CEO</div>
+  </div>
+  <div class="pcard">
+    <div class="logo"><img src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/claude-for-small-business-launches-new-workflows-integrations-and-training-programs/wix-light.svg" alt="Wix"></div>
+    <p>“소상공인에게는 의도를 행동으로 바꿔 주는 AI가 필요합니다. 그래서 우리는 Wix의 웹사이트 빌더와 비즈니스 플랫폼을 Claude for Small Business에 가져옵니다. 사용자가 이미 일하고 있는 바로 그곳에서 웹사이트를 만들고 사업을 관리할 수 있도록요.”</p>
+    <div class="who">Tuvit Rubin Kaplan, 개발자 플랫폼 총괄(Head of Developer Platform)</div>
+  </div>
+  <div class="pcard">
+    <div class="logo"><img src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/claude-for-small-business-launches-new-workflows-integrations-and-training-programs/airwallex-light.svg" alt="Airwallex"></div>
+    <p>“이제 Airwallex가 Claude for Small Business에 통합되어, 사업주는 간단한 프롬프트만으로 결제를 받고, 해외 공급업체에 지급하기 위해 환전하고, 현금 흐름을 관리하는 등 훨씬 많은 일을 할 수 있습니다.”</p>
+    <div class="who">Jason Gottlieb, 금융·전략 파트너십 부사장(VP of Financial &amp; Strategic Partnerships)</div>
+  </div>
+  <div class="pcard">
+    <div class="logo"><img src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/claude-for-small-business-launches-new-workflows-integrations-and-training-programs/myob-light.png" alt="MYOB"></div>
+    <p>“현금 흐름을 확인하든, 세금 신고를 준비하든, 성장을 계획하든, 모든 사업주에게는 자신이 다루는 숫자에 대한 확신이 필요합니다. Claude for Small Business 안의 MYOB는 사업체가 받는 인사이트와 조치가 이미 매일 의존하는 재무·운영 기록에 근거하도록 돕습니다. 그 결과는 호주와 뉴질랜드 사업체에 더 적절한 안내와 실질적인 지원을 제공할 수 있는 AI입니다.”</p>
+    <div class="who">Yonatan Bley, 중소기업 제품·제품 마케팅 총괄(General Manager, SME Product and Product Marketing)</div>
+  </div>
+</div>
+
+<h2>신뢰를 위한 설계</h2>
+
+<p>봄 투어에서 설문에 응한 사업주의 절반이 AI 사용을 주저하는 가장 큰 이유로 데이터 보안을 꼽았습니다. 통제 장치는 이렇게 작동합니다.</p>
+
+<ul>
+  <li><strong>기본적으로 무엇을 언제 실행할지는 당신이 정합니다.</strong> 모든 워크플로는 승인 모드로 시작합니다. Claude가 작업 초안을 만들어 대기시킨 뒤 당신의 승인을 기다립니다. 어떤 워크플로가 익숙해지면 자동으로 실행되도록 허용할 수 있습니다. 이 선택은 워크플로 하나하나 따로 하며, 언제든 되돌릴 수 있습니다.</li>
+  <li><strong>일부 워크플로는 마지막 단계 직전에서 멈춥니다.</strong> 예를 들어 Claude는 Gusto에서 급여를 실행 대기 상태로 준비만 하고, 제출은 당신이 합니다.</li>
+  <li><strong>기존 소프트웨어의 권한은 그대로 유지됩니다.</strong> 직원이 지금 Intuit QuickBooks나 Google Drive에서 볼 수 없는 것은 Claude를 통해서도 볼 수 없습니다.</li>
+  <li>기본적으로 Team 및 Enterprise 플랜에서는 당신의 사업 데이터로 학습하지 않습니다.</li>
+</ul>
+
+<p>자세한 내용은 <a href="https://trust.anthropic.com/">Trust Center</a>에 있습니다.</p>
+
+<h2>새로운 교육·지원 기회</h2>
+
+<p>이번 주부터 Claude SMB 투어가 파트너 Tenex와 함께 돌아와 <a href="https://anthropic.swoogo.com/claude-smb-workshop-boston/rta">보스턴</a>, <a href="https://anthropic.swoogo.com/claude-smb-workshop-pittsburgh/rta">피츠버그</a>, <a href="https://anthropic.swoogo.com/claude-smb-workshop-detroit/rta">디트로이트</a>, <a href="https://anthropic.swoogo.com/claude-smb-workshop-minneapolis/rta">미니애폴리스</a>, <a href="https://anthropic.swoogo.com/claude-smb-workshop-phoenix/rta">피닉스</a>, <a href="https://anthropic.swoogo.com/claude-smb-workshop-memphis/rta">멤피스</a>, <a href="https://anthropic.swoogo.com/claude-smb-workshop-savannah/rta">서배너</a>, <a href="https://anthropic.swoogo.com/claude-smb-workshop-bentonville/rta">벤턴빌</a>, <a href="https://anthropic.swoogo.com/claude-smb-workshop-tampa/rta">탬파</a>, <a href="https://anthropic.swoogo.com/claude-smb-workshop-raleigh/rta">롤리</a>에서 무료 반나절 워크숍을 엽니다. 워크숍에 대해 더 알아보고 등록하려면 <a href="https://www.anthropic.com/events/build-with-claude">여기</a>를 보세요.</p>
+
+<blockquote>“그 자리에 앉아 있을 수 있어서 운이 좋았습니다. 지난 몇 년 동안 제 시간을 가장 값지게 투자한 몇 시간이었습니다.”
+<cite>— Paola Alvarado, CORE Boiler &amp; Mechanical Services 사장, 루이지애나주 프레리빌</cite></blockquote>
+
+<p>또한 Claude 파트너 네트워크(Claude Partner Network) 안에서 소상공인에 집중하는 컨설팅 파트너와 시스템 통합 업체를 선정하기 시작했습니다. <a href="https://partnerhub.claude.com/directory/partner/1784259993008x356713100372617860">A.team</a>, <a href="https://partnerhub.claude.com/directory/partner/1784259990043x541987221200018940">AnswerRocket</a>, <a href="https://partnerhub.claude.com/directory/partner/bold-tech-partner">Bold Tech</a>, <a href="https://partnerhub.claude.com/directory/partner/1784259945978x195470687185893340">Caylent</a>, <a href="https://partnerhub.claude.com/directory/partner/1784260001823x362151805260541250">First Line Software</a>, <a href="https://partnerhub.claude.com/directory/partner/1784260003108x180366083877681100">Grid Dynamics</a>, <a href="https://partnerhub.claude.com/directory/partner/1784260006158x658004936465662000">LightCI</a>, <a href="https://partnerhub.claude.com/directory/partner/1784260008826x243046775320587400">Loka</a>, <a href="https://partnerhub.claude.com/directory/partner/1784260011304x967968340701961500">Praecipio</a>, <a href="https://partnerhub.claude.com/directory/partner/rosetree-solutions">Rosetree Solutions</a>, <a href="https://partnerhub.claude.com/directory/partner/the-agile-monkeys-sl">The Agile Monkeys</a>를 시작으로, <a href="https://partnerhub.claude.com/directory?filters=1789178865067x436833862108438660">더 추가할</a> 계획입니다.</p>
+
+<p>몇 주 안에 공인 Claude SMB 트레이너가 주최하는 지역 사회 주도 Claude 워크숍도 발표할 예정입니다. 이 트레이너들은 올여름 샌프란시스코와 뉴욕에서 Tenex와 Anthropic이 연 전용 “Train the Trainer” 행사를 통해 교육을 받았습니다.</p>
+
+<p>이번 가을에는 통합을 만든 기업들도 소상공인 사업주에게 이미 쓰고 있는 도구와 함께 Claude를 쓰는 법을 직접 가르칩니다. Claude for Small Business 파트너 웨비나 시리즈에서는 14개 기술 파트너가 9월 말부터 11월까지 각자의 커넥터를 다루는 무료 라이브 웨비나를 하나씩 엽니다. 각 세션은 그 커넥터가 Claude 안에서 무엇을 할 수 있는지, 도구와 Claude 사이에서 데이터가 어떻게 오가는지, 그리고 세션이 끝나기 전에 직접 실행해 볼 워크플로 하나를 다룹니다.</p>
+
+<p>등록은 여기서: <a href="https://luma.com/0p7fmc93">Notion</a> (9월 25일), <a href="https://events.ringcentral.com/events/ringcentral-anthropic-webinar?code=1VT0iDMhkYRYHvCvKuh7xHS1x">RingCentral</a> (10월 1일), <a href="https://events.zoom.us/ev/AiJIgCaSD_osXZeGeXnc35LGiTBIHdUDmFozuhmTENO1P2oUl3I-~AgAG7IFCoItAIlAIpdM2J7wX0K8l1OTZimYEPk8HrltCwvlqK6sEY7HXfqtWBB5w0i-aA4o-9WIvF50a6y0xYOIbiQ">Zoom</a> (10월 8일), <a href="https://monday.zoom.us/webinar/register/WN_WkuWnYDXQ9GQMisrSzJgpg#/registration">monday.com</a> (10월 12일), <a href="https://monday.zoom.us/webinar/register/WN_WkuWnYDXQ9GQMisrSzJgpg#/registration">Expensify</a> (10월 13일), <a href="https://events.apollo.io/apollo-claude-growth/">Apollo</a> (10월 15일), <a href="https://adminhug.info/claude102026">HubSpot</a> (10월 20일), <a href="https://event.on24.com/wcc/r/5496016/977F305A86D5D6E06F602DE266A993C6">Gusto</a> (10월 21일), <a href="https://zapier.com/resources/events/claude-smb-zapier-with-anthropic">Zapier</a> (10월 22일), <a href="https://xero.zoom.us/webinar/register/WN_c_4fE7BGRGi35kiIK1OwCA#/registration">Xero</a> (10월 27일), <a href="https://www.clay.com/livestreams/claude-for-small-business-build-your-growth-engine-with-clay?utm_source=all&amp;utm_medium=influencerpartner&amp;utm_campaign=claude_smb_anthropic">Clay</a> (10월 28일), <a href="https://www.tiktokacademy.com/student/page/3663358-north-american-europe-putting-ai-agents-to-work-powering-growth-with-tiktok-ads-and-claude-for-small-business?utm_source=partner_site&amp;utm_medium=blog&amp;utm_campaign=anthropic_MCP_261022_partner_enablement_na&amp;utm_content=webinar">TikTok</a> (10월 29일), <a href="https://www.alignable.com/groups/invite-only-events/events/how-small-businesses-are-growing-with-ai-nov-2026">Alignable</a> (11월 5일), <a href="https://www.linkedin.com/events/run-grow-andenableyourbusinessw7503923852599525376/">Atlassian</a> (11월 17일). 앞으로 몇 주에 걸쳐 <a href="https://claude.com/solutions/small-business?tab=virtual#events">여기</a>에 더 추가할 예정입니다.</p>
+
+<h2>지역 사회와의 협력</h2>
+
+<p>우리는 소상공인의 AI 도입이 경제 성장과 고용을 통해 상당한 공익을 낳을 수 있다고 믿습니다. 그래서 우리 <a href="https://www.anthropic.com/beneficial-deployments">Beneficial Deployments</a> 팀은 소상공인과 창업가를 지원하는 조직들과 협력합니다.</p>
+
+<p>우리는 소상공인을 위한 실용 교육의 대표 주자로 널리 인정받는 <a href="https://www.goldmansachs.com/community-transformation/10000-small-businesses/us">Goldman Sachs 10,000 Small Businesses</a>와 파트너십을 맺습니다. 이 프로그램은 미국 전역에서 19,000명 넘는 창업가가 사업을 키우고 일자리를 만들도록 도왔습니다. 우리는 함께 소상공인을 위한 응용 AI 학습 시리즈를 새로 만들고 있습니다. 글로벌 차원에서는 <a href="https://thedo.world/">The DO</a>의 새 프로그램인 <a href="https://doincuversity.ai/">IncuVersity</a>의 창립 파트너로, 앞으로 몇 년에 걸쳐 20,000명의 초기 창업가가 Claude로 사업을 세우도록 돕는 것을 목표로 합니다. 그리고 전 세계 초기 단계 사회적 기업가를 후원하는 <a href="https://echoinggreen.org/">Echoing Green</a>이 새로운 AI 중심 프로그램에 Claude를 도입하는 과정에도 협력하고 있습니다.</p>
+
+<h2>시작하기</h2>
+
+<p><a href="http://claude.com/plugins/small-business">Claude for Small Business를 설치</a>하고, “set me up”이라고 말한 뒤, 도구 한두 개를 연결하세요. 모든 유료 Claude 플랜에서 사용할 수 있으며, 두 명 이상인 사업체에는 <a href="https://claude.com/pricing#team-&amp;-enterprise">Team 플랜</a>을 권합니다. 단계별 설치 가이드와 워크플로 목록은 <a href="https://academy.claude.com/tutorials/how-to-install-the-claude-for-small-business-plugin">Claude Academy</a>에 있습니다.</p>
+
+<div class="callout">
+  <strong>Claude로 조직의 운영 방식을 바꿔 보세요.</strong>
+  <a href="https://claude.com/pricing#api">요금 보기</a> ·
+  <a href="https://claude.com/contact-sales">영업팀 문의</a>
+</div>
+
+<footer>
+  이 글은 Claude 공식 블로그 원문을 한국어로 옮긴 비공식 번역본입니다.
+  내용의 정확한 의미는 위 원문 링크를 함께 참고하세요.
+</footer>

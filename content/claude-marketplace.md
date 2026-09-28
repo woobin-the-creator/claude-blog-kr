@@ -1,0 +1,116 @@
+---
+slug: "claude-marketplace"
+title: "Claude Marketplace: 플러그인·커넥터, 제품·에이전트, 서비스 파트너를 한곳에"
+nav: "Claude Marketplace · 플러그인·제품·파트너 통합 출시"
+main: "Claude blog"
+cat: "Product announcements"
+date: "2026-09-23"
+author: "ai"
+rev: 1
+style_css: ":root { --fg:#1a1a1a; --muted:#666; --line:#e5e5e5; --accent:#c96442; --code-bg:#f6f6f4; }\n  * { box-sizing: border-box; }\n  body {\n    font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", \"Apple SD Gothic Neo\",\n      \"Malgun Gothic\", sans-serif;\n    color: var(--fg); line-height: 1.75; max-width: 760px;\n    margin: 0 auto; padding: 48px 24px 96px; background:#fff;\n  }\n  header { border-bottom: 2px solid var(--line); padding-bottom: 24px; margin-bottom: 32px; }\n  h1 { font-size: 1.9rem; line-height: 1.35; margin: 0 0 12px; }\n  .meta { color: var(--muted); font-size: 0.9rem; }\n  .meta .orig { display:block; margin-top:6px; }\n  .meta a { color: var(--accent); text-decoration: none; }\n  h2 { font-size: 1.4rem; margin: 44px 0 8px; padding-top: 8px; }\n  h3 { font-size: 1.15rem; margin: 30px 0 8px; color:#000; }\n  p { margin: 0 0 16px; }\n  a { color: var(--accent); }\n  ul, ol { margin: 0 0 16px; padding-left: 22px; }\n  li { margin-bottom: 8px; }\n  blockquote { margin: 16px 0; padding: 8px 18px; border-left:3px solid var(--line);\n    color:#333; font-style: italic; }\n  hr { border: none; border-top: 1px solid var(--line); margin: 40px 0; }\n  code { background: var(--code-bg); padding: 2px 6px; border-radius: 4px;\n    font-family: \"SF Mono\", Menlo, Consolas, monospace; font-size: 0.88em; }\n  figure { margin: 24px 0; }\n  figure img { width: 100%; height: auto; border:1px solid var(--line); border-radius: 8px;\n    background:#fff; }\n  figure.hero img { border:none; max-width: 210px; display:block; margin: 0 auto 8px; }\n  .quotes { display:grid; gap:18px; margin: 20px 0 8px; }\n  .quote { border:1px solid var(--line); border-radius: 10px; padding: 18px 20px; }\n  .quote img.logo { height: 26px; width:auto; display:block; margin-bottom: 12px; }\n  .quote p { margin: 0 0 10px; color:#333; }\n  .quote cite { display:block; font-style: normal; color: var(--muted); font-size: 0.85rem; }\n  figcaption { color: var(--muted); font-size: 0.85rem; text-align: center;\n    margin-top: 10px; line-height: 1.5; }\n  figcaption a { color: var(--accent); }\n  .video { position: relative; width: 100%; padding-top: 56.25%; margin: 24px 0 8px;\n    border-radius: 8px; overflow: hidden; background:#000; }\n  .video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }\n  .callout { background:#faf6f4; border-left:3px solid var(--accent);\n    padding: 12px 16px; border-radius: 0 6px 6px 0; margin: 16px 0; }\n  .callout strong { color: var(--accent); }\n  .lede { color:#333; font-size: 1.05rem; }\n  footer { margin-top: 64px; padding-top: 20px; border-top:1px solid var(--line);\n    color: var(--muted); font-size: 0.82rem; }"
+has_markdown: false
+markdown_length: 0
+html_length: 6790
+---
+
+<!-- rendered HTML -->
+<header>
+  <h1>Claude Marketplace: Anthropic이 제공하는 플러그인·커넥터, 제품·에이전트, 서비스 파트너</h1>
+  <div class="meta">
+    2026년 9월 23일 · 읽는 시간 5분
+    · 카테고리: <a href="https://claude.com/blog/category/announcements">Product announcements</a>
+    · 제품: <a href="https://claude.com/platform/api">Claude Platform</a>
+    <span class="orig">원문:
+      <a href="https://claude.com/blog/claude-marketplace">Claude Marketplace: plugins and connectors, products and agents, and service partners by Anthropic</a>
+      (한글 번역본)</span>
+  </div>
+</header>
+
+<figure class="hero"><img src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/claude-marketplace/hero.svg" alt="Claude Marketplace 일러스트"></figure>
+
+<p class="lede"><em>Claude로 더 많은 일을 할 수 있게 해 주는 도구와 서비스를 찾아보거나, 직접 만든 것을 등록해 Claude 고객과 함께 성장하세요.</em></p>
+
+<p>오늘부터 <a href="https://claude.com/platform/marketplace">Claude Marketplace</a>가 플러그인과 커넥터, 에이전트와 제품, 서비스 파트너를 한곳에 모아 제공한다. 고객에게는 알맞은 도구와 서비스를 찾을 수 있는 단일 목적지를 제공하고, 빌더와 파트너에게는 Claude를 사용하는 팀에 더 쉽게 다가갈 수 있는 길을 열어 준다.</p>
+
+<h2>고객을 위해: Claude로 더 많은 일을 하도록 도와주는 도구와 서비스 발견하기</h2>
+
+<p>Claude Marketplace는 팀이 Claude 활용 범위를 넓히는 데 필요한 것을 찾는 곳이다. 여기서 다음을 할 수 있다.</p>
+
+<ul>
+  <li><strong>커넥터와 플러그인 추가.</strong> Atlassian, Google, Microsoft, Notion, Salesforce 등 오늘 기준 2,000개가 넘는 커넥터와 플러그인 중에서 고를 수 있다.</li>
+  <li><strong>에이전트와 제품 구매.</strong> 약정한 Anthropic 사용 금액(committed spend)의 일부를 CrowdStrike, Cursor, Harvey, Legora, Lovable, Snowflake 같은 기업이 만든 Claude 기반 소프트웨어에 쓸 수 있다.</li>
+  <li><strong>서비스 파트너와 함께 확장.</strong> <a href="https://partnerhub.claude.com/directory/">Claude Partner Network</a>의 컨설팅 파트너나 시스템 통합(SI) 업체, 예를 들어 Accenture, Boston Consulting Group, Deloitte 등과 연결해 AI 전략을 세우고 조직 전체에 Claude를 도입할 수 있다.</li>
+</ul>
+
+<figure>
+  <img src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/claude-marketplace/claude-marketplace.png" alt="Claude Marketplace 화면. 커넥터·플러그인, 에이전트·제품, 서비스 파트너 목록이 보인다">
+</figure>
+
+<h2>빌더와 파트너를 위해: Claude를 사용하는 팀에게 발견되기</h2>
+
+<p>Claude 고객을 위한 도구, 제품, 서비스를 만드는 기업은 Claude Marketplace에 등록할 수 있다. 제공하는 것에 맞는 경로를 고르면 된다.</p>
+
+<ul>
+  <li><strong>Claude를 사용하는 팀을 위해 무언가를 만들고 있는가?</strong> Anthropic이 선도한 개방형 표준인 모델 컨텍스트 프로토콜(Model Context Protocol, MCP)과 에이전트 스킬(Agent Skills)을 사용해 <a href="https://claude.com/docs/connectors/building/submission">커넥터</a>나 <a href="https://claude.com/docs/plugins/submit">플러그인</a>을 만들면 된다.</li>
+  <li><strong>Claude 기반 에이전트나 제품을 판매하는가?</strong> 마켓플레이스에 등록하도록 <a href="https://claude.com/marketplace-partners">신청</a>하면 된다. 그러면 팀들이 약정한 Anthropic 사용 금액의 일부로 그 제품을 구매할 수 있다.</li>
+  <li><strong>컨설팅이나 시스템 통합을 제공하는가?</strong> <a href="https://claude.com/form/cpn-partner-application">Claude Partner Network</a>에 가입하면 마켓플레이스에 노출되어 Claude 고객이 찾고 연락할 수 있다.</li>
+</ul>
+
+<h3>파트너의 목소리</h3>
+
+<div class="quotes">
+  <div class="quote">
+    <img class="logo" src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/claude-marketplace/atlassian.svg" alt="Atlassian 로고">
+    <p>“우리는 공동 고객의 업무가 힘들이지 않고 흘러가길 바랍니다. Claude에게 질문하면 Claude가 당신의 세계를 정말로 이해하고 있다고 믿을 수 있어야 하죠. Atlassian의 Teamwork Graph는 우리 커넥터를 통해 Confluence, Jira, 그 밖의 앱이 가진 전체 맥락을 Claude 안으로 가져옵니다. 그래서 모든 응답이 팀과 도구 전반에서 실제로 벌어지는 일에 근거하게 됩니다.”</p>
+    <cite>Jamil Valliani, Head of Product, AI, Atlassian</cite>
+  </div>
+  <div class="quote">
+    <img class="logo" src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/claude-marketplace/crowdstrike.svg" alt="CrowdStrike 로고">
+    <p>“AI는 기업이 운영되는 방식을, 그리고 기술이 조달·배포·운영되는 방식을 바꾸고 있습니다. 보안이 그 선두에 있습니다. Anthropic과 함께 우리는 Falcon 플랫폼을 Claude Marketplace에 올려, 기업이 AI를 실제로 쓰는 바로 그곳에 AI 네이티브 사이버보안을 배치합니다. 우리는 프런티어 AI를 방어자의 전력 승수(force multiplier)로 바꾸고 있습니다.”</p>
+    <cite>Daniel Bernard, Chief Business Officer, CrowdStrike</cite>
+  </div>
+  <div class="quote">
+    <img class="logo" src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/claude-marketplace/hebbia.svg" alt="Hebbia 로고">
+    <p>“세계 최대 투자자와 은행 중 다수가 Hebbia 위에서 일하며, 제품 안의 가장 어려운 추론 문제 일부에 Claude를 사용합니다. Claude Marketplace를 통해 고객은 약정한 Anthropic 사용 금액의 일부를 Hebbia를 팀에 도입하는 데 쓸 수 있습니다.”</p>
+    <cite>Aabhas Sharma, President and CTO, Hebbia</cite>
+  </div>
+  <div class="quote">
+    <img class="logo" src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/claude-marketplace/legora.svg" alt="Legora 로고">
+    <p>“Claude Marketplace는 법무팀이 이미 Anthropic에 한 투자를 쉽게 확장할 수 있게 해 줍니다. 이미 약정한 예산으로 Legora의 aOS를 도입할 수 있죠. 절차가 간소해졌고, 첫날부터 모든 것이 함께 잘 작동한다는 확신을 가질 수 있습니다.”</p>
+    <cite>Kristin Thayer, VP of Partnerships, Legora</cite>
+  </div>
+  <div class="quote">
+    <img class="logo" src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/claude-marketplace/notion.svg" alt="Notion 로고">
+    <p>“Notion 커넥터는 팀이 이미 의존하는 지식과 맥락을 Claude 안으로 직접 가져와, 사람들이 흐름을 끊지 않고 정보에서 행동으로 넘어가도록 돕습니다. Claude 생태계의 일부가 되는 것은 Notion을 사람과 AI가 함께 쓰는 공유 공간으로 만들겠다는 우리 목표를 앞당깁니다. 업무의 맥락이 그 일을 진전시키는 도구와 계속 연결되어 있는 공간이죠.”</p>
+    <cite>David Rosenberg, Head of Ecosystem, Notion</cite>
+  </div>
+  <div class="quote">
+    <img class="logo" src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/claude-marketplace/salesforce.svg" alt="Salesforce 로고">
+    <p>“Salesforce 고객은 CRM 데이터와 Slack 대화를 Claude로 일하는 바로 그 자리에서 보고 싶어 합니다. 도구를 바꾸지 않고도 준비하고, 후속 조치를 하고, 딜을 업데이트할 수 있도록요. Salesforce in Claude가 Claude Marketplace에서 제공되면서 더 많은 팀이 더 빨리 시작할 수 있습니다.”</p>
+    <cite>Nick Johnston, EVP, Global Partnerships, Salesforce</cite>
+  </div>
+  <div class="quote">
+    <img class="logo" src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/claude-marketplace/snowflake.svg" alt="Snowflake 로고">
+    <p>“Snowflake는 데이터가 이미 있는 곳에서 Claude 같은 모델을 실행함으로써 얻는 맥락, 보안, 효율성을 갖춘, 거버넌스가 적용된 AI의 터전을 기업에 제공합니다. Claude Marketplace는 Anthropic 고객이 약정한 사용 금액의 일부를 활용해 Snowflake를 더 쉽게 도입하도록 해 주며, 조달 주기를 줄이고 가치 실현까지의 시간을 앞당깁니다.”</p>
+    <cite>Alexa Kelly, Head of Enterprise Technology &amp; AI Partnerships, Snowflake</cite>
+  </div>
+</div>
+
+<h2>고객 사례</h2>
+
+<p>CodeRabbit은 Claude Marketplace를 이용해 Anthropic 약정 금액의 일부를 자사의 코딩 에이전트가 실행되는 Vercel에 썼고, Power Digital과 ThoughtSpot은 자사 데이터가 있는 Snowflake에 같은 방식으로 썼다. 이들이 어떻게 했는지는 <a href="https://claude.com/blog/how-coderabbit-power-digital-and-thoughtspot-scale-with-snowflake-and-vercel-on-claude-marketplace">여기</a>에서 읽을 수 있다.</p>
+
+<h2>시작하기</h2>
+
+<p><a href="https://claude.com/platform/marketplace">Claude Marketplace</a>는 오늘부터 이용할 수 있다. 팀이 Claude로 더 많은 일을 하도록 도와줄 도구, 에이전트, 서비스를 둘러보자. 파트너라면 <a href="http://claude.com/marketplace#join">마켓플레이스에 참여하는 방법</a>을 확인하고 Claude 고객과 함께 성장하자.</p>
+
+<div class="callout">
+  <strong>Claude로 조직의 운영 방식을 바꿔 보세요.</strong>
+  <a href="https://claude.com/pricing#api">요금 보기</a> ·
+  <a href="https://claude.com/contact-sales">영업팀 문의</a>
+</div>
+
+<footer>
+  이 글은 Claude 공식 블로그 원문을 한국어로 옮긴 비공식 번역본입니다.
+  내용의 정확한 의미는 위 원문 링크를 함께 참고하세요.
+</footer>

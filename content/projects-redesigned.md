@@ -1,0 +1,99 @@
+---
+slug: "projects-redesigned"
+title: "프로젝트 새 단장: 폴더에서 대화로"
+nav: "프로젝트 새 단장 · 스레드+코디네이터, Claude Code 베타"
+main: "Claude blog"
+cat: "Product announcements"
+date: "2026-09-17"
+author: "ai"
+rev: 1
+style_css: ":root { --fg:#1a1a1a; --muted:#666; --line:#e5e5e5; --accent:#c96442; --code-bg:#f6f6f4; }\n  * { box-sizing: border-box; }\n  body {\n    font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", \"Apple SD Gothic Neo\",\n      \"Malgun Gothic\", sans-serif;\n    color: var(--fg); line-height: 1.75; max-width: 760px;\n    margin: 0 auto; padding: 48px 24px 96px; background:#fff;\n  }\n  header { border-bottom: 2px solid var(--line); padding-bottom: 24px; margin-bottom: 32px; }\n  h1 { font-size: 1.9rem; line-height: 1.35; margin: 0 0 12px; }\n  .meta { color: var(--muted); font-size: 0.9rem; }\n  .meta .orig { display:block; margin-top:6px; }\n  .meta a { color: var(--accent); text-decoration: none; }\n  h2 { font-size: 1.4rem; margin: 44px 0 8px; padding-top: 8px; }\n  h3 { font-size: 1.15rem; margin: 30px 0 8px; color:#000; }\n  p { margin: 0 0 16px; }\n  a { color: var(--accent); }\n  ul, ol { margin: 0 0 16px; padding-left: 22px; }\n  li { margin-bottom: 8px; }\n  blockquote { margin: 16px 0; padding: 8px 18px; border-left:3px solid var(--line);\n    color:#333; font-style: italic; }\n  hr { border: none; border-top: 1px solid var(--line); margin: 40px 0; }\n  code { background: var(--code-bg); padding: 2px 6px; border-radius: 4px;\n    font-family: \"SF Mono\", Menlo, Consolas, monospace; font-size: 0.88em; }\n  figure { margin: 24px 0; }\n  figure img { width: 100%; height: auto; border:1px solid var(--line); border-radius: 8px;\n    background:#fff; }\n  figure.hero img { border:none; max-width: 210px; display:block; margin: 0 auto 8px; }\n  figcaption { color: var(--muted); font-size: 0.85rem; text-align: center;\n    margin-top: 10px; line-height: 1.5; }\n  figcaption a { color: var(--accent); }\n  .video { position: relative; width: 100%; padding-top: 56.25%; margin: 24px 0 8px;\n    border-radius: 8px; overflow: hidden; background:#000; }\n  .video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }\n  .callout { background:#faf6f4; border-left:3px solid var(--accent);\n    padding: 12px 16px; border-radius: 0 6px 6px 0; margin: 16px 0; }\n  .callout strong { color: var(--accent); }\n  .lede { color:#333; font-size: 1.05rem; }\n  footer { margin-top: 64px; padding-top: 20px; border-top:1px solid var(--line);\n    color: var(--muted); font-size: 0.82rem; }"
+has_markdown: false
+markdown_length: 0
+html_length: 4498
+---
+
+<!-- rendered HTML -->
+<header>
+  <h1>프로젝트 새 단장: 폴더에서 대화로</h1>
+  <div class="meta">
+    2026년 9월 17일
+    · 카테고리: <a href="https://claude.com/blog/category/announcements">Product announcements</a>,
+    <a href="https://claude.com/blog/category/claude-code">Claude Code</a>
+    · 제품: <a href="https://claude.com/product/claude-code">Claude Code</a>
+    · 읽는 시간 5분
+    <span class="orig">원문:
+      <a href="https://claude.com/blog/projects-redesigned">Projects redesigned: from folder to conversation by Anthropic</a>
+      (한글 번역본)</span>
+  </div>
+</header>
+
+<figure class="hero"><img src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/projects-redesigned/hero.svg" alt="엔터프라이즈 에이전트 노드 일러스트"></figure>
+
+<p class="lede">Claude 프로젝트(projects)의 새로운 경험을 Claude Code에서 베타로 만나보세요.</p>
+
+<p>지금까지는 하나의 빌드 작업에서 여러 세션을 관리하려면 일을 쪼개고, 인수인계를 저글링하고, 결과를 다시 꿰매 붙여야 했습니다. 이제 Claude Code 프로젝트에서는 무엇을 끝내야 하는지 설명하기만 하면 Claude가 작업을 관리합니다.</p>
+
+<p>Claude는 요청의 범위를 정하고, 작업을 위임하고, 병렬 스레드(thread)를 조율하고, 결과물을 검토하고, 완성된 결과를 조립합니다. 여러분은 그 과정 내내, 심지어 휴대폰에서도 진행 방향을 조정할 수 있으며, 컴퓨터 앞을 떠난 뒤에도 Claude는 계속 일합니다.</p>
+
+<p>예를 들어 프로젝트를 구성하고 앱 결제 과정의 p75 지연 시간을 줄이는 것을 목표로 잡아 보세요. 그런 다음 Claude에게 각 엔드포인트를 프로파일링하고, 최적화를 테스트하고, 병렬 스레드에서 PR을 열라고 요청합니다. 또는 API, 웹, 모바일 리포지토리를 연결하고 폐기 예정인 v1 엔드포인트를 퇴역시키는 것을 목표로 잡을 수도 있습니다. Claude는 리포지토리마다 스레드를 하나씩 만들어 호출부를 마이그레이션하고, 테스트를 실행하고, PR을 연 뒤, 어떤 것을 먼저 머지해야 하는지 알려줍니다.</p>
+
+<p>오늘부터 새 프로젝트는 Claude Code에서 클라우드 세션을 사용하고 웹이나 데스크톱에 기존 프로젝트가 없는 일부 Claude Pro 및 Max 구독자에게 베타로 제공됩니다.</p>
+
+<p>앞으로 한 주에 걸쳐 해당 플랜의 더 많은 Claude Code 사용자로 접근 범위를 넓힐 예정입니다. Claude 전체와 Team 및 Enterprise 플랜에서의 새 프로젝트는 그 이후에 제공됩니다. Pro 또는 Max 플랜인데 아직 접근 권한이 없다면 <a href="https://claude.com/form/projects" target="_blank">대기자 명단</a>에 등록할 수 있습니다.</p>
+
+<p>Pro와 Max 플랜의 기존 프로젝트는 지금과 똑같이 계속 동작합니다. 채팅과 Cowork로 롤아웃이 확대되면서 기존 프로젝트도 업그레이드할 예정입니다.</p>
+
+<h2>스레드가 일하고, Claude가 지휘한다</h2>
+
+<p>프로젝트에는 일을 수행하는 스레드와 이를 지휘하는 코디네이터(coordinator)가 있습니다.</p>
+
+<p>프로젝트를 시작할 때 목표와 함께 리포지토리 또는 컨텍스트를 선택합니다. Claude는 먼저 바로 착수할 수 있는 작업을 제안합니다. 프로젝트의 클라우드 환경, 커넥터, 플러그인, 지침, 모델을 구성할 수 있습니다.</p>
+
+<figure><img src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/projects-redesigned/start-new-threads.png" alt="새 스레드를 시작하는 프로젝트 카드 화면"></figure>
+
+<p>메인 프로젝트 채팅에서 진행 상황을 모니터링하고 안내할 수도 있고, 개별 스레드로 들어가 세부 사항을 살펴보고 조정할 수도 있습니다. 비서실장에게 브리핑하듯 프로젝트 안에서 Claude에게 브리핑하면, Claude가 새 스레드나 기존 스레드로 작업을 배분합니다.</p>
+
+<p>Claude는 중간 점검도 하고 작업을 끝까지 마무리합니다. 리포지토리가 연결되어 있으면 스레드가 풀 리퀘스트를 열고 테스트를 실행하며, 문서가 연결되어 있으면 문서를 읽고 초안을 작성합니다.</p>
+
+<div class="video"><iframe src="https://www.youtube.com/embed/-EAEc4LiTyo" title="A glance at project threads" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+
+<p>내부적으로 각 스레드는 자기만의 브랜치와 리포지토리 사본에서 작업하는 Claude Code 클라우드 세션입니다. 코디네이터가 작업을 정리해 주지만, 여러 스레드가 같은 코드를 손대면 그 겹침은 다른 PR과 마찬가지로 머지 충돌로 해결됩니다.</p>
+
+<p>각 스레드는 필요할 때 서브에이전트, 루프, 워크플로를 활용해 위임받은 작업을 더 작은 조각으로 나눌 수 있어, 큰 과제도 더 빨리 끝납니다.</p>
+
+<h2>컨텍스트는 시간이 지날수록 쌓인다</h2>
+
+<p>프로젝트는 오래 실행되거나 에이전트 방식으로 진행되는 워크플로, 즉 답변 한 번으로 끝나지 않고 여러 부분으로 이루어진 작업을 위해 설계되었습니다.</p>
+
+<p>시간이 지나면서 Claude는 프로젝트의 세부 사항을 더 많이 익히고 이를 작업에 적용합니다. 이제 모든 스레드가 공유 메모리에 기여하고 또 그 메모리를 끌어다 쓰므로, 복잡한 프롬프트 엔지니어링의 필요성이 줄어듭니다.</p>
+
+<p>예를 들어 Claude는 릴리스가 금요일로 옮겨졌다는 것, 내보내기 기능을 뺀 이유, 결제 서비스를 건드리기 전에 누구에게 확인해야 하는지를 기억할 수 있습니다.</p>
+
+<figure>
+  <img src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/projects-redesigned/launch-readiness.gif" alt="일주일에 걸친 하나의 프로젝트 화면. 요청마다 오른쪽에 스레드가 열리고 아래에 메모리·결정·결과가 쌓인다">
+  <figcaption>일주일에 걸친 하나의 프로젝트. 요청할 때마다 오른쪽에 스레드가 열리고, 그 아래에 메모리와 결정, 결과가 쌓입니다.</figcaption>
+</figure>
+
+<p>Claude는 여러분의 업무 방식과 소통 스타일도 기억합니다. 얼마나 자주 중간 점검을 할지, 새 스레드를 얼마나 자주 시작할지, 각 업데이트를 얼마나 상세하게 쓸지 조정해 달라고 요청할 수 있습니다.</p>
+
+<p>메모리와 함께, 이제 프로젝트에는 여러분이 추가한 파일과 Claude가 만든 아티팩트를 모아 두는 라이브러리가 포함됩니다. 관련 자료를 찾기 쉬워지고, 새 작업이 이전 성과 위에 쌓아 올리기도 쉬워집니다.</p>
+
+<h2>다음 단계</h2>
+
+<p>프로젝트는 여러 스레드를 동시에 실행할 수 있고, 각 스레드는 온전한 Claude Code 세션입니다. 그래서 프로젝트는 사용량 한도에 더 빨리 도달할 수 있습니다. 프로젝트별 사용량을 확인할 수 있고, 코디네이터 채팅과 워커 스레드가 각각 사용할 모델과 노력(effort) 수준을 선택할 수 있습니다.</p>
+
+<p>현재 스레드는 클라우드에서 실행됩니다. 여러분의 로컬 도구 및 코드와 함께, 여러분의 네트워크 안에서 여러분의 머신 위에서 실행하는 기능도 곧 제공됩니다.</p>
+
+<p><a href="https://claude.com/projects" target="_blank">프로젝트</a>를 지금 시작해 보세요.</p>
+
+<div class="callout">
+  <strong>Claude로 조직의 운영 방식을 바꿔 보세요.</strong>
+  <a href="https://claude.com/pricing#api">요금 보기</a> ·
+  <a href="https://claude.com/contact-sales">영업팀 문의</a>
+</div>
+
+<footer>
+  이 글은 Claude 공식 블로그 원문을 한국어로 옮긴 비공식 번역본입니다.
+  내용의 정확한 의미는 위 원문 링크를 함께 참고하세요.
+</footer>

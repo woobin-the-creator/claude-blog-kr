@@ -1,0 +1,87 @@
+---
+slug: "build-plugins-for-claude"
+title: "디렉터리 제출 포털로 Claude 플러그인 만들기"
+nav: "Claude 플러그인 만들기 · 디렉터리 제출 포털 공개"
+main: "Claude blog"
+cat: "Product announcements"
+date: "2026-09-25"
+author: "ai"
+rev: 1
+style_css: ":root { --fg:#1a1a1a; --muted:#666; --line:#e5e5e5; --accent:#c96442; --code-bg:#f6f6f4; }\n  * { box-sizing: border-box; }\n  body {\n    font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", \"Apple SD Gothic Neo\",\n      \"Malgun Gothic\", sans-serif;\n    color: var(--fg); line-height: 1.75; max-width: 760px;\n    margin: 0 auto; padding: 48px 24px 96px; background:#fff;\n  }\n  header { border-bottom: 2px solid var(--line); padding-bottom: 24px; margin-bottom: 32px; }\n  h1 { font-size: 1.9rem; line-height: 1.35; margin: 0 0 12px; }\n  .meta { color: var(--muted); font-size: 0.9rem; }\n  .meta .orig { display:block; margin-top:6px; }\n  .meta a { color: var(--accent); text-decoration: none; }\n  h2 { font-size: 1.4rem; margin: 44px 0 8px; padding-top: 8px; }\n  h3 { font-size: 1.15rem; margin: 30px 0 8px; color:#000; }\n  p { margin: 0 0 16px; }\n  a { color: var(--accent); }\n  ul, ol { margin: 0 0 16px; padding-left: 22px; }\n  li { margin-bottom: 8px; }\n  blockquote { margin: 16px 0; padding: 8px 18px; border-left:3px solid var(--line);\n    color:#333; font-style: italic; }\n  hr { border: none; border-top: 1px solid var(--line); margin: 40px 0; }\n  code { background: var(--code-bg); padding: 2px 6px; border-radius: 4px;\n    font-family: \"SF Mono\", Menlo, Consolas, monospace; font-size: 0.88em; }\n  figure { margin: 24px 0; }\n  figure img { width: 100%; height: auto; border:1px solid var(--line); border-radius: 8px;\n    background:#fff; }\n  figure.hero img { border:none; max-width: 210px; display:block; margin: 0 auto 8px; }\n  figcaption { color: var(--muted); font-size: 0.85rem; text-align: center;\n    margin-top: 10px; line-height: 1.5; }\n  figcaption a { color: var(--accent); }\n  .video { position: relative; width: 100%; padding-top: 56.25%; margin: 24px 0 8px;\n    border-radius: 8px; overflow: hidden; background:#000; }\n  .video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }\n  .callout { background:#faf6f4; border-left:3px solid var(--accent);\n    padding: 12px 16px; border-radius: 0 6px 6px 0; margin: 16px 0; }\n  .callout strong { color: var(--accent); }\n  .lede { color:#333; font-size: 1.05rem; }\n  footer { margin-top: 64px; padding-top: 20px; border-top:1px solid var(--line);\n    color: var(--muted); font-size: 0.82rem; }"
+has_markdown: false
+markdown_length: 0
+html_length: 3853
+---
+
+<!-- rendered HTML -->
+<header>
+  <h1>디렉터리 제출 포털로 Claude 플러그인 만들기</h1>
+  <div class="meta">
+    2026년 9월 25일 · 읽는 시간 5분
+    · 카테고리: <a href="https://claude.com/blog/category/announcements">Product announcements</a>
+    · 제품: Claude apps
+    <span class="orig">원문:
+      <a href="https://claude.com/blog/build-plugins-for-claude">Build plugins for Claude with the directory submission portal</a>
+      (한글 번역본)</span>
+  </div>
+</header>
+
+<figure class="hero"><img src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/build-plugins-for-claude/hero.svg" alt="Claude 플러그인 디렉터리 제출 포털 일러스트"></figure>
+
+<p class="lede"><em>이제 새 개발자 포털을 통해 Claude 디렉터리에 플러그인을 제출하고, 검토 과정을 추적하고, 게시된 뒤에는 사용 분석까지 볼 수 있다.</em></p>
+
+<p>매일 수백만 명이 Claude를 자신의 앱, 업무 도구, 데이터에 연결한다. 오늘 우리는 개발자가 그 사용자들에게 더 쉽게 다가갈 수 있도록 한다.</p>
+
+<p>플러그인(plugin)은 MCP 커넥터(connector), 에이전트 스킬(Agent Skills), 또는 둘 모두를 하나로 묶은 패키지이며, Claude용 서드파티 확장을 만드는 주된 방법이다. 플러그인을 만들어 새 디렉터리 제출 포털로 제출하면, 승인된 뒤 <a href="https://claude.ai/directory">Claude 디렉터리</a>에 등록된다.</p>
+
+<h2>디렉터리 제출 포털에서 플러그인을 제출하고 추적하기</h2>
+
+<p><a href="https://claude.ai/directory/manage/new">디렉터리 제출 포털</a>은 유료 Claude 플랜을 사용하는 개발자에게 열려 있다. 플러그인을 제출해 Claude 디렉터리에 게시하는 방법은 두 가지다.</p>
+
+<ul>
+  <li><strong>단일 MCP 커넥터:</strong> 원격 MCP 서버를 가리키기만 하면 된다.</li>
+  <li><strong>플러그인 번들(bundle):</strong> MCP 서버와 스킬을 결합해 GitHub에 호스팅하고, 그 저장소를 제출한다. Claude Code에서는 플러그인에 LSP, 커맨드, 훅(hook), 에이전트도 포함할 수 있다.</li>
+</ul>
+
+<p>어느 경로를 택하든 포털이 제출부터 출시까지 안내한다. 할 수 있는 일은 다음과 같다.</p>
+
+<ul>
+  <li><strong>플러그인 자동 검증.</strong> 제출하는 즉시 각 제출물이 점검되고 안전성 스캔을 거치므로, 문제를 일찍 발견할 수 있다.</li>
+  <li><strong>검토 상태와 피드백 확인.</strong> 플러그인이 검토 과정의 어느 단계에 있는지, 안전성 스캔 결과, 권장 변경 사항을 볼 수 있다.</li>
+  <li><strong>준비되면 게시.</strong> 승인이 끝나면 Claude에 플러그인을 언제 게시할지 직접 정한다.</li>
+</ul>
+
+<figure>
+  <img src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/build-plugins-for-claude/review-status.png" alt="플러그인의 검토 상태와 권장 변경 사항을 보여주는 화면">
+  <figcaption>플러그인의 검토 상태와 권장 변경 사항을 양식화해 보여주는 화면. 데이터는 예시용이다.</figcaption>
+</figure>
+
+<h2>게시 후 플러그인을 모니터링하고 개선하기</h2>
+
+<p>플러그인이 게시되면 사용 분석에서 제품 표면(product surface)과 버전별 설치 수를 보여주므로, 사용자를 위해 어떤 수정과 기능을 우선할지 정할 수 있다. 발견(discovery) 측면에서는 목록이 얼마나 자주 조회되는지, 어떤 검색어가 사람들을 그 목록으로 이끄는지 볼 수 있어, 새로운 사용자에게 다가가도록 목록을 다듬을 수 있다.</p>
+
+<figure>
+  <img src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/build-plugins-for-claude/usage-metrics.png" alt="게시된 플러그인의 사용 지표를 보여주는 화면">
+  <figcaption>게시된 플러그인의 사용 지표를 양식화해 보여주는 화면. 데이터는 예시용이다.</figcaption>
+</figure>
+
+<h2>MCP 2.0과 그 확장으로 사용자에게 풍부한 경험 제공하기</h2>
+
+<p>Claude는 흔히 <a href="https://modelcontextprotocol.io/specification/2026-07-28">MCP 2.0</a>이라 부르는 최신 MCP 사양을 지원하며, 여기에는 상태 비저장(stateless) 코어가 포함된다. 두 가지 <a href="https://modelcontextprotocol.io/extensions/overview">MCP 확장(extension)</a>으로 플러그인 사용 경험을 개선할 수 있다. 채팅 안에서 인터랙티브 UI를 제공하는 <a href="https://claude.com/docs/connectors/building/mcp-apps/getting-started">MCP Apps</a>, 그리고 기업 사용자를 위한 무개입(zero-touch) OAuth를 제공하는 <a href="https://claude.com/docs/connectors/building/enterprise-managed-auth">Enterprise Managed Auth</a>다. 더 많은 MCP 기능과 확장에 대한 지원도 곧 추가된다.</p>
+
+<h2>Claude용 플러그인 만들기 시작하기</h2>
+
+<p>플러그인은 서드파티 개발자가 Claude용 확장을 만드는 주된 방법이다. 앞으로 몇 주에 걸쳐 Claude와 Claude Code 전반에 하나의 통합된 발견 경험이 순차적으로 배포된다. 스킬과 MCP 커넥터는 여전히 기본 구성 요소(building block)로 남으며, Claude 디렉터리도 계속해서 이들을 목록에 올린다. 앞으로 개발자는 자신의 커넥터 목록을 플러그인으로 전환할 수 있게 된다. 이미 Claude 디렉터리에 스킬, 커넥터, 플러그인이 올라가 있다면 아무것도 바꿀 필요가 없다.</p>
+
+<p>플러그인 제작을 시작하려면 <a href="https://claude.com/docs/build/overview">플러그인 만드는 방법</a> 문서를 읽고, <a href="https://claude.ai/directory/manage/new">여기</a>에서 플러그인을 제출하면 된다.</p>
+
+<div class="callout">
+  <strong>Claude로 조직의 운영 방식을 바꿔 보세요.</strong>
+  <a href="https://claude.com/pricing#api">요금 보기</a> ·
+  <a href="https://claude.com/contact-sales">영업팀 문의</a>
+</div>
+
+<footer>
+  이 글은 Claude 공식 블로그 원문을 한국어로 옮긴 비공식 번역본입니다.
+  내용의 정확한 의미는 위 원문 링크를 함께 참고하세요.
+</footer>

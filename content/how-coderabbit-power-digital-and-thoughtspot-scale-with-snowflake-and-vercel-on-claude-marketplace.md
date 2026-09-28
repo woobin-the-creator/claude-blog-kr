@@ -1,0 +1,108 @@
+---
+slug: "how-coderabbit-power-digital-and-thoughtspot-scale-with-snowflake-and-vercel-on-claude-marketplace"
+title: "CodeRabbit, Power Digital, ThoughtSpot은 Claude Marketplace에서 Snowflake와 Vercel을 어떻게 확장했나"
+nav: "Claude Marketplace 고객 사례 · Snowflake·Vercel 약정 확장"
+main: "Claude blog"
+cat: "Enterprise AI"
+date: "2026-09-23"
+author: "ai"
+rev: 1
+style_css: ":root { --fg:#1a1a1a; --muted:#666; --line:#e5e5e5; --accent:#c96442; --code-bg:#f6f6f4; }\n  * { box-sizing: border-box; }\n  body {\n    font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", \"Apple SD Gothic Neo\",\n      \"Malgun Gothic\", sans-serif;\n    color: var(--fg); line-height: 1.75; max-width: 760px;\n    margin: 0 auto; padding: 48px 24px 96px; background:#fff;\n  }\n  header { border-bottom: 2px solid var(--line); padding-bottom: 24px; margin-bottom: 32px; }\n  h1 { font-size: 1.9rem; line-height: 1.35; margin: 0 0 12px; }\n  .meta { color: var(--muted); font-size: 0.9rem; }\n  .meta .orig { display:block; margin-top:6px; }\n  .meta a { color: var(--accent); text-decoration: none; }\n  h2 { font-size: 1.4rem; margin: 44px 0 8px; padding-top: 8px; }\n  h3 { font-size: 1.15rem; margin: 30px 0 8px; color:#000; }\n  p { margin: 0 0 16px; }\n  a { color: var(--accent); }\n  ul, ol { margin: 0 0 16px; padding-left: 22px; }\n  li { margin-bottom: 8px; }\n  blockquote { margin: 16px 0; padding: 8px 18px; border-left:3px solid var(--line);\n    color:#333; font-style: italic; }\n  blockquote cite { display:block; font-style: normal; color: var(--muted); font-size: 0.85rem; margin-top: 6px; }\n  hr { border: none; border-top: 1px solid var(--line); margin: 40px 0; }\n  code { background: var(--code-bg); padding: 2px 6px; border-radius: 4px;\n    font-family: \"SF Mono\", Menlo, Consolas, monospace; font-size: 0.88em; }\n  figure { margin: 24px 0; }\n  figure img { width: 100%; height: auto; border:1px solid var(--line); border-radius: 8px;\n    background:#fff; }\n  figure.hero img { border:none; max-width: 210px; display:block; margin: 0 auto 8px; }\n  figcaption { color: var(--muted); font-size: 0.85rem; text-align: center;\n    margin-top: 10px; line-height: 1.5; }\n  figcaption a { color: var(--accent); }\n  .video { position: relative; width: 100%; padding-top: 56.25%; margin: 24px 0 8px;\n    border-radius: 8px; overflow: hidden; background:#000; }\n  .video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }\n  .callout { background:#faf6f4; border-left:3px solid var(--accent);\n    padding: 12px 16px; border-radius: 0 6px 6px 0; margin: 16px 0; }\n  .callout strong { color: var(--accent); }\n  .lede { color:#333; font-size: 1.05rem; }\n  footer { margin-top: 64px; padding-top: 20px; border-top:1px solid var(--line);\n    color: var(--muted); font-size: 0.82rem; }"
+has_markdown: false
+markdown_length: 0
+html_length: 6179
+---
+
+<!-- rendered HTML -->
+<header>
+  <h1>CodeRabbit, Power Digital, ThoughtSpot은 Claude Marketplace에서 Snowflake와 Vercel을 어떻게 확장했나</h1>
+  <div class="meta">
+    2026년 9월 23일
+    · 카테고리: <a href="https://claude.com/blog/category/enterprise-ai">Enterprise AI</a>
+    · 제품: <a href="https://claude.com/platform/api">Claude Platform</a>
+    <span class="orig">원문:
+      <a href="https://claude.com/blog/how-coderabbit-power-digital-and-thoughtspot-scale-with-snowflake-and-vercel-on-claude-marketplace">How CodeRabbit, Power Digital, and ThoughtSpot scale with Snowflake and Vercel on Claude Marketplace</a>
+      (한글 번역본)</span>
+  </div>
+</header>
+
+<figure class="hero"><img src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/how-coderabbit-power-digital-and-thoughtspot-scale-with-snowflake-and-vercel-on-claude-marketplace/hero.svg" alt="Claude Marketplace 고객 사례 일러스트"></figure>
+
+<p class="lede"><em>CodeRabbit은 Claude Marketplace를 통해 Vercel 플랜을 확장했고, Power Digital과 ThoughtSpot은 기존 Anthropic 약정(commitment)을 활용해 Snowflake 용량을 늘렸다.</em></p>
+
+<p>Claude로 제품을 만드는 기업은 일을 끝내기 위해 다른 소프트웨어에도 의존한다. 데이터를 저장하고 분석하는 Snowflake, 앱을 실행하는 Vercel이 그 예다. Claude Marketplace는 Anthropic 약정 금액을 가진 기업이 그 일부를 팀이 이미 의존하고 있는 도구에 쓸 수 있게 해 준다. 그래서 새 예산을 요청하지 않고도 한 번의 투자로 팀이 매일 쓰는 것을 더 많이 감당할 수 있다.</p>
+
+<p>CodeRabbit, Power Digital, ThoughtSpot이 Claude Marketplace를 이용해 Vercel과 Snowflake 활용을 어떻게 확장했는지 소개한다.</p>
+
+<h2>Power Digital은 고객 데이터를 Snowflake 위에서 운영한다</h2>
+
+<p><a href="https://powerdigitalmarketing.com/">Power Digital</a>은 자사 팀과 고객을 위한 플랫폼 Nova를 만드는 마케팅 에이전시다. 고객은 Nova를 통해 데이터를 연결하고, Nova는 Snowflake 위에서 돌아가며 리포팅, 사내 도구, 그리고 마케팅 성과를 높이는 모델에 동력을 공급한다. Snowflake 덕분에 Power Digital은 고객별로 안전한 데이터 환경을 빠르게 구축할 수 있고, Snowflake Cortex AI를 이용하면 기존 거버넌스 프레임워크 안에서 Claude 같은 모델을 그 데이터 위에서 직접 실행할 수 있다.</p>
+
+<p>이제 Claude는 고객 납품물과 재무 운영부터 자사 제품에 내장된 모델까지 Power Digital 전반에서 쓰이고 있다. 사용자는 1월 엔지니어 약 12명에서 오늘날 800명 이상으로 늘었다.</p>
+
+<p>5년간 Snowflake 고객이었던 Power Digital은 올해 Claude Marketplace를 통해 Snowflake 약정을 확장했다. 지출이 이미 승인된 예산에서 나오기 때문에, 팀은 Snowflake 사용량을 빠르게 늘릴 수 있다.</p>
+
+<blockquote>
+  “우리는 회사 운영 방식의 상당 부분을 Claude로 중앙화했고, 전사적으로 수백 개의 도구를 관리합니다. Claude Marketplace 덕분에 고객 데이터를 보관하는 Snowflake를 같은 Anthropic 약정 안으로 가져올 수 있었습니다. 우리가 요청했을 때는 이미 계약서가 작성되고 있었죠.”
+  <cite>John Saunders, Senior Vice President, Innovation, Power Digital</cite>
+</blockquote>
+
+<h2>ThoughtSpot은 Snowflake 위에 AI 분석을 구축한다</h2>
+
+<p><a href="https://www.thoughtspot.com/">ThoughtSpot의 에이전틱 분석(agentic analytics) 플랫폼</a>은 비즈니스 사용자에게 바로 의사결정에 쓸 수 있는 인사이트를 제공한다. 회사의 시맨틱·컨텍스트 레이어에 근거해, 결정론적이고 검증 가능한 쿼리로 신뢰할 수 있는 답을 전달한다.</p>
+
+<p>AI 기능을 구동하기 위해 ThoughtSpot은 Snowflake의 추론 API(inference API)를 사용해 Claude 같은 모델을 Snowflake 안에 있는 고객 데이터에 직접 실행한다. 데이터, 비즈니스 컨텍스트, 접근 제어, AI를 하나의 생태계 안에 두는 것이다. ThoughtSpot은 Snowflake 추론 API 구매를 기존 Anthropic 약정에 적용했고, 그래서 제품팀은 이미 확보된 예산으로 API를 활용한 개발을 시작할 수 있었다.</p>
+
+<blockquote>
+  “우리 Agentic Analytics 플랫폼은 Claude 위에서 돌아갑니다. 그러니 Snowflake의 추론 API를 Claude Marketplace를 통해 구매하는 것은 자연스러운 경로였죠. 이미 한 약정을 적용했기 때문에, 구매는 이미 승인된 예산에서 이루어졌습니다.”
+  <cite>Francois Lopitaux, SVP Product Management, ThoughtSpot</cite>
+</blockquote>
+
+<p>ThoughtSpot은 Claude와 함께 성장하고 있기도 하다. ThoughtSpot의 AI 분석가 <a href="https://claude.com/connectors/thoughtspot-spotter">Spotter</a>는 Claude용 커넥터로 제공되어, 사용자는 Claude를 떠나지 않고 데이터를 분석하고 대시보드를 만들고 탐색하고 조치를 취할 수 있다.</p>
+
+<blockquote>
+  “우리 AI 분석가 Spotter는 이미 Claude 커넥터 디렉터리에 올라 있습니다. 우리도 마켓플레이스를 통해 직접 에이전틱 제품을 판매해서, 고객이 우리가 방금 한 것과 똑같이 할 수 있게 하고 싶습니다.”
+  <cite>Francois Lopitaux, ThoughtSpot</cite>
+</blockquote>
+
+<h2>CodeRabbit은 코딩 에이전트를 Vercel 위에서 실행한다</h2>
+
+<p><a href="https://claude.com/platform/marketplace/coderabbit">CodeRabbit</a>은 Claude 위에서 AI가 생성한 코드를 검증해, 엔지니어링 팀이 무엇을 출시할지 통제할 수 있게 한다. CodeRabbit의 에이전트는 코드를 작성하고 테스트하므로, 그 코드를 안전하게 실행할 곳이 필요하다. <a href="https://vercel.com/sandbox">Vercel Sandbox</a>는 각 에이전트의 코드를 고유한 파일시스템과 네트워크를 가진 격리된 Linux microVM에서 실행해, 다른 작업이나 CodeRabbit 자체 시스템과 분리한다. <a href="https://vercel.com/workflows">Vercel Workflows</a>는 작업을 조율해, 오래 걸리는 작업이 시간 제한에 걸리지 않고 멈추고 재개하고 끝날 수 있게 한다.</p>
+
+<p>CodeRabbit의 엔지니어링 및 제품 리더들이 종량제(pay-as-you-go) Vercel 플랜에서 약정 플랜으로 옮기고 싶어 했을 때, 회사는 최근 확장한 Anthropic 약정으로 그 업그레이드 비용을 충당했다. 예산이 이미 승인되어 있었기에 계약은 일주일 안에 마무리됐다.</p>
+
+<blockquote>
+  “우리에게 가치는 유연성입니다. 엔지니어들이 신뢰하는 도구를 이미 승인된 예산으로 뒷받침하는 것이죠. 그와 똑같은 가치를 Claude Marketplace에서 우리 고객에게 직접 전달할 수 있다는 점은 궁극의 윈윈입니다.”
+  <cite>Blair Pierson, Head of Global Partnerships, CodeRabbit</cite>
+</blockquote>
+
+<h2>Snowflake와 Vercel은 Claude 위에서 만드는 고객과 함께 성장한다</h2>
+
+<p><a href="https://claude.com/platform/marketplace/snowflake">Snowflake</a>와 <a href="https://claude.com/platform/marketplace/vercel">Vercel</a> 같은 판매자에게 Claude Marketplace는 이미 Claude 위에서 개발하는 고객에게 다가가고, Anthropic 약정을 가진 고객에게 더 빠른 구매 경로를 제공하는 방법이다.</p>
+
+<blockquote>
+  “AI는 데이터와 컨텍스트에 근거할 때 신뢰받습니다. Claude는 Snowflake 안에서 직접 실행되므로, 고객의 거버넌스·컨텍스트·권한이 첫날부터 신뢰할 수 있는 인사이트의 기반으로 이미 갖춰져 있습니다. Claude Marketplace는 그 관계를 쉽게 확장해 주어, 고객이 Anthropic 약정의 일부를 AI 워크로드용으로 Snowflake에 곧바로 돌릴 수 있게 합니다. 이는 우리가 공동 고객 전반에서 Anthropic과 함께 키워 가고 있는 움직임입니다.”
+  <cite>Omar Bed-Mohamed, Director, Enterprise Technology Partnerships, Snowflake</cite>
+</blockquote>
+
+<blockquote>
+  “Claude Marketplace는 CodeRabbit 같은 고객이 Vercel의 에이전틱 인프라(Agentic Infrastructure)를 빠르게 조달하고 플랫폼을 확장할 수 있게 해 줍니다. Claude 위에서 개발하는 모든 기업의 에이전트 실행을 돕게 되기를 기대합니다.”
+  <cite>Zack Ciesinski, Head of Product Partnerships, Vercel</cite>
+</blockquote>
+
+<h2>Claude Marketplace를 통해 구매하기</h2>
+
+<p>Claude로 개발한다는 것은 팀이 이미 의존하는 데이터 플랫폼과 인프라를 함께 끌어들이는 일인 경우가 많다. <a href="https://claude.com/marketplace">Claude Marketplace</a>는 고객이 Anthropic 약정의 일부를 Vercel, Snowflake 등 파트너에 쓸 수 있게 해 주어, 팀이 조달에 쓰는 시간을 줄이고 만들고 있는 것에 더 많은 시간을 쏟게 한다.</p>
+
+<p>Anthropic 약정을 이런 방식으로 사용하는 기능은 제한된 미리보기(limited preview) 단계다. 약정이 있다면 담당 어카운트 팀에 문의하거나 <a href="https://claude.com/marketplace-contact-sales">요청을 제출</a>해 자격이 되는지 확인해 보라. <a href="https://claude.com/blog/claude-marketplace">Claude Marketplace에 대해 더 알아보기</a>.</p>
+
+<div class="callout">
+  <strong>Claude로 조직의 운영 방식을 바꿔 보세요.</strong>
+  <a href="https://claude.com/pricing#api">요금 보기</a> ·
+  <a href="https://claude.com/contact-sales">영업팀 문의</a>
+</div>
+
+<footer>
+  이 글은 Claude 공식 블로그 원문을 한국어로 옮긴 비공식 번역본입니다.
+  내용의 정확한 의미는 위 원문 링크를 함께 참고하세요.
+</footer>
