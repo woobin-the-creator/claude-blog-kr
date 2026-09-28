@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "giving-companies-more-control-over-their-ai-agents-with-nvidia.html", date: "2026-09-28", main: "Claude blog", cat: "Agents",
+      title: "NVIDIA와 함께, 기업이 AI 에이전트를 더 강하게 통제할 수 있도록", nav: "NVIDIA × Managed Agents · OpenShell로 에이전트 권한 통제" },
     { file: "working-at-the-frontier-how-balyasny-asset-management-evaluates-and-governs-claude-fable-5.html", date: "2026-09-17", main: "Claude blog", cat: "Enterprise AI",
       title: "프런티어에서 일하기: Balyasny Asset Management는 Claude Fable 5를 어떻게 평가하고 관리하는가", nav: "BAM × Claude Fable 5 · 수천 개 금융 과제 평가와 BAMAgent 거버넌스" },
     { file: "projects-redesigned.html", date: "2026-09-17", main: "Claude blog", cat: "Product announcements",
