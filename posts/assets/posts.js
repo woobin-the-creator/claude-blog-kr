@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "agents-you-can-coach-how-asana-builds-human-agent-teams-with-claude.html", date: "2026-09-29", main: "Claude blog", cat: "Agents",
+      title: "코칭할 수 있는 에이전트: Asana는 Claude로 어떻게 사람-에이전트 팀을 만드는가", nav: "Asana × Claude · 역할·공유 메모리·투명한 작업으로 사람-에이전트 팀 운영" },
     { file: "giving-companies-more-control-over-their-ai-agents-with-nvidia.html", date: "2026-09-28", main: "Claude blog", cat: "Agents",
       title: "NVIDIA와 함께, 기업이 AI 에이전트를 더 강하게 통제할 수 있도록", nav: "NVIDIA × Managed Agents · OpenShell로 에이전트 권한 통제" },
     { file: "working-at-the-frontier-how-balyasny-asset-management-evaluates-and-governs-claude-fable-5.html", date: "2026-09-17", main: "Claude blog", cat: "Enterprise AI",
