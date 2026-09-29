@@ -1,0 +1,144 @@
+---
+slug: "agents-you-can-coach-how-asana-builds-human-agent-teams-with-claude"
+title: "코칭할 수 있는 에이전트: Asana는 Claude로 어떻게 사람-에이전트 팀을 만드는가"
+nav: "Asana × Claude · 역할·공유 메모리·투명한 작업으로 사람-에이전트 팀 운영"
+main: "Claude blog"
+cat: "Agents"
+date: "2026-09-29"
+author: "ai"
+rev: 1
+style_css: ":root { --fg:#1a1a1a; --muted:#666; --line:#e5e5e5; --accent:#c96442; --code-bg:#f6f6f4; }\n  * { box-sizing: border-box; }\n  body {\n    font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", \"Apple SD Gothic Neo\",\n      \"Malgun Gothic\", sans-serif;\n    color: var(--fg); line-height: 1.75; max-width: 760px;\n    margin: 0 auto; padding: 48px 24px 96px; background:#fff;\n  }\n  header { border-bottom: 2px solid var(--line); padding-bottom: 24px; margin-bottom: 32px; }\n  h1 { font-size: 1.9rem; line-height: 1.35; margin: 0 0 12px; }\n  .meta { color: var(--muted); font-size: 0.9rem; }\n  .meta .orig { display:block; margin-top:6px; }\n  .meta a { color: var(--accent); text-decoration: none; }\n  h2 { font-size: 1.4rem; margin: 44px 0 8px; padding-top: 8px; }\n  h3 { font-size: 1.15rem; margin: 30px 0 8px; color:#000; }\n  p { margin: 0 0 16px; }\n  a { color: var(--accent); }\n  ul, ol { margin: 0 0 16px; padding-left: 22px; }\n  li { margin-bottom: 8px; }\n  blockquote { margin: 16px 0; padding: 8px 18px; border-left:3px solid var(--line);\n    color:#333; font-style: italic; }\n  hr { border: none; border-top: 1px solid var(--line); margin: 40px 0; }\n  code { background: var(--code-bg); padding: 2px 6px; border-radius: 4px;\n    font-family: \"SF Mono\", Menlo, Consolas, monospace; font-size: 0.88em; }\n  figure { margin: 24px 0; }\n  figure img { width: 100%; height: auto; border:1px solid var(--line); border-radius: 8px;\n    background:#fff; }\n  figure.hero img { border:none; max-width: 210px; display:block; margin: 0 auto 8px; }\n  figcaption { color: var(--muted); font-size: 0.85rem; text-align: center;\n    margin-top: 10px; line-height: 1.5; }\n  figcaption a { color: var(--accent); }\n  .video { position: relative; width: 100%; padding-top: 56.25%; margin: 24px 0 8px;\n    border-radius: 8px; overflow: hidden; background:#000; }\n  .video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }\n  .callout { background:#faf6f4; border-left:3px solid var(--accent);\n    padding: 12px 16px; border-radius: 0 6px 6px 0; margin: 16px 0; }\n  .callout strong { color: var(--accent); }\n  .lede { color:#333; font-size: 1.05rem; }\n  footer { margin-top: 64px; padding-top: 20px; border-top:1px solid var(--line);\n    color: var(--muted); font-size: 0.82rem; }"
+has_markdown: false
+markdown_length: 0
+html_length: 10157
+---
+
+<!-- rendered HTML -->
+<header>
+  <h1>코칭할 수 있는 에이전트: Asana는 Claude로 어떻게 사람-에이전트 팀을 만드는가</h1>
+  <div class="meta">
+    2026년 9월 29일
+    · 카테고리: <a href="https://claude.com/blog/category/agents">Agents</a>
+    · 제품: <a href="https://claude.com/platform/api">Claude Platform</a>
+    · 읽는 시간: 5분
+    · 저자: Aleksandra Todorova, Kristen Swanson
+    <span class="orig">원문:
+      <a href="https://claude.com/blog/agents-you-can-coach-how-asana-builds-human-agent-teams-with-claude">Agents you can coach: how Asana builds human-agent teams with Claude by Anthropic</a>
+      (한글 번역본)</span>
+  </div>
+</header>
+
+<figure class="hero"><img src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/agents-you-can-coach-how-asana-builds-human-agent-teams-with-claude/hero.svg" alt="엔터프라이즈 에이전트 일러스트"></figure>
+
+<p class="lede"><em>Asana의 최고제품책임자(CPO) Arnab Bose가, Asana가 AI 에이전트를 범위가 정해진 역할, 공유 메모리, 모두가 볼 수 있는 작업을 갖춘 팀 동료로 어떻게 운영하는지 이야기합니다.</em></p>
+
+<p><em>이 글은 사람-에이전트 팀(human-agent team) 만들기 시리즈의 세 번째 글입니다. <a href="https://claude.com/blog/building-effective-human-agent-teams" target="_blank">첫 번째 글</a>에서는 Anthropic이 멀티플레이어 AI를 다루며 배운 것을 나눴습니다. <a href="https://claude.com/blog/turning-conversation-into-knowledge-how-slack-builds-human-agent-teams" target="_blank">두 번째 글</a>에서는 Slack이 업무 대화를 에이전트에게 필요한 컨텍스트로 바꾸는 방법을 소개했습니다. 이번 글은 에이전트가 팀이 일하는 바로 그 플랫폼 위에서 동작할 때 무엇이 달라지는지 살펴봅니다.</em></p>
+
+<p>AI 에이전트를 도입하기 몇 해 전부터, Asana의 팀들은 팀이 함께 일하는 방식에 구조와 책임을 새겨 넣을 방법을 거듭 다듬어 왔습니다. 그 결과가 <em>Work Graph</em>® 모델입니다. 모든 작업(task), 프로젝트, 목표, 대화를 관계의 망 위에 배치하고, 각각에 정의된 담당자(owner), 기여자, 의존 관계를 붙인 모델입니다.</p>
+
+<p>AI 에이전트를 만들기 시작했을 때, 그들은 AI를 위한 새로운 컨텍스트 구조를 덧붙이는 대신 에이전트가 이 같은 모델 안에서 동작하도록 하기로 했습니다. 에이전트는 정의된 역할을 갖고, 작업을 배정받고, 메시지를 읽고 쓰고, 사람 협업자들과 나란히 활동 피드에 등장합니다. 여기에 에이전트가 무엇에 접근하고 무엇을 공유할 수 있는지에 대한 추가 안전장치가 붙습니다.</p>
+
+<p>우리는 Asana의 최고제품책임자 Arnab Bose와 이야기를 나누며, Asana의 팀들이 Claude를 어떻게 쓰고 이런 에이전트들과 어떻게 함께 일하는지 들었습니다. 복잡한 작업은 Claude 모델이 구동합니다. 각 에이전트는 어떻게 역할과 접근 권한을 얻는지, 누가 그것을 훈련시키는지, 작업은 어떻게 모두에게 보이는 상태로 유지되는지, 그리고 Asana의 사람-에이전트 팀에서 에이전트가 맡는 일의 종류는 무엇인지 다룹니다.</p>
+
+<h2>에이전트가 행동하기 전에, 먼저 생각을 정리하고 일을 구조화하세요</h2>
+
+<p>Asana 직원들에게 Claude는 기본 AI 도구이며, Google Drive, Slack, 그리고 당연히 Asana까지 직원들이 일하는 데 쓰는 플랫폼들에 연결되어 있습니다.</p>
+
+<p>"사람은 비정형 데이터로 하루를 이해합니다. 떠오른 아이디어, Slack에서의 대화, Zoom 회의 녹화, Databricks 리포트, Google Docs의 정보 같은 것들이죠." Arnab의 말입니다. "그걸 Claude와 이야기하며 정리하고, 그 모든 것을 Asana가 프로젝트와 작업으로 제공하는 구조 안에 밀어 넣을 수 있습니다." 구조가 자리를 잡으면 에이전트가 그 위에서 행동할 수 있습니다. 이 시리즈의 첫 글 <a href="https://claude.com/blog/building-effective-human-agent-teams" target="_blank"><em>효과적인 사람-에이전트 팀 만들기</em></a>에서 설명한 세 가지 역량, 즉 지속되는 메모리, 에이전트 자신의 자격 증명(credential), 공유 컨텍스트를 갖추고서 말입니다.</p>
+
+<p><strong>실천 방법:</strong></p>
+<ul>
+  <li><strong>자신의 아이디어에서 시작하세요.</strong> 하루 동안 흩어진 비정형 조각들, 아이디어, Slack 대화, 여러 문서에 흩어진 메모를 Claude에게 가져오세요.</li>
+  <li><strong>Claude와 토론하고 논의하세요.</strong> 생각의 파트너로 삼아, 다음 단계가 분명해질 때까지 아이디어를 이야기하세요.</li>
+  <li><strong>실행 가능한 항목을 Work Graph에 기록하세요.</strong> 실행 가능한 것은 프로젝트와 작업으로 옮겨, 에이전트와 동료가 집어 들 수 있게 하세요.</li>
+</ul>
+
+<h2>모든 에이전트에 역할, 그리고 필요한 도구와 접근 권한을 부여하세요</h2>
+
+<p>Asana 직원들은 어떤 프로젝트에서든 사람 동료와 일하듯 AI 에이전트와 일할 수 있습니다. 사람이 자신이 일할 팀을 설계하고, 각 직원은 팀의 목표를 보강하는 데 쓸 수 있는 추천 에이전트 목록을 받습니다.</p>
+
+<p>에이전트는 역할이나 업무 유형을 중심으로 만들어집니다. 예를 들어 콘텐츠 작가, 인사이트 분석가, 프로젝트 매니저, 업무 접수(work intake) 전문가, 캠페인 분석가, 캠페인 코디네이터 같은 식입니다. 각 에이전트에는 Asana가 고객들이 그 일을 어떻게 하는지 연구해 만든 사전 구축 스킬과, HubSpot이나 문서 드라이브처럼 필요한 연동(integration)이 함께 딸려 옵니다.</p>
+
+<figure><img src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/agents-you-can-coach-how-asana-builds-human-agent-teams-with-claude/agent-profile.png" alt="Asana AI 팀 동료(에이전트)의 프로필 페이지 화면"></figure>
+
+<p>각 에이전트에는 이름과 목적, 사용할 수 있는 사람, 관리자, 지시 사항, 스킬, 연동, 권한을 나열한 프로필 페이지도 있습니다. Asana는 접근을 의도적으로 설계할 수 있는 도구를 제공합니다. "Asana는 경계가 있는 작업 표면입니다." Arnab의 말입니다. "전체가 아니라 특정 프로젝트 묶음에만, 또는 특정 문서 묶음에만, 아니면 문서와 앱의 조합에 접근을 허용하는 식으로 선택할 수 있습니다."</p>
+
+<p>사람 사용자와 마찬가지로 에이전트도 명시적 접근 제어를 받지만, 한 가지 안전장치가 더 있습니다. Asana에 따르면 에이전트의 실질적 접근 범위는 그 에이전트를 호출한 사람의 권한에 의해 제한됩니다. 덕분에 에이전트는 공개 콘텐츠에는 폭넓게 접근하면서도, 에이전트가 비공개 맥락에서 알게 된 정보에 누군가 접근할 위험은 최소화됩니다.</p>
+
+<p><strong>실천 방법:</strong></p>
+<ul>
+  <li><strong>에이전트를 만들기 전에 역할을 정의하세요.</strong> 팀에서 에이전트가 할 수 있는 일의 종류를 생각한 다음, 신입 직원의 첫 분기를 계획하듯 에이전트의 목적, 지시 사항, 담당하는 구체적인 일을 적어 두세요.</li>
+  <li><strong>접근 범위를 정하세요.</strong> 에이전트가 읽을 수 있는 프로젝트와 문서, 접근할 수 있는 애플리케이션, 취할 수 있는 행동을 정하세요.</li>
+  <li><strong>사용자와 관리자를 따로 지정하세요.</strong> 많은 사람이 에이전트와 일할 수 있지만, 에이전트가 무엇에 접근하고 어떻게 행동할지를 다스리는 것은 소수의 지정된 그룹이어야 합니다.</li>
+</ul>
+
+<h2>에이전트와 일하는 것과 에이전트를 훈련시키는 것을 분리하세요</h2>
+
+<p>Asana가 AI 팀 동료(AI teammate)라고 부르는 에이전트의 핵심 기능은 공유 메모리입니다. 에이전트가 이전 지시에서 얻은 정보를 기억해 두면, 여러 사용자가 그 메모리를 재사용해 작업이나 일을 더 빨리 끝낼 수 있습니다. "AI 팀 동료는 팀의 한 사람인 것처럼 코칭하고 훈련시킬 수 있습니다." Arnab의 말입니다.</p>
+
+<p>공유 메모리가 동작하는 방식에는 역할 기반 제한이 하나 있습니다. 누구나 작업에 대해 에이전트에게 피드백을 줄 수 있지만, 그 피드백을 영구 메모리에 반영(commit)하거나 되돌리거나 메모리에서 삭제하는 것은 관리자(admin)와 편집자(editor)만 할 수 있습니다. 그 외 사람들의 피드백은 현재 작업에만 적용됩니다.</p>
+
+<p>이 구분은 의도적인 것이라고 Arnab은 말합니다. Asana의 커뮤니케이션 팀이 회사의 목소리와 어조를 책임지므로, 글을 쓰는 에이전트의 편집자와 관리자는 그들이 됩니다. Arnab은 그 에이전트로 초안을 쓸 수는 있지만 에이전트의 행동을 바꿀 수는 없습니다. 그리고 대부분의 사람은 그 내부 장치를 만질 필요가 전혀 없습니다. "팀의 모든 사람이 스킬, 행동, 메모리 같은 개념을 이해할 필요는 없습니다. 팀에서 한두 명이 전문가가 되어 올바르게 설정해 두면, 팀의 다른 모든 사람이 그 뒤로 똑같은 혜택을 누립니다."</p>
+
+<p><strong>실천 방법:</strong></p>
+<ul>
+  <li><strong>각 에이전트를 누가 훈련시키고 누가 함께 일할지 정하세요.</strong> 팀이 쓰는 에이전트를 만드는 데 도움을 줄 수 있는 사내 주제 전문가를 찾으세요. 나머지 사람들은 작업에 피드백은 줄 수 있지만 에이전트를 다시 쓸 수는 없습니다.</li>
+  <li><strong>편집자를 전문성에 맞추세요.</strong> 브랜드 목소리나 계획 관례처럼 에이전트가 적용하는 기준을 소유한 팀이 그 에이전트를 소유(또는 관리)합니다.</li>
+  <li><strong>일하면서 메모리를 쌓으세요.</strong> 피드백은 시간이 지날수록 에이전트를 개선할 수 있습니다. 남길 가치가 있는 결정은 기억하라고 에이전트에게 요청하고, 더는 유효하지 않거나 사실이 아닌 것은 삭제하세요.</li>
+</ul>
+
+<h2>에이전트의 작업을 모두가 볼 수 있는 곳에 두세요</h2>
+
+<p><a href="https://claude.com/blog/turning-conversation-into-knowledge-how-slack-builds-human-agent-teams" target="_blank">Slack의 에이전트가 채널에 투명하게 게시하는 것</a>과 비슷하게, 작업이 AI 팀 동료에게 배정되면 에이전트가 그 일을 하고 있다는 것과 무엇을 하는지를 모두가 볼 수 있습니다. 에이전트는 조사 계획과 수행한 단계를 포함한 활동을 게시하므로, 그 작업에 접근할 수 있는 모든 사람이 에이전트가 한 일을 읽고, 코멘트하고, 원하는 결과 쪽으로 방향을 잡아 줄 수 있습니다.</p>
+
+<p>Asana의 커뮤니케이션 팀이 Arnab에게 강연용 브리핑 문서를 검토해 달라고 요청했을 때, 그는 작업에서 에이전트를 @멘션하고 이전 강연의 토크 트랙도 반영해 달라고 요청했습니다. 그 에이전트를 여러 번 써 봤고 언급한 자료가 이미 Work Graph에 있었기 때문에 메시지는 짧았습니다. 커뮤니케이션 팀의 동료는 그의 요청과 에이전트의 응답을 볼 수 있었고, 동시에 에이전트와 주고받을 수도 있었습니다.</p>
+
+<p>"AI 활용에 아주 능숙하다면 일대일 AI 에이전트에서도 훌륭한 응답을 얻어, 문서를 뽑아서 Slack이나 Asana에 다시 올릴 수 있을 겁니다." Arnab의 말입니다. "하지만 그 시점에 그 콘텐츠를 검토하는 다른 사람들은 프롬프트가 무엇이었고 어떤 대화가 오갔는지 모릅니다. 당신이 준 지침 일부에 동의하지 않는다면, 그들이 거기에 맞춰 조율하는 건 불가능합니다." 공유 작업에서는 요청, 반박, 결과물이 한곳에 있고, 결과물을 검토하는 사람들이 그 결과물을 만들어 낸 지시 사항도 수정할 수 있습니다.</p>
+
+<p><strong>실천 방법</strong></p>
+<ul>
+  <li><strong>팀이 작업을 검토하는 곳으로 에이전트를 데려오세요.</strong> 그러면 요청, 에이전트의 단계, 결과가 한곳에 있고, 검토자가 지시 사항이나 결과물을 바꿀 수 있습니다.</li>
+  <li><strong>에이전트의 작업은 에이전트의 작업임이 보이게 하세요.</strong> 그래야 사람들이 그 일을 사람 동료가 아니라 AI 에이전트가 하고 있음을 알 수 있습니다.</li>
+  <li><strong>검토자가 에이전트의 작업을 코칭할 수 있게 하세요.</strong> Asana의 에이전트는 공유 작업에 계획과 단계를 게시하므로, 다른 검토자가 추가 지시나 피드백을 줄 수 있습니다.</li>
+</ul>
+
+<h2>Asana가 에이전트에게 넘긴 세 가지 일</h2>
+
+<p>Asana에서 문서를 생성하거나 복잡한 작업을 실행하는 에이전트 업무는 모두 Claude가 구동합니다. 회사 전반의 서로 다른 팀에서 가져온 세 가지 예시입니다.</p>
+
+<h3>Slack 채널의 제품 질문에 답하기</h3>
+
+<p>Asana가 기능을 출시하면 영업 담당자와 고객 성공(customer success) 직원이 공유 Slack 채널에서 질문할 수 있습니다. AI 팀 동료가 있기 전에는 같은 질문이 반복해서 올라왔고, 그때마다 주제 전문가가 @멘션됐습니다. 검색 가능한 지식 베이스는 현실적인 해법이 아니었다고 Arnab은 말합니다. 답이 미묘하고 계속 바뀌기 때문입니다. "제품의 현재 상태가 무엇인지에 대해 어느 정도 안목 있는 판단이 필요합니다."</p>
+
+<p>그 질문들은 여전히 Slack으로 갑니다. 현장에서 묻기에 가장 간단한 곳이기 때문입니다. 이제는 채널에 있는 Asana 앱이 각 질문을 Asana 작업으로 바꾸고, 에이전트가 그것을 집어 듭니다. 승인된 가이드가 있으면 에이전트가 출처 링크와 함께 답합니다. 승인된 답이 없고 질문이 제품의 빈틈을 가리키면, 에이전트는 제품 팀의 접수 프로젝트에 작업을 만들어 백로그에 추가합니다. 그리고 같은 질문이 계속 올라오고 에이전트가 같은 기록을 계속 게시하게 되면, 교육 자료와 문서를 갱신하라는 작업을 인에이블먼트(enablement) 팀 앞으로 만듭니다.</p>
+
+<p>이 프로세스 덕분에 인에이블먼트 팀은 전략적이고 우선순위 높은 일에 집중할 귀중한 시간을 확보하고, 동시에 사업의 다른 영역에도 정보가 전달됩니다. 예를 들어 새 제품의 특정 주제에 질문이 많이 몰리면, 그건 인에이블먼트 팀이 추가 교육이나 정보로 그 주제에 집중해야 한다는 신호입니다.</p>
+
+<h3>위험 갱신 건에 대한 경영진 브리핑</h3>
+
+<p>Asana의 최고고객책임자(CCO) Josh Abdulla는 예전에 매주 경영진을 위한 위험 갱신(at-risk renewal) 브리핑을 만들었습니다. 고객 성공 매니저(CSM)들이 위험한 갱신 건을 표시하고 상황이 바뀔 때마다 계정을 갱신한 내용을 바탕으로 한 것이었습니다. 전 세계 수천 고객에 걸친 갱신 내용의 양은 전담 인력이 종합하지 않고는 최신 상태를 유지하기 불가능할 정도였고, 그건 지루한 일이었으며 프로세스를 사후 대응적으로 만들었습니다. "Josh는 데이터가 처음 보여 줄 때가 아니라, 리더들이 말해 줄 때 문제를 알게 됐습니다." Arnab의 말입니다.</p>
+
+<p>고객 경험 조직은 Asana 안에 At-Risk Renewal이라는 AI 팀 동료 에이전트를 만들었습니다. 이 에이전트는 각 CSM의 업데이트, 상태 메모, 코멘트를 포함해 글로벌 포트폴리오 전체의 모든 위험 갱신 작업을 읽고, 긍정적 흐름, 부정적 흐름, 권장 후속 조치라는 세 묶음으로 정리된 구조화된 일일 다이제스트를 생성합니다. 먼저 글로벌 관점으로 훑은 다음 지역별로 나누고, 매일 아침 최고고객책임자, 최고매출책임자(CRO), 그리고 모든 지역 고객 성공 리더에게 다이제스트를 자동으로 보냅니다. 다이제스트가 공유 공간에 도착하므로 리더들은 특정 계정의 이탈 예측 뒤에 어떤 선행 지표가 있었는지 같은 후속 질문을 할 수 있고, 다음 실행 때 기억해 둘 것을 에이전트에게 코칭할 수 있어 리포트는 아침마다 나아집니다.</p>
+
+<p>"각자 Claude에게 리포트를 만들어 달라고 할 수도 있었을 겁니다." Arnab의 말입니다. "하지만 리포트가 표준화되고, 공유 워크스페이스가 있고, 실행할 때마다 계속 좋아지는 상태에는 어떻게 도달할까요?"</p>
+
+<h3>Command로 엔지니어링 사이클 계획하기</h3>
+
+<p>Asana가 자사 제품에 자동화된 코딩 루프를 돌렸을 때, 자동 생성된 변경으로 사이클이 비대해지면서 사이클 시간과 릴리스가 밀렸습니다. 이 루프 자체는 소프트웨어 회사에서 흔해졌습니다. 여러 채널에서 고객 피드백을 모으고, 종합하고, 코딩 에이전트를 실행해 풀 리퀘스트(PR)로 바꾸는 것입니다. "코드 생성은 이제 더는 병목이 아닙니다." Arnab의 말입니다. "병목은 계획, 의사결정, 다듬기에 있습니다." Asana의 엔지니어링 조직은 이제 대규모 엔지니어링 팀을 관리하는 제품인 Command by Asana 위에서 돌아가며, 이 루프를 관리하는 데 그것을 씁니다.</p>
+
+<p>Command에서 팀 공간(team space)은 하나의 제품을 맡은 10~12명의 엔지니어 그룹을 담습니다. 에이전트가 고객 피드백과 팀의 Slack 피드백 채널 코멘트에서 뽑아낸 티켓으로 팀의 미계획(unplanned) 보드를 채웁니다. 그 보드에서 사이클로 무엇을 옮길지는 사람이 정하고, Command는 낙관적·균형적·보수적 추정치로 사이클 완료 시점을 예측합니다.</p>
+
+<p>티켓은 사람에게도 코딩 에이전트에게도 배정할 수 있고, 사이클 데이터가 모두 한곳에 있기 때문에 매니저는 채팅으로 왜 릴리스가 궤도를 벗어났는지, 어떤 트레이드오프가 그것을 되돌릴 수 있는지 물을 수 있습니다. Command는 데이터를 바탕으로 신호를 만드는 요인이 무엇이고 어떤 변경을 맞바꿀지 답합니다. 이 모든 것이 Claude 같은 어시스턴트가 읽을 수 있게 해 주는 연결인 Asana의 MCP 서버를 통해 노출되므로, Arnab이나 그의 CTO 동료 같은 사람은 Command를 열지 않고도 Claude에게 무엇이 순조로운지 물을 수 있습니다.</p>
+
+<p>"팀이 힘들이지 않고 함께 일할 수 있을 때 인류는 번영하며, 오늘날 모든 팀은 일부는 사람, 일부는 에이전트입니다." Arnab의 말입니다. "우리가 설계하는 일이 바로 그런 종류의 일입니다. 사람과 에이전트가 함께 일할 수 있는 하나의 공유 컨텍스트, 기여와 접근을 감사할 수 있도록 모든 에이전트에 부여된 고유한 ID, 그리고 팀의 지식이 증발하는 대신 쌓이도록 에이전트가 배울 수 있는 것을 담은 지속적인 기록입니다."</p>
+
+<div class="callout">
+  <strong>Claude로 조직의 운영 방식을 바꿔 보세요.</strong>
+  <a href="https://claude.com/pricing#api">요금 보기</a> ·
+  <a href="https://claude.com/contact-sales">영업팀 문의</a>
+</div>
+
+<footer>
+  이 글은 Claude 공식 블로그 원문을 한국어로 옮긴 비공식 번역본입니다.
+  내용의 정확한 의미는 위 원문 링크를 함께 참고하세요.
+</footer>
