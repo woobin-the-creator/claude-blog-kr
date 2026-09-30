@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "claude-for-government-is-now-generally-available.html", date: "2026-09-30", main: "Claude blog", cat: "Product announcements",
+      title: "Claude for Government 정식 출시", nav: "Claude for Government GA · FedRAMP High·좌석 요금 없음·Claude Code CLI·M365 얼리 액세스" },
     { file: "agents-you-can-coach-how-asana-builds-human-agent-teams-with-claude.html", date: "2026-09-29", main: "Claude blog", cat: "Agents",
       title: "코칭할 수 있는 에이전트: Asana는 Claude로 어떻게 사람-에이전트 팀을 만드는가", nav: "Asana × Claude · 역할·공유 메모리·투명한 작업으로 사람-에이전트 팀 운영" },
     { file: "giving-companies-more-control-over-their-ai-agents-with-nvidia.html", date: "2026-09-28", main: "Claude blog", cat: "Agents",
