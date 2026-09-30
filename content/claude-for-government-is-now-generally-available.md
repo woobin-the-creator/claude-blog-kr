@@ -1,0 +1,71 @@
+---
+slug: "claude-for-government-is-now-generally-available"
+title: "Claude for Government 정식 출시"
+nav: "Claude for Government GA · FedRAMP High·좌석 요금 없음·Claude Code CLI·M365 얼리 액세스"
+main: "Claude blog"
+cat: "Product announcements"
+date: "2026-09-30"
+author: "ai"
+rev: 1
+style_css: ":root { --fg:#1a1a1a; --muted:#666; --line:#e5e5e5; --accent:#c96442; --code-bg:#f6f6f4; }\n  * { box-sizing: border-box; }\n  body {\n    font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", \"Apple SD Gothic Neo\",\n      \"Malgun Gothic\", sans-serif;\n    color: var(--fg); line-height: 1.75; max-width: 760px;\n    margin: 0 auto; padding: 48px 24px 96px; background:#fff;\n  }\n  header { border-bottom: 2px solid var(--line); padding-bottom: 24px; margin-bottom: 32px; }\n  h1 { font-size: 1.9rem; line-height: 1.35; margin: 0 0 12px; }\n  .meta { color: var(--muted); font-size: 0.9rem; }\n  .meta .orig { display:block; margin-top:6px; }\n  .meta a { color: var(--accent); text-decoration: none; }\n  h2 { font-size: 1.4rem; margin: 44px 0 8px; padding-top: 8px; }\n  h3 { font-size: 1.15rem; margin: 30px 0 8px; color:#000; }\n  p { margin: 0 0 16px; }\n  a { color: var(--accent); }\n  ul, ol { margin: 0 0 16px; padding-left: 22px; }\n  li { margin-bottom: 8px; }\n  blockquote { margin: 16px 0; padding: 8px 18px; border-left:3px solid var(--line);\n    color:#333; font-style: italic; }\n  hr { border: none; border-top: 1px solid var(--line); margin: 40px 0; }\n  code { background: var(--code-bg); padding: 2px 6px; border-radius: 4px;\n    font-family: \"SF Mono\", Menlo, Consolas, monospace; font-size: 0.88em; }\n  figure { margin: 24px 0; }\n  figure img { width: 100%; height: auto; border:1px solid var(--line); border-radius: 8px;\n    background:#fff; }\n  figure.hero img { border:none; max-width: 210px; display:block; margin: 0 auto 8px; }\n  figcaption { color: var(--muted); font-size: 0.85rem; text-align: center;\n    margin-top: 10px; line-height: 1.5; }\n  figcaption a { color: var(--accent); }\n  .video { position: relative; width: 100%; padding-top: 56.25%; margin: 24px 0 8px;\n    border-radius: 8px; overflow: hidden; background:#000; }\n  .video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }\n  .callout { background:#faf6f4; border-left:3px solid var(--accent);\n    padding: 12px 16px; border-radius: 0 6px 6px 0; margin: 16px 0; }\n  .callout strong { color: var(--accent); }\n  .lede { color:#333; font-size: 1.05rem; }\n  footer { margin-top: 64px; padding-top: 20px; border-top:1px solid var(--line);\n    color: var(--muted); font-size: 0.82rem; }"
+has_markdown: false
+markdown_length: 0
+html_length: 4361
+---
+
+<!-- rendered HTML -->
+<header>
+  <h1>Claude for Government 정식 출시</h1>
+  <div class="meta">
+    2026년 9월 30일
+    · 카테고리: <a href="https://claude.com/blog/category/announcements">Product announcements</a>
+    <span class="orig">원문:
+      <a href="https://claude.com/blog/claude-for-government-is-now-generally-available">Claude for Government is now generally available by Anthropic</a>
+      (한글 번역본)</span>
+  </div>
+</header>
+
+<figure class="hero"><img src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/claude-for-government-is-now-generally-available/hero.svg" alt="Claude for Government 일러스트"></figure>
+
+<p class="lede"><em>Claude Code CLI와 Claude for Microsoft 365도 얼리 액세스(early access)로 함께 제공됩니다.</em></p>
+
+<p>오늘부터 <a href="https://claude.com/solutions/government" target="_blank">Claude for Government</a>가 연방 및 주 정부 기관에 정식 제공(generally available)됩니다. 이 플랫폼은 FedRAMP High 인가 환경을 통해 Claude의 코딩 및 에이전트 업무(agentic work) 역량을 제공하며, <a href="https://claude.com/blog/bringing-claude-code-and-claude-cowork-to-government" target="_blank">7월부터 공개 베타</a>로 운영되어 왔습니다.</p>
+
+<p>정부 기관은 컴플라이언스 요구 사항을 타협하지 않으면서 Anthropic의 상용 고객과 동등한 수준의 기능을 이용할 수 있습니다. 새로운 기능은 일반적으로 상용 릴리스 주기에 맞춰 제공됩니다.</p>
+
+<p><a href="https://claude.com/product/overview" target="_blank">Claude</a>는 데스크톱의 파일을 직접 다루기 때문에, 기관 직원은 스킬(skill), 플러그인(plugin), 프로젝트(project)를 활용해 메모 작성, RFP(제안요청서) 검토, 민원 처리(casework) 같은 업무를 수행할 수 있습니다. <a href="https://claude.com/product/claude-code" target="_blank">Claude Code</a>를 사용하면 공공 부문 팀이 공공 서비스의 기반이 되는 소프트웨어 시스템을 구축하고 현대화할 수 있습니다.</p>
+
+<p>Claude for Government의 거버넌스 통제 기능은 공공 부문 기관을 위해 특별히 설계되었습니다. 관리자는 설정 기본값을 정하고 부서별로 예산을 배분하고 통제할 수 있습니다. 보안 팀과 인가 담당자(authorizing official)는 기관의 ATO(운영 승인, Authority to Operate) 절차를 뒷받침하는 감사 로그와 문서를 받습니다. 조달 담당자는 Anthropic과 직접 계약하고 정식 출시(general-availability) 조건으로 발주할 수 있습니다.</p>
+
+<p>Claude Code 명령줄 인터페이스(CLI)와 <a href="https://claude.com/claude-for-microsoft-365" target="_blank">Claude for Microsoft 365</a>도 같은 환경에서 같은 관리 통제 기능과 함께 얼리 액세스로 순차 제공되고 있습니다.</p>
+
+<figure><img src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/claude-for-government-is-now-generally-available/admin-configuration.png" alt="관리자 콘솔의 설정 화면"><figcaption><em>관리자 콘솔의 설정(configuration) 화면</em></figcaption></figure>
+
+<h2>과금, 관리, 감독</h2>
+
+<p><strong>좌석(seat) 요금이 없습니다.</strong> 기관은 고정 단위로 사용량에 대해 비용을 지불하며, 초과 불가 상한(not-to-exceed cap)이 엄격하게 적용되므로 지출이 기관이 확보한 예산을 넘지 않습니다. 관리자는 그룹별 지출 한도와 모델 한도를 갖는 사용자 등급(tier)을 정의하고, 사용자별·모델별 사용량을 추적하며, 잔액이 부족해지기 전에 소진(burndown) 알림을 받습니다.</p>
+
+<figure><img src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/claude-for-government-is-now-generally-available/admin-spend-analytics.png" alt="관리자 콘솔의 지출 분석 화면"><figcaption><em>관리자 콘솔의 지출 분석(spend analytics) 화면</em></figcaption></figure>
+
+<p><strong>부서 조직 구조에 맞춘 관리.</strong> 부서 단위 관리자는 선불 사용량을 하위 기관에 배분하고, 각 하위 기관은 자체 사용자를 관리합니다. 기관은 자체 ID 공급자(identity provider)를 연결해 SSO(single sign-on)를 사용할 수 있으며, 관리 포털에서 직접 설정할 수 있습니다. SCIM 그룹 매핑으로 좌석 등급별 요청 한도(rate limit), 금액 상한, 허용 모델을 지정합니다. 계층형 설정(layered configuration)으로 Claude가 연결할 수 있는 대상과 사용 가능한 기능을 포함해 하위 기관의 기본값을 정합니다.</p>
+
+<p><strong>설계 단계부터 반영된 감독.</strong> 관리 작업은 조직 관리자가 검토할 수 있는 감사 로그에 기록됩니다. Anthropic 측의 민감한 작업에는 2인 승인(two-person approval)이 필요합니다. 사용량 내보내기(export)에는 미터링 데이터만 담기므로, 기관은 민감한 자료를 옮기지 않고도 ATO와 감사관(IG, Inspector General) 요청에 답할 수 있습니다. 대화 기록은 기관이 관리하는 기기에 로컬로 남습니다.</p>
+
+<h2>시작하기</h2>
+
+<p>Claude for Government는 오늘부터 연방 및 주 정부 기관에 정식 제공됩니다. 시작하기 위해 별도의 클라우드 공급자와 계약할 필요가 없습니다. 기존 고객은 데스크톱 애플리케이션으로 옮겨 가면서 앱 내 가져오기(import)를 통해 대화 기록을 함께 가져올 수 있습니다.</p>
+
+<p><a href="https://trust.anthropic.com/resources#6ab2b125752bf0e0e8025505" target="_blank">FedRAMP 보안 구성 가이드(FedRAMP Secure Configuration Guide)</a>는 Anthropic의 <a href="https://trust.anthropic.com/" target="_blank">트러스트 센터(trust center)</a>에서 확인할 수 있습니다. 애플리케이션은 기관의 표준 MDM(모바일 기기 관리) 플랫폼을 통해 배포됩니다.</p>
+
+<p>새로 도입하려는 기관은 <a href="http://claude.com/solutions/government" target="_blank">claude.com/solutions/government</a>에서 액세스를 요청할 수 있습니다. Claude Code CLI 또는 Claude for Microsoft 365 얼리 액세스에 참여하려면 공공 부문 팀에 문의하세요.</p>
+
+<div class="callout">
+  <strong>Claude로 조직의 운영 방식을 바꿔 보세요.</strong>
+  <a href="https://claude.com/pricing#api">요금 보기</a> ·
+  <a href="https://claude.com/contact-sales">영업팀 문의</a>
+</div>
+
+<footer>
+  이 글은 Claude 공식 블로그 원문을 한국어로 옮긴 비공식 번역본입니다.
+  내용의 정확한 의미는 위 원문 링크를 함께 참고하세요.
+</footer>
