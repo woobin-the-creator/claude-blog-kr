@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "how-anthropics-sales-team-rebuilt-inbound-with-claude-managed-agents.html", date: "2026-09-30", main: "Claude blog", cat: "Enterprise AI",
+      title: "Anthropic 영업팀은 Claude Managed Agents로 인바운드를 어떻게 다시 만들었나", nav: "Anthropic 영업팀 구매 에이전트 · Managed Agents로 인바운드 재구축·전환 2배·5일 빠른 성사" },
     { file: "claude-for-government-is-now-generally-available.html", date: "2026-09-30", main: "Claude blog", cat: "Product announcements",
       title: "Claude for Government 정식 출시", nav: "Claude for Government GA · FedRAMP High·좌석 요금 없음·Claude Code CLI·M365 얼리 액세스" },
     { file: "agents-you-can-coach-how-asana-builds-human-agent-teams-with-claude.html", date: "2026-09-29", main: "Claude blog", cat: "Agents",

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anthropic 영업팀은 Claude Managed Agents로 인바운드를 어떻게 다시 만들었나</title>
+<style>
+  :root { --fg:#1a1a1a; --muted:#666; --line:#e5e5e5; --accent:#c96442; --code-bg:#f6f6f4; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo",
+      "Malgun Gothic", sans-serif;
+    color: var(--fg); line-height: 1.75; max-width: 760px;
+    margin: 0 auto; padding: 48px 24px 96px; background:#fff;
+  }
+  header { border-bottom: 2px solid var(--line); padding-bottom: 24px; margin-bottom: 32px; }
+  h1 { font-size: 1.9rem; line-height: 1.35; margin: 0 0 12px; }
+  .meta { color: var(--muted); font-size: 0.9rem; }
+  .meta .orig { display:block; margin-top:6px; }
+  .meta a { color: var(--accent); text-decoration: none; }
+  h2 { font-size: 1.4rem; margin: 44px 0 8px; padding-top: 8px; }
+  h3 { font-size: 1.15rem; margin: 30px 0 8px; color:#000; }
+  p { margin: 0 0 16px; }
+  a { color: var(--accent); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  blockquote { margin: 16px 0; padding: 8px 18px; border-left:3px solid var(--line);
+    color:#333; font-style: italic; }
+  hr { border: none; border-top: 1px solid var(--line); margin: 40px 0; }
+  code { background: var(--code-bg); padding: 2px 6px; border-radius: 4px;
+    font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 0.88em; }
+  figure { margin: 24px 0; }
+  figure img { width: 100%; height: auto; border:1px solid var(--line); border-radius: 8px;
+    background:#fff; }
+  figure.hero img { border:none; max-width: 210px; display:block; margin: 0 auto 8px; }
+  figcaption { color: var(--muted); font-size: 0.85rem; text-align: center;
+    margin-top: 10px; line-height: 1.5; }
+  figcaption a { color: var(--accent); }
+  .video { position: relative; width: 100%; padding-top: 56.25%; margin: 24px 0 8px;
+    border-radius: 8px; overflow: hidden; background:#000; }
+  .video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .callout { background:#faf6f4; border-left:3px solid var(--accent);
+    padding: 12px 16px; border-radius: 0 6px 6px 0; margin: 16px 0; }
+  .callout strong { color: var(--accent); }
+  .lede { color:#333; font-size: 1.05rem; }
+  footer { margin-top: 64px; padding-top: 20px; border-top:1px solid var(--line);
+    color: var(--muted); font-size: 0.82rem; }
+</style>
+<link rel="stylesheet" href="assets/nav.css">
+<header>
+  <h1>Anthropic 영업팀은 Claude Managed Agents로 인바운드를 어떻게 다시 만들었나</h1>
+  <div class="meta">
+    2026년 9월 30일
+    · 카테고리: <a href="https://claude.com/blog/category/enterprise-ai">Enterprise AI</a>
+    · 제품: <a href="https://claude.com/platform/api">Claude Platform</a>
+    · 글쓴이: Carl Johnson
+    <span class="orig">원문:
+      <a href="https://claude.com/blog/how-anthropics-sales-team-rebuilt-inbound-with-claude-managed-agents">How Anthropic's sales team rebuilt inbound with Claude Managed Agents by Anthropic</a>
+      (한글 번역본)</span>
+  </div>
+</header>
+
+<figure class="hero"><img src="assets/how-anthropics-sales-team-rebuilt-inbound-with-claude-managed-agents/hero.svg" alt="Claude Managed Agents 일러스트"></figure>
+
+<p class="lede"><em>Anthropic의 영업 개발(sales development) 리더 Carl Johnson이, Claude 기반 구매 에이전트(buying agent)가 이제 인바운드 고객 대부분에게 답하게 된 과정과 그것이 우리 영업팀의 일하는 방식을 어떻게 바꿨는지 이야기합니다.</em></p>
+
+<p>영업 리더로서 인정하기 괴로운 일이지만, 얼마 전까지만 해도 회사에서 Claude를 도입하려는 분들은 필요한 답을 충분히 빨리 받지 못하고 있었습니다. Contact Sales 폼을 작성하고 나서도 답을 듣기까지 너무 오래, 때로는 며칠씩 기다려야 했습니다. 질문 대부분은 단순했습니다. 플랜 가격이 얼마인지, 최소 좌석(seat) 수가 있는지, HIPAA 계약 요건을 충족할 수 있는지 같은 것들이었죠. 답은 우리 문서와 지원 문서에 이미 있었지만, 고객은 누군가 빠르게 안내해 주길 원했습니다.</p>
+
+<p>그래서 우리는 Claude Managed Agents(베타)로 구매 에이전트를 만들었습니다. 잠재 고객을 "우리 회사에 Claude를 도입하고 싶다"는 단계에서 구매 완료까지 데려가는 에이전트입니다. 구매 에이전트는 이제 하루에 수천 건의 대화를 나누며, 고객의 가장 급한 질문에 답하고, 결제(checkout)까지 안내합니다. 에이전트가 우리 팀에 넘기는(escalate) 고객은 이미 충분히 이해한 상태로, 구매 결정을 내릴 준비가 더 잘 되어 있습니다. 이들은 예전 폼으로 들어온 리드(lead)보다 두 배 넘게 자주 영업 기회(opportunity)로 전환되고, 계약 성사(close)도 약 5일 빠릅니다. 우리는 이 경험을 의도적으로 옵트인(opt-in)으로 남겨 두었습니다. 즉 고객이 처음에 자신의 선호에 따라 에이전트와 이야기할지, 영업 담당자(sales rep)와 이야기할지 직접 선택합니다.</p>
+
+<figure><img src="assets/how-anthropics-sales-team-rebuilt-inbound-with-claude-managed-agents/buying-agent-outcomes.png" alt="이전과 지금의 인바운드 흐름 비교 다이어그램. 이전: Contact Sales 페이지 → CRM 리드 생성 → 담당자 자격 심사 → 어카운트 임원. 지금: Contact Sales 페이지 → 구매 에이전트 → 결제·담당자·답변 중 하나"><figcaption>이전: Contact Sales 폼 → CRM 리드 생성 → 담당자가 며칠에 걸친 이메일로 자격 심사 → 어카운트 임원(account executive)의 디스커버리 콜·견적·주문서. 지금: Contact Sales 페이지에서 에이전트와 대화 시작 → 구매 에이전트가 답하고 플랜 추천 → 결제(맞춤 견적과 구매), 담당자(에이전트가 처리하지 못하면 대화 전체 맥락과 함께 넘김), 답변(셀프서비스 자료 제공 또는 방향 안내) 중 하나로 마무리</figcaption></figure>
+
+<h2>예전 인바운드 프로세스는 왜 무너졌나</h2>
+
+<p>구매 에이전트를 만들기 전 우리 인바운드 프로세스는 꽤 단순했습니다. 구매자가 폼을 작성합니다. 리드는 비즈니스 개발 담당자(BDR)에게 라우팅되고, 담당자가 자격을 심사(qualify)한 뒤 어카운트 임원(account executive)에게 넘깁니다. 팀이 제품에 관심 있는 모든 사람과 이야기할 수 있을 때는 이 방식이 여전히 잘 작동합니다.</p>
+
+<p>하지만 우리는 매달 수만 건의 인바운드 요청을 받았고, 인바운드 BDR 팀은 이를 감당할 수 없었습니다. 담당자들은 문서에 이미 나와 있는 질문에 답하느라 하루를 보냈고, 대기열에 있는 모든 고객에게 닿을 효과적인 방법이 없었습니다. 이것은 우리가 고객에게 주고 싶은 경험이 아니었습니다.</p>
+
+<p>우리는 모든 고객이 어느 시간에든, 어떤 언어로든 제대로 아는 답을 받고, 원하는 방식대로 구매할 수 있길 바랐습니다. 그리고 그 방식은 종종 영업 담당자와 이야기하지 않는 것을 뜻합니다. 담당자들은 결과의 방향을 바꿀 수 있는 대화에 시간을 쓰길 바랐습니다.</p>
+
+<h2>그 간극을 메우는 구매 에이전트</h2>
+
+<p>우리는 고객이 이미 질문을 던지고 있던 곳에 에이전트를 배치했습니다. <a href="https://claude.com/contact-sales" target="_blank">Contact Sales</a> 페이지와 <a href="https://claude.com/pricing#team-&amp;-enterprise" target="_blank">요금(Pricing)</a> 페이지, 제품 안, 그리고 이메일입니다. 어떤 고객이든 <a href="http://claude.ai" target="_blank">Claude.ai</a> 제품 안에서 구매 에이전트를 찾을 수 있습니다. 어떤 플랜이 가장 잘 맞는지 이해하도록 돕는 단순한 채팅 경험입니다. 고객이 팀에 필요한 것을 설명하면 에이전트가 몇 가지 후속 질문을 던지고, 가격·보안·데이터에 관한 질문에 답한 뒤 플랜과 좌석 수를 추천합니다. 각 대화는 세 가지 중 하나로 끝납니다.</p>
+
+<ul>
+  <li><strong>구매.</strong> 구매자가 곧바로 결제로 갑니다.</li>
+  <li><strong>핸드오프(hand-off).</strong> 규모가 크거나 복잡한 거래는 에이전트가 대화 내용 전체와 함께 구매자를 담당자에게 넘깁니다.</li>
+  <li><strong>빠른 답변.</strong> 때로는 고객에게 필요한 게 그것뿐입니다.</li>
+</ul>
+
+<p>우리는 에이전트가 영업 담당자와 같은 일을 따라가도록 만들었습니다. 즉 고객이 해결하려는 문제가 무엇인지, 현재 Claude 사용 현황은 어떤지, 우리가 어떻게 가장 잘 도울 수 있는지를 이해하는 것입니다.</p>
+
+<figure><img src="assets/how-anthropics-sales-team-rebuilt-inbound-with-claude-managed-agents/buying-agent-chat.png" alt="구매 에이전트 채팅 화면. 40명 규모 클리닉이 환자 데이터 사용 가능 여부와 비용을 묻자, 에이전트가 HIPAA 준수는 Claude Enterprise에서 가능하다고 답하며 40좌석 Claude Enterprise 제안과 결제 버튼을 보여준다"><figcaption>구매 에이전트 채팅 예시. 40명 규모 클리닉이 환자 데이터 사용 가능 여부와 비용을 묻자, 에이전트가 HIPAA 준수는 Claude Enterprise에서 가능하며 사람의 도움 없이 진행할 수 있다고 답하고 40좌석 제안과 함께 "결제 계속하기" 버튼을 제시합니다.</figcaption></figure>
+
+<h2>왜 Claude Managed Agents를 썼나?</h2>
+
+<p>내부적으로 구매 에이전트는 단순합니다. 프롬프트 하나, 도구(tool) 몇 개, 그리고 Claude Managed Agents 위에서 돌아가는 Claude가 전부입니다. 플랫폼이 호스팅, 세션 관리, 도구 오케스트레이션을 맡아 주기 때문에, 엔지니어들은 인프라를 만드는 대신 영업팀과 함께 구매 경험을 설계하는 데 시간을 썼습니다.</p>
+
+<p>우리가 최종적으로 Managed Agents를 선택한 이유는 다음과 같습니다.</p>
+
+<ul>
+  <li><strong>빠른 프로덕션 투입.</strong> 엔지니어 한 명이 단 몇 주 만에 Managed Agents 위에 초기 구매 에이전트를 만들었습니다.</li>
+  <li><strong>기술·비기술 기여자 모두 참여.</strong> 코드는 엔지니어링이 소유했지만, 영업과 콘텐츠 리드들이 Console에서 시스템 프롬프트를 직접 검토하고 편집했습니다. 변경 사항은 먼저 스테이징(staging) 에이전트에 반영되므로, 고객에게 닿기 전에 누구나 수정안을 시험해 볼 수 있었습니다.</li>
+  <li><strong>하네스(harness)가 아니라 도메인에 집중.</strong> Managed Agents가 에이전트 루프, 세션, 호스팅을 실행합니다. 우리는 프롬프트, 도구, 지식 베이스(knowledge base)에 시간을 썼습니다. 판매에 고유한 세 가지입니다.</li>
+  <li><strong>버전 관리로 반복 비용 절감.</strong> 에이전트의 모든 변경이 각각의 버전으로 저장됩니다. 내부 테스트 시작 약 일주일 만에 v7에 이르렀고, 출시 후에도 매주 프롬프트 변경을 배포했습니다. 필요하면 새 세션을 이전 버전으로 손쉽게 되돌릴 수 있었습니다.</li>
+  <li><strong>더 많은 활용 사례를 지원하는 유연성.</strong> 지금은 고객이 우리 웹사이트에서 에이전트를 만납니다. Managed Agents는 예약 실행(scheduled runs)을 지원하므로, 다른 유형의 고객 접점을 탐색할 길이 열려 있습니다.</li>
+</ul>
+
+<figure><img src="assets/how-anthropics-sales-team-rebuilt-inbound-with-claude-managed-agents/managed-agents-console.png" alt="Claude Managed Agents 구조 다이어그램. 구매자와 백엔드 사이에서, 우리가 작성한 프롬프트·지식 베이스·도구와, Managed Agents가 실행하는 에이전트 루프·세션·호스팅·Console·버전 관리·예약 실행을 구분해 보여준다"><figcaption>구매자는 요금·Contact Sales·제품 페이지에서 에이전트와 대화하고, 우리 백엔드는 요금·결제·영업 시스템에 대해 에이전트의 도구 호출을 실행합니다. 우리가 작성한 것(도메인): 프롬프트, 지식 베이스, 도구. Claude Managed Agents가 대신 실행하는 것: 에이전트 루프, 세션, 호스팅, Console, 버전 관리, 예약 실행(다음 과제). Claude Managed Agents는 베타입니다.</figcaption></figure>
+
+<h2>구매 에이전트를 만들며 배운 것</h2>
+
+<ul>
+  <li><strong>Claude에게 규칙이 아니라 목표를 주세요.</strong> 에이전트의 목표를 설명하는 편이 상세한 지시 목록보다 잘 작동했습니다. 예를 들어 "당신의 목표는 고객 요구 사항을 이해하고, 잠재 고객의 자격을 심사하고, 최적의 플랜을 추천하는 것입니다"처럼 단순한 문장이 모든 자격 요건을 순서도로 나열하는 것보다 효과적이었습니다.</li>
+  <li><strong>적을수록 좋습니다.</strong> 길이, 복잡도, 구조가 다양한 프롬프트로 실험해 본 결과 '적을수록 좋다'는 격언이 가장 잘 통했습니다. 오늘날의 모델은 복잡하고 미묘한 목표를 이해하고 거기서 거꾸로 일을 풀어 갈 수 있습니다. 실제로는 좌석 기반 요금이 무엇을 포함하는지, 청구 주기가 언제 돌아가는지처럼 성공에 필요한 지식과 맥락을 주고 Claude의 길을 비켜 주는 것을 뜻했습니다.</li>
+  <li><strong>개발 루프에 SME(주제 전문가)를 넣으세요.</strong> 에이전트 코딩(agent coding)이 개발 주기를 앞당기는 세상에서 점점 더 가치가 커지는 일입니다. Managed Agents와 Claude Code로 시간을 아낀 덕분에, 엔지니어들은 영업팀과 더 많은 시간을 보내며 고객 중심 경험을 다듬을 수 있었습니다. 에이전트를 일찍, 자주 테스트할 수 있었고 그 결과 빠르게 반복할 수 있었습니다.</li>
+  <li><strong>고객에게 맞는 것에 집중하세요.</strong> 에이전트는 소규모 팀에게 Enterprise 대신 Team 플랜을 안내하는 경우가 많습니다. 어떤 경우엔 그게 그들에게 맞는 답이기 때문입니다. 우리는 이것을 기능이라고 결정했습니다. 업셀(upsell)당하는 대신 맞는 플랜에 안착한 구매자가 더 오래 남고 더 나은 경험을 합니다.</li>
+  <li><strong>에이전트→담당자 에스컬레이션은 모두 피드백으로 다루세요.</strong> 에이전트가 구매자를 담당자에게 넘길 때마다 그 이유를 설명합니다. 초기에는 그 이유 대부분이 고객이 아직 우리 셀프서비스 제품으로는 스스로 할 수 없는 일들이었습니다. 그 이유들이 경험을 개선하는 방향을 정했고, 거래를 마무리하는 데 사람의 도움이 필요한 대화의 비율은 약 절반으로 줄었습니다.</li>
+</ul>
+
+<h2>고객에게 달라진 것</h2>
+
+<p>에이전트는 이제 하루 24시간 수천 건의 대화를 나눕니다. 고객은 예약된 통화를 기다리거나 며칠에 걸쳐 이메일을 주고받는 대신 즉시 답을 얻습니다. 실제로 많은 고객이 사람보다 에이전트와 이야기하는 쪽을 선호합니다. 질문이 떠오를 때마다 빠르고 정확한 답을 주기 때문입니다. 새로운 셀프서비스 Enterprise 고객 중 다수가 구매 전에 구매 에이전트와 대화했고, 미리 에이전트와 이야기한 고객이 자신이 무엇을 사는지 더 잘 이해하고 있다는 것을 확인했습니다.</p>
+
+<h2>에이전트가 우리 영업 조직을 어떻게 바꿨나</h2>
+
+<p>에이전트는 담당자들이 하루를 보내는 방식을 바꿨습니다. 이제 팀의 시간과 에너지 대부분을 구매 여정의 더 이른 단계에서 고객을 교육하고, 실시간 고객 대화를 더 많이 나누고, 이벤트 현장에서 직접 시간을 보내는 데 집중할 수 있게 되었습니다.</p>
+
+<p>가장 큰 변화는 담당자들이 이제 더 잘 준비된 리드를 받고, 예전 문의 폼보다 리드를 영업 기회로 더 자주 전환하며, 계약을 약 5일 더 빨리 성사시킨다는 점입니다. 담당자는 고객이 무엇을 원하는지, 어떤 안내를 이미 받았는지, 우리가 어떻게 가장 잘 도울 수 있는지 이미 아는 상태로 대화를 시작합니다.</p>
+
+<p>예를 들어 내부 영업 담당자 중 한 명인 Ojas는 예전에는 거래 하나를 성사시키는 데 이메일 약 10통을 주고받았지만, 지금은 6통 정도면 됩니다. 구매 에이전트 출시 이후 성사 거래(closed won) 산출을 2.5배로 늘렸는데, 이미 충분히 이해하고 준비된 채로 마지막 한 걸음만 도움이 필요한 고객에게 집중할 수 있게 된 덕분입니다.</p>
+
+<p>얼마 전까지 인바운드는 우리 팀이 따라잡을 수 없는 대기열이었습니다. 지금은 어떤 구매자든 어느 시간에나 시작할 수 있는 대화이고, 담당자들은 시간을 더 효율적으로 씁니다. 구매 에이전트는 고객 관계 전반에 걸친 에이전트를 향한 우리의 첫걸음입니다.</p>
+
+<p>직접 만들어 볼 준비가 되셨나요? <a href="https://claude.com/blog/claude-managed-agents" target="_blank">Claude Managed Agents</a>에 대해 더 알아보거나, 여러분의 영업 활동에 에이전트를 도입하는 것에 관해 <a href="https://claude.com/contact-sales" target="_blank">우리 팀과 상담</a>하세요.</p>
+
+<p><em>이 글은 Carl Johnson이 썼으며 Izzy Lee, Bobby P., Lina Ochman, Yana Gevorgyan, Jerico Johns, Taylre Duarte가 기여했습니다.</em></p>
+
+<div class="callout">
+  <strong>Claude로 조직의 운영 방식을 바꿔 보세요.</strong>
+  <a href="https://claude.com/pricing#api">요금 보기</a> ·
+  <a href="https://claude.com/contact-sales">영업팀 문의</a>
+</div>
+
+<footer>
+  이 글은 Claude 공식 블로그 원문을 한국어로 옮긴 비공식 번역본입니다.
+  내용의 정확한 의미는 위 원문 링크를 함께 참고하세요.
+</footer>
+<script src="assets/store.js"></script>
+<script src="assets/posts.js"></script>
+<script src="assets/nav.js"></script>
+</body>
+</html>
