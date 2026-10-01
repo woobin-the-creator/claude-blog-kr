@@ -1,79 +1,272 @@
-/* Shared sidebar navigation for translated posts */
-#site-nav { --nav-accent:#c96442; --nav-line:#e5e5e5; --nav-muted:#666;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo",
-    "Malgun Gothic", sans-serif; box-sizing: border-box; background:#fafaf8; }
-#site-nav a { text-decoration: none; color: inherit; }
-#site-nav .nav-brand { font-size: 0.95rem; font-weight: 700; color:#1a1a1a;
-  display:block; line-height:1.4; }
-#site-nav .nav-home { display:inline-block; margin-top:6px; font-size:0.84rem;
-  color: var(--nav-accent); }
-#site-nav .nav-heading { font-size:0.72rem; letter-spacing:0.04em; text-transform:uppercase;
-  color: var(--nav-muted); margin: 22px 0 10px; }
-#site-nav ul { list-style:none; margin:0; padding:0; }
-#site-nav li { margin: 0; }
-#site-nav .nav-link { display:block; padding:8px 10px; border-radius:6px;
-  font-size:0.88rem; line-height:1.4; color:#333; border-left:2px solid transparent; }
-#site-nav .nav-link:hover { background:#f0ece9; }
-#site-nav .nav-link .nav-date { display:block; font-size:0.74rem; color:var(--nav-muted);
-  margin-top:2px; }
-#site-nav .nav-link.active { background:#f5ede9; border-left-color: var(--nav-accent);
-  color: var(--nav-accent); font-weight:600; }
-#site-nav .nav-tools { margin-top: 22px; }
-#site-nav .nav-library { display:inline-flex; align-items:center; gap:6px;
-  font-size:0.84rem; color:#333; padding:7px 11px; border:1px solid var(--nav-line);
-  border-radius:999px; }
-#site-nav .nav-library:hover { border-color: var(--nav-accent); color: var(--nav-accent); }
-#site-nav .nav-count { background: var(--nav-accent); color:#fff; font-size:0.72rem;
-  min-width:18px; text-align:center; padding:1px 6px; border-radius:999px; }
-/* Mobile-only hamburger toggle (injected by nav-mobile.js); hidden on desktop. */
-#site-nav .nav-toggle { display:none; }
+/* 글 페이지 레이아웃: 사이트 헤더(#site-nav) · 전체 글 서랍 · 목차 · 브레드크럼 · 본문 열.
+ *
+ * 레거시 정적 글(posts/*.html)은 이 파일만 정적으로 링크한다. 그래서 공용 디자인 시스템을
+ * 여기서 @import 한다 — 인라인 <style> 뒤에 붙으므로 같은 특이도에서 이긴다.
+ * post.html / 404.html 도 이 파일 하나만 링크한다.
+ */
+@import url("site.css");
 
-/* Wide screens (>=1080px): fixed sidebar in its own reserved left column.
-   The article body is shifted right so the two never overlap. */
+/* ---------- 본문 열 ---------- */
+:root {
+  --toc-w: 216px;
+  --toc-gap: 56px;
+  --col-left: var(--gutter);
+}
+.post-main {
+  max-width: calc(var(--prose) + 2 * var(--gutter));
+  margin: 0 auto;
+  padding: var(--sp-7) var(--gutter) var(--sp-9);
+}
+@media (max-width: 600px) { .post-main { padding-top: var(--sp-5); padding-bottom: 120px; } }
+
+/* post.html 이 아닌 레거시 글은 body 에 글별 max-width/padding 이 걸려 있다. 풀어준다. */
+body.cbk-post { max-width: none; margin: 0; padding: 0; }
+
+/* 1080px 이상 + 목차 있음: 왼쪽 고정 목차 열 + 본문 열. 둘을 한 덩어리로 가운데 정렬한다. */
 @media (min-width: 1080px) {
-  #site-nav { position: fixed; top:0; left:0; width:248px; height:100vh;
-    overflow-y:auto; padding: 40px 22px; border-right:1px solid var(--nav-line); z-index: 30; }
-  body { margin-left: 248px !important; margin-right: auto !important; }
+  /* 50% 는 쓰이는 자리 기준으로 풀린다: 고정 목차의 left 는 뷰포트, 본문 margin-left 는 body.
+     둘 다 스크롤바를 뺀 폭이라 클래식 스크롤바에서도 열이 어긋나지 않는다. */
+  :root { --col-left: max(var(--gutter), calc(50% - (var(--toc-w) + var(--toc-gap) + var(--prose)) / 2)); }
+  body.cbk-post .site-header-inner { max-width: calc(var(--prose) + 2 * var(--gutter)); }
+  body.cbk-post.has-toc .site-header-inner { max-width: calc(var(--toc-w) + var(--toc-gap) + var(--prose) + 2 * var(--gutter)); }
+  body.has-toc .post-main {
+    margin-left: calc(var(--col-left) + var(--toc-w) + var(--toc-gap) - var(--gutter));
+    margin-right: auto;
+  }
+}
+/* 메모 패널이 오른쪽에 도킹되는 아주 넓은 화면: 패널 폭만큼 비켜서 가운데 정렬 */
+@media (min-width: 1660px) {
+  body.cbk-notes-open {
+    --col-left: max(var(--gutter), calc((100% - 648px - (var(--toc-w) + var(--toc-gap) + var(--prose))) / 2));
+  }
+  body.cbk-notes-open:not(.has-toc) .post-main {
+    margin-left: max(0px, calc((100% - 648px - var(--prose) - 2 * var(--gutter)) / 2));
+  }
+  body.cbk-notes-open .site-header-inner { max-width: none; }
 }
 
-/* Narrow screens (<1080px): a sticky top bar that STILL follows on scroll. */
-@media (max-width: 1079px) {
-  #site-nav { position: sticky; top: 0; z-index: 30;
-    border-bottom:1px solid var(--nav-line); padding: 12px 20px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-    display:flex; align-items:center; flex-wrap:wrap; gap:8px; }
-  #site-nav .nav-brand { font-size:0.9rem; }
-  #site-nav .nav-home { margin:0 8px 0 0; }
-  #site-nav .nav-heading { display:none; }
-  /* hamburger toggle button sits at the right of the bar */
-  #site-nav .nav-toggle { display:inline-flex; align-items:center; gap:6px; margin-left:auto;
-    font:inherit; font-size:0.86rem; cursor:pointer; border:1px solid var(--nav-line);
-    background:#fff; color:var(--nav-accent); border-radius:8px; padding:7px 12px; }
-  #site-nav.nav-open .nav-toggle { background:var(--nav-accent); color:#fff;
-    border-color:var(--nav-accent); }
-  /* the post list is collapsed by default and drops down full-width when open */
-  #site-nav ul { display:none; flex-basis:100%; width:100%; order:10;
-    max-height:60vh; overflow-y:auto; margin-top:10px; padding-top:8px;
-    border-top:1px solid var(--nav-line); }
-  #site-nav.nav-open ul { display:block; }
-  #site-nav ul .nav-link { display:block; border:0; border-bottom:1px solid #f2efed;
-    border-radius:0; padding:9px 8px; }
-  #site-nav ul .nav-link.active { border-left:2px solid var(--nav-accent); }
-  #site-nav ul .nav-link .nav-date { display:none; }
+/* ---------- 사이트 헤더(글 페이지) ---------- */
+#site-nav .nav-tools { display: contents; }
+#site-nav .nav-toggle { gap: 6px; }
+#site-nav .nav-toggle svg { width: 16px; height: 16px; }
+
+/* ---------- 전체 글 서랍 ---------- */
+#site-nav .nav-drawer {
+  position: fixed;
+  top: var(--header-h);
+  right: 0;
+  bottom: 0;
+  z-index: 60;
+  width: min(420px, 100vw);
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  border-left: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  transform: translateX(102%);
+  visibility: hidden;
+  transition: transform .22s ease, visibility 0s linear .22s;
+}
+#site-nav.nav-open .nav-drawer {
+  transform: none;
+  visibility: visible;
+  transition: transform .22s ease;
+}
+#site-nav .nav-backdrop {
+  position: fixed;
+  inset: var(--header-h) 0 0 0;
+  z-index: 55;
+  background: rgba(20, 20, 19, 0.32);
+  display: none;
+}
+#site-nav.nav-open .nav-backdrop { display: block; }
+body.nav-drawer-open { overflow: hidden; }
+#site-nav .nav-drawer-head {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--sp-4) var(--sp-5);
+  border-bottom: 1px solid var(--line);
+}
+#site-nav .nav-drawer ul {
+  flex: 1 1 auto;
+  list-style: none;
+  margin: 0;
+  padding: var(--sp-2) 0 var(--sp-6);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+#site-nav .nav-link {
+  display: block;
+  padding: 10px var(--sp-5);
+  border-left: 2px solid transparent;
+  color: var(--text);
+  text-decoration: none;
+  font-size: 15px;
+  line-height: 1.5;
+}
+#site-nav .nav-link:hover { background: var(--bg-sub); color: var(--ink); }
+#site-nav .nav-link.active { border-left-color: var(--accent); background: var(--bg-sub); color: var(--ink); font-weight: 600; }
+#site-nav .nav-title { display: block; }
+#site-nav .nav-star { color: var(--link); }
+#site-nav .nav-date { display: block; margin-top: 2px; font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
+@media (max-width: 600px) { #site-nav .nav-drawer-head, #site-nav .nav-link { padding-left: var(--sp-4); padding-right: var(--sp-4); } }
+
+/* ---------- 브레드크럼(출처 / 주제) — claude.dev 의 각진 태그 ---------- */
+.post-crumb {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-2);
+  margin: 0 0 var(--sp-4);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.4;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+#post-body .post-crumb a, .post-crumb a {
+  display: inline-block;
+  padding: 4px 8px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  color: var(--muted);
+  text-decoration: none;
+}
+#post-body .post-crumb a:hover, .post-crumb a:hover { color: var(--ink); border-color: var(--ink); }
+.post-crumb .post-crumb-sep { color: var(--muted); }
+/* 제목은 바로 아래 h1 과 같으므로 화면에서는 숨기고 스크린리더에는 남긴다 */
+.post-crumb a + .post-crumb-sep + a + .post-crumb-sep,
+.post-crumb .post-crumb-cur {
+  position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap;
 }
 
-/* Breadcrumb injected above each post header (메인 › 서브 › 제목). */
-.post-crumb { font-size: 0.82rem; line-height: 1.5; color: var(--nav-muted, #666);
-  margin: 0 0 20px; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
-.post-crumb a { color: var(--nav-accent, #c96442); text-decoration: none; }
-.post-crumb a:hover { text-decoration: underline; }
-.post-crumb .post-crumb-sep { color: #bbb; }
-.post-crumb .post-crumb-cur { color: var(--nav-muted, #666); }
+/* ---------- 목차 ---------- */
+.post-toc { display: none; }
+@media (min-width: 1080px) {
+  .post-toc {
+    display: block;
+    position: fixed;
+    top: calc(var(--header-h) + var(--sp-7));
+    left: var(--col-left);
+    width: var(--toc-w);
+    max-height: calc(100vh - var(--header-h) - var(--sp-8));
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding-right: var(--sp-2);
+    scrollbar-width: thin;
+  }
+  .post-toc-m { display: none; }
+}
+.post-toc .toc-label { margin: 0 0 var(--sp-3); }
+.post-toc ol, .post-toc-m ol { list-style: none; margin: 0; padding: 0; }
+.post-toc li, .post-toc-m li { margin: 0; }
+.post-toc a, #post-body .post-toc-m a {
+  position: relative;
+  display: block;
+  padding: 5px 0 5px 18px;
+  color: var(--muted);
+  font-size: 13.5px;
+  line-height: 1.5;
+  text-decoration: none;
+}
+.post-toc a::before, .post-toc-m a::before {
+  content: "└";
+  position: absolute;
+  left: 0;
+  font-family: var(--font-mono);
+  color: var(--line-strong);
+}
+.post-toc .toc-h3 a, #post-body .post-toc-m .toc-h3 a { padding-left: 34px; font-size: 13px; }
+.post-toc .toc-h3 a::before, #post-body .post-toc-m .toc-h3 a::before { left: 16px; }
+.post-toc a:hover, #post-body .post-toc-m a:hover { color: var(--ink); }
+.post-toc a.active { color: var(--ink); font-weight: 600; }
+.post-toc a.active::before { color: var(--accent); }
 
-/* ---------- post content: small-screen polish (applies to every post page) ----------
-   These rules load after each post's inline <style>, so they win on small screens. */
-@media (max-width: 600px) {
-  body { padding: 32px 16px 72px !important; }
-  /* wide tables scroll horizontally instead of overflowing the viewport */
-  table { display: block; width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.post-toc-m {
+  margin: 0 0 var(--sp-6);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--bg-raised);
+}
+.post-toc-m summary {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  min-height: 44px;
+  padding: 0 var(--sp-4);
+  cursor: pointer;
+  list-style: none;
+}
+.post-toc-m summary::-webkit-details-marker { display: none; }
+.post-toc-m summary::after {
+  content: "";
+  margin-left: auto;
+  width: 8px; height: 8px;
+  border-right: 1.5px solid var(--muted);
+  border-bottom: 1.5px solid var(--muted);
+  transform: rotate(45deg) translateY(-2px);
+  transition: transform .15s;
+}
+.post-toc-m[open] summary::after { transform: rotate(-135deg) translateY(-2px); }
+.post-toc-m summary .label { color: var(--ink); }
+.post-toc-m ol { padding: 0 var(--sp-4) var(--sp-3); border-top: 1px solid var(--line); padding-top: var(--sp-2); }
+#post-body .post-toc-m a { font-size: 14px; padding-top: 7px; padding-bottom: 7px; }
+
+/* 글 오류·리뷰 배지(post.html) */
+#post-error {
+  padding: var(--sp-9) 0 var(--sp-8);
+  color: var(--text);
+  font-size: 17px;
+  text-align: center;
+}
+.page-404 #post-error::before {
+  content: "404";
+  display: block;
+  margin: 0 0 var(--sp-4);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 64px;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+#post-error #post-error-msg { display: block; }
+#post-error a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  margin-top: var(--sp-5);
+  padding: 0 16px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  color: var(--ink);
+  font-size: 15px;
+  text-decoration: none;
+}
+#post-error a:hover { border-color: var(--ink); }
+#post-review-badge {
+  margin: 0 0 var(--sp-5);
+  padding: var(--sp-3) var(--sp-4);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  background: var(--bg-raised);
+  font-size: 14px;
+}
+#post-review-badge a { color: var(--link); }
+
+@media print {
+  #site-nav, .post-toc, .post-toc-m, .cbk-bar, .cbk-note-fab, .cbk-note-panel { display: none !important; }
+  body.has-toc .post-main { margin: 0 auto; }
+}
+
+/* 글을 불러오는 동안 */
+#post-error[hidden] ~ #post-body:empty::before {
+  content: "글을 불러오는 중…";
+  display: block;
+  padding: var(--sp-8) 0;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  color: var(--muted);
 }

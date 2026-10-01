@@ -54,8 +54,12 @@
     var p = (rows || [])[0];
     if (!p) { fail("글을 찾을 수 없습니다: " + slug); return; }
 
+    /* 글별 CSS 는 우선순위가 가장 낮은 cascade layer 로 넣는다. 공용 디자인 시스템
+       (nav.css → site.css, unlayered)이 특이도와 무관하게 이기고, 글별 컴포넌트
+       (.callout · .stats …)는 공용 CSS 가 다루지 않는 속성에서 그대로 살아남는다.
+       DB 의 style_css 원문은 바꾸지 않는다. */
     var st = document.getElementById("post-style");
-    if (st) st.textContent = p.style_css || "";
+    if (st) st.textContent = "@layer post {\n" + (p.style_css || "") + "\n}";
 
     var body = document.getElementById("post-body");
     if (body) body.innerHTML = p.body_html || "";

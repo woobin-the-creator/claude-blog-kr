@@ -53,7 +53,7 @@ function boot(file, url, found) {
   ok("body container exists", !!doc.getElementById("post-body"));
   ok("body_html rendered", /본문입니다/.test(doc.getElementById("post-body").innerHTML));
   ok("post's own header kept", !!doc.querySelector("#post-body header h1"));
-  ok("style injected", (doc.getElementById("post-style") || {}).textContent === "body{color:#123456}");
+  ok("style injected into the low-priority post layer", (doc.getElementById("post-style") || {}).textContent === "@layer post {\nbody{color:#123456}\n}");
   ok("document title set from the post", doc.title === "내 첫 글");
   ok("no error state shown", doc.getElementById("post-error").hidden === true);
   ok("root pages flag themselves for nav.js", w.CBK_AT_ROOT === true);
