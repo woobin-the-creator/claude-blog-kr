@@ -67,6 +67,16 @@
   if (backdrop) backdrop.addEventListener("click", function () { setOpen(false, true); });
 
   document.addEventListener("keydown", function (e) {
-    if (e.key === "Escape" && nav.classList.contains("nav-open")) setOpen(false, true);
+    if (!nav.classList.contains("nav-open")) return;
+    if (e.key === "Escape") { setOpen(false, true); return; }
+    // 서랍이 열려 있는 동안 Tab 은 서랍 안(과 닫기 버튼)에서만 돈다.
+    if (e.key === "Tab") {
+      var items = [btn].concat([].slice.call(drawer.querySelectorAll("a[href], button")));
+      var first = items[0], last = items[items.length - 1];
+      var inside = items.indexOf(document.activeElement) !== -1;
+      if (!inside) { e.preventDefault(); first.focus(); }
+      else if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
   });
 })();

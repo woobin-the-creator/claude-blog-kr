@@ -13,6 +13,10 @@
  * 모든 글자색 조합은 WCAG AA(4.5:1) 이상으로 맞췄다.
  */
 
+/* 한글 웹폰트. 쓰인 글자 조각(unicode-range)만 받는다. 정적 페이지는 <head> 에서도 같은 주소를 직접
+   링크해 병렬로 받고(같은 URL 이라 한 번만 내려받는다), 레거시 글은 이 @import 로 받는다. */
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
+
 /* ---------- 1. tokens ---------- */
 :root {
   color-scheme: light;
@@ -758,9 +762,26 @@ input:focus, textarea:focus, select:focus {
 #post-body .q .qt, #post-body .testimonial p, #post-body .quote p { color: var(--text); font-style: normal; }
 #post-body .q .qa { color: var(--muted); }
 #post-body .q img { border-color: var(--line); }
-#post-body .logos img { border-color: var(--line); background: #fff; }
+#post-body .logos img { border-color: var(--line); background: #fff; max-width: 100%; object-fit: contain; }
+#post-body .logos a { flex: 0 1 auto; min-width: 0; max-width: 100%; }
 #post-body .rules li::before { color: var(--link); font-family: var(--font-mono); font-weight: 600; }
 #post-body .week .what { color: var(--muted); }
+/* 글별 컴포넌트의 레이아웃 복원.
+   위의 요소 규칙(#post-body ul/li/p/h2/blockquote/figure)은 post.html 에서 @layer post 를 무조건
+   이기므로, 같은 요소를 다르게 배치하던 컴포넌트는 원래 값을 여기서 되돌린다. */
+#post-body .rules, #post-body .lessons { padding-left: 0; list-style: none; }
+#post-body .lessons li { margin-bottom: 16px; }
+#post-body .pills { margin: 10px 0 0; padding: 0; list-style: none; }
+#post-body .pills li, #post-body .week li { margin: 0; }
+#post-body .week ol { list-style: none; margin: 0; padding: 0; }
+#post-body .q .qt { margin: 0 0 8px; }
+#post-body .q .qa { margin: 0; }
+#post-body .quote p, #post-body .testimonial p { margin: 0 0 10px; }
+#post-body .story .body p:last-child { margin-bottom: 0; }
+#post-body .testimonial blockquote, #post-body .partner blockquote { margin: 0 0 10px; padding: 0; border: 0; }
+#post-body .band h2 { margin: 0; padding: 0; font-size: 1.5rem; font-weight: 500; line-height: 1.2; }
+#post-body figure.logo { margin: 14px 0 4px; }
+#post-body figure.logo img { border: 0; background: none; width: auto; max-width: 150px; height: 42px; object-fit: contain; }
 /* 한 글에만 있는 카드형 블록들(하드코딩 밝은 배경) */
 #post-body .how, #post-body .story, #post-body .none { background: var(--bg-sub); color: var(--text); }
 #post-body .how .sec { border-top-color: var(--line); }

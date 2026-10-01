@@ -88,7 +88,7 @@
   function buildItems() {
     return POSTS.map(function (p) {
       var active = p.file === current ? " active" : "";
-      var star = (CBK && CBK.isBookmarked(CBK.slugOf(p.file))) ? '<span class="nav-star" aria-label="즐겨찾기">★</span> ' : "";
+      var star = (CBK && CBK.isBookmarked(CBK.slugOf(p.file))) ? '<span class="nav-star" aria-hidden="true">★</span><span class="sr-only">즐겨찾기 </span>' : "";
       return (
         '<li><a class="nav-link' + active + '" href="' + hrefFor(p.file) + '"' +
           (active ? ' aria-current="page"' : "") + ">" +
@@ -129,7 +129,7 @@
           ICON.moon + ICON.sun + "</button>" +
       "</div>" +
     "</div>" +
-    '<div class="nav-drawer" id="site-nav-drawer" aria-label="전체 글 목록">' +
+    '<div class="nav-drawer" id="site-nav-drawer" role="dialog" aria-modal="true" aria-label="전체 글 목록">' +
       '<div class="nav-drawer-head">' +
         '<span class="nav-heading label">전체 글</span>' +
         '<span class="nav-drawer-count label">' + (POSTS.length || "") + "</span>" +
@@ -212,7 +212,10 @@
     }
   }
   wrapTables();
-  window.addEventListener("load", wrapTables);
+  // 웹폰트가 늦게 도착하거나 화면 폭이 바뀌면 넘침 여부가 달라진다 — 다시 잰다.
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(wrapTables);
+  var resizeT = null;
+  window.addEventListener("resize", function () { clearTimeout(resizeT); resizeT = setTimeout(wrapTables, 200); });
 
   /* ---------- 목차 ----------
    * h2 가 2개 이상일 때만 만든다. id 가 없으면 제목 텍스트로 만든다(중복은 -2, -3…).
@@ -290,7 +293,9 @@
 
     // 목차 id 는 렌더 뒤에 생기므로, 주소에 #id 가 있으면 여기서 이동한다.
     if (location.hash) {
-      var target = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+      var raw = location.hash.slice(1), want = raw;
+      try { want = decodeURIComponent(raw); } catch (e) { /* 잘못된 % 이스케이프 — 원문 그대로 찾는다 */ }
+      var target = document.getElementById(want);
       if (target && target.scrollIntoView) target.scrollIntoView();
     }
   }

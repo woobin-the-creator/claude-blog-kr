@@ -160,8 +160,8 @@ body.nav-drawer-open { overflow: hidden; }
   .post-toc-m { display: none; }
 }
 .post-toc .toc-label { margin: 0 0 var(--sp-3); }
-.post-toc ol, .post-toc-m ol { list-style: none; margin: 0; padding: 0; }
-.post-toc li, .post-toc-m li { margin: 0; }
+.post-toc ol, #post-body .post-toc-m ol { list-style: none; margin: 0; padding: 0; }
+.post-toc li, #post-body .post-toc-m li { margin: 0; }
 .post-toc a, #post-body .post-toc-m a {
   position: relative;
   display: block;
@@ -211,7 +211,7 @@ body.nav-drawer-open { overflow: hidden; }
 }
 .post-toc-m[open] summary::after { transform: rotate(-135deg) translateY(-2px); }
 .post-toc-m summary .label { color: var(--ink); }
-.post-toc-m ol { padding: 0 var(--sp-4) var(--sp-3); border-top: 1px solid var(--line); padding-top: var(--sp-2); }
+#post-body .post-toc-m ol { padding: var(--sp-2) var(--sp-4) var(--sp-3); border-top: 1px solid var(--line); }
 #post-body .post-toc-m a { font-size: 14px; padding-top: 7px; padding-bottom: 7px; }
 
 /* 글 오류·리뷰 배지(post.html) */
