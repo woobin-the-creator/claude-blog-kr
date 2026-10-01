@@ -36,6 +36,13 @@ notify() {
 }
 
 cd "$REPO" || { echo "repo missing"; exit 1; }
+# The run commits in this checkout and pushes main, so it must be on main.
+branch="$(git branch --show-current)"
+if [ "$branch" != "main" ]; then
+  echo "repo is on '$branch', not main; skipped"
+  notify "⏸ 번역 파이프라인 건너뜀: 로컬 레포가 '${branch}' 브랜치예요. main으로 돌려 두면 다음 실행에서 처리해요."
+  exit 0
+fi
 git pull --rebase --quiet 2>/dev/null || true
 
 NEW="$(python3 "$PIPE_DIR/detect_new.py")"
@@ -53,10 +60,13 @@ while IFS= read -r slug; do
   prompt="Use the claude-blog-translate-ko skill to translate the post at ${url} into Korean and deploy it to the existing GitHub Pages repo at ${REPO}.
 The repo is already set up: index.html, posts/, and posts/assets/nav.{css,js} all exist.
 IMPORTANT: name the generated post file exactly posts/${slug}.html (use the blog slug as the filename) and put its downloaded media under posts/assets/${slug}/.
-Translate faithfully (no summarizing), carry over every image, YouTube embed, and hyperlink, add the post to index.html (newest first) and to the POSTS array in posts/assets/nav.js, then commit and push to origin main.
+Translate faithfully (no summarizing), carry over every image, YouTube embed, and hyperlink, register the post as the first entry of CBK_POSTS in posts/assets/posts.js (the single catalog for index, sidebar, and breadcrumb), then commit and push to origin main.
 Work autonomously; do not ask questions."
 
-  if claude -p "$prompt" --dangerously-skip-permissions; then
+  # A claude -p that hangs at startup never exits on its own (2026-10-02: idle
+  # for 1h50m, ignored SIGTERM), so cap each post and SIGKILL after a grace period.
+  # </dev/null: otherwise claude reads the rest of the slug list from the loop's stdin into its prompt.
+  if timeout -k 60 45m claude -p "$prompt" --dangerously-skip-permissions </dev/null; then
     # Confirm it is actually live (poll the live URL, not the build API).
     live=0
     for _ in $(seq 1 30); do
@@ -76,8 +86,9 @@ Work autonomously; do not ask questions."
       notify "⚠️ ${slug} 번역은 됐지만 GitHub Pages 반영이 늦습니다. 잠시 후 확인하세요.%0A${PAGES_BASE}/"
     fi
   else
-    echo "claude run FAILED for $slug"
-    notify "❌ 번역 실패: ${slug}%0A로그: ${LOG}"
+    rc=$?
+    echo "claude run FAILED for $slug (exit $rc; 124/137 = timed out)"
+    notify "❌ 번역 실패: ${slug} (exit ${rc})%0A로그: ${LOG}"
   fi
 done <<< "$NEW"
 
