@@ -85,7 +85,8 @@ export function fixtures(root = REPO) {
       body_html: sample.body_html.replace(/<h1>[\s\S]*?<\/h1>/, "<h1>폴백 렌더 확인용 글</h1>")
     };
   }
-  const list = Object.values(posts).map(({ meta }) => ({
+  // 카탈로그(목록)에는 넣지 않는다 — 실제 사이트처럼 104개 목록을 유지하고, 폴백 글은 본문 조회로만 닿는다.
+  const list = Object.values(posts).filter(({ meta }) => meta.slug !== "e2e-fallback-post").map(({ meta }) => ({
     slug: meta.slug, title: meta.title, nav: meta.nav, main: meta.main, cat: meta.cat,
     date: meta.date, author: meta.author || "ai", rev: meta.rev || 1
   })).sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : a.slug < b.slug ? -1 : 1));

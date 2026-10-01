@@ -12,6 +12,7 @@ const arg = (k, d) => { const i = process.argv.indexOf(k); return i > -1 ? proce
 const root = path.resolve(arg("--root", REPO));
 const out = path.resolve(arg("--out", "shots/after"));
 const schemes = (arg("--schemes", "light,dark")).split(",");
+const only = arg("--pages", "") ? arg("--pages", "").split(",") : null;   // 예: --pages home,library
 fs.mkdirSync(out, { recursive: true });
 
 const { server, base } = await startServer(root);
@@ -20,6 +21,7 @@ const rows = [];
 try {
   for (const scheme of schemes) {
     for (const pg of PAGES) {
+      if (only && !only.includes(pg.name)) continue;
       for (const w of WIDTHS) {
         const ctx = await browser.newContext({ viewport: viewport(w), colorScheme: scheme });
         await wire(ctx, { allowFonts: true, root });
