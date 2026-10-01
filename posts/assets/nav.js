@@ -38,15 +38,62 @@
            : (location.pathname.split("/").pop() || "").replace(/\.html$/, "");
   var current = slug + ".html";
 
-  /* ---------- sidebar ---------- */
+  function esc(s) {
+    return String(s).replace(/[&<>"]/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
+    });
+  }
+  var ICON = {
+    list: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 5h14M3 10h14M3 15h9"/></svg>',
+    close: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M5 5l10 10M15 5L5 15"/></svg>',
+    moon: '<svg class="i-moon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M16.5 12.2A7 7 0 0 1 7.8 3.5a7 7 0 1 0 8.7 8.7z"/></svg>',
+    sun: '<svg class="i-sun" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="10" cy="10" r="3.4"/><path d="M10 1.8v2M10 16.2v2M1.8 10h2M16.2 10h2M4.2 4.2l1.4 1.4M14.4 14.4l1.4 1.4M4.2 15.8l1.4-1.4M14.4 5.6l1.4-1.4"/></svg>',
+    up: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M6.5 9.5V17H4a1 1 0 0 1-1-1v-5.5a1 1 0 0 1 1-1h2.5zm0 0L9.6 3a1.6 1.6 0 0 1 2.9 1.2L11.8 8H16a1.5 1.5 0 0 1 1.5 1.7l-.9 5.8A1.8 1.8 0 0 1 14.8 17H6.5"/></svg>',
+    down: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M13.5 10.5V3H16a1 1 0 0 1 1 1v5.5a1 1 0 0 1-1 1h-2.5zm0 0L10.4 17a1.6 1.6 0 0 1-2.9-1.2L8.2 12H4a1.5 1.5 0 0 1-1.5-1.7l.9-5.8A1.8 1.8 0 0 1 5.2 3h8.3"/></svg>',
+    note: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 16h3.2L16 7.2a2.3 2.3 0 0 0-3.2-3.2L4 12.8V16z"/><path d="M11.6 5.2l3.2 3.2"/></svg>'
+  };
+
+  /* ---------- 레거시 정적 글: post.html 과 같은 껍데기로 감싼다 ----------
+   * posts/<slug>.html 은 본문 노드가 body 바로 아래에 있다. 공용 CSS 가 post.html 과
+   * 같은 선택자(#post-body …)로 두 경로를 다루도록 노드를 옮겨 담는다(내용은 그대로).
+   * 이미 실행된 <script> 는 옮기지 않는다. */
+  function ensurePostShell() {
+    if (document.getElementById("post-body")) return;
+    var main = document.createElement("main");
+    main.className = "post-main";
+    main.id = "post-main";
+    var wrap = document.createElement("div");
+    wrap.id = "post-body";
+    var kids = [].slice.call(document.body.childNodes);
+    for (var i = 0; i < kids.length; i++) {
+      var n = kids[i];
+      if (n.nodeType === 1 && (n.tagName === "SCRIPT" || n.id === "site-nav" || n.id === "cbk-catalog-error")) continue;
+      wrap.appendChild(n);
+    }
+    main.appendChild(wrap);
+    document.body.insertBefore(main, document.body.firstChild);
+  }
+  ensurePostShell();
+  document.body.classList.add("cbk-post");
+
+  /* 레거시 글에는 head 인라인 테마 스크립트도, site.js 도 없다. 한 번만 붙인다.
+   * (site.css 는 레거시 글이 정적으로 링크하는 nav.css 가 @import 한다.) */
+  if (!window.CBK_site && !document.querySelector('script[src$="site.js"]')) {
+    var siteJs = document.createElement("script");
+    siteJs.src = ASSETS + "site.js";
+    document.body.appendChild(siteJs);
+  }
+
+  /* ---------- 사이트 헤더 + 전체 글 서랍 ---------- */
   function buildItems() {
     return POSTS.map(function (p) {
       var active = p.file === current ? " active" : "";
-      var star = (CBK && CBK.isBookmarked(CBK.slugOf(p.file))) ? "★ " : "";
+      var star = (CBK && CBK.isBookmarked(CBK.slugOf(p.file))) ? '<span class="nav-star" aria-hidden="true">★</span><span class="sr-only">즐겨찾기 </span>' : "";
       return (
-        '<li><a class="nav-link' + active + '" href="' + hrefFor(p.file) + '">' +
-          star + (p.nav || p.title) +
-          '<span class="nav-date">' + p.date + "</span>" +
+        '<li><a class="nav-link' + active + '" href="' + hrefFor(p.file) + '"' +
+          (active ? ' aria-current="page"' : "") + ">" +
+          '<span class="nav-title">' + star + esc(p.nav || p.title) + "</span>" +
+          '<span class="nav-date">' + esc(p.date) + "</span>" +
         "</a></li>"
       );
     }).join("");
@@ -56,7 +103,7 @@
     var favCount = CBK.bookmarkedSlugs().length;
     return (
       '<div class="nav-tools">' +
-        '<a class="nav-library" href="' + BASE + 'library.html">📑 보관함' +
+        '<a class="nav-library site-link" href="' + BASE + 'library.html">보관함' +
           (favCount ? ' <span class="nav-count">' + favCount + "</span>" : "") +
         "</a>" +
       "</div>"
@@ -65,55 +112,194 @@
 
   var nav = document.createElement("nav");
   nav.id = "site-nav";
+  nav.className = "site-header";
+  nav.setAttribute("aria-label", "사이트");
   nav.innerHTML =
-    '<a class="nav-brand" href="' + BASE + 'index.html">Claude 블로그 한글 번역</a>' +
-    '<a class="nav-home" href="' + BASE + 'index.html">← 메인으로</a>' +
-    '<div class="nav-heading">다른 글</div>' +
-    "<ul>" + buildItems() + "</ul>" +
-    buildTools();
+    '<div class="site-header-inner">' +
+      '<a class="nav-brand site-brand" href="' + BASE + 'index.html">' +
+        '<span class="brand-mark" aria-hidden="true">KR</span>' +
+        '<span class="brand-text">Claude 블로그<span class="brand-sub"> 한글 번역</span></span>' +
+      "</a>" +
+      '<div class="site-links">' +
+        '<a class="nav-home site-link" href="' + BASE + 'index.html">홈</a>' +
+        buildTools() +
+      "</div>" +
+      '<div class="site-actions">' +
+        '<button type="button" class="icon-btn theme-toggle" data-theme-toggle aria-label="테마 전환">' +
+          ICON.moon + ICON.sun + "</button>" +
+      "</div>" +
+    "</div>" +
+    '<div class="nav-drawer" id="site-nav-drawer" role="dialog" aria-modal="true" aria-label="전체 글 목록">' +
+      '<div class="nav-drawer-head">' +
+        '<span class="nav-heading label">전체 글</span>' +
+        '<span class="nav-drawer-count label">' + (POSTS.length || "") + "</span>" +
+      "</div>" +
+      "<ul>" + buildItems() + "</ul>" +
+    "</div>" +
+    '<div class="nav-backdrop" aria-hidden="true"></div>';
 
+  var placeholder = document.getElementById("site-nav-placeholder");
+  if (placeholder && placeholder.parentNode) placeholder.parentNode.removeChild(placeholder);
   document.body.insertBefore(nav, document.body.firstChild);
+  if (window.CBK_site && window.CBK_site.paint) window.CBK_site.paint();
 
   /* re-render sidebar stars + favorite count after a background sync pull */
   function refreshSidebar() {
     var ul = nav.querySelector("ul");
     if (ul) ul.innerHTML = buildItems();
+    var cnt = nav.querySelector(".nav-drawer-count");
+    if (cnt) cnt.textContent = POSTS.length || "";
     var toolsEl = nav.querySelector(".nav-tools");
     var html = buildTools();
     if (toolsEl) {
       if (html) toolsEl.outerHTML = html;
       else toolsEl.parentNode.removeChild(toolsEl);
     } else if (html) {
-      nav.insertAdjacentHTML("beforeend", html);
+      var links = nav.querySelector(".site-links");
+      if (links) links.insertAdjacentHTML("beforeend", html);
+      else nav.insertAdjacentHTML("beforeend", html);
     }
+  }
+
+  /* 글 머리(<header>)는 본문 안의 것만 본다 — 사이트 헤더와 헷갈리지 않게. */
+  function postHeader() {
+    return document.querySelector("#post-body header") || document.querySelector("header");
   }
 
   /* ---------- breadcrumb (메인 › 서브 › 제목) ---------- */
   function buildCrumb() {
     var meta = window.CBK_postBySlug ? window.CBK_postBySlug(slug) : null;
-    var header = document.querySelector("header");
+    var header = postHeader();
     if (!meta || !header) return;
     if (document.querySelector(".post-crumb")) return;   // 갱신 시 중복 삽입 방지
     function enc(s) { return encodeURIComponent(s); }
-    function esc(s) {
-      return String(s).replace(/[&<>"]/g, function (c) {
-        return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
-      });
-    }
     var crumb = document.createElement("nav");
     crumb.className = "post-crumb";
     crumb.setAttribute("aria-label", "breadcrumb");
     crumb.innerHTML =
       '<a href="' + BASE + 'index.html#m=' + enc(meta.main) + '">' + esc(meta.main) + "</a>" +
-      '<span class="post-crumb-sep">›</span>' +
+      '<span class="post-crumb-sep" aria-hidden="true">/</span>' +
       '<a href="' + BASE + 'index.html#m=' + enc(meta.main) + "&c=" + enc(meta.cat) + '">' + esc(meta.cat) + "</a>" +
-      '<span class="post-crumb-sep">›</span>' +
+      '<span class="post-crumb-sep" aria-hidden="true">/</span>' +
       '<span class="post-crumb-cur">' + esc(meta.title) + "</span>";
     header.parentNode.insertBefore(crumb, header);
   }
 
   if (window.CBK_onCatalog) window.CBK_onCatalog(function () { refreshSidebar(); buildCrumb(); });
   else { refreshSidebar(); buildCrumb(); }
+
+  /* ---------- 표: 박스 안에서만 가로 스크롤 ---------- */
+  var postBody = document.getElementById("post-body");
+  function wrapTables() {
+    if (!postBody) return;
+    var tables = postBody.querySelectorAll("table");
+    for (var i = 0; i < tables.length; i++) {
+      var t = tables[i];
+      if (t.closest(".table-scroll, .tbl-wrap, .table-wrap")) continue;
+      var w = document.createElement("div");
+      w.className = "table-scroll";
+      t.parentNode.insertBefore(w, t);
+      w.appendChild(t);
+    }
+    // 키보드로도 가로 스크롤할 수 있게 스크롤 박스를 포커스 가능하게 한다.
+    var boxes = postBody.querySelectorAll(".table-scroll, .tbl-wrap, .table-wrap, pre");
+    for (var j = 0; j < boxes.length; j++) {
+      var b = boxes[j];
+      if (b.scrollWidth > b.clientWidth + 1 && !b.hasAttribute("tabindex")) {
+        b.setAttribute("tabindex", "0");
+        if (b.tagName !== "PRE") { b.setAttribute("role", "region"); b.setAttribute("aria-label", "가로로 스크롤되는 표"); }
+      }
+    }
+  }
+  wrapTables();
+  // 웹폰트가 늦게 도착하거나 화면 폭이 바뀌면 넘침 여부가 달라진다 — 다시 잰다.
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(wrapTables);
+  var resizeT = null;
+  window.addEventListener("resize", function () { clearTimeout(resizeT); resizeT = setTimeout(wrapTables, 200); });
+
+  /* ---------- 목차 ----------
+   * h2 가 2개 이상일 때만 만든다. id 가 없으면 제목 텍스트로 만든다(중복은 -2, -3…).
+   * 데스크톱(≥1080px)은 왼쪽 고정 열(.post-toc), 그보다 좁으면 본문 위 접이식(.post-toc-m). */
+  function slugify(t) {
+    var s = String(t).trim().toLowerCase()
+      .replace(/\s+/g, "-")
+      .replace(/[^0-9a-z\-_ㄱ-ㆎ가-힣]/g, "")
+      .replace(/-+/g, "-").replace(/^-|-$/g, "");
+    return s || "section";
+  }
+  function buildToc() {
+    if (!postBody || document.querySelector(".post-toc")) return;
+    var all = postBody.querySelectorAll("h2, h3");
+    var hs = [], h2n = 0;
+    for (var i = 0; i < all.length; i++) {
+      if (all[i].closest("header, footer")) continue;
+      if (!all[i].textContent.trim()) continue;
+      hs.push(all[i]);
+      if (all[i].tagName === "H2") h2n++;
+    }
+    if (h2n < 2) return;
+    var items = "";
+    for (var k = 0; k < hs.length; k++) {
+      var h = hs[k];
+      if (!h.id) {
+        var base = slugify(h.textContent), id = base, n = 2;
+        while (document.getElementById(id)) id = base + "-" + (n++);
+        h.id = id;
+      }
+      items += '<li class="toc-' + h.tagName.toLowerCase() + '"><a href="#' + encodeURIComponent(h.id) +
+        '" data-target="' + esc(h.id) + '">' + esc(h.textContent.trim().replace(/\s+/g, " ")) + "</a></li>";
+    }
+    var aside = document.createElement("nav");
+    aside.className = "post-toc";
+    aside.setAttribute("aria-label", "목차");
+    aside.innerHTML = '<p class="toc-label label">목차</p><ol>' + items + "</ol>";
+    postBody.parentNode.insertBefore(aside, postBody);
+
+    var details = document.createElement("details");
+    details.className = "post-toc-m";
+    details.innerHTML = '<summary><span class="label">목차</span><span class="toc-count label">' + hs.length + "</span></summary><ol>" + items + "</ol>";
+    var header = postHeader();
+    if (header && postBody.contains(header)) header.parentNode.insertBefore(details, header.nextSibling);
+    else postBody.insertBefore(details, postBody.firstChild);
+
+    document.body.classList.add("has-toc");
+
+    var links = document.querySelectorAll(".post-toc a, .post-toc-m a");
+    var activeId = "";
+    function setActive(id) {
+      if (id === activeId) return;
+      activeId = id;
+      for (var i = 0; i < links.length; i++) {
+        var on = links[i].getAttribute("data-target") === id;
+        links[i].classList.toggle("active", on);
+        if (on) links[i].setAttribute("aria-current", "location"); else links[i].removeAttribute("aria-current");
+      }
+    }
+    var ticking = false;
+    function onScroll() {
+      if (ticking) return;
+      ticking = true;
+      (window.requestAnimationFrame || setTimeout)(function () {
+        ticking = false;
+        var id = hs[0].id;
+        for (var i = 0; i < hs.length; i++) {
+          if (hs[i].getBoundingClientRect().top <= 120) id = hs[i].id; else break;
+        }
+        setActive(id);
+      });
+    }
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+
+    // 목차 id 는 렌더 뒤에 생기므로, 주소에 #id 가 있으면 여기서 이동한다.
+    if (location.hash) {
+      var raw = location.hash.slice(1), want = raw;
+      try { want = decodeURIComponent(raw); } catch (e) { /* 잘못된 % 이스케이프 — 원문 그대로 찾는다 */ }
+      var target = document.getElementById(want);
+      if (target && target.scrollIntoView) target.scrollIntoView();
+    }
+  }
+  buildToc();
 
   /* ---------- per-post bookmark + note bar ---------- */
   if (!CBK) return;
@@ -138,23 +324,24 @@
     "</button>" +
     '<span class="cbk-rate">' +
       '<button type="button" id="cbk-like" class="cbk-like' + (rating === 1 ? " on" : "") +
-        '" aria-pressed="' + (rating === 1) + '" title="좋아요">👍' +
+        '" aria-pressed="' + (rating === 1) + '" title="좋아요">' + ICON.up +
         '<span class="cbk-rate-label">좋아요</span></button>' +
       '<button type="button" id="cbk-dislike" class="cbk-dislike' + (rating === -1 ? " on" : "") +
-        '" aria-pressed="' + (rating === -1) + '" title="별로예요">👎' +
+        '" aria-pressed="' + (rating === -1) + '" title="별로예요">' + ICON.down +
         '<span class="cbk-rate-label">별로</span></button>' +
     "</span>" +
     '<span id="cbk-reason-status" class="cbk-status"></span>' +
     '<span id="cbk-sync-status" class="cbk-status"></span>' +
-    '<a class="cbk-library" href="' + BASE + 'library.html">📑 보관함</a>' +
+    '<a class="cbk-library" href="' + BASE + 'library.html">보관함 →</a>' +
     '<div id="cbk-reason-wrap" class="cbk-reason-wrap"' + (reasonOpen ? "" : " hidden") + ">" +
       '<textarea id="cbk-reason" class="cbk-reason" ' +
         'placeholder="왜 이렇게 평가했나요? — 이 이유가 나중에 취향 학습에 쓰입니다."></textarea>' +
       '<div class="cbk-note-hint">평가 이유 · 자동 저장됨</div>' +
     "</div>";
 
-  var header = document.querySelector("header");
+  var header = postHeader();
   if (header && header.parentNode) header.parentNode.insertBefore(bar, header.nextSibling);
+  else if (postBody) postBody.insertBefore(bar, postBody.firstChild);
   else document.body.insertBefore(bar, nav.nextSibling);
 
   /* ---------- 메모: Notion-style docked note panel (right sidebar) ----------
@@ -167,10 +354,10 @@
   panel.setAttribute("aria-label", "이 글에 대한 메모");
   panel.innerHTML =
     '<div class="cbk-note-head">' +
-      '<span class="cbk-note-title">📝 메모</span>' +
+      '<span class="cbk-note-title">' + ICON.note + '메모</span>' +
       '<span id="cbk-note-status" class="cbk-status"></span>' +
       '<button type="button" id="cbk-note-close" class="cbk-note-close" ' +
-        'aria-label="메모 닫기" title="닫기">✕</button>' +
+        'aria-label="메모 닫기" title="닫기">' + ICON.close + '</button>' +
     "</div>" +
     '<textarea id="cbk-note" class="cbk-note" ' +
       'placeholder="이 글에 대한 메모를 남겨보세요 — 이 브라우저에 자동 저장됩니다."></textarea>' +
@@ -185,7 +372,8 @@
   fab.id = "cbk-note-fab";
   fab.className = "cbk-note-fab" + (note ? " has-note" : "");
   fab.setAttribute("aria-expanded", "false");
-  fab.innerHTML = '<span class="cbk-fab-icon">📝</span>' +
+  fab.setAttribute("aria-label", "메모");
+  fab.innerHTML = '<span class="cbk-fab-icon">' + ICON.note + '</span>' +
     '<span class="cbk-fab-label">메모</span><span class="cbk-dot"></span>';
 
   document.body.appendChild(panel);
