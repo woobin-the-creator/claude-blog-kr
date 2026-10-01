@@ -4,7 +4,9 @@
  */
 import { chromium } from "playwright";
 import { createRequire } from "node:module";
-import { startServer, wire, fixtures, PAGES, WIDTHS, viewport, settle, overflowReport } from "./harness.mjs";
+import fs from "node:fs";
+import path from "node:path";
+import { startServer, wire, fixtures, PAGES, WIDTHS, viewport, settle, overflowReport, REPO } from "./harness.mjs";
 
 const require = createRequire(import.meta.url);
 const AXE = require.resolve("axe-core/axe.min.js");
@@ -131,6 +133,10 @@ try {
     const box = await page.locator("#site-nav .nav-drawer").boundingBox();
     ok("서랍: 화면 안에 보인다", box && box.x >= 0 && box.x + box.width <= 1281 && box.height > 300, JSON.stringify(box));
     ok("서랍: 현재 글이 강조된다", await page.locator("#site-nav .nav-link.active").count() === 1);
+    for (let i = 0; i < 6; i++) await page.keyboard.press("Shift+Tab");
+    ok("서랍: Tab 포커스가 서랍 밖으로 안 나간다", await page.evaluate(() => {
+      const a = document.activeElement; return !!a && (!!a.closest(".nav-drawer") || a.classList.contains("nav-toggle"));
+    }));
     await page.keyboard.press("Escape");
     ok("서랍: Esc 로 닫힘", await page.locator("#site-nav.nav-open").count() === 0);
     await page.click("#site-nav .nav-toggle");
@@ -145,6 +151,13 @@ try {
     const top = await page.evaluate((id) => document.getElementById(id).getBoundingClientRect().top, target);
     ok("목차: 링크가 해당 제목으로 이동", top >= 0 && top < 160, "top=" + top);
     ok("목차: 이동한 항목이 강조된다", (await page.locator(".post-toc a.active").getAttribute("data-target")) === target);
+    await page.close();
+  }
+  // 잘못된 % 이스케이프 해시도 글 페이지 UI 를 깨지 않는다
+  {
+    const { page, errors } = await open("post.html?slug=" + SLUG + "#100%", { ctx });
+    await settle(page, "post");
+    ok("글: 잘못된 해시에도 평가 바·목차가 그려진다", await page.locator(".cbk-bar").count() === 1 && await page.locator(".post-toc").count() === 1, errors.join(" | "));
     await page.close();
   }
   // 홈: 즐겨찾기만 보기
@@ -268,6 +281,19 @@ try {
       await settle(pm, "post");
       const r = await overflowReport(pm);
       ok(`스윕 ${s} 375: 가로 스크롤 없음`, r.scrollWidth <= r.clientWidth && r.offenders.length === 0, r.offenders.join(" "));
+    }
+    // 레거시 정적 URL(posts/<slug>.html): 인라인 CSS 가 layer 밖이라 특이도로만 이긴다 — 따로 훑는다.
+    console.log("· 레거시 정적 글 스윕(다크 대비 · 375 가로 스크롤)");
+    for (const s of slugs) {
+      if (!fs.existsSync(path.join(REPO, "posts", s + ".html"))) continue;
+      await pd.goto(base + "posts/" + encodeURIComponent(s) + ".html");
+      await settle(pd, "legacy");
+      const v = await contrast(pd);
+      ok(`레거시 ${s} 다크: 대비 위반 0`, v.length === 0, v.slice(0, 3).join(" || "));
+      await pm.goto(base + "posts/" + encodeURIComponent(s) + ".html");
+      await settle(pm, "legacy");
+      const r = await overflowReport(pm);
+      ok(`레거시 ${s} 375: 가로 스크롤 없음`, r.scrollWidth <= r.clientWidth && r.offenders.length === 0, r.offenders.join(" "));
     }
     await cd.close();
     await cl.close();
