@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "claude-code-mods.html", date: "2026-10-01", main: "Claude blog", cat: "Product announcements",
+      title: "TypeScript 모드(mod)로 Claude Code 커스터마이즈하기", nav: "Claude Code 모드(mod) · TypeScript 함수로 프롬프트·UI·내장 기능 교체, sec-default" },
     { file: "how-anthropics-sales-team-rebuilt-inbound-with-claude-managed-agents.html", date: "2026-09-30", main: "Claude blog", cat: "Enterprise AI",
       title: "Anthropic 영업팀은 Claude Managed Agents로 인바운드를 어떻게 다시 만들었나", nav: "Anthropic 영업팀 구매 에이전트 · Managed Agents로 인바운드 재구축·전환 2배·5일 빠른 성사" },
     { file: "claude-for-government-is-now-generally-available.html", date: "2026-09-30", main: "Claude blog", cat: "Product announcements",
