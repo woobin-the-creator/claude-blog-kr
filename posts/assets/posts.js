@@ -242,7 +242,9 @@
     { file: "lessons-from-building-claude-code-prompt-caching-is-everything.html", date: "2026-04-30", main: "claude.dev", cat: "Engineering",
       title: "Claude Code를 만들며 배운 것: 프롬프트 캐싱이 전부다", nav: "프롬프트 캐싱이 전부다 · 접두어 순서·메시지로 갱신·도구/모델 고정·캐시 안전 컴팩션 포크" },
     { file: "opus-4-6-hackathon-winners.html", date: "2026-04-20", main: "Claude blog", cat: "Claude Code · 해커톤",
-      title: "Built with Opus 4.6 Claude Code 해커톤 우승팀을 소개합니다", nav: "Built with Opus 4.6 해커톤" }
+      title: "Built with Opus 4.6 Claude Code 해커톤 우승팀을 소개합니다", nav: "Built with Opus 4.6 해커톤" },
+    { file: "seeing-like-an-agent.html", date: "2026-04-10", main: "claude.dev", cat: "Agents",
+      title: "에이전트처럼 보기: Claude Code에서 도구를 설계하는 방법", nav: "에이전트처럼 보기 · AskUserQuestion·Task 도구·점진적 공개로 본 Claude Code 도구 설계" }
   ];
 
   /* file 또는 slug(확장자 없는 파일명)로 포스트 1건 조회. 없으면 null. */
