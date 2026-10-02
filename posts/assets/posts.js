@@ -237,6 +237,8 @@
       title: "모든 작업에 맞는 하네스: Claude Code의 다이내믹 워크플로", nav: "다이내믹 워크플로 · agent/parallel/pipeline, 6가지 패턴, ultracode, 토너먼트 정렬·격리 트리아지, /loop·/goal, s로 저장" },
     { file: "how-we-claude-code.html", date: "2026-05-23", main: "Claude Youtube", cat: "Claude Code",
       title: "Claude 팀은 Claude Code를 이렇게 쓴다: 모호성 제거·HTML 기획·통합 검증", nav: "How we Claude Code" },
+    { file: "using-claude-code-the-unreasonable-effectiveness-of-html.html", date: "2026-05-20", main: "claude.dev", cat: "Playbooks",
+      title: "Claude Code 활용하기: HTML의 터무니없는 효과", nav: "HTML의 터무니없는 효과 · Markdown 대신 HTML로 스펙·리뷰·디자인·보고서·편집기 만들기" },
     { file: "opus-4-6-hackathon-winners.html", date: "2026-04-20", main: "Claude blog", cat: "Claude Code · 해커톤",
       title: "Built with Opus 4.6 Claude Code 해커톤 우승팀을 소개합니다", nav: "Built with Opus 4.6 해커톤" }
   ];
