@@ -31,6 +31,8 @@
       title: "Claude Code 사용법: effort를 어디에 쓸 것인가", nav: "effort를 어디에 쓸 것인가 · effort 곡선, 빌드 3종 실험, Terminal-Bench 3.0 엣지 케이스, 수준별 경험칙" },
     { file: "what-a-task-costs-on-opus-5-5.html", date: "2026-09-25", main: "claude.dev", cat: "Playbooks",
       title: "Opus 5.5에서 작업 하나는 얼마가 드나", nav: "Opus 5.5 작업 비용 · 턴·캐시·출력·모델 4요소, effort 사다리, 캐시 깨는 행동, /usage로 직접 재기" },
+    { file: "how-we-made-claude-ai-faster.html", date: "2026-09-23", main: "claude.dev", cat: "Engineering",
+      title: "우리는 어떻게 2주 만에 claude.ai를 3배 빠르게 만들었나", nav: "claude.ai 3배 빠르게 · Slack 스레드 150개 루프, 명령어 수 래칫, 정적 composer, 8.33ms 프레임 예산" },
     { file: "working-at-the-frontier-how-balyasny-asset-management-evaluates-and-governs-claude-fable-5.html", date: "2026-09-17", main: "Claude blog", cat: "Enterprise AI",
       title: "프런티어에서 일하기: Balyasny Asset Management는 Claude Fable 5를 어떻게 평가하고 관리하는가", nav: "BAM × Claude Fable 5 · 수천 개 금융 과제 평가와 BAMAgent 거버넌스" },
     { file: "projects-redesigned.html", date: "2026-09-17", main: "Claude blog", cat: "Product announcements",
