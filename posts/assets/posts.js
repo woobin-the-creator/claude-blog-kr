@@ -27,6 +27,8 @@
       title: "NVIDIA와 함께, 기업이 AI 에이전트를 더 강하게 통제할 수 있도록", nav: "NVIDIA × Managed Agents · OpenShell로 에이전트 권한 통제" },
     { file: "building-with-claude-sonnet-5-5.html", date: "2026-09-28", main: "claude.dev", cat: "Playbooks",
       title: "Claude Sonnet 5.5로 개발하기", nav: "Claude Sonnet 5.5로 개발하기 · Opus와 고르는 기준, 가격, Sonnet 5 마이그레이션, 튜닝" },
+    { file: "what-a-task-costs-on-opus-5-5.html", date: "2026-09-25", main: "claude.dev", cat: "Playbooks",
+      title: "Opus 5.5에서 작업 하나는 얼마가 드나", nav: "Opus 5.5 작업 비용 · 턴·캐시·출력·모델 4요소, effort 사다리, 캐시 깨는 행동, /usage로 직접 재기" },
     { file: "working-at-the-frontier-how-balyasny-asset-management-evaluates-and-governs-claude-fable-5.html", date: "2026-09-17", main: "Claude blog", cat: "Enterprise AI",
       title: "프런티어에서 일하기: Balyasny Asset Management는 Claude Fable 5를 어떻게 평가하고 관리하는가", nav: "BAM × Claude Fable 5 · 수천 개 금융 과제 평가와 BAMAgent 거버넌스" },
     { file: "projects-redesigned.html", date: "2026-09-17", main: "Claude blog", cat: "Product announcements",
