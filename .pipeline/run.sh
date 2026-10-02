@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Daily pipeline: detect new claude.com/blog posts -> translate+deploy via the
+# Daily pipeline: detect new claude.com/blog and claude.dev posts -> translate+deploy via the
 # claude-blog-translate-ko skill -> notify on Telegram.
 set -uo pipefail
 
@@ -52,15 +52,26 @@ if [ -z "$NEW" ]; then
 fi
 echo "new posts:"; echo "$NEW"
 
-while IFS= read -r slug; do
-  [ -z "$slug" ] && continue
-  url="https://claude.com/blog/$slug"
-  echo "--- translating $slug ---"
+while IFS=$'\t' read -r url cat; do
+  [ -z "$url" ] && continue
+  slug="${url##*/}"
+  echo "--- translating $url ---"
+
+  case "$url" in
+    https://claude.dev/*)
+      label="claude.dev"
+      source_note="This post is from claude.dev, Anthropic's developer blog (a Next.js site), not claude.com's Webflow blog. The skill's extract_media.py still finds its images and <video> clips, but returns site-relative /media/... paths (prefix https://claude.dev) and also lists the site logo /shared/img/clawd-mark.png, which is not content. Download the content images and the mp4 clips (small, a few hundred KB) under posts/assets/${slug}/ and embed each clip with <video controls muted playsinline loop poster=...>, keeping its aria-label as the caption.
+Catalog entry: main \"claude.dev\", cat \"${cat}\", date = the post's own publish date (not today), and credit the original author(s) in the post meta line." ;;
+    *)
+      label="Claude 블로그"
+      source_note="Catalog entry: main \"Claude blog\"; take cat from the post's category on claude.com." ;;
+  esac
 
   prompt="Use the claude-blog-translate-ko skill to translate the post at ${url} into Korean and deploy it to the existing GitHub Pages repo at ${REPO}.
 The repo is already set up: index.html, posts/, and posts/assets/nav.{css,js} all exist.
 IMPORTANT: name the generated post file exactly posts/${slug}.html (use the blog slug as the filename) and put its downloaded media under posts/assets/${slug}/.
-Translate faithfully (no summarizing), carry over every image, YouTube embed, and hyperlink, register the post as the first entry of CBK_POSTS in posts/assets/posts.js (the single catalog for index, sidebar, and breadcrumb), then commit and push to origin main.
+Translate faithfully (no summarizing), carry over every image, video, YouTube embed, and hyperlink, register the post in CBK_POSTS in posts/assets/posts.js (the single catalog for index, sidebar, and breadcrumb; keep it sorted by date, newest first), then commit and push to origin main.
+${source_note}
 Work autonomously; do not ask questions."
 
   # A claude -p that hangs at startup never exits on its own (2026-10-02: idle
@@ -74,13 +85,13 @@ Work autonomously; do not ask questions."
       [ "$code" = "200" ] && { live=1; break; }
       sleep 8
     done
-    title="$(curl -s "$url" | grep -o '<title>[^<]*</title>' | head -1 | sed -e 's/<[^>]*>//g' -e 's/ | Claude//')"
+    title="$(curl -sL "$url" | grep -o '<title>[^<]*</title>' | head -1 | sed -e 's/<[^>]*>//g' -e 's/ | Claude//' -e 's| / claude\.dev Blog||')"
     [ -z "$title" ] && title="$slug"
     if [ "$live" = "1" ]; then
       echo "live OK: $slug"
       python3 "$PIPE_DIR/mark_seen.py" "$slug"
       git add "$PIPE_DIR/seen.json" && git commit -q -m "pipeline: mark $slug translated" && git push -q origin main 2>/dev/null || true
-      notify "🆕 새 Claude 블로그 글 번역 완료%0A<b>${title}</b>%0A${PAGES_BASE}/posts/${slug}.html"
+      notify "🆕 새 ${label} 글 번역 완료%0A<b>${title}</b>%0A${PAGES_BASE}/posts/${slug}.html"
     else
       echo "deployed but not live yet: $slug"
       notify "⚠️ ${slug} 번역은 됐지만 GitHub Pages 반영이 늦습니다. 잠시 후 확인하세요.%0A${PAGES_BASE}/"
