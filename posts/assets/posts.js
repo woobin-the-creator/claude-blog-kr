@@ -231,6 +231,8 @@
       title: "에이전트 표면의 진화: Claude Managed Agents로 만들기", nav: "Managed Agents로 만들기" },
     { file: "whats-new-in-claude-managed-agents.html", date: "2026-06-09", main: "Claude blog", cat: "Product announcements",
       title: "Claude Managed Agents 새 기능: 일정 실행과 환경 변수 볼트", nav: "관리형 에이전트 새 기능" },
+    { file: "lessons-from-building-claude-code-how-we-use-skills.html", date: "2026-06-03", main: "claude.dev", cat: "Skills",
+      title: "Claude Code를 만들며 배운 것: 우리는 스킬을 어떻게 쓰는가", nav: "스킬 사용법 교훈 · 9가지 스킬 유형, Gotchas 섹션, 점진적 공개, 트리거용 description, 온디맨드 hook, marketplace 운영" },
     { file: "how-we-claude-code.html", date: "2026-05-23", main: "Claude Youtube", cat: "Claude Code",
       title: "Claude 팀은 Claude Code를 이렇게 쓴다: 모호성 제거·HTML 기획·통합 검증", nav: "How we Claude Code" },
     { file: "opus-4-6-hackathon-winners.html", date: "2026-04-20", main: "Claude blog", cat: "Claude Code · 해커톤",
