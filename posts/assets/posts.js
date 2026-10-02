@@ -233,6 +233,8 @@
       title: "Claude Managed Agents 새 기능: 일정 실행과 환경 변수 볼트", nav: "관리형 에이전트 새 기능" },
     { file: "lessons-from-building-claude-code-how-we-use-skills.html", date: "2026-06-03", main: "claude.dev", cat: "Skills",
       title: "Claude Code를 만들며 배운 것: 우리는 스킬을 어떻게 쓰는가", nav: "스킬 사용법 교훈 · 9가지 스킬 유형, Gotchas 섹션, 점진적 공개, 트리거용 description, 온디맨드 hook, marketplace 운영" },
+    { file: "a-harness-for-every-task-dynamic-workflows-in-claude-code.html", date: "2026-06-02", main: "claude.dev", cat: "Agents",
+      title: "모든 작업에 맞는 하네스: Claude Code의 다이내믹 워크플로", nav: "다이내믹 워크플로 · agent/parallel/pipeline, 6가지 패턴, ultracode, 토너먼트 정렬·격리 트리아지, /loop·/goal, s로 저장" },
     { file: "how-we-claude-code.html", date: "2026-05-23", main: "Claude Youtube", cat: "Claude Code",
       title: "Claude 팀은 Claude Code를 이렇게 쓴다: 모호성 제거·HTML 기획·통합 검증", nav: "How we Claude Code" },
     { file: "opus-4-6-hackathon-winners.html", date: "2026-04-20", main: "Claude blog", cat: "Claude Code · 해커톤",
