@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Code 모드(mod) 시작하기</title>
+<style>
+  :root { --fg:#1a1a1a; --muted:#666; --line:#e5e5e5; --accent:#c96442; --code-bg:#f6f6f4; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo",
+      "Malgun Gothic", sans-serif;
+    color: var(--fg); line-height: 1.75; max-width: 760px;
+    margin: 0 auto; padding: 48px 24px 96px; background:#fff;
+  }
+  header { border-bottom: 2px solid var(--line); padding-bottom: 24px; margin-bottom: 32px; }
+  h1 { font-size: 1.9rem; line-height: 1.35; margin: 0 0 12px; }
+  .meta { color: var(--muted); font-size: 0.9rem; }
+  .meta .orig { display:block; margin-top:6px; }
+  .meta a { color: var(--accent); text-decoration: none; }
+  h2 { font-size: 1.4rem; margin: 44px 0 8px; padding-top: 8px; }
+  h3 { font-size: 1.15rem; margin: 30px 0 8px; color:#000; }
+  p { margin: 0 0 16px; }
+  a { color: var(--accent); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  blockquote { margin: 16px 0; padding: 8px 18px; border-left:3px solid var(--line);
+    color:#333; font-style: italic; }
+  hr { border: none; border-top: 1px solid var(--line); margin: 40px 0; }
+  code { background: var(--code-bg); padding: 2px 6px; border-radius: 4px;
+    font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 0.88em; }
+  pre { background: var(--code-bg); padding: 16px 18px; border-radius: 8px;
+    overflow-x: auto; margin: 0 0 16px; line-height: 1.5; }
+  pre code { background: none; padding: 0; font-size: 0.85rem; white-space: pre; }
+  table { border-collapse: collapse; width: 100%; margin: 0 0 20px; font-size: 0.95rem; }
+  th, td { border: 1px solid var(--line); padding: 8px 12px; text-align: left; vertical-align: top; }
+  th { background: var(--code-bg); }
+  figure { margin: 24px 0; }
+  figure img { width: 100%; height: auto; border:1px solid var(--line); border-radius: 8px;
+    background:#fff; }
+  figure video { width: 100%; height: auto; border:1px solid var(--line); border-radius: 8px;
+    background:#000; display:block; }
+  figure .surface { color: var(--muted); font-size: 0.8rem; margin: 10px 0 4px;
+    text-transform: uppercase; letter-spacing: 0.04em; }
+  figcaption { color: var(--muted); font-size: 0.85rem; text-align: center;
+    margin-top: 10px; line-height: 1.5; }
+  figcaption b { color: var(--accent); margin-right: 6px; }
+  figcaption a { color: var(--accent); }
+  .chain { background: var(--code-bg); border-radius: 8px; padding: 14px 18px;
+    font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 0.85rem;
+    text-align: center; white-space: pre; overflow-x: auto; }
+  .video { position: relative; width: 100%; padding-top: 56.25%; margin: 24px 0 8px;
+    border-radius: 8px; overflow: hidden; background:#000; }
+  .video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .callout { background:#faf6f4; border-left:3px solid var(--accent);
+    padding: 12px 16px; border-radius: 0 6px 6px 0; margin: 16px 0; }
+  .callout strong { color: var(--accent); }
+  .lede { color:#333; font-size: 1.05rem; }
+  footer { margin-top: 64px; padding-top: 20px; border-top:1px solid var(--line);
+    color: var(--muted); font-size: 0.82rem; }
+</style>
+<link rel="stylesheet" href="assets/nav.css">
+</head>
+<body>
+<header>
+  <h1>Claude Code 모드(mod) 시작하기</h1>
+  <div class="meta">
+    2026년 10월 1일
+    · 카테고리: Tutorials
+    · 글쓴이: Addy Osmani
+    · 출처: <a href="https://claude.dev/blog">claude.dev</a>
+    <span class="orig">원문:
+      <a href="https://claude.dev/blog/getting-started-with-claude-code-mods">Getting started with Claude Code mods</a>
+      (한글 번역본)</span>
+  </div>
+</header>
+
+<p class="lede">빈 폴더에서 첫 Claude Code 모드를 만들어 보고, 그다음 API로 또 무엇을 할 수 있는지 살펴본다.</p>
+
+<p>Claude Code는 이미 동작 방식을 꽤 많이 바꿀 수 있다. 설정(settings), 권한 규칙, 슬래시 명령, 스킬, 상태 표시줄(status line)이 그렇다. 모드(mod)는 여기서 한 걸음 더 나아간다. 모드는 Claude Code가 하는 일을 고쳐 쓰거나 아예 교체할 수 있고, 커스텀 UI를 그릴 수도 있다. 내부적으로 모드는 훅(hook)이며, 플러그인(plugin) 안에 담겨 배포된다. 모드 하나하나는 세션 안에서 실행되며 일어나는 모든 이벤트를 그때그때 지켜보는 작은 JavaScript 또는 TypeScript 모듈이다.</p>
+
+<p>그래서 모드는 Claude Code를 자신의 일하는 방식에 맞추는 수단이 된다. 늘 들여다보는 수치를 표시하는 판을 하나 붙일 수도 있고, 긴장되는 명령 앞에 가드를 세울 수도 있으며, 변경 사항을 자기 취향대로 읽기 위한 리뷰 화면을 만들 수도 있다.</p>
+
+<p>이 가이드는 빈 폴더에서 모드 하나를 만든다. <strong>Token Weather</strong>, 프롬프트 위에 그려지는 컨텍스트 윈도우의 실시간 일기예보다. 80줄 정도다. 그다음 더 큰 모드 두 개, <strong>Blast Radius</strong>와 <strong>Replay Theater</strong>를 둘러보며 API로 또 무엇을 할 수 있는지 보여 준다.</p>
+
+<figure>
+  <div class="surface">Terminal</div>
+  <video controls muted playsinline loop preload="metadata" src="assets/getting-started-with-claude-code-mods/fig-a-terminal.mp4" poster="assets/getting-started-with-claude-code-mods/fig-a-poster.jpg" aria-label="어두운 터미널에서 세 데모 사이에 타이틀 카드가 나온다. Token Weather의 띠가 18% Clear에서 81% Storm으로 올라가고, Blast Radius가 rm -rf build를 붙잡고 삭제될 파일 9개를 보여 주며, Replay Theater가 greet를 welcome으로 바꾸는 과정을 한 단계씩 넘긴다."></video>
+  <div class="surface">Desktop</div>
+  <video controls muted playsinline loop preload="none" src="assets/getting-started-with-claude-code-mods/fig-a-desktop.mp4" poster="assets/getting-started-with-claude-code-mods/fig-a-desktop-poster.jpg" aria-label="Claude 데스크톱 앱의 밝은 Code 탭에서 같은 세 데모 사이에 타이틀 카드가 나온다. Token Weather의 띠가 10% Clear에서 77% Storm으로 올라가고, Blast Radius 카드가 rm -rf build로 삭제될 파일 9개를 나열하며, Replay Theater가 greet를 welcome으로 바꾸는 과정을 한 단계씩 넘긴다."></video>
+  <figcaption><b>FIG A</b>터미널 세션에서 Token Weather, Blast Radius, Replay Theater를 차례로 실행한 모습</figcaption>
+</figure>
+
+<figure>
+  <video controls muted playsinline loop preload="none" src="assets/getting-started-with-claude-code-mods/fig-b-band.mp4" poster="assets/getting-started-with-claude-code-mods/fig-b-band.png" aria-label="한 줄짜리 터미널 띠가 세 가지 예보를 순환한다. Clear는 노란 해, Showers는 파란 우산, Storm은 분홍 번개로, 각각 200k 중 토큰 수와 최근 턴의 작은 막대 차트가 함께 표시된다."></video>
+  <figcaption><b>FIG B</b>컨텍스트 윈도우가 차오르는 동안의 Token Weather 띠: 18% Clear, 67% Showers, 81% Storm</figcaption>
+</figure>
+
+<p><strong>Claude Code 2.1.287 이상이 필요하다.</strong> 모드는 기본으로 켜져 있으므로 따로 켤 것은 없다. API는 릴리스마다 바뀔 수 있다. Claude Code는 모드를 로드할 때마다 해당 빌드의 타입 선언을 모드의 <code>.claude-plugin/types/</code> 폴더에 써 주며, 그것이 여러분 버전의 기준이다.</p>
+
+<h2 id="how-a-mod-works">모드의 동작 방식</h2>
+
+<p>모드는 동작이 JavaScript 또는 TypeScript 모듈에 들어 있는 Claude Code 플러그인이다.</p>
+
+<ul>
+  <li>폴더는 <code>.claude-plugin/plugin.json</code> 매니페스트를 가진 평범한 플러그인이다.</li>
+  <li><code>hooks/hooks.json</code>이 <code>modules</code> 아래에 모듈 하나를 지정한다.</li>
+  <li>모듈은 <code>register(on, options)</code>를 export한다. 그 안에서 <code>on(event, matcher?, hook)</code>이 훅을 추가한다.</li>
+</ul>
+
+<p>모든 훅은 같은 모양이다.</p>
+
+<pre><code>on(&quot;tool.call&quot;, { tool: &quot;Bash&quot; }, async ($, e, next) =&gt; {
+  // $    the mods API: ui, session, state, store, fs, process, clock, http, tool, command, model, ...
+  // e    this event&#x27;s input, as plain data
+  // next passes e to the other plugins and then to Claude Code&#x27;s own behavior
+  return next(e);
+});</code></pre>
+
+<p>훅은 미들웨어처럼 체인(chain)을 이룬다. 여러분의 훅이 실행되고, <code>next(e)</code>가 이벤트를 다음 플러그인에 넘기며, 맨 아래에서 Claude Code가 원래 하려던 일을 한다. 훅은 세 가지 중 하나를 할 수 있다.</p>
+
+<figure>
+  <div class="chain">이벤트  →  [ 내 훅 ]  →  [ 다른 플러그인 ]  →  [ Claude Code ]
+          ←   next(e)   ←     next(e)      ←   결과
+"응답"하는 훅은 next를 호출하지 않고 바로 반환한다</div>
+  <figcaption><b>훅은 체인을 이룬다</b>이벤트는 내 훅, 다른 플러그인, Claude Code 순으로 지나간다. 각 단계는 <code>next(e)</code>를 호출해 이벤트를 넘기고, 결과는 거꾸로 흘러 돌아온다. 응답하는 훅은 next를 호출하지 않고 반환한다. (원문의 다이어그램은 사이트에서 동적으로 그려지는 차트라 여기서는 텍스트로 옮겼다. <a href="https://claude.dev/blog/getting-started-with-claude-code-mods#how-a-mod-works">원문 보기</a>)</figcaption>
+</figure>
+
+<table>
+  <thead><tr><th>동작</th><th>방법</th><th>예시</th></tr></thead>
+  <tbody>
+    <tr><td><strong>관찰(Observe)</strong></td><td><code>const r = await next(e); /* 살펴보기 */ return r</code></td><td>모든 파일 편집을 기록한다. 매 턴이 끝날 때 수치를 읽는다.</td></tr>
+    <tr><td><strong>고쳐 쓰기(Rewrite)</strong></td><td><code>return next({ ...e, command: safer })</code></td><td>체인의 나머지가 보는 내용을 바꾼다.</td></tr>
+    <tr><td><strong>응답(Answer)</strong></td><td><code>next</code>를 호출하지 않고 <code>return { deny: "…" }</code></td><td>도구 호출을 거부한다. 명령이나 도구를 직접 처리한다.</td></tr>
+  </tbody>
+</table>
+
+<p>이벤트는 도구 호출, 제출된 프롬프트, 턴의 시작과 종료, 세션의 시작과 종료, 슬래시 명령, 그리고 <code>ui.render</code>, 즉 인터페이스의 모든 조각이 그려지는 순간까지 아우른다. 모듈은 DOM도 Node도 없는 자체 샌드박스 안에서 실행되므로, 바깥 세계와의 모든 상호작용은 <code>$</code>를 거친다.</p>
+
+<p><strong>설정 훅(settings hook)과 다른 점.</strong> 설정 훅은 이벤트마다 셸 명령을 실행하고 stdin과 stdout으로 JSON을 주고받는다. 모드는 한 번 로드되면 세션에 계속 머문다. 상태를 유지할 수 있고, 이벤트가 일어날 때마다 갱신되는 UI를 그릴 수 있으며, Claude Code를 거꾸로 호출할 수도 있다. 창(pane)을 열고, 프로세스를 실행하고, 슬래시 명령을 등록하고, 모델이 호출할 수 있는 도구를 등록하는 식이다.</p>
+
+<p><strong>Claude Code 자신도 모드를 쓴다.</strong> AGENTS.md 지원과 대화 옆의 <code>/diff</code> 창을 비롯한 Claude Code의 일부 기능은 모드로 만들어져 있다. 테스트까지 포함한 소스가 공개 저장소 <a href="https://github.com/anthropics/claude-code">anthropics/claude-code</a>의 <code>mods/</code> 아래에 있으니, 팀이 모드를 어떻게 만드는지 읽어 볼 수 있다.</p>
+
+<h2 id="build-your-first-mod-token-weather">첫 모드 만들기: Token Weather</h2>
+
+<p>Token Weather는 매 턴이 끝난 뒤 컨텍스트 윈도우가 얼마나 찼는지 읽어서 프롬프트 위에 한 줄을 그린다. 날씨 아이콘, 퍼센트, 윈도우 대비 사용 토큰 수, 최근 턴의 작은 차트, 그리고 마지막 턴이 얼마나 더했는지가 들어간다.</p>
+
+<table>
+  <thead><tr><th>사용량</th><th>예보</th></tr></thead>
+  <tbody>
+    <tr><td>25% 미만</td><td>☀ Clear</td></tr>
+    <tr><td>25–49%</td><td>☁ Cloudy</td></tr>
+    <tr><td>50–74%</td><td>☂ Showers</td></tr>
+    <tr><td>75–89%</td><td>☇ Storm</td></tr>
+    <tr><td>90% 이상</td><td>↯ Compact soon</td></tr>
+  </tbody>
+</table>
+
+<p>실제 세션에서의 모습이다. 턴마다 더 많은 파일을 읽고, 띠는 ☀ Clear에서 ☂ Showers를 거쳐 ☇ Storm으로 차오른다.</p>
+
+<figure>
+  <div class="surface">Terminal</div>
+  <video controls muted playsinline loop preload="metadata" src="assets/getting-started-with-claude-code-mods/fig-c-terminal.mp4" poster="assets/getting-started-with-claude-code-mods/fig-c-poster.jpg" aria-label="어두운 터미널 창에서 턴마다 Claude에게 더 많은 Python 파일을 읽게 하는 동안, 프롬프트 위의 띠가 노란 Clear에서 파란 Showers, 분홍 Storm으로 바뀐다."></video>
+  <div class="surface">Desktop</div>
+  <video controls muted playsinline loop preload="none" src="assets/getting-started-with-claude-code-mods/fig-c-desktop.mp4" poster="assets/getting-started-with-claude-code-mods/fig-c-desktop-poster.jpg" aria-label="Claude 데스크톱 앱의 밝은 Code 탭에서 턴마다 Claude에게 기상 관측소 서비스와 그 로그·측정값, 그다음 테스트를 더 읽게 하는 동안, 프롬프트 상자 위의 띠가 노란 Clear에서 파란 Showers, 분홍 Storm으로 바뀐다."></video>
+  <figcaption><b>FIG C</b>세 턴에 걸친 전체 터미널 세션의 Token Weather: 200k 윈도우의 18%, 67%, 81%</figcaption>
+</figure>
+
+<h3 id="the-shortcut-let-claude-build-it">지름길: Claude에게 만들게 하기</h3>
+
+<p>여섯 단계를 건너뛸 수도 있다. Claude Code는 모드를 작성하는 법을 알고 있으니, 원하는 모드를 설명하고 작업을 맡기면 된다. <code>claude</code>로 세션을 시작하고 아래 프롬프트를 붙여 넣자.</p>
+
+<pre><code>Make me a Claude Code mod called token-weather: a live forecast of my context window, shown in the band above the prompt.
+What it should show, on one line:
+- A weather icon and word for how full the context window is: under 25% ☀ Clear (yellow), 25–49% ☁ Cloudy (cyan), 50–74% ☂ Showers (blue), 75–89% ☇ Storm (magenta), 90% and up ↯ Compact soon (red).
+- The percentage used, then the tokens used out of the window, like &quot;134.4k / 200k&quot;.
+- A small chart of the last 12 turns, drawn with ▁▂▃▄▅▆▇█.
+- How much the last turn added, like &quot;▲ +98.3k last turn&quot;.
+It should update after every turn.</code></pre>
+
+<p>Claude가 세션에 핫 리로딩(hot reloading)을 켤지 한 번 묻는다. 허용하면 Claude의 턴이 끝날 때 프롬프트 위에 띠가 나타난다. 그 뒤로는 모든 변경이 제자리에서 리로드되므로, 계속 수정을 요청하면서("Storm을 70%부터 시작하게 해 줘", "끝에 달러 비용을 붙여 줘") 띠가 바뀌는 걸 지켜볼 수 있다. 이 모드는 이번 세션에만 로드되며 폴더는 나중에 정리되므로, 남겨 두려면 폴더를 복사해 두고 여느 플러그인처럼 설치하면 된다(<a href="#step-6-share-it">6단계</a>).</p>
+
+<p>프롬프트가 보고 싶은 것만 설명한다는 점에 주목하자. 모드를 쓰기 위해 API를 알 필요는 없다. Claude Code에 내장된 모드 작성 가이드가 "어떻게"를 다룬다. 리로드 뒤에도 살아남도록 상태를 어디에 둘지, <code>claude plugin validate</code>로 플러그인을 어떻게 검사할지, 어떤 이벤트에 훅을 걸지 같은 것들이다. "What it should show" 줄들을 바꾸면 그건 우리 모드가 아니라 여러분의 모드가 된다.</p>
+
+<p>어떻게 조립되는지 먼저 보고 싶거나 Claude가 쓴 것을 검토하고 싶다면 계속 읽어 보자.</p>
+
+<h3 id="step-1-create-the-folder">1단계: 폴더 만들기</h3>
+
+<p>Claude Code가 충분히 새 버전인지 확인한다.</p>
+
+<pre><code>claude --version   # 2.1.287 or later</code></pre>
+
+<p>다음 구조를 만든다.</p>
+
+<pre><code>token-weather/
+├── .claude-plugin/
+│   ├── plugin.json
+│   └── types/            (written by Claude Code when it loads the mod)
+├── hooks/
+│   ├── hooks.json
+│   └── token-weather.mjs
+├── types/
+│   └── index.d.ts        (added in step 3)
+└── tests/
+    └── token-weather.test.ts   (added in step 5)</code></pre>
+
+<p><code>.claude-plugin/plugin.json</code>은 표준 플러그인 매니페스트다.</p>
+
+<pre><code>{
+  &quot;name&quot;: &quot;token-weather&quot;,
+  &quot;version&quot;: &quot;0.1.0&quot;,
+  &quot;description&quot;: &quot;A live forecast of the context window, drawn above the prompt.&quot;,
+  &quot;author&quot;: { &quot;name&quot;: &quot;You&quot; }
+}</code></pre>
+
+<p><code>hooks/hooks.json</code>은 모듈을 가리킨다. 모드에는 정확히 하나가 있다.</p>
+
+<pre><code>{
+  &quot;modules&quot;: [&quot;./token-weather.mjs&quot;]
+}</code></pre>
+
+<h3 id="step-2-draw-something">2단계: 무언가 그리기</h3>
+
+<p>프롬프트 바로 위의 띠는 <code>AbovePrompt</code>라는 컴포넌트다. Claude Code는 거기에 아무것도 직접 그리지 않으므로 첫 목표로 알맞다. 그 <code>ui.render</code> 이벤트에 훅을 걸고 요소 트리를 반환한다.</p>
+
+<pre><code>// hooks/token-weather.mjs
+export function register(on) {
+  on(&quot;ui.render&quot;, { component: &quot;AbovePrompt&quot; }, ($, e, next) =&gt; {
+    const { Box, Text } = $.ui.resolve(e);
+    return Box({
+      paddingX: 1,
+      children: [Text({ color: &quot;yellow&quot;, bold: true, children: &quot;☀  Clear skies&quot; })],
+    });
+  });
+}</code></pre>
+
+<p>요소는 전역이 아니다. Claude Code가 그리는 표면(surface)마다 지원하는 요소 집합이 조금씩 다르기 때문에, <code>$.ui.resolve(e)</code>가 지금 그려지는 표면용 생성자를 돌려준다. <code>h</code>를 팩토리로 삼으면 JSX도 된다.</p>
+
+<p>플러그인을 로드한 채 세션을 시작한다.</p>
+
+<pre><code>claude --plugin-dir ./token-weather</code></pre>
+
+<p>프롬프트 위에 "☀ Clear skies"가 나타난다. 세션은 열어 두자. 폴더가 감시되고 있어서 저장할 때마다 재시작 없이 모듈이 제자리에서 리로드된다. 이 빠른 피드백 루프가 모드 작성을 재미있게 만드는 요소의 대부분이다.</p>
+
+<div class="callout"><strong>팁:</strong> 모양을 익혔다면 다음 모드는 <a href="#the-shortcut-let-claude-build-it">지름길</a>에서처럼 Claude에게 설명해 보자. 같은 세션에서 핫 리로드되는 폴더에 플러그인을 써 준다.</div>
+
+<h3 id="step-3-read-real-numbers-and-keep-them-in-state">3단계: 실제 수치를 읽고 <code>$.state</code>에 보관하기</h3>
+
+<p><code>$.session.usage()</code>는 상태 표시줄과 같은 수치를 돌려준다. <code>context.tokens</code>는 마지막 응답이 답한 입력량이고, <code>context.window</code>는 모델의 윈도우이며, <code>context.percent</code>는 둘의 비율이다. 이 호출은 공짜다. <code>breakdown</code>을 요청할 때만 토큰 집계 요청을 보낸다.</p>
+
+<p>세션이 시작될 때와 매 턴이 끝난 뒤 수치를 읽는다.</p>
+
+<pre><code>on(&quot;session.start&quot;, async ($, e, next) =&gt; {
+  const result = await next(e);
+  await takeReading($);
+  return result;
+});
+on(&quot;turn.complete&quot;, async ($, e, next) =&gt; {
+  const result = await next(e);
+  if (!e.agentId) {
+    await takeReading($); // main-loop turns only, not subagents
+  }
+  return result;
+});</code></pre>
+
+<p>두 훅 모두 <code>next(e)</code>를 먼저 호출한 뒤 관찰한다. 어느 쪽도 일어나는 일을 바꾸지 않는다.</p>
+
+<p><strong>수치를 어디에 둘 것인가.</strong> 모듈 수준의 <code>let readings = []</code>가 당연한 선택처럼 보이지만, 핫 리로드는 새로 로드하는 것이다. <code>register</code>가 다시 실행되고, <code>session.start</code>가 다시 발생하며, 모듈 변수는 처음부터 시작한다. 대신 이력을 <code>$.state</code>에 두자. 이름 붙은 값을 세션 내내 호스트가 보관하며, 리로드에도 살아남는다.</p>
+
+<pre><code>// Held by the host, so the history survives a hot reload of this file.
+const readings = { plugin: &quot;token-weather&quot;, key: &quot;readings&quot; };
+async function takeReading($) {
+  const { context } = await $.session.usage();
+  if (!context?.window) return;
+  const tokens = context.tokens ?? 0;
+  const percent = context.percent ?? Math.round((tokens / context.window) * 100);
+  const { value: history = [] } = await $.state.get(readings);
+  await $.state.set(readings, [...history, { tokens, window: context.window, percent }].slice(-HISTORY));
+}</code></pre>
+
+<p>상태 값은 플러그인의 <strong>타입 계약(type contract)</strong>에 선언한다. 매니페스트가 가리키는 작은 <code>.d.ts</code> 파일이다. <code>types/index.d.ts</code>를 추가한다.</p>
+
+<pre><code>export type TokenWeatherReading = { tokens: number; window: number; percent: number };
+declare module &quot;claude-code&quot; {
+  interface PluginState {
+    &quot;token-weather&quot;: { readings: TokenWeatherReading[] };
+  }
+}</code></pre>
+
+<p>그다음 <code>plugin.json</code>에 <code>"types": "./types/index.d.ts"</code>를 추가한다. 이 단계를 건너뛰면 <code>claude plugin validate</code>가 고칠 방법을 알려 주는 오류로 멈춰 세운다. <code>token-weather.readings is not declared: the manifest's types contract must name it in interface PluginState { … }</code>.</p>
+
+<p>그 대가로 다시 그리기는 공짜로 얻는다. 렌더 훅이 실행되는 동안 <code>$.state.get</code>을 호출하면 그 드로잉이 구독되므로, 이후의 모든 <code>$.state.set</code>이 띠를 다시 그린다. <code>$.ui.invalidate</code>를 호출할 일은 없다.</p>
+
+<h3 id="step-4-draw-the-forecast">4단계: 예보 그리기</h3>
+
+<p>모듈 전체는 다음과 같다.</p>
+
+<pre><code>// Token Weather: a live forecast of the context window, above the prompt.
+const HISTORY = 12;
+const BARS = &quot;▁▂▃▄▅▆▇█&quot;;
+const FORECAST = [
+  { upTo: 25, icon: &quot;☀&quot;, word: &quot;Clear&quot;, color: &quot;yellow&quot; },
+  { upTo: 50, icon: &quot;☁&quot;, word: &quot;Cloudy&quot;, color: &quot;cyan&quot; },
+  { upTo: 75, icon: &quot;☂&quot;, word: &quot;Showers&quot;, color: &quot;blue&quot; },
+  { upTo: 90, icon: &quot;☇&quot;, word: &quot;Storm&quot;, color: &quot;magenta&quot; },
+  { upTo: Infinity, icon: &quot;↯&quot;, word: &quot;Compact soon&quot;, color: &quot;red&quot; },
+];
+// Held by the host, so the history survives a hot reload of this file.
+const readings = { plugin: &quot;token-weather&quot;, key: &quot;readings&quot; };
+export function register(on) {
+  on(&quot;session.start&quot;, async ($, e, next) =&gt; {
+    const result = await next(e);
+    await takeReading($);
+    return result;
+  });
+  on(&quot;turn.complete&quot;, async ($, e, next) =&gt; {
+    const result = await next(e);
+    if (!e.agentId) {
+      await takeReading($); // main-loop turns only, not subagents
+    }
+    return result;
+  });
+  on(&quot;ui.render&quot;, { component: &quot;AbovePrompt&quot; }, async ($, e, next) =&gt; {
+    const { value: history = [] } = await $.state.get(readings);
+    if (e.props.hasSurvey || history.length === 0) {
+      return next(e);
+    }
+    const { Box, Text } = $.ui.resolve(e);
+    return band(Box, Text, history, e.props.bodyColumns);
+  });
+}
+async function takeReading($) {
+  const { context } = await $.session.usage();
+  if (!context?.window) return;
+  const tokens = context.tokens ?? 0;
+  const percent = context.percent ?? Math.round((tokens / context.window) * 100);
+  const { value: history = [] } = await $.state.get(readings);
+  await $.state.set(readings, [...history, { tokens, window: context.window, percent }].slice(-HISTORY));
+}
+function band(Box, Text, history, columns) {
+  const now = history[history.length - 1];
+  const f = FORECAST.find((b) =&gt; now.percent &lt; b.upTo);
+  const parts = [
+    Text({ color: f.color, bold: true, children: `${f.icon}  ${f.word}` }),
+    Text({ children: `  ${now.percent}% of context` }),
+    Text({ dimColor: true, children: `  ${short(now.tokens)} / ${short(now.window)}` }),
+  ];
+  if (columns &gt;= 60) {
+    parts.push(Text({ dimColor: true, children: &quot;   last turns &quot; }));
+    parts.push(Text({ color: f.color, children: sparkline(history) }));
+    if (history.length &gt; 1) {
+      parts.push(Text({ dimColor: true, children: trend(history) }));
+    }
+  }
+  return Box({ flexDirection: &quot;row&quot;, paddingX: 1, children: parts });
+}
+function sparkline(history) {
+  const top = Math.max(...history.map((r) =&gt; r.tokens), 1);
+  return history.map((r) =&gt; BARS[Math.floor((r.tokens / top) * (BARS.length - 1))]).join(&quot;&quot;);
+}
+function trend(history) {
+  const delta = history[history.length - 1].tokens - history[history.length - 2].tokens;
+  if (delta === 0) return &quot;  steady&quot;;
+  return delta &gt; 0 ? `  ▲ +${short(delta)} last turn` : `  ▼ ${short(-delta)} last turn`;
+}
+function short(n) {
+  if (n &gt;= 1_000_000) return `${+(n / 1_000_000).toFixed(1)}M`;
+  if (n &gt;= 1_000) return `${+(n / 1_000).toFixed(1)}k`;
+  return String(n);
+}</code></pre>
+
+<p>자신의 모드에 베껴 갈 만한 세부 사항이 셋 있다.</p>
+
+<ul>
+  <li><strong>컴포넌트의 props는 <code>e.props</code>에 있다.</strong> <code>hasSurvey</code>는 설문이 띠를 쓰고 싶어 한다는 뜻이므로, 훅은 <code>next(e)</code>로 양보한다. <code>bodyColumns</code>는 띠의 실제 너비인데, 대화 옆에 창이 도킹돼 있는 동안은 터미널보다 좁다. 트리 크기를 여기에 맞추자. <code>e</code>의 최상위에는 <code>e.component</code>, <code>e.surface</code>, <code>e.requestId</code>, <code>e.viewport</code>만 있다.</li>
+  <li><strong>그릴 게 없으면 넘겨라.</strong> <code>next(e)</code>를 반환하면 띠를 Claude Code와 다른 모드에 돌려준다.</li>
+  <li><strong>이모지 대신 단일 폭 기호를 써라.</strong> ☀ ☁ ☂ ☇ ↯는 어떤 터미널 폰트에서도 정렬이 맞는다.</li>
+</ul>
+
+<p>파일을 저장하면 실행 중인 세션이 바로 반영한다. 큰 파일을 읽는 턴을 몇 번 거치면, 이 절 첫머리의 녹화처럼 띠가 Clear에서 Showers를 거쳐 Storm으로 움직인다.</p>
+
+<h3 id="step-5-validate-and-test">5단계: 검증하고 테스트하기</h3>
+
+<p><code>claude plugin validate</code>는 Claude Code가 할 방식 그대로 매니페스트와 모듈 소스를 읽고, 모듈이 어떤 훅을 걸고 무엇을 호출하는지 보고한다.</p>
+
+<pre><code>$ claude plugin validate ./token-weather
+  &gt; types ./types/index.d.ts declares state: token-weather.readings
+  &gt; ./token-weather.mjs hooks: session.start, turn.complete, ui.render{component=AbovePrompt}
+  &gt; ./token-weather.mjs calls: $.session.usage (via takeReading), $.state.get, $.state.set (via takeReading), $.ui.resolve
+  &gt; ./token-weather.mjs state writes: token-weather.readings
+  &gt; ./token-weather.mjs state reads: token-weather.readings
+√ Validation passed</code></pre>
+
+<p><code>claude plugin test</code>는 플러그인의 <code>*.test.ts</code> 파일들을 실제 Claude Code 런타임에 대고 실행한다. 테스트가 <code>on</code>으로 등록하는 훅은 체인에서 모드 <em>뒤에</em> 실행되며 Claude Code가 답할 내용을 스텁(stub)하므로, <code>$.session.usage()</code>가 무엇을 반환할지 정확히 제어할 수 있다.</p>
+
+<pre><code>// tests/token-weather.test.ts
+import { describe, expect, test } from &quot;claude-code/testing&quot;;
+describe(&quot;token-weather&quot;, () =&gt; {
+  test(&quot;the band follows the context window&quot;, async ($, on) =&gt; {
+    // Hooks registered here run after the mod and stub what Claude Code would answer.
+    let tokens = 36_100;
+    on(&quot;session.start&quot;, ($, e) =&gt; ({ cwd: e.cwd }));
+    on(&quot;session.usage&quot;, () =&gt; ({
+      value: { startedAt: 0, rateLimits: [], context: { tokens, window: 200_000, percent: Math.round(tokens / 2_000) } },
+    }));
+    on(&quot;turn.complete&quot;, () =&gt; ({ text: &quot;&quot; }));
+    await $.session.start({ surface: &quot;terminal&quot;, isInteractive: true, cwd: &quot;/work&quot; } as any);
+    const ui = await $.ui.mount({
+      plugin: &quot;token-weather&quot;,
+      surface: &quot;terminal&quot;,
+      component: &quot;AbovePrompt&quot;,
+      props: { hasSurvey: false, isWorking: false, maxRows: 10, bodyColumns: 120 },
+    } as any);
+    expect(await ui.find({ type: &quot;Text&quot;, text: /Clear/ })).toBeDefined();
+    tokens = 134_400;
+    await $.turn.complete({ reason: &quot;answer&quot;, answer: &quot;ok&quot;, durationMs: 1 } as any);
+    expect(await ui.find({ type: &quot;Text&quot;, text: /Showers/ })).toBeDefined();
+    expect(await ui.find({ type: &quot;Text&quot;, text: /67% of context/ })).toBeDefined();
+    expect(await ui.find({ type: &quot;Text&quot;, text: /▲ \+98\.3k last turn/ })).toBeDefined();
+    await ui.unmount();
+  });
+});</code></pre>
+
+<pre><code>$ claude plugin test ./token-weather
+(pass) token-weather &gt; the band follows the context window
+ 1 pass
+ 0 fail</code></pre>
+
+<p>이 테스트는 3단계의 다시 그리기 동작도 확인한다. 모드가 다시 그려 달라고 한 번도 요청하지 않았는데 <code>turn.complete</code> 뒤에 띠가 갱신된다.</p>
+
+<h3 id="step-6-share-it">6단계: 공유하기</h3>
+
+<p>모드는 플러그인이므로 같은 방식으로 배포한다. 마켓플레이스에 넣으면 되는데, <code>.claude-plugin/marketplace.json</code>이 있는 폴더 하나면 충분하다.</p>
+
+<pre><code>{
+  &quot;name&quot;: &quot;my-mods&quot;,
+  &quot;owner&quot;: { &quot;name&quot;: &quot;You&quot; },
+  &quot;plugins&quot;: [{ &quot;name&quot;: &quot;token-weather&quot;, &quot;source&quot;: &quot;./token-weather&quot; }]
+}</code></pre>
+
+<pre><code>claude plugin marketplace add ./my-mods
+claude plugin install token-weather@my-mods --scope user</code></pre>
+
+<h2 id="sharing-your-mod">모드 공유하기</h2>
+
+<p>모드는 Claude Code 플러그인이므로 다른 플러그인과 똑같이 공유하며, 새로 배울 것은 없다. 마켓플레이스 파일과 함께 모드를 GitHub 저장소에 올리면 그 저장소가 여러분의 마켓플레이스가 된다. 누구나 거기서 설치할 수 있고, 평범한 push로 업데이트할 수 있다.</p>
+
+<p>설치는 Claude Code 안에서 명령 세 개면 된다.</p>
+
+<pre><code>/plugin marketplace add your-org/my-mods
+/plugin install token-weather@my-mods
+/reload-plugins</code></pre>
+
+<p>리로드하면 모드가 시작된다. 나타나지 않으면 Claude Code를 재시작하자.</p>
+
+<p>모드는 여러분의 컴퓨터에서 Claude Code 안에 실행되는 코드이며, Claude Code와 같은 접근 권한을 가진다. 그리고 Anthropic이 아니라 게시자가 작성한 것이다. 그러니 패키지를 설치할 때처럼 모드를 설치하자. 먼저 저장소를 읽고, 신뢰하는 사람의 것만 설치한다. 명령을 실행하기 전까지는 아무것도 설치되지 않는다.</p>
+
+<p>Claude 디렉터리는 모드가 포함된 플러그인을 받으며, <a href="https://claude.ai/directory/manage">claude.ai/directory/manage</a>에서 제출할 수 있다. 그러면 여러분이 링크를 주지 않아도 사람들이 찾을 수 있다.</p>
+
+<h2 id="two-more-mods">모드 두 개 더</h2>
+
+<p>Token Weather는 지켜보고 그리기만 한다. 다음 두 모드는 이벤트에 끼어들고, 창을 열고, 입력을 받는다.</p>
+
+<h3 id="blast-radius-see-what-a-risky-command-would-change-before-it-runs">Blast Radius: 위험한 명령이 실행되기 전에 무엇을 바꿀지 보기</h3>
+
+<p>Claude가 <code>rm -rf</code>, <code>git reset --hard</code>, <code>git clean</code>, force push, 또는 데이터베이스 마이그레이션으로 Bash를 호출하면 Blast Radius가 그 호출을 붙잡는다. 명령이 무엇을 건드릴지 계산해서 <strong>Proceed</strong>와 <strong>Cancel</strong>이 있는 창을 연다. <code>2</code>를 누르면 Claude는 사유가 담긴 거부를 받는다. <code>1</code>을 누르면 명령이 쓰인 그대로 실행된다.</p>
+
+<figure>
+  <div class="surface">Terminal</div>
+  <video controls muted playsinline loop preload="metadata" src="assets/getting-started-with-claude-code-mods/fig-d-terminal.mp4" poster="assets/getting-started-with-claude-code-mods/fig-d-poster.jpg" aria-label="어두운 터미널에서 Claude에게 build 폴더를 지우라고 하자, 노란 테두리의 Blast Radius 창이 명령을 보여 주고 build/ 아래에서 삭제될 파일을 나열하며 번호가 붙은 Proceed와 Cancel 선택지를 제시한다."></video>
+  <div class="surface">Desktop</div>
+  <video controls muted playsinline loop preload="none" src="assets/getting-started-with-claude-code-mods/fig-d-desktop.mp4" poster="assets/getting-started-with-claude-code-mods/fig-d-desktop-poster.jpg" aria-label="Claude 데스크톱 앱의 밝은 Code 탭에서 Claude에게 오래된 빌드 산출물을 치우라고 하자, 노란 테두리의 Blast Radius 카드가 명령을 보여 주고 build/ 아래에서 삭제될 파일을 나열하며 번호가 붙은 Proceed와 Cancel 선택지를 제시한다."></video>
+  <figcaption><b>FIG D</b>Blast Radius가 rm -rf build를 붙잡고 삭제될 파일 9개(1.1 MB)를 나열한다. Cancel은 거부하고, 두 번째 시도에서 Proceed가 실행한다.</figcaption>
+</figure>
+
+<p>훅 세 개를 쓴다. Bash에 대한 <code>tool.call</code>, 그리고 <code>Pane</code>과 <code>AbovePrompt</code>에 대한 <code>ui.render</code>다. 핵심은 위 표의 "응답" 동작이다.</p>
+
+<pre><code>on(&quot;tool.call&quot;, { tool: &quot;Bash&quot; }, async ($, e, next) =&gt; {
+  const risk = classify(String(e.command ?? &quot;&quot;));
+  if (risk === null) return next(e);                 // everything else runs as normal
+  const report = await measure($, risk, await $.session.cwd());  // git status, git clean -n, du, ...
+  held = { command: e.command, risk, report, decision: null };
+  const opened = await $.ui.open({ id: &quot;blast-radius&quot;, title: &quot;Blast Radius&quot;, focus: true });
+  if (!opened.isPlaced) held.where = &quot;band&quot;;         // too narrow for a pane: draw above the prompt
+  while (held.decision === null &amp;&amp; !next.signal.aborted) {
+    await $.process.run([&quot;sleep&quot;, &quot;0.25&quot;]);          // time inside $ calls doesn&#x27;t count against the hook&#x27;s time limit
+  }
+  if (held.decision === &quot;proceed&quot;) return next(e);   // let it run
+  return { deny: `Blast Radius held this command: the user pressed Cancel. It would have: ${report.summary}.` };
+});</code></pre>
+
+<p>여기서 배울 점:</p>
+
+<ul>
+  <li><strong>드라이런(dry run)에는 <code>$.process.run</code>.</strong> 보고서는 도구 자체의 명령에서 나온다. <code>git status --porcelain</code>, <code>git clean -n</code>, <code>git log HEAD..origin/main</code>, <code>showmigrations</code>. 인자는 argv 배열로 들어가므로 경로 안의 어떤 것도 셸 코드로 실행되지 않는다.</li>
+  <li><strong>호출 붙잡아 두기.</strong> 훅은 디스패치마다 10초의 자체 시간을 받지만, <code>$</code> 호출 안에서 기다리는 시간은 계산되지 않는다. 루프는 버튼의 <code>onPress</code>가 결정을 세팅할 때까지 짧은 <code>sleep</code> 프로세스를 기다리고, <code>next.signal</code>이 중단되면(Esc를 눌렀을 때) 포기한다.</li>
+  <li><strong>단축키가 있는 버튼.</strong> <code>Button({ label: "Proceed", hotkey: "1", onPress })</code>는 클릭으로도, Tab과 Enter로도, 숫자 키로도 동작한다.</li>
+  <li><strong>띠로 강등하기.</strong> 터미널은 충분히 넓을 때 대화 옆에 창을 도킹한다. <code>$.ui.open</code>이 <code>isPlaced: false</code>를 답하면 같은 보고서를 프롬프트 위에 그린다.</li>
+</ul>
+
+<figure>
+  <img src="assets/getting-started-with-claude-code-mods/fig-e-band.png" alt="옆 창이 없는 터미널: 프롬프트 위의 노란 테두리 상자가 명령, 커밋되지 않은 변경이 버려질 파일 두 개, 번호가 붙은 Proceed와 Cancel 선택지를 보여 준다." loading="lazy">
+  <figcaption><b>FIG E</b>120열에서 Blast Radius가 git reset --hard에 대한 보고서를 프롬프트 위 띠에 그린 모습</figcaption>
+</figure>
+
+<p>이것은 안전망이지 권한 시스템이 아니다. 명령 텍스트를 읽기 때문에 <code>$(…)</code>, alias, <code>rm</code>을 호출하는 스크립트는 통과한다. 확실히 막으려면 권한 규칙을 쓰자.</p>
+
+<h3 id="replay-theater-step-through-the-last-turns-edits">Replay Theater: 마지막 턴의 편집을 한 단계씩 되짚기</h3>
+
+<p>턴이 실행되는 동안 Replay Theater는 모든 Edit과 Write 호출을 기록한다. 파일과 전후 텍스트다. 턴이 끝나면 프롬프트 위에 힌트가 나타난다. <code>r</code>을 누르면(또는 <code>/replay</code>를 입력하면) 창이 편집을 diff 하나씩 걸어가며 보여 주는데, 번호가 붙은 단계 띠와 <strong>Prev</strong>, <strong>Next</strong>, <strong>Close</strong> 버튼이 있다.</p>
+
+<figure>
+  <div class="surface">Terminal</div>
+  <video controls muted playsinline loop preload="metadata" src="assets/getting-started-with-claude-code-mods/fig-f-terminal.mp4" poster="assets/getting-started-with-claude-code-mods/fig-f-poster.jpg" aria-label="greet를 welcome으로 바꾸는 빨강·초록 diff가 담긴 어두운 터미널 기록, 프롬프트 위의 자홍색 Replay 힌트, 그다음 Prev·Next·Close 버튼과 함께 편집을 diff 하나씩 넘기는 자홍색 테두리 창."></video>
+  <div class="surface">Desktop</div>
+  <video controls muted playsinline loop preload="none" src="assets/getting-started-with-claude-code-mods/fig-f-desktop.mp4" poster="assets/getting-started-with-claude-code-mods/fig-f-desktop-poster.jpg" aria-label="Claude 데스크톱 앱의 밝은 Code 탭에서 Claude가 파일 네 개에 걸쳐 greet를 welcome으로 바꾸고, 프롬프트 상자 위에 Replay 버튼이 달린 자홍색 Replay 힌트가 나타난 뒤, 자홍색 테두리 창이 Prev·Next·Close 버튼과 함께 편집을 diff 하나씩 넘긴다."></video>
+  <figcaption><b>FIG F</b>Replay Theater: 파일 3개에 걸친 5번의 편집으로 이름을 바꾼 뒤의 힌트, 그다음 창에서 1~5단계를 넘기는 모습</figcaption>
+</figure>
+
+<p>편집을 막거나 바꾸는 일은 결코 없다. 관찰만 한다.</p>
+
+<pre><code>on(&quot;tool.call&quot;, async ($, e, next) =&gt; {
+  if (EDIT_TOOLS.has(e.tool)) state.pending.push(...(await stepsFor($, e)));  // old/new text → diff
+  return next(e);                                                              // the edit runs untouched
+});
+on(&quot;turn.start&quot;, ($, e, next) =&gt; { if (!e.agentId) state.pending = []; return next(e); });
+on(&quot;turn.complete&quot;, async ($, e, next) =&gt; {
+  const r = await next(e);
+  if (!e.agentId &amp;&amp; state.pending.length) state.replay = state.pending;       // one replay per turn
+  return r;
+});
+on(&quot;session.start&quot;, async ($, e, next) =&gt; {
+  const r = await next(e);
+  await $.command.register({ name: &quot;replay&quot;, description: &quot;Step through the last turn&#x27;s file edits&quot; });
+  return r;
+});
+on(&quot;command.run&quot;, { command: &quot;replay&quot; }, async ($, e) =&gt; ({ text: (await openReplay($)) ? &quot;Replaying&quot; : &quot;No edits&quot; }));</code></pre>
+
+<p>여기서 배울 점:</p>
+
+<ul>
+  <li><strong>이벤트 짝짓기.</strong> <code>turn.start</code>와 <code>turn.complete</code>가 편집들을 턴당 하나의 리플레이로 묶고, <code>e.agentId</code>가 서브에이전트 턴을 묶음에서 제외한다.</li>
+  <li><strong>슬래시 명령 등록.</strong> <code>session.start</code>에서 <code>$.command.register</code>를 호출하고, <code>command.run</code>에서 응답한다.</li>
+  <li><strong>파일 읽기.</strong> Write의 경우 쓰기가 반영되기 직전에 <code>$.fs.read</code>로 이전 내용을 가져오므로 diff가 실제와 같다.</li>
+  <li><strong>배치는 표면의 몫이다.</strong> 전체 화면에서는 창이 오른쪽에 도킹된다. 80열에서는 프롬프트 위에 인라인으로 열린다. 모드는 어느 쪽이든 같은 트리를 그린다.</li>
+</ul>
+
+<figure>
+  <img src="assets/getting-started-with-claude-code-mods/fig-g-inline.png" alt="프롬프트 위에 자홍색 테두리 상자가 있는 세로로 긴 터미널 창: 번호가 붙은 단계 띠, 파일 greet.js, 한 줄짜리 diff, 그리고 Prev·Next·Close 버튼." loading="lazy">
+  <figcaption><b>FIG G</b>80열에서 프롬프트 위에 인라인으로 그려진 Replay Theater</figcaption>
+</figure>
+
+<h2 id="four-habits-worth-keeping">지킬 만한 습관 네 가지</h2>
+
+<ul>
+  <li><strong>Claude Code가 써 주는 타입에 기대라.</strong> 모드를 로드할 때마다 Claude Code는 해당 빌드의 선언을 모드의 <code>.claude-plugin/types/</code> 폴더에 써 주므로, 에디터와 <code>tsc -p</code>가 추가 작업 없이 동작한다. 모든 이벤트, <code>$</code>의 모든 메서드, 모든 요소의 props에 대한 참고 자료다.</li>
+  <li><strong>props는 <code>e.props</code>에서 읽어라.</strong> <code>hasSurvey</code>, <code>bodyColumns</code>를 비롯한 나머지는 <code>e</code> 자체가 아니라 거기에 있다.</li>
+  <li><strong>핫 리로드를 염두에 두라.</strong> 저장할 때마다 <code>register</code>와 <code>session.start</code>가 다시 실행되므로, 데이터는 모듈 변수가 아니라 <code>$.state</code>에 두자.</li>
+  <li><strong>그림이 안 보이면 로그를 읽어라.</strong> <code>claude --debug</code>를 실행하고, 훅이 검증을 통과하지 못하는 트리를 반환했다는 줄을 찾자.</li>
+</ul>
+
+<h2 id="what-will-you-mod">무엇을 모드로 만들 것인가?</h2>
+
+<p>여기 소개한 세 모드는 각각 질문 하나에서 나왔다. <em>내 컨텍스트는 얼마나 찼지?</em>, <em>이 명령은 무엇을 지우려는 거지?</em>, <em>Claude가 방금 무엇을 바꿨지?</em> 여러분의 질문은 다를 것이고, 바로 그게 핵심이다. 출발점으로 삼을 만한 아이디어 몇 가지:</p>
+
+<ul>
+  <li><code>$.session.usage()</code>로 만든 비용 또는 rate limit 미터를 <code>$.ui.status</code>로 상태 표시줄에</li>
+  <li>모든 프롬프트에 팀의 규약을 덧붙이는 <code>prompt.submit</code> 훅</li>
+  <li>이번 세션에서 Claude가 읽은 파일을 나열하는 창, Claude가 무엇을 봤는지의 실시간 지도</li>
+  <li>긴 턴이 끝나면 <code>$.ui.toast</code>로 토스트를 보내는 집중 타이머</li>
+  <li>프로덕션 kubectl 컨텍스트나 <code>terraform apply</code>처럼 자신의 스택에 맞춘 <code>tool.call</code> 가드</li>
+</ul>
+
+<h3 id="share-what-you-build">만든 것을 공유하기</h3>
+
+<p>이제 매일 쓰는 모드를 만들었는가? 실행 중인 모습을 GIF나 스크린샷으로 담아 X나 LinkedIn에 올리면 다른 개발자들이 무엇이 가능한지 볼 수 있다. 플러그인을 마켓플레이스에 넣고(<a href="#sharing-your-mod">모드 공유하기</a>) 링크를 걸면, 마음에 든 사람 누구나 명령 세 개로 설치할 수 있다.</p>
+
+<footer>
+  이 글은 claude.dev(Anthropic 개발자 블로그) 원문을 한국어로 옮긴 비공식 번역본입니다.
+  내용의 정확한 의미는 위 원문 링크를 함께 참고하세요.
+</footer>
+<script src="assets/store.js"></script>
+<script src="assets/posts.js"></script>
+<script src="assets/nav.js"></script>
+</body>
+</html>

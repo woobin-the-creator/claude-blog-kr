@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "getting-started-with-claude-code-mods.html", date: "2026-10-01", main: "claude.dev", cat: "Tutorials",
+      title: "Claude Code 모드(mod) 시작하기", nav: "Claude Code 모드 시작하기 · 빈 폴더에서 Token Weather 만들기, Blast Radius·Replay Theater 둘러보기" },
     { file: "claude-code-mods.html", date: "2026-10-01", main: "Claude blog", cat: "Product announcements",
       title: "TypeScript 모드(mod)로 Claude Code 커스터마이즈하기", nav: "Claude Code 모드(mod) · TypeScript 함수로 프롬프트·UI·내장 기능 교체, sec-default" },
     { file: "how-anthropics-sales-team-rebuilt-inbound-with-claude-managed-agents.html", date: "2026-09-30", main: "Claude blog", cat: "Enterprise AI",
