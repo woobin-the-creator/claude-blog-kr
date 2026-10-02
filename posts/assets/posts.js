@@ -239,6 +239,8 @@
       title: "Claude 팀은 Claude Code를 이렇게 쓴다: 모호성 제거·HTML 기획·통합 검증", nav: "How we Claude Code" },
     { file: "using-claude-code-the-unreasonable-effectiveness-of-html.html", date: "2026-05-20", main: "claude.dev", cat: "Playbooks",
       title: "Claude Code 활용하기: HTML의 터무니없는 효과", nav: "HTML의 터무니없는 효과 · Markdown 대신 HTML로 스펙·리뷰·디자인·보고서·편집기 만들기" },
+    { file: "lessons-from-building-claude-code-prompt-caching-is-everything.html", date: "2026-04-30", main: "claude.dev", cat: "Engineering",
+      title: "Claude Code를 만들며 배운 것: 프롬프트 캐싱이 전부다", nav: "프롬프트 캐싱이 전부다 · 접두어 순서·메시지로 갱신·도구/모델 고정·캐시 안전 컴팩션 포크" },
     { file: "opus-4-6-hackathon-winners.html", date: "2026-04-20", main: "Claude blog", cat: "Claude Code · 해커톤",
       title: "Built with Opus 4.6 Claude Code 해커톤 우승팀을 소개합니다", nav: "Built with Opus 4.6 해커톤" }
   ];
