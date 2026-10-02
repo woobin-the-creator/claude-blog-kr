@@ -1,0 +1,267 @@
+---
+slug: "a-harness-for-every-task-dynamic-workflows-in-claude-code"
+title: "모든 작업에 맞는 하네스: Claude Code의 다이내믹 워크플로"
+nav: "다이내믹 워크플로 · agent/parallel/pipeline, 6가지 패턴, ultracode, 토너먼트 정렬·격리 트리아지, /loop·/goal, s로 저장"
+main: "claude.dev"
+cat: "Agents"
+date: "2026-06-02"
+author: "ai"
+rev: 1
+style_css: ":root { --fg:#1a1a1a; --muted:#666; --line:#e5e5e5; --accent:#c96442; --code-bg:#f6f6f4; }\n  * { box-sizing: border-box; }\n  body {\n    font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", \"Apple SD Gothic Neo\",\n      \"Malgun Gothic\", sans-serif;\n    color: var(--fg); line-height: 1.75; max-width: 760px;\n    margin: 0 auto; padding: 48px 24px 96px; background:#fff;\n  }\n  header { border-bottom: 2px solid var(--line); padding-bottom: 24px; margin-bottom: 32px; }\n  h1 { font-size: 1.9rem; line-height: 1.35; margin: 0 0 12px; }\n  .meta { color: var(--muted); font-size: 0.9rem; }\n  .meta .orig { display:block; margin-top:6px; }\n  .meta a { color: var(--accent); text-decoration: none; }\n  h2 { font-size: 1.4rem; margin: 44px 0 8px; padding-top: 8px; }\n  h3 { font-size: 1.15rem; margin: 30px 0 8px; color:#000; }\n  h4 { font-size: 1.02rem; margin: 24px 0 6px; color:#000; }\n  p { margin: 0 0 16px; }\n  a { color: var(--accent); }\n  ul, ol { margin: 0 0 16px; padding-left: 22px; }\n  li { margin-bottom: 8px; }\n  blockquote { margin: 16px 0; padding: 8px 18px; border-left:3px solid var(--line);\n    color:#333; font-style: italic; }\n  hr { border: none; border-top: 1px solid var(--line); margin: 40px 0; }\n  code { background: var(--code-bg); padding: 2px 6px; border-radius: 4px;\n    font-family: \"SF Mono\", Menlo, Consolas, monospace; font-size: 0.88em; }\n  pre { background: var(--code-bg); padding: 16px 18px; border-radius: 8px;\n    overflow-x: auto; margin: 0 0 16px; line-height: 1.5; }\n  pre code { background: none; padding: 0; font-size: 0.85rem; white-space: pre; }\n  table { border-collapse: collapse; width: 100%; margin: 0 0 20px; font-size: 0.95rem; }\n  th, td { border: 1px solid var(--line); padding: 8px 12px; text-align: left; vertical-align: top; }\n  th { background: var(--code-bg); }\n  td.nw, th.nw { white-space: nowrap; }\n  td.num, th.num { text-align: right; }\n  figure { margin: 24px 0; }\n  figure img { width: 100%; height: auto; border:1px solid var(--line); border-radius: 8px;\n    background:#fff; }\n  figure video { width: 100%; height: auto; border:1px solid var(--line); border-radius: 8px;\n    background:#000; display:block; }\n  figure table { margin-bottom: 0; }\n  figcaption { color: var(--muted); font-size: 0.85rem; text-align: center;\n    margin-top: 10px; line-height: 1.5; }\n  figcaption b { color: var(--accent); margin-right: 6px; }\n  figcaption a { color: var(--accent); }\n  .video { position: relative; width: 100%; padding-top: 56.25%; margin: 24px 0 8px;\n    border-radius: 8px; overflow: hidden; background:#000; }\n  .video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }\n  .callout { background:#faf6f4; border-left:3px solid var(--accent);\n    padding: 12px 16px; border-radius: 0 6px 6px 0; margin: 16px 0; }\n  .callout strong { color: var(--accent); }\n  .interactive { border:1px dashed var(--line); border-radius: 8px; padding: 16px 18px; background:#fcfcfb; }\n  .interactive .label { font-size:0.8rem; color: var(--muted); letter-spacing: .04em; margin-bottom: 8px; }\n  .lede { color:#333; font-size: 1.05rem; }\n  footer { margin-top: 64px; padding-top: 20px; border-top:1px solid var(--line);\n    color: var(--muted); font-size: 0.82rem; }"
+has_markdown: false
+markdown_length: 0
+html_length: 15104
+---
+
+<!-- rendered HTML -->
+<header>
+<header>
+  <h1>모든 작업에 맞는 하네스: Claude Code의 다이내믹 워크플로</h1>
+  <div class="meta">
+    2026년 6월 2일
+    · 카테고리: Agents
+    · 글쓴이: Thariq Shihipar, Sid Bidasaria (Members of Technical Staff, Claude Code)
+    · 출처: <a href="https://claude.dev/blog">claude.dev</a>
+    <span class="orig">원문:
+      <a href="https://claude.dev/blog/a-harness-for-every-task-dynamic-workflows-in-claude-code">A harness for every task: dynamic workflows in Claude Code</a>
+      (한글 번역본)</span>
+  </div>
+</header>
+
+<p class="lede">Claude Code는 이제 자신만의 멀티 에이전트 하네스(harness)를 즉석에서 작성하고 오케스트레이션할 수 있다. 다이내믹 워크플로(dynamic workflows)가 어떻게 동작하는지, 그리고 그것을 가장 잘 활용하는 패턴은 무엇인지 소개한다.</p>
+
+<p>지난주 우리는 Claude Code에 <a href="https://code.claude.com/docs/en/workflows">다이내믹 워크플로</a>를 출시했다. 이제 Claude는 눈앞의 작업에 맞춰 자신만의 <a href="https://code.claude.com/docs/en/glossary#agentic-harness">하네스</a>를 즉석에서 작성할 수 있다.</p>
+
+<p>기본 Claude Code 하네스는 코딩을 위해 만들어졌지만, 알고 보면 많은 작업이 코딩 작업과 닮아 있기 때문에 다른 여러 종류의 작업에도 유용하다. 하지만 최고 성능을 내기 위해 Claude Code 위에 별도의 맞춤 하네스를 만들어야 했던 작업군도 있다. <a href="https://support.claude.com/en/articles/11088861-using-research-on-claude">Research</a>, <a href="https://support.claude.com/en/articles/11932705-automated-security-reviews-in-claude-code">보안 분석</a>, <a href="https://code.claude.com/docs/en/agent-teams">에이전트 팀</a>, <a href="https://code.claude.com/docs/en/code-review">Code Review</a> 같은 것들이다.</p>
+
+<p>워크플로를 쓰면 Claude Code 위에 하네스를 동적으로 만들 수 있어서, Claude가 이런 문제들을 훨씬 자연스럽게 풀 수 있다. 만든 워크플로를 다른 사람과 공유하고 재사용할 수도 있다.</p>
+
+<p>이 글에서는 내가 워크플로를 처음 써 보며 얻은 경험과 배운 점을 공유해, 여러분이 최대한 활용할 수 있도록 하려 한다. 다만 모범 사례는 아직 만들어지는 중이라는 점을 기억하자. 다이내믹 워크플로는 토큰을 더 많이 쓰는 경우가 많으며, 복잡하고 가치가 높은 작업에 가장 잘 맞는다.</p>
+
+<h2 id="example-prompts">예시 프롬프트</h2>
+
+<p>기술적인 세부 사항으로 들어가기 전에, 워크플로로 무엇이 가능한지 상상해 볼 수 있도록 예시 프롬프트 몇 개부터 보여 주고 싶다.</p>
+
+<blockquote>"이 테스트는 50번에 한 번쯤 실패한다. 재현하는 워크플로를 만들어라. 레이스에 대한 경쟁 가설들을 세우고, 증거를 견뎌낸 가설이 하나 남을 때까지 멈추지 마라."</blockquote>
+
+<blockquote>"워크플로를 써서 내 최근 세션 50개를 훑어보고, 내가 반복해서 하는 교정을 캐낸 다음 되풀이되는 것들을 <code>CLAUDE.md</code> 규칙으로 만들어라."</blockquote>
+
+<blockquote>"워크플로를 써서 지난 6개월간 Slack의 #incidents 채널을 뒤지고, 아무도 티켓을 올리지 않은 반복되는 근본 원인을 찾아라."</blockquote>
+
+<blockquote>"내 사업 계획을 가져가서, 서로 다른 에이전트들이 투자자·고객·경쟁자의 관점에서 갈기갈기 뜯어보는 워크플로를 실행해라."</blockquote>
+
+<blockquote>"여기 이력서 80개가 든 폴더가 있다. 워크플로를 써서 백엔드 직무 기준으로 순위를 매기고 상위 10명을 다시 한번 검증해라. 루브릭은 AskUserQuestion 도구로 나를 인터뷰해서 만들어라."</blockquote>
+
+<blockquote>"이 CLI 도구의 이름이 필요하다. 워크플로를 써서 후보를 잔뜩 브레인스토밍하고 토너먼트를 돌려 상위 3개를 골라라."</blockquote>
+
+<blockquote>"워크플로를 써서 우리 User 모델을 어디서나 Account로 이름을 바꿔라."</blockquote>
+
+<blockquote>"내 블로그 글 초안을 훑어보고 워크플로를 써서 모든 기술적 주장을 코드베이스와 대조해 검증해라. 틀린 내용은 하나도 내보내고 싶지 않다."</blockquote>
+
+<h2 id="how-dynamic-workflows-work">다이내믹 워크플로는 어떻게 동작하나</h2>
+
+<p>다이내믹 워크플로는 <a href="https://code.claude.com/docs/en/sub-agents">서브에이전트</a>를 띄우고 조율하는 데 쓰는 몇 가지 특수 함수가 포함된 JavaScript 파일을 실행한다.</p>
+
+<figure>
+  <img src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/a-harness-for-every-task-dynamic-workflows-in-claude-code/fig-a-building-blocks.png" alt="agent(prompt, opts) 함수와 옵션 설명: prompt만 필수 입력이고, schema는 검증된 JSON을 반환하며, model은 opus·sonnet·haiku 중 고르고, isolation은 worktree 또는 remote, agentType은 서브에이전트를 선택한다. 그 아래 parallel()은 펼쳐서 모두 기다리고, pipeline()은 각 항목을 모든 단계에 차례로 흘려보낸다.">
+  <figcaption><b>FIG A</b>워크플로 스크립트의 세 가지 구성 요소: agent()는 서브에이전트 하나를 띄우고, parallel()과 pipeline()은 여럿을 조합한다.</figcaption>
+</figure>
+
+<p>다이내믹 워크플로에는 데이터 처리를 돕는 JSON, Math, Array 같은 표준 JavaScript 함수도 포함된다.</p>
+
+<p>특히 알아 둘 만한 점은, 다이내믹 워크플로가 각 에이전트에 어떤 모델을 쓸지, 서브에이전트를 별도의 worktree에서 실행할지를 결정할 수 있다는 것이다. 덕분에 Claude가 필요한 지능 수준과 격리 수준을 스스로 고를 수 있다.</p>
+
+<p>사용자 조작이나 터미널 종료 등으로 워크플로가 중단되더라도, 세션을 재개하면 워크플로가 멈춘 지점부터 이어서 진행한다.</p>
+
+<h2 id="why-dynamic-workflows">왜 다이내믹 워크플로인가</h2>
+
+<p>기본 Claude Code 하네스에 작업을 시키면, 같은 컨텍스트 윈도 안에서 계획과 실행을 모두 해야 한다. 많은 코딩 작업에는 이 방식이 매우 효과적이지만, 오래 걸리거나, 대규모로 병렬이거나, 구조가 매우 정형화돼 있거나, 적대적(adversarial) 성격의 작업에서는 무너질 수 있다.</p>
+
+<p>복잡한 작업을 하나의 컨텍스트 윈도에서 오래 수행할수록 Claude는 몇 가지 특정한 실패 양상에 더 취약해지기 때문이다.</p>
+
+<ul>
+<li><strong>에이전트의 게으름(agentic laziness)</strong>은 Claude가 특히 복잡하고 여러 부분으로 이루어진 작업을 끝내기 전에 멈추고, 일부만 진행한 뒤 작업이 끝났다고 선언하는 현상이다. 예를 들어 보안 리뷰 항목 50개 중 35개만 처리하는 식이다.</li>
+<li><strong>자기 선호 편향(self-preferential bias)</strong>은 Claude가 자신의 결과나 발견을 선호하는 경향으로, 특히 루브릭에 비추어 그것을 검증하거나 판정하라고 할 때 두드러진다.</li>
+<li><strong>목표 표류(goal drift)</strong>는 여러 턴을 거치며, 특히 compaction 이후에 원래 목표에 대한 충실도가 점점 떨어지는 현상이다. 요약 단계마다 손실이 생기고, 엣지 케이스 요구사항이나 "X는 하지 마라" 같은 제약은 사라질 수 있다.</li>
+</ul>
+
+<p>워크플로를 만들면 각자 자기 컨텍스트 윈도와 집중된, 격리된 목표를 가진 별도의 Claude 서브에이전트들을 오케스트레이션하게 되므로 이런 문제에 맞서는 데 도움이 된다.</p>
+
+<h2 id="dynamic-vs-static-workflows">다이내믹 워크플로 vs 정적 워크플로</h2>
+
+<p>여러분은 이전에 Claude Agent SDK나 <code>claude -p</code>를 써서 여러 Claude Code 인스턴스를 함께 조율하는 정적(static) 워크플로를 만들어 봤을지도 모른다.</p>
+
+<p>하지만 정적 워크플로는 모든 엣지 케이스에서 동작해야 하므로 대개 더 범용적이다. <a href="https://www.anthropic.com/news/claude-opus-4-8">Claude Opus 4.8</a>과 다이내믹 워크플로가 나오면서, 이제 Claude는 여러분의 사용 사례에 꼭 맞는 맞춤 하네스를 직접 작성할 만큼 똑똑해졌다.</p>
+
+<figure>
+  <img src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/a-harness-for-every-task-dynamic-workflows-in-claude-code/fig-b-static-vs-dynamic.png" alt="'결제 서비스를 새 공급자로 옮겨야 할까?'라는 질문을 두 가지 방식으로 처리하는 그림. 정적 하네스는 웹 검색 5번, 결과 가져오기, 검증, 요약을 거쳐 일반적인 리서치 보고서를 낸다. 다이내믹 워크플로는 결제 코드를 읽고, 각 기능을 새 공급자 문서와 대조하고, 실제 거래량으로 가격을 계산하고, 악마의 변호인을 돌린 뒤 구체적인 추천으로 끝난다.">
+  <figcaption><b>FIG B</b>정적 하네스는 어떤 질문에든 같은 단계를 실행한다. 다이내믹 워크플로는 눈앞의 질문에 맞게 모양이 잡힌다.</figcaption>
+</figure>
+
+<h2 id="helpful-patterns-when-using-dynamic-workflows">다이내믹 워크플로를 쓸 때 유용한 패턴</h2>
+
+<p>다이내믹 워크플로는 Claude에게 하나 만들어 달라고 하기만 하면 바로 쓸 수 있다. 또는 트리거 단어 "<code>ultracode</code>"를 써서 Claude Code가 반드시 워크플로를 만들도록 할 수도 있다.</p>
+
+<p>하지만 다이내믹 워크플로가 어떻게 동작하는지 멘털 모델을 세워 두면, 언제 써야 하는지와 프롬프트로 Claude를 어떻게 유도할지 이해하는 데 도움이 된다.</p>
+
+<p>Claude가 워크플로를 만들 때 쓰고 서로 조합할 법한 몇 가지 흔한 패턴이 있다.</p>
+
+<figure>
+  <img src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/a-harness-for-every-task-dynamic-workflows-in-claude-code/fig-c-six-patterns.png" alt="여섯 가지 워크플로 패턴을 작은 다이어그램으로 그린 그림: 분류 후 실행, 펼치고 종합, 적대적 검증, 생성 후 필터, 토너먼트, 끝날 때까지 반복.">
+  <figcaption><b>FIG C</b>Claude가 조합해 쓰는 여섯 가지 워크플로 패턴.</figcaption>
+</figure>
+
+<h3>분류 후 실행 (Classify-and-act)</h3>
+<p>분류기 에이전트로 작업 유형을 판단한 다음, 유형에 따라 다른 에이전트나 동작으로 라우팅한다. 또는 마지막에 분류기를 둬서 출력을 결정한다.</p>
+
+<h3>펼치고 종합 (Fan-out-and-synthesize)</h3>
+<p>작업을 여러 작은 단계로 쪼개고, 단계마다 에이전트를 하나씩 돌린 뒤 그 결과를 종합한다. 작은 단계가 아주 많을 때, 또는 각 단계가 서로 간섭하거나 오염되지 않도록 자기만의 깨끗한 컨텍스트 윈도를 갖는 게 이로울 때 특히 유용하다. 종합 단계는 일종의 장벽(barrier)이다. 펼쳐진 에이전트가 모두 끝나기를 기다렸다가 그들의 구조화된 출력을 하나의 결과로 합친다.</p>
+
+<h3>적대적 검증 (Adversarial verification)</h3>
+<p>띄운 에이전트마다 별도의 에이전트를 하나 더 띄워, 그 출력을 루브릭이나 기준에 비추어 적대적으로 검증한다.</p>
+
+<h3>생성 후 필터 (Generate-and-filter)</h3>
+<p>어떤 주제에 대해 아이디어를 여러 개 생성한 다음, 루브릭이나 검증으로 걸러내고, 중복을 제거하고, 가장 품질이 높고 검증된 아이디어만 돌려준다.</p>
+
+<h3>토너먼트 (Tournament)</h3>
+<p>일을 나누는 대신 에이전트들이 경쟁하게 한다. N개의 에이전트를 띄워 각자 다른 접근법으로 같은 작업을 시도하게 한다. 그런 다음 판정 에이전트가 프롬프트나 모델을 사용해 결과를 쌍대 비교(pairwise) 방식으로 판정하고, 승자가 나올 때까지 이어간다.</p>
+
+<h3>끝날 때까지 반복 (Loop until done)</h3>
+<p>일의 양을 알 수 없는 작업이라면, 정해진 횟수만큼 도는 대신 중지 조건(새로운 발견이 없거나 로그에 더 이상 오류가 없을 때)이 충족될 때까지 에이전트를 계속 띄우며 반복한다.</p>
+
+<h2 id="use-cases">사용 사례</h2>
+
+<p>언제, 어떻게 Claude Code에 다이내믹 워크플로를 만들어 달라고 할지 창의적으로 생각해 보자. 내 경험상 워크플로는 때로 기술적이지 않은 일에 훨씬 더 유용하기도 했다.</p>
+
+<h3>마이그레이션과 리팩터링</h3>
+
+<p><a href="https://bun.com/">Bun</a>은 워크플로를 써서 Zig에서 Rust로 다시 작성되었다. 어떻게 했는지는 <a href="https://x.com/jarredsumner/status/2060050578026189172">Jarred의 스레드</a>에서 더 읽어볼 수 있고, 우리가 수백만 줄 코드베이스에서 <a href="https://claude.com/blog/ai-code-migration">AI 코드 마이그레이션</a>을 어떻게 돌리는지도 볼 수 있다.</p>
+
+<p>핵심은 작업을 처리해야 할 일련의 단계로 쪼개는 것이다. 예를 들어 호출 지점(callsite), 실패하는 테스트, 모듈 등으로 나눈다. 수정 건마다 worktree 안에서 서브에이전트를 띄워 수정하게 하고, 다른 에이전트가 적대적으로 리뷰한 뒤 머지한다. 자원을 많이 쓰는 명령은 쓰지 말라고 에이전트에 일러두는 것도 고려하자. 그러면 머신 자원이 바닥나지 않으면서 최대한 병렬로 돌릴 수 있다.</p>
+
+<h3>딥 리서치</h3>
+
+<p>우리는 다이내믹 워크플로를 쓰는 딥 리서치 스킬(<code>/deep-research</code>)을 Claude Code 안에 공개했다. 구체적으로는 웹 검색을 펼치고, 출처를 가져오고, 그 주장들을 적대적으로 검증한 뒤, 인용이 달린 보고서를 종합한다.</p>
+
+<p>하지만 이런 종류의 리서치는 웹 검색 말고도 쓸 데가 많다. 예를 들어 Slack의 맥락에서 상태 보고서를 작성해 달라고 하거나, 코드베이스를 깊이 탐색해 어떤 기능이 어떻게 동작하는지 조사해 달라고 할 수 있다.</p>
+
+<h3>딥 검증</h3>
+
+<figure>
+  <img src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/a-harness-for-every-task-dynamic-workflows-in-claude-code/fig-d-deep-verification.png" alt="보고서가 주장 추출기로 들어가고, 거기서 주장 검사기 1부터 N까지로 펼쳐진다. 각 검사기 뒤에는 선택적으로 출처 감사기가 붙고, 결과는 검증된 보고서로 모인다.">
+  <figcaption><b>FIG D</b>딥 검증: 사실 주장 하나마다 검사 에이전트 하나, 그 뒤에 선택적으로 출처 감사 에이전트.</figcaption>
+</figure>
+
+<p>반대로, 보고서가 참조하는 모든 사실 주장을 확인하고 출처를 달고 싶다면, 에이전트 하나가 사실 주장을 모두 찾아낸 뒤 각 주장을 자세히 확인하는 서브에이전트를 띄우는 워크플로를 만들면 된다. 출처 서브에이전트가 찾은 출처가 충분히 질이 높은지 확인하는 검증 에이전트를 추가로 둘 수도 있다.</p>
+
+<h3>정렬</h3>
+
+<figure>
+  <img src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/a-harness-for-every-task-dynamic-workflows-in-claude-code/fig-e-tournament-sort.png" alt="항목 1,000개가 대진표에 들어간다. 1라운드는 비교마다 새 에이전트를 써서 항목을 짝지어 비교하고, 승자들은 2라운드에서 만나며, 마지막 비교가 결승을 결정하고, 출력은 정렬된 목록이다.">
+  <figcaption><b>FIG E</b>토너먼트 정렬: 비교마다 새 에이전트가 붙으므로, 어느 컨텍스트도 1,000개 항목을 통째로 들고 있을 필요가 없다.</figcaption>
+</figure>
+
+<p>Claude Code가 잘 평가할 거라고 믿는 어떤 정성적 기준으로 정렬하고 싶은 항목 목록이 있을 수 있다. 예를 들어 버그 심각도로 정렬한 지원 티켓 같은 것이다. 하지만 프롬프트 하나로 1,000개 이상의 행을 정렬하려 하면 품질이 떨어지고 컨텍스트에도 들어가지 않는다. 대신 토너먼트를 돌리거나, 쌍대 비교 에이전트의 파이프라인을 쓰거나(비교 판단이 절대 점수 매기기보다 더 신뢰할 만하다), 병렬로 버킷 순위를 매긴 뒤 합치자. 비교 하나하나가 자기 에이전트이므로, 결정론적 루프가 대진표를 들고 있고 컨텍스트에는 진행 중인 순서만 남는다.</p>
+
+<h3>메모리와 규칙 준수</h3>
+
+<figure>
+  <img src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/a-harness-for-every-task-dynamic-workflows-in-claude-code/fig-f-rule-review.png" alt="+142줄, −87줄짜리 diff를 다섯 가지 규칙에 대해 검사하며, 규칙마다 검증 에이전트가 하나씩 붙는다. 두 규칙이 42번째 줄과 90번째 줄을 지적하고 나머지는 깨끗하다. 회의론자 에이전트가 각 지적을 다시 읽어 실제 위반과 오탐을 가려내고, 확인된 위반만 남긴다.">
+  <figcaption><b>FIG F</b>규칙별 리뷰: 규칙 하나마다 깨끗한 컨텍스트의 검증 에이전트 하나, 그 뒤에 회의론자가 지적 사항을 걸러낸다.</figcaption>
+</figure>
+
+<p><code>CLAUDE.md</code>에 넣어 두어도 Claude가 자꾸 놓치거나 어려워하는 특정 규칙 묶음이 있다면, 검증 에이전트가 반드시 확인해야 할 규칙 목록을 가진 워크플로를 만들자. 규칙 하나당 검증 에이전트 하나다. 규칙 판정이 적절한지 리뷰하는 회의론자(skeptic) 페르소나 서브에이전트를 만들면 오탐이 너무 많아지는 것을 막는 데 도움이 된다.</p>
+
+<p>반대 방향도 통한다. 최근 세션과 코드 리뷰 코멘트에서 여러분이 반복해서 하는 교정을 캐내고, 병렬 에이전트로 클러스터링하고, 후보마다 적대적으로 검증한 뒤(이 규칙이 실제 실수를 막아 줬을까?), 살아남은 것들을 다시 <code>CLAUDE.md</code>로 증류하는 것이다.</p>
+
+<h3>근본 원인 조사</h3>
+
+<p>디버깅은 독립적인 가설을 여러 개 세우고 검증할 때 가장 잘 되지만, 컨텍스트 윈도 하나만 쓰면 Claude는 자기 선호 편향에 빠질 수 있다.</p>
+
+<p>워크플로는 서로 겹치지 않는 증거로부터 가설을 만드는 에이전트들을 띄워 이를 구조적으로 막을 수 있다. 예를 들어 로그, 파일, 데이터 각각에 별도의 에이전트를 두는 식이다. 그런 다음 각 가설이 검증자와 반박자로 이루어진 패널을 마주하게 한다.</p>
+
+<p>이건 코드에만 해당하는 얘기가 아니다. 워크플로는 영업(3월에 매출이 왜 떨어졌나?), 데이터 엔지니어링(이 파이프라인이 왜 실패했나?), 그 밖의 어떤 사후 분석(post-mortem) 작업에도 쓸 수 있다.</p>
+
+<h3>대규모 트리아지</h3>
+
+<figure>
+  <img src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/a-harness-for-every-task-dynamic-workflows-in-claude-code/fig-g-quarantine.png" alt="지원 티켓, 버그 리포트, 사용자 피드백으로 이루어진 신뢰할 수 없는 백로그가 읽기 전용 도구만 있는 격리 구역으로 들어간다. 거기서 리더 에이전트들이 항목을 분류하고, 이미 추적 중인 것과 중복을 제거하고, 구조화된 요약만 내보낸다. 높은 권한의 도구가 있는 신뢰 구역에는 요약을 바탕으로 행동하는 액터 에이전트가 있어, 고칠 수 있으면 수정을 시도해 PR을 열고, 아니면 사람에게 에스컬레이션한다. /loop가 이것을 계속 돌린다.">
+  <figcaption><b>FIG G</b>격리하고 나서 행동하기: 리더 에이전트는 아무 권한 없이 신뢰할 수 없는 콘텐츠를 다루고, 액터 에이전트는 오직 그들의 요약만 본다.</figcaption>
+</figure>
+
+<p>모든 팀에는 사람이 다 처리할 수 없는 지원 큐, 버그 리포트, 혹은 다른 종류의 백로그가 있다.</p>
+
+<p>트리아지 워크플로는 각 항목을 분류하고, 이미 추적 중인 것과 중복을 제거하고, 조치를 취한다. 조치란 수정을 시도하거나 사람에게 에스컬레이션하는 것일 수 있다.</p>
+
+<p>트리아지 워크플로에 유용한 패턴은 격리(quarantine)다. 신뢰할 수 없는 공개 콘텐츠를 읽는 에이전트는 높은 권한의 행동을 하지 못하게 막고, 그런 행동은 정보에 따라 행동하는 역할을 맡은 에이전트가 대신 하도록 하는 것이다.</p>
+
+<p>트리아지 워크플로를 /loop와 짝지으면 Claude가 이 일을 계속해서 하게 할 수 있다.</p>
+
+<h3>탐색과 취향</h3>
+
+<p>워크플로는 해법에 대한 여러 접근법을 탐색할 때, 특히 디자인이나 네이밍처럼 취향에 좌우되고 루브릭이 있으면 좋은 일에 유용할 수 있다.</p>
+
+<p>Claude에게 여러 해법을 탐색하게 하고, 리뷰 에이전트에는 좋은 해법이 어떤 모습인지에 대한 루브릭을 주어 보자. 리뷰 에이전트가 기준을 충족했다고 느끼면 작업이 완료된다. 해법들을 루브릭에 따라 토너먼트로 순위를 매기거나 고를 수도 있다.</p>
+
+<h3>평가(Evals)</h3>
+
+<p>worktree 안에서 별도의 에이전트들을 띄운 다음, 특정 출력물을 루브릭에 비추어 비교하고 채점하는 비교 에이전트를 띄우면 특정 작업에 대한 가벼운 eval을 돌릴 수 있다. 예를 들어 여러분이 만든 스킬을 특정 기준에 따라 평가하고 다듬는 식이다.</p>
+
+<h3>모델·지능 라우팅</h3>
+
+<p>여러분의 작업에 맞게 조정된, 어떤 모델을 쓸지 결정하는 분류기 에이전트를 만들자. 작업에 많은 도구 호출이 필요하고 실행 전에 조사를 해 보면 그 일에 가장 알맞은 모델을 알아낼 수 있을 때 도움이 된다.</p>
+
+<p>예를 들어 "auth 모듈이 어떻게 동작하는지 설명해라"라는 작업에 가장 알맞은 모델은 auth 모듈에 파일이 몇 개나 있는지와 코드베이스의 모양에 따라 달라진다. 분류기 에이전트가 이 조사를 한 뒤, 예상되는 작업 복잡도에 따라 Sonnet이나 Opus로 라우팅할 수 있다.</p>
+
+<h2 id="when-not-to-use-dynamic-workflows">다이내믹 워크플로를 쓰지 말아야 할 때</h2>
+
+<p>워크플로는 새로운 기능이다. 크게 뛰어난 결과를 내는 사용 사례가 많지만, 모든 작업에 필요한 것은 아니며 토큰을 훨씬 더 많이 쓰게 될 수도 있다.</p>
+
+<p>워크플로는 이전에 해 보지 않은 방식으로 Claude Code를 밀어붙이는 데 창의적으로 쓰는 것이 가장 좋다. 평범한 코딩 작업이라면 이렇게 자문해 보자. 정말 더 많은 컴퓨팅이 필요한가? 예를 들어 대부분의 전통적인 코딩 작업에는 리뷰어 5명짜리 패널이 필요하지 않다.</p>
+
+<p>같은 판단은 한 단계 위의 아키텍처 계층에도 적용된다. <a href="https://claude.com/blog/building-multi-agent-systems-when-and-how-to-use-them">멀티 에이전트 vs 단일 에이전트</a> 결정도 비슷한 논리를 따른다. 병렬성과 전문화는 그 조율 비용을 치를 만한 값어치를 해야 한다.</p>
+
+<h2 id="tips-for-building-dynamic-workflows">다이내믹 워크플로 만들기 팁</h2>
+
+<h3>프롬프팅</h3>
+
+<p>위에서 설명한 구체적인 기법을 써서 다이내믹 워크플로에 상세하게 프롬프트를 주면 가장 좋은 결과가 나온다.</p>
+
+<p>워크플로는 큰 작업만을 위한 것이 아니다. 모델에게 "빠른 워크플로(quick workflow)"를 쓰라고 프롬프트할 수 있다. 예를 들어 어떤 가정에 대한 빠른 적대적 리뷰를 만들 수 있다.</p>
+
+<h3><code>/goal</code>, <code>/loop</code>와 조합하기</h3>
+
+<p>트리아지, 리서치, 검증처럼 반복할 수 있는 워크플로를 쓸 때는 <code>/loop</code>와 짝지어 일정 간격으로 실행하고, /goal로 엄격한 완료 요건을 정해 두자.</p>
+
+<h3>토큰 사용 예산</h3>
+
+<p>다이내믹 워크플로에 명시적인 토큰 사용 예산을 정해 작업이 쓰는 토큰 수를 제한할 수 있다. "10k 토큰을 써라"처럼 예산을 프롬프트에 넣으면 상한이 설정된다.</p>
+
+<h3>다이내믹 워크플로 저장·공유하기</h3>
+
+<p>워크플로 메뉴에서 "s"를 누르면 워크플로를 저장할 수 있다. 저장한 것은 <code>~/.claude/workflows</code>에 체크인하거나 스킬로 배포할 수 있다.</p>
+
+<figure>
+  <img src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/a-harness-for-every-task-dynamic-workflows-in-claude-code/fig-h-workflows-panel.png" alt="Claude Code의 Dynamic workflows 패널. 실행 세 개가 에이전트 수, 총 토큰, 소요 시간과 함께 나열돼 있다: review-changes(에이전트 14개, 482k 토큰, 6분 12초), find-flaky-tests(에이전트 6개, 아직 실행 중), deep-research(에이전트 22개, 1.1M 토큰, 11분 3초). 하단 키: 선택, enter 보기, s 저장, esc 닫기.">
+  <figcaption><b>FIG H</b>다이내믹 워크플로 패널. s를 누르면 실행을 재사용 가능한 워크플로로 저장한다.</figcaption>
+</figure>
+
+<p>스킬로 공유하려면 JavaScript 워크플로 파일을 스킬 폴더에 넣고 <code>SKILL.md</code>에서 참조하면 된다. 유연성을 더 주고 싶다면, 스킬 안의 워크플로를 그대로 실행해야 하는 스크립트가 아니라 템플릿으로 생각하라고 Claude에게 프롬프트하는 것도 좋다.</p>
+
+<figure>
+  <img src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/a-harness-for-every-task-dynamic-workflows-in-claude-code/skill-workflow-template.png" alt="~/.claude/skills/deep-verify/ 스킬 폴더에 SKILL.md, verify-claims.workflow.js, rubric.md가 들어 있고, 그 옆에 SKILL.md 내용이 보인다. SKILL.md는 ./verify-claims.workflow.js를 참조해 각 주장을 자기 서브에이전트로 검증하라고 적혀 있다.">
+  <figcaption>워크플로 파일을 담은 스킬 폴더와, 그 파일을 참조하는 SKILL.md.</figcaption>
+</figure>
+
+<h2 id="a-new-starting-point-for-discovery">발견을 위한 새로운 출발점</h2>
+
+<p>워크플로는 Claude Code를 확장하는 유용한 새 방법이다. 여러분의 작업을 Claude가 돕게 하는 새로운 방식을 탐색하는 출발점으로 삼아 보기를 권한다. 어떻게 써야 가장 좋은지는 아직 발견할 것이 많다. 무엇을 찾았는지 알려 달라.</p>
+
+<p><em>애초에 하네스에 무엇이 들어가야 하는지에 대한 원칙은 Claude로 개발할 때의 세 가지 <a href="https://claude.com/blog/harnessing-claudes-intelligence">하네스 설계 패턴</a>을 참고하라.</em></p>
+
+<p><em>이 글은 Anthropic에서 Claude Code를 만드는 Members of Technical Staff인 Thariq Shihipar와 Sid Bidasaria가 썼다.</em></p>
+
+<footer>
+  이 글은 claude.dev(Anthropic 개발자 블로그) 원문을 한국어로 옮긴 비공식 번역본입니다.
+  내용의 정확한 의미는 위 원문 링크를 함께 참고하세요.
+</footer>

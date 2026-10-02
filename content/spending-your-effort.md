@@ -1,0 +1,241 @@
+---
+slug: "spending-your-effort"
+title: "Claude Code 사용법: effort를 어디에 쓸 것인가"
+nav: "effort를 어디에 쓸 것인가 · effort 곡선, 빌드 3종 실험, Terminal-Bench 3.0 엣지 케이스, 수준별 경험칙"
+main: "claude.dev"
+cat: "Engineering"
+date: "2026-09-25"
+author: "ai"
+rev: 1
+style_css: ":root { --fg:#1a1a1a; --muted:#666; --line:#e5e5e5; --accent:#c96442; --code-bg:#f6f6f4; }\n  * { box-sizing: border-box; }\n  body {\n    font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", \"Apple SD Gothic Neo\",\n      \"Malgun Gothic\", sans-serif;\n    color: var(--fg); line-height: 1.75; max-width: 760px;\n    margin: 0 auto; padding: 48px 24px 96px; background:#fff;\n  }\n  header { border-bottom: 2px solid var(--line); padding-bottom: 24px; margin-bottom: 32px; }\n  h1 { font-size: 1.9rem; line-height: 1.35; margin: 0 0 12px; }\n  .meta { color: var(--muted); font-size: 0.9rem; }\n  .meta .orig { display:block; margin-top:6px; }\n  .meta a { color: var(--accent); text-decoration: none; }\n  h2 { font-size: 1.4rem; margin: 44px 0 8px; padding-top: 8px; }\n  h3 { font-size: 1.15rem; margin: 30px 0 8px; color:#000; }\n  h4 { font-size: 1.02rem; margin: 24px 0 6px; color:#000; }\n  p { margin: 0 0 16px; }\n  a { color: var(--accent); }\n  ul, ol { margin: 0 0 16px; padding-left: 22px; }\n  li { margin-bottom: 8px; }\n  blockquote { margin: 16px 0; padding: 8px 18px; border-left:3px solid var(--line);\n    color:#333; font-style: italic; }\n  hr { border: none; border-top: 1px solid var(--line); margin: 40px 0; }\n  code { background: var(--code-bg); padding: 2px 6px; border-radius: 4px;\n    font-family: \"SF Mono\", Menlo, Consolas, monospace; font-size: 0.88em; }\n  pre { background: var(--code-bg); padding: 16px 18px; border-radius: 8px;\n    overflow-x: auto; margin: 0 0 16px; line-height: 1.5; }\n  pre code { background: none; padding: 0; font-size: 0.85rem; white-space: pre; }\n  table { border-collapse: collapse; width: 100%; margin: 0 0 20px; font-size: 0.95rem; }\n  th, td { border: 1px solid var(--line); padding: 8px 12px; text-align: left; vertical-align: top; }\n  th { background: var(--code-bg); }\n  td.nw, th.nw { white-space: nowrap; }\n  td.num, th.num { text-align: right; }\n  figure { margin: 24px 0; }\n  figure img { width: 100%; height: auto; border:1px solid var(--line); border-radius: 8px;\n    background:#fff; }\n  figure video { width: 100%; height: auto; border:1px solid var(--line); border-radius: 8px;\n    background:#000; display:block; }\n  figure table { margin-bottom: 0; }\n  figcaption { color: var(--muted); font-size: 0.85rem; text-align: center;\n    margin-top: 10px; line-height: 1.5; }\n  figcaption b { color: var(--accent); margin-right: 6px; }\n  figcaption a { color: var(--accent); }\n  .video { position: relative; width: 100%; padding-top: 56.25%; margin: 24px 0 8px;\n    border-radius: 8px; overflow: hidden; background:#000; }\n  .video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }\n  .callout { background:#faf6f4; border-left:3px solid var(--accent);\n    padding: 12px 16px; border-radius: 0 6px 6px 0; margin: 16px 0; }\n  .callout strong { color: var(--accent); }\n  .interactive { border:1px dashed var(--line); border-radius: 8px; padding: 16px 18px; background:#fcfcfb; }\n  .interactive .label { font-size:0.8rem; color: var(--muted); letter-spacing: .04em; margin-bottom: 8px; }\n  .lede { color:#333; font-size: 1.05rem; }\n  .gallery { display:grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 12px 0 0; }\n  .gallery figure { margin: 0; }\n  .gallery figcaption { margin-top: 6px; }\n  @media (max-width: 640px) { .gallery { grid-template-columns: 1fr; } }\n  footer { margin-top: 64px; padding-top: 20px; border-top:1px solid var(--line);\n    color: var(--muted); font-size: 0.82rem; }"
+has_markdown: false
+markdown_length: 0
+html_length: 15375
+---
+
+<!-- rendered HTML -->
+<header>
+  <h1>Claude Code 사용법: effort를 어디에 쓸 것인가</h1>
+  <div class="meta">
+    2026년 9월 25일
+    · 카테고리: Engineering
+    · 글쓴이: Thariq Shihipar
+    · 출처: <a href="https://claude.dev/blog">claude.dev</a>
+    <span class="orig">원문:
+      <a href="https://claude.dev/blog/spending-your-effort">Using Claude Code: Spending your effort</a>
+      (한글 번역본)</span>
+  </div>
+</header>
+
+<p class="lede">effort가 실제로 무엇인지, Claude Code에서 어떤 상황에 어떤 수준을 써야 하는지를 다룬다. 내가 직접 세 가지 빌드를 시험해 본 결과와 Opus 5.5·Fable 5.1의 Terminal-Bench 3.0 결과를 깊이 파헤친 내용을 바탕으로 한다.</p>
+
+<p>최신 Claude 모델의 가장 좋은 점 하나는 Claude Code에서 프롬프트 캐시를 깨지 않고 effort에 반응한다는 것이다. 그런데 이 기능에 대해 사용자들로부터 질문을 많이 받았다. <a href="https://claude.com/blog/claude-model-and-effort-level-in-claude-code">effort란 정확히 무엇</a>이고, 어떤 effort 수준을 언제 써야 하나? 왜 effort라는 것이 필요하기는 한가?</p>
+
+<p>이 질문에 답하기 위해 eval을 깊이 들여다보고, 평소 업무 전반에서 effort를 직접 시험해 보기로 했다.</p>
+
+<p>크게 보면, effort는 Claude가 검증(verification)과 엣지 케이스 테스트를 얼마나 하는지, 그리고 자기 판단을 얼마나 쓰는지를 조절하는 훌륭한 수단이었다. 하드웨어, 코드 리뷰, 보안처럼 검증과 엣지 케이스 테스트가 더 유용한 영역에서는 effort를 더 쓸 때 결과가 더 좋았다.</p>
+
+<p>일반적인 소프트웨어 엔지니어링에서는 다음 루프를 돌리고 있다. 모델에게 나를 인터뷰하게 한 뒤 low effort로 구현하고, 만든 것을 리뷰한 다음, high effort로 검증을 돌린다.</p>
+
+<h2 id="what-is-effort">effort란 무엇인가?</h2>
+
+<p>크게 보면 effort는 그 작업에 얼마나 많은 컴퓨팅을 쓰길 원하는지에 대한 근사치를 모델에게 알려 준다. 작업 난이도에 대한 당신의 모델링과 어느 정도 연관된다.</p>
+
+<p>이렇게 생각해 보자. 누군가 어떤 일을 12시간 연속으로 해 달라고 부탁하면, 그냥 그 일을 해 주길 원하는 것이라고 받아들여 아주 열심히 할 것이다. 같은 일을 1시간 안에 해 달라고 하면, 요구를 충족하는 최선의 버전을 내놓은 뒤 거기서부터 반복(iterate)하리라 기대할 것이다.</p>
+
+<p>혹은 그 일에는 최소 3시간이 필요하다고 되받은 뒤, 3시간을 들여 결과를 내놓을 수도 있다.</p>
+
+<p>effort도 같은 식으로 생각해야 한다. Claude는 항상 당신의 작업을 합리적으로 수행하려 하지만, effort가 높아지면 판단과 검증을 위해 더 많은 독립적인 행동을 취하게 된다.</p>
+
+<h2 id="effort-curves">effort 곡선</h2>
+
+<p>Fable 5.1과 Opus 5.5의 effort 곡선은 지금까지 중 가장 좋다. 각 수준마다 벤치마크 점수와 소비 토큰이 함께 올라간다.</p>
+
+<figure>
+  <img src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/spending-your-effort/fig-a-effort-curves.png" alt="Terminal-Bench 3.0: effort 설정별 토큰 사용량 대비 통과율 차트. Opus 5.5, Fable 5.1, Opus 5, Fable 5의 low부터 max까지 곡선">
+  <figcaption><b>FIG A</b>Terminal-Bench 3.0. 모든 모델에 같은 70개 과제를 사용했다(GPU 과제 4개는 제외). Opus 5.5는 약 3주 뒤에 실행했으며, 응답은 128k 토큰으로 제한되고 GitHub·PyPI 접근은 없었다. Opus 5의 max는 effort-120 실행이다.<br>
+  <small>원문 차트 설명: Terminal-Bench 3.0만 대상으로, Opus 5.5·Fable 5.1·Opus 5·Fable 5의 effort 설정(low~max)별 통과율을 시도당 중간값 토큰(로그 스케일)에 대해 그린 것. Opus 5.5는 모든 설정에서 가장 높은 점수를 기록해 low 36.6%에서 max 65.7%까지 오르고, Fable 5.1은 모든 설정에서 Opus 5와 Fable 5보다 높다. Opus 5.5의 high는 Fable 5.1의 max와 같은 점수(58.9% 대 58.0%)를 절반의 토큰으로 낸다. Fable 5는 xhigh에서 max까지 43.4%로 정체된다. 원문 차트는 <a href="https://claude.dev/blog/spending-your-effort#effort-curves">여기</a>서 PNG로 내려받을 수 있다.</small></figcaption>
+</figure>
+
+<p>그런데 이것이 실제로는 무엇을 뜻할까? 이를 평가하기 위해 여러 작업을 서로 다른 effort 수준에서 시도하고 벤치마크를 꼼꼼히 살폈다.</p>
+
+<h2 id="building-with-effort">effort로 만들어 보기</h2>
+
+<p>모델이 어떻게 동작하는지 이해하는 가장 좋은 방법은 실험을 돌려 보는 것이다. Opus 5.5에서 같은 작업을 여러 effort 수준으로 시도해 어떤 일을 하는지 살펴봤다. 아주 다양한 작업에서 해 봤지만, 여기서는 몇 가지 장난감 예시로 설명한다.</p>
+
+<h3>명세가 부족한 빌드 작업</h3>
+
+<p>Claude에게 "개인 피트니스·운동 트래커 앱을 만들어 줘"라고 하면, effort에 따라 앱이 얼마나 살이 붙는지가 극적으로 달라지고, 동시에 Claude가 과정에서 더 많은 선택을 스스로 하게 된다. low effort에서는 피트니스 앱이 그저 기록 로그와 간단한 그래프일 뿐이다. 더 높은 effort 수준에서는 앱이 더 복잡해지고 세부가 더해진다. max effort에서는 히트 차트가 생긴다.</p>
+
+<figure>
+  <div class="gallery">
+    <figure><img src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/spending-your-effort/fitness-oneline-low.png" alt="low effort(1.5분)로 만든 피트니스 앱"><figcaption>low (1.5분)</figcaption></figure>
+    <figure><img src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/spending-your-effort/fitness-oneline-medium.png" alt="medium effort(4분)로 만든 피트니스 앱"><figcaption>medium (4분)</figcaption></figure>
+    <figure><img src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/spending-your-effort/fitness-oneline-high.png" alt="high effort(11분)로 만든 피트니스 앱"><figcaption>high (11분)</figcaption></figure>
+    <figure><img src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/spending-your-effort/fitness-oneline-max.png" alt="max effort(67분)로 만든 피트니스 앱"><figcaption>max (67분)</figcaption></figure>
+  </div>
+  <figcaption>한 줄 프롬프트로 각 effort 수준에서 만든 피트니스 앱. 원문에서는 각 앱이 실제로 동작하는 인터랙티브 데모로 들어가 있으며, 여기서는 캡처 화면으로 대신한다. <a href="https://claude.dev/blog/spending-your-effort#building-with-effort">원문에서 직접 만져 보기</a>.</figcaption>
+</figure>
+
+<p>반복해 나갈 단순한 바탕이 필요했다면 low effort로 충분했을 것이다. Claude의 최선을 한 번에(one shot) 받고 싶다면 max effort다.</p>
+
+<h3>가볍게 명세된 디자인 작업</h3>
+
+<p>이미 어느 정도 명세가 된 작업이지만 Claude와 함께 탐색을 좀 해 보고 싶다면 어떨까? 예시로 Claude Code의 <code>/config</code> 메뉴를 다시 디자인해 달라고 해 봤다. 모든 시도가 대체로 같은 아이디어였다. 하위 메뉴와 더 나은 검색을 쓰는 것이다.</p>
+
+<p>low effort(1분 소요)에서는 아이디어는 전달되지만 Claude Code처럼 보이지는 않는 인터랙티브 스케치를 받았다.</p>
+
+<p>max effort(28분 소요)에서는 Claude Code와 매우 닮은 목업과 함께 여러 흐름에 대한 워크스루 여러 개를 받았다.</p>
+
+<p>목표가 반복하며 피드백을 주는 것이라면 low effort가 훨씬 빨리 거기 도달한다. 하지만 max effort는 처음부터 훨씬 다듬어진 결과를 준다. 이 특정 작업에서는 Claude의 비전을 이해하기 위해 low effort를 쓰는 편이 더 좋다고 생각한다.</p>
+
+<figure>
+  <div class="gallery">
+    <figure><img src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/spending-your-effort/config-redesign-low.png" alt="low effort /config 화면"><figcaption>low</figcaption></figure>
+    <figure><img src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/spending-your-effort/config-redesign-medium.png" alt="medium effort /config 화면"><figcaption>medium</figcaption></figure>
+    <figure><img src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/spending-your-effort/config-redesign-high.png" alt="high effort /config 화면"><figcaption>high</figcaption></figure>
+    <figure><img src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/spending-your-effort/config-redesign-max.png" alt="max effort /config 화면"><figcaption>max</figcaption></figure>
+  </div>
+  <figcaption>각 effort 수준에서 나온 Claude Code <code>/config</code> 재디자인. 원문에서는 인터랙티브 목업이며 여기서는 캡처 화면이다. <a href="https://claude.dev/blog/spending-your-effort#building-with-effort">원문에서 보기</a>.</figcaption>
+</figure>
+
+<h3>상세히 명세된 빌드 작업</h3>
+
+<p>Claude에게 세부 사항을 많이 주면 어떨까? 피트니스 앱에 대해 나를 심층 인터뷰하게 한 뒤, 그 스펙을 서로 다른 모델과 effort 수준에서 구현하게 해 봤다.</p>
+
+<p>이 스펙이 주어지자 모델들의 행동이 훨씬 비슷해졌다. 꽤 비슷하게 보이는 디자인과 비슷한 구현을 받았고 세부만 달랐다. max effort에서는 Claude가 몇 가지 세부를 단순화하는 데 시간을 좀 들였다.</p>
+
+<figure>
+  <div class="gallery">
+    <figure><img src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/spending-your-effort/fitness-spec-low.png" alt="low effort(16분)로 스펙에 따라 만든 피트니스 앱"><figcaption>low (16분)</figcaption></figure>
+    <figure><img src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/spending-your-effort/fitness-spec-medium.png" alt="medium effort(22분)로 스펙에 따라 만든 피트니스 앱"><figcaption>medium (22분)</figcaption></figure>
+    <figure><img src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/spending-your-effort/fitness-spec-high.png" alt="high effort(33분)로 스펙에 따라 만든 피트니스 앱"><figcaption>high (33분)</figcaption></figure>
+    <figure><img src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/spending-your-effort/fitness-spec-max.png" alt="max effort(79분)로 스펙에 따라 만든 피트니스 앱"><figcaption>max (79분)</figcaption></figure>
+  </div>
+  <figcaption>인터뷰 스펙으로 각 effort 수준에서 만든 피트니스 앱. 원문에서는 11단계 흐름을 자동 재생하는 폰 목업이며, 여기서는 한 장면씩 캡처했다. <a href="https://claude.dev/blog/spending-your-effort#building-with-effort">원문에서 흐름 전체 보기</a>.</figcaption>
+</figure>
+
+<h3>정리</h3>
+
+<p>일반적인 소프트웨어 엔지니어링, 특히 새 기능 작업에서는 내가 루프 안에 얼마나 들어가 있고 싶은지에 따라 effort 수준이 크게 달라진다. low effort는 Claude가 출발점을 빨리 내놓게 해 주고, 더 높은 effort 수준은 더 많은 일을 해내지만 Claude가 나를 대신해 더 많은 가정을 하게 된다.</p>
+
+<p>기능 개발에서 특히 효과가 좋았던 루프는 이렇다.</p>
+
+<ul>
+  <li>Claude에게 스펙을 주고, 내가 빠뜨린 세부에 대해 나를 인터뷰하게 한다</li>
+  <li>low effort로 구현한다</li>
+  <li>핵심을 제대로 잡았는지 리뷰하고, 필요하면 low effort로 반복한다</li>
+  <li>high effort로 검증하고 테스트한다</li>
+</ul>
+
+<h2 id="how-effort-levels-impact-output-on-difficult-tasks">어려운 작업에서 effort 수준이 결과에 미치는 영향</h2>
+
+<p>하지만 이것들은 분명 장난감 예시이고, Claude가 충분히 완수할 수 있는 작업이다. Claude가 작업을 완수하느냐 못 하느냐의 차이가 갈리는 경우는 어떨까?</p>
+
+<p>그런 어려운 문제를 찾으려면 벤치마크로 가야 한다. 그래서 내가 좋아하는 벤치마크 하나를 파고들었다. 커뮤니티가 모은 벤치마크인 Terminal-Bench 3.0이다.</p>
+
+<p>Terminal-Bench 3.0 문제는 대략 보안, 하드웨어, ML, 과학, 소프트웨어, 운영, 미디어 같은 범주로 나눌 수 있다. 전체 문제는 여기서 볼 수 있다: <a href="https://github.com/harbor-framework/terminal-bench/releases/tag/v3.0.0">https://github.com/harbor-framework/terminal-bench/releases/tag/v3.0.0</a>. 커뮤니티에서 모은 것이라 누구나 기여할 수 있다.</p>
+
+<p>이 모델들이 마주하는 문제 유형을 감 잡기 위해 한번 읽어 볼 가치가 있다. 많은 과제의 범위와 야심에 놀랐다. 내가 평소 마주하는 평균적인 작업보다 훨씬 복잡하다.</p>
+
+<p>예를 들어 이런 과제들이 있었다.</p>
+
+<ul>
+  <li><strong>하드웨어</strong> (<code>retro-console-soc</code>): 작은 FPGA에 들어가고 테스트 ROM을 렌더링하는 8비트 게임 콘솔을 Verilog로 만든다.</li>
+  <li><strong>과학</strong> (<code>takens-embedding-lean</code>): Takens의 임베딩 정리를 Lean 4로 형식 증명한다.</li>
+  <li><strong>ML</strong> (<code>mp-checkpoint-consolidation</code>): mixture-of-experts 체크포인트의 샤드 16개를 참조 로짓을 재현하는 파일 하나로 병합한다.</li>
+  <li><strong>운영</strong> (<code>intrastat-meldung</code>): 한 회사의 월말 EU 무역 통계 신고를 끝까지 수행한다.</li>
+  <li><strong>미디어</strong> (<code>layout-config-recreation</code>): 포스터 이미지를 편집 가능한 레이아웃 파일로 다시 만든다.</li>
+</ul>
+
+<h3>엣지 케이스가 많을 때 높은 effort 수준이 도움이 된다</h3>
+
+<p>Terminal-Bench 3.0 결과를 읽고 얻은 핵심은, <strong>숨은 엣지 케이스가 많은 작업에 높은 effort가 가장 좋다</strong>는 것이다.</p>
+
+<p>깔끔한 예가 <code>html-js-filter</code>다. 페이지에 JavaScript를 몰래 넣는 모든 방법을 걸러 내는 HTML sanitizer를 요구하는 Terminal-Bench 3.0 과제다. Fable 5.1은 low에서 1/5였다가 xhigh에서 5/5가 됐다.<sup>1</sup></p>
+
+<p>low effort의 전형적인 시도는 약 2분이 걸린다. 이 시도들은 각각 필터를 대략 한 번에 작성한 뒤, 손으로 쓴 페이지 하나에 대해 테스트했다.</p>
+
+<p>high effort 실행은 약 33분에 끝난다. 내가 추적한 실행에서는 첫 초안을 적대적으로(adversarially) 리뷰한 뒤, 설치된 파서의 소스를 읽어 버그를 확인하고, 깨끗한 테스트 케이스 여러 개를 입력과 같은 출력이 나올 때까지 돌리고, 표준 XSS 테스트 스위트를 실행하고, 마지막으로 무작위 문서 퍼저(fuzzer)를 작성했다.</p>
+
+<p>HTML sanitizer처럼 엣지 케이스가 많은 것에는 이 추가 effort가 충분히 값어치를 한다. 성능 최적화나 보안 리뷰처럼 프로덕션 요구 수준이 높은 복잡한 작업에서도 꼼꼼함을 위해 토큰을 더 쓰는 것이 합리적이다.</p>
+
+<p>하지만 모든 작업에 이 정도 effort가 필요한 것은 아니다.</p>
+
+<p>아래 다이어그램은 서로 다른 모델과 effort 수준에서 Terminal-Bench 3.0의 모든 결과와 그것이 어떻게 실패했는지를 보여 준다. 전반적으로 effort를 높이면 엣지 케이스를 놓쳐서 생기는 실패(보라색 블록)는 줄어드는 경향이 있지만, 모델이 잘못된 접근을 택한 경우(파란색 블록)는 고쳐지지 않는다.</p>
+
+<figure>
+  <img src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/spending-your-effort/fig-b-outcomes-fable-5-1.png" alt="Terminal-Bench 3.0 결과별 시도 분포, Fable 5.1 low 대 max. 각 사각형이 시도 하나">
+  <figcaption><b>FIG B</b>각 사각형은 시도 하나다. 실패 유형은 모델 심사자가 분류한 것이며 근사치다.<br>
+  <small>원문은 모델(Fable 5.1·Opus 5·Fable 5)과 effort 슬라이더를 바꿔 볼 수 있는 인터랙티브 차트다. 여기에는 기본 상태인 Fable 5.1(low 대 max)을 실었고, 아래에 Opus 5·Fable 5 화면도 함께 둔다. Fable 5.1 low: 370회 시도 중 140 통과, 2 "내 컴퓨터에서는 되는데", 7 예시에 과적합, 10 거의 맞지만 정확하지 않음, 40 자체 테스트가 놓친 버그, 45 요구 사항 오독, 31 잘못되거나 불완전한 수정, 32 도메인 규칙 오류, 25 잘못된 해석 선택, 38 기타 실패(시도당 중간값 73k 토큰). Fable 5.1 max: 370회 중 214 통과, 1 "내 컴퓨터에서는 되는데", 3 예시에 과적합, 6 거의 맞지만 정확하지 않음, 14 자체 테스트가 놓친 버그, 26 요구 사항 오독, 10 잘못되거나 불완전한 수정, 24 도메인 규칙 오류, 47 잘못된 해석 선택, 25 기타 실패(시도당 중간값 222k 토큰). <a href="https://claude.dev/blog/spending-your-effort#how-effort-levels-impact-output-on-difficult-tasks">원문 인터랙티브 차트</a>.</small></figcaption>
+</figure>
+
+<figure>
+  <div class="gallery">
+    <figure><img src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/spending-your-effort/fig-b-outcomes-opus-5.png" alt="Terminal-Bench 3.0 결과별 시도 분포, Opus 5"><figcaption>Opus 5</figcaption></figure>
+    <figure><img src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/spending-your-effort/fig-b-outcomes-fable-5.png" alt="Terminal-Bench 3.0 결과별 시도 분포, Fable 5"><figcaption>Fable 5</figcaption></figure>
+  </div>
+  <figcaption>같은 차트의 Opus 5, Fable 5 상태.</figcaption>
+</figure>
+
+<h3>effort가 도움이 되는 문제 영역</h3>
+
+<p>이 모델들을 Terminal-Bench 3.0에서 평가하며 가장 흥미로웠던 점 하나는, 다른 영역보다 effort의 혜택을 더 많이 받는 문제 영역이 있다는 것이었다. 다음 다이어그램에서 분류를 볼 수 있다.</p>
+
+<figure>
+  <img src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/spending-your-effort/fig-c-categories-fable-5-1.png" alt="과제 범주별 통과율, low effort 대 top effort, Fable 5.1">
+  <figcaption><b>FIG C</b>통과율. 범주가 작기 때문에 low effort는 각 모델의 가장 낮은 두 설정을, top effort는 가장 높은 세 설정을 묶었다.<br>
+  <small>Fable 5.1, low effort → top effort 통과율: 보안 64% → 87%, 하드웨어 34% → 75%, ML 54% → 73%, 과학 41% → 61%, 소프트웨어 43% → 56%, 미디어 18% → 30%, 운영 12% → 22%. 원문 차트에서는 "규정집(rulebook) 성격의 일은 낮게 머문다"는 주석이 붙어 있고, 각 행을 눌러 과제 목록을 볼 수 있다. <a href="https://claude.dev/blog/spending-your-effort#how-effort-levels-impact-output-on-difficult-tasks">원문 인터랙티브 차트</a>.</small></figcaption>
+</figure>
+
+<figure>
+  <div class="gallery">
+    <figure><img src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/spending-your-effort/fig-c-categories-opus-5.png" alt="과제 범주별 통과율, Opus 5"><figcaption>Opus 5</figcaption></figure>
+    <figure><img src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/spending-your-effort/fig-c-categories-fable-5.png" alt="과제 범주별 통과율, Fable 5"><figcaption>Fable 5</figcaption></figure>
+  </div>
+  <figcaption>같은 차트의 Opus 5, Fable 5 상태.</figcaption>
+</figure>
+
+<p>이를 보여 주기 위해, Terminal-Bench 3.0의 여러 영역에서 Opus 5.5가 low effort에서는 실패했지만 high effort에서는 성공한 문제 몇 개를 골랐다. 대부분 엣지 케이스를 테스트하고 고려했기 때문이다.</p>
+
+<p><strong><code>mvcc-lsm-compaction</code></strong>: 크래시 보고서를 바탕으로 스토리지 엔진 버그를 compaction을 깨지 않고 고치라는 Terminal-Bench 3.0 과제다. Opus 5.5는 low에서 0/5였다가 xhigh에서 4/5가 됐다.</p>
+
+<p>low(시도당 약 1분)에서 Claude는 빌드하거나 재현기(reproducer)를 돌려 보기 전에 코드를 수정했고, 새로 쓴 테스트가 원래 버그를 잡아냈을지 확인하지 않았다.</p>
+
+<p>xhigh(약 11분)에서 Claude는 먼저 크래시를 재현하고, compaction을 전혀 하지 않는 참조 구현에 대한 무작위 테스트를 작성했으며, 반쯤 끝난 수정에서는 자기 테스트가 실패하는지 확인했다.</p>
+
+<p><strong><code>cli-2ph-simplex</code></strong>: Python으로 작성한 CLI 선형 계획(linear-program) 솔버를 요구하는 Terminal-Bench 3.0 과제다. Opus 5.5는 low에서 0/5였다가 high에서 5/5가 됐다.</p>
+
+<p>low 시도들은 솔버를 한 번에 작성하고 작은 문제 몇 개로 확인한 뒤 약 10k 토큰 즈음에서 멈췄다. 마지막 메시지에서 Claude는 큰 문제에서는 느릴 수 있다고 경고했지만 확인하지는 않았다.</p>
+
+<p>high 시도에서 Claude는 별도의 brute-force 솔버와 비교해 무작위 문제로 솔버를 테스트하고, 더 큰 문제의 시간을 측정하고, 너무 오래 걸리거나 크래시하는 케이스에 부딪힌 뒤 탐색을 다시 짰다.</p>
+
+<p><strong><code>gsea-proteomics</code></strong>: 프로테오믹스 데이터에 유전자 집합 농축 분석(gene set enrichment analysis, GSEA)을 수행해 여덟 가지 처리 중 어느 것이 목표 조직과 닮았는지 찾는 Terminal-Bench 3.0 과제다. Opus 5.5는 low에서 0/5였다가 high에서 4/5가 됐다.</p>
+
+<p>low effort에서 Claude는 합리적으로 들리는 데이터 전처리 방법 하나를 고르고, 그 한 가지 방식으로 분석을 돌린 뒤 결과를 보고했다.</p>
+
+<p>high에서 Claude는 데이터를 전처리하는 두 가지 방법을 시도했고, 유의한 처리 목록이 달라진다는 것을 알아챈 뒤, 올바른 쪽을 고르기 전에 왜 그런지 파고들었다.</p>
+
+<p>사용자가 루프 안에 있었다면 Claude가 문제 설정 방법을 사용자에게 물었을 수도 있다. 하지만 루프 안에 사용자가 없다면 high effort가 더 잘한다.</p>
+
+<h3>Claude Code에서 effort 수준을 언제 어떻게 쓸까</h3>
+
+<p>어떤 effort 수준을 언제 쓰는지에 대한 내 경험칙은 이렇다.</p>
+
+<ul>
+  <li><strong>Low</strong>: 루프 안에서 빠른 응답을 원할 때. 예: 브레인스토밍, 스케치, 쉬운 변경</li>
+  <li><strong>Medium</strong>: 평소 소프트웨어 엔지니어링 작업 대부분. 예: 새 기능 구현.</li>
+  <li><strong>High</strong>: 검증이 중요하거나 엣지 케이스가 있는 작업. 예: 브라운필드(brownfield) 코드베이스의 버그 수정.</li>
+  <li><strong>Max</strong>: Claude가 완전히 자율적으로 어려운 문제를 풀길 원할 때. 예: 앱을 끝까지 만들고 검증하기, 중요한 소프트웨어의 보안 취약점 찾기.</li>
+</ul>
+
+<p>Opus 5.5와 Fable 5.1에서 작업에 따라, 혹은 대화 도중에라도 Claude Code의 <code>/effort</code>로 effort를 바꿔 보고, 이것이 당신의 직관과 맞는지 알려 주길 바란다.</p>
+
+<hr>
+
+<p><small><sup>1</sup> 수치에 대한 참고: 이 수치는 우리 내부 실행에서 나온 것으로, 과제당 5회 시도이며 Fable 5.1은 프로덕션 안전 개입(safety interventions)을 끈 상태다. Claude 제품에서는 Fable 5.1의 안전장치가 일부 보안 요청을 Opus에 넘긴다. 보안 과제는 인터넷 접근 없이 실행했으므로 여기의 과제별 수치는 공개 리더보드나 출시 글과 일치하지 않는다. 본문의 사례는 개별 실행에서 가져온 것이며 일부는 중간 effort 설정에서 나왔다.</small></p>
+
+<footer>
+  이 글은 claude.dev(Anthropic 개발자 블로그) 원문을 한국어로 옮긴 비공식 번역본입니다.
+  내용의 정확한 의미는 위 원문 링크를 함께 참고하세요.
+</footer>
