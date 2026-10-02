@@ -21,6 +21,8 @@
       title: "Claude for Government 정식 출시", nav: "Claude for Government GA · FedRAMP High·좌석 요금 없음·Claude Code CLI·M365 얼리 액세스" },
     { file: "agents-you-can-coach-how-asana-builds-human-agent-teams-with-claude.html", date: "2026-09-29", main: "Claude blog", cat: "Agents",
       title: "코칭할 수 있는 에이전트: Asana는 Claude로 어떻게 사람-에이전트 팀을 만드는가", nav: "Asana × Claude · 역할·공유 메모리·투명한 작업으로 사람-에이전트 팀 운영" },
+    { file: "automating-eval-design-and-hillclimbing.html", date: "2026-09-28", main: "claude.dev", cat: "Playbooks",
+      title: "Claude로 eval 설계와 hillclimbing 자동화하기", nav: "eval 설계·hillclimbing 자동화 · 좋은 eval 4요소, 과적합 방지, /claude-api build-eval·hillclimb" },
     { file: "giving-companies-more-control-over-their-ai-agents-with-nvidia.html", date: "2026-09-28", main: "Claude blog", cat: "Agents",
       title: "NVIDIA와 함께, 기업이 AI 에이전트를 더 강하게 통제할 수 있도록", nav: "NVIDIA × Managed Agents · OpenShell로 에이전트 권한 통제" },
     { file: "building-with-claude-sonnet-5-5.html", date: "2026-09-28", main: "claude.dev", cat: "Playbooks",
