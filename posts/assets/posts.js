@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "claude-code-in-the-cloud.html", date: "2026-10-06", main: "claude.dev", cat: "Playbooks",
+      title: "클라우드에서 쓰는 Claude Code: 클라우드 세션 현장 가이드", nav: "Claude Code 클라우드 세션 현장 가이드 · 작업마다 VM 하나, 병렬 워크플로우 7가지, GitHub 연결 한 번에 성공하기" },
     { file: "getting-started-with-claude-code-mods.html", date: "2026-10-01", main: "claude.dev", cat: "Tutorials",
       title: "Claude Code 모드(mod) 시작하기", nav: "Claude Code 모드 시작하기 · 빈 폴더에서 Token Weather 만들기, Blast Radius·Replay Theater 둘러보기" },
     { file: "claude-code-mods.html", date: "2026-10-01", main: "Claude blog", cat: "Product announcements",
