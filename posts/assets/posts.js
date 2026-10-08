@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "building-effective-agent-automations.html", date: "2026-10-08", main: "claude.dev", cat: "Agents",
+      title: "효과적인 에이전트 자동화 만들기", nav: "효과적인 에이전트 자동화 · Managed Agents 레퍼런스 구현, bookmark·ledger·vault·예산 상한, 흔한 실패 유형 6가지 규칙" },
     { file: "claude-code-in-the-cloud.html", date: "2026-10-06", main: "claude.dev", cat: "Playbooks",
       title: "클라우드에서 쓰는 Claude Code: 클라우드 세션 현장 가이드", nav: "Claude Code 클라우드 세션 현장 가이드 · 작업마다 VM 하나, 병렬 워크플로우 7가지, GitHub 연결 한 번에 성공하기" },
     { file: "getting-started-with-claude-code-mods.html", date: "2026-10-01", main: "claude.dev", cat: "Tutorials",
