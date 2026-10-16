@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "solving-code-review-at-anthropic.html", date: "2026-10-15", main: "claude.dev", cat: "Engineering",
+      title: "Claude Code 팀은 코드 리뷰를 어떻게 하는가", nav: "Claude Code 팀의 코드 리뷰 · 7겹 검사, 위험 비례 승인, 장애를 eval로, 리뷰 라운드 수렴, 사람이 결정하는 5곳" },
     { file: "building-effective-agent-automations.html", date: "2026-10-08", main: "claude.dev", cat: "Agents",
       title: "효과적인 에이전트 자동화 만들기", nav: "효과적인 에이전트 자동화 · Managed Agents 레퍼런스 구현, bookmark·ledger·vault·예산 상한, 흔한 실패 유형 6가지 규칙" },
     { file: "claude-code-in-the-cloud.html", date: "2026-10-06", main: "claude.dev", cat: "Playbooks",
