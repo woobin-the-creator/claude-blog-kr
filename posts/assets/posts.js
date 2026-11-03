@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "introducing-artifacts-for-legal-work.html", date: "2026-10-28", main: "Claude blog", cat: "Announcements",
+      title: "법률 업무용 아티팩트를 소개합니다", nav: "법률 업무용 아티팩트 · Claude for Legal 갤러리(인용 검증·사건 보드·규제 스캔), 60+ 법률 커넥터, 로펌·리걸테크 파트너, 사법 접근성" },
     { file: "idc-brings-quanta-into-claude-and-adopts-claude-across-the-company.html", date: "2026-10-28", main: "Claude blog", cat: "Announcements",
       title: "IDC, Quanta를 Claude에 도입하고 회사 전체에 Claude를 채택하다", nav: "IDC Quanta × Claude · MCP 커넥터로 경쟁 브리프·벤더 후보·예산 비교, 사내 도입(코드 리뷰 5일→30분, 기획 3주→3일)" },
     { file: "how-to-manage-costs-and-demonstrate-roi-for-claude-code-on-google-cloud.html", date: "2026-10-27", main: "Claude blog", cat: "Best practices",
