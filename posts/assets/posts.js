@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "expanding-claude-for-nonprofits.html", date: "2026-10-26", main: "Claude blog", cat: "Announcements",
+      title: "비영리 단체를 위한 Claude 확대", nav: "Claude for Nonprofits 플러그인 · 팀 확장(마케팅·채용·이사회), 조직 지도·AI 정책, 모금 전 주기, Claude Corps·Taproot" },
     { file: "claude-duet-safety-privacy-and-security.html", date: "2026-10-23", main: "Claude blog", cat: "Announcements",
       title: "Claude Duet의 안전, 프라이버시, 보안", nav: "Claude Duet의 안전·프라이버시·보안 · 중요한 행동은 승인, 민감 정보 분류기, 자격 증명·브라우저 격리, 레드 팀·버그 바운티" },
     { file: "building-agents-when-to-fold-subagents-into-your-main-agent-loop.html", date: "2026-10-22", main: "Claude blog", cat: "Best practices",
