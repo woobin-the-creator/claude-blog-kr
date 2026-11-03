@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "claude-duet-safety-privacy-and-security.html", date: "2026-10-23", main: "Claude blog", cat: "Announcements",
+      title: "Claude Duet의 안전, 프라이버시, 보안", nav: "Claude Duet의 안전·프라이버시·보안 · 중요한 행동은 승인, 민감 정보 분류기, 자격 증명·브라우저 격리, 레드 팀·버그 바운티" },
     { file: "building-agents-when-to-fold-subagents-into-your-main-agent-loop.html", date: "2026-10-22", main: "Claude blog", cat: "Best practices",
       title: "에이전트 만들기: 서브에이전트를 메인 에이전트 루프로 합쳐야 할 때", nav: "서브에이전트를 메인 루프로 합치기 · 점진적 공개(스킬·도구 검색), 작업 완수 eval, 하나씩 합치고 비교, 팀은 스킬·도구를 소유" },
     { file: "solving-code-review-at-anthropic.html", date: "2026-10-15", main: "claude.dev", cat: "Engineering",
