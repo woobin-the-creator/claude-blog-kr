@@ -23,6 +23,8 @@
       title: "Google Cloud에서 Claude Code 비용을 관리하고 ROI를 입증하는 방법", nav: "Google Cloud의 Claude Code 비용·ROI · 통제→추적→입증, gateway 지출 상한·모델 기본값, OTel 대시보드, 영향 지표" },
     { file: "expanding-claude-for-nonprofits.html", date: "2026-10-26", main: "Claude blog", cat: "Announcements",
       title: "비영리 단체를 위한 Claude 확대", nav: "Claude for Nonprofits 플러그인 · 팀 확장(마케팅·채용·이사회), 조직 지도·AI 정책, 모금 전 주기, Claude Corps·Taproot" },
+    { file: "unified-claude-enterprise.html", date: "2026-10-23", main: "Claude blog", cat: "Announcements",
+      title: "Enterprise에서 Claude Cowork와 채팅이 하나로", nav: "Enterprise 통합 Claude · 채팅·Cowork 단일 경험 GA, 클라우드 VM 격리·egress 기본 차단, 효율 모드·모델 권한·지출 한도·공동 예산" },
     { file: "claude-duet-safety-privacy-and-security.html", date: "2026-10-23", main: "Claude blog", cat: "Announcements",
       title: "Claude Duet의 안전, 프라이버시, 보안", nav: "Claude Duet의 안전·프라이버시·보안 · 중요한 행동은 승인, 민감 정보 분류기, 자격 증명·브라우저 격리, 레드 팀·버그 바운티" },
     { file: "building-agents-when-to-fold-subagents-into-your-main-agent-loop.html", date: "2026-10-22", main: "Claude blog", cat: "Best practices",
