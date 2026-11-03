@@ -1,0 +1,73 @@
+---
+slug: "idc-brings-quanta-into-claude-and-adopts-claude-across-the-company"
+title: "IDC, Quanta를 Claude에 도입하고 회사 전체에 Claude를 채택하다"
+nav: "IDC Quanta × Claude · MCP 커넥터로 경쟁 브리프·벤더 후보·예산 비교, 사내 도입(코드 리뷰 5일→30분, 기획 3주→3일)"
+main: "Claude blog"
+cat: "Announcements"
+date: "2026-10-28"
+author: "ai"
+rev: 1
+style_css: ":root { --fg:#1a1a1a; --muted:#666; --line:#e5e5e5; --accent:#c96442; --code-bg:#f6f6f4; }\n  * { box-sizing: border-box; }\n  body {\n    font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", \"Apple SD Gothic Neo\",\n      \"Malgun Gothic\", sans-serif;\n    color: var(--fg); line-height: 1.75; max-width: 760px;\n    margin: 0 auto; padding: 48px 24px 96px; background:#fff;\n  }\n  header { border-bottom: 2px solid var(--line); padding-bottom: 24px; margin-bottom: 32px; }\n  h1 { font-size: 1.9rem; line-height: 1.35; margin: 0 0 12px; }\n  .meta { color: var(--muted); font-size: 0.9rem; }\n  .meta .orig { display:block; margin-top:6px; }\n  .meta a { color: var(--accent); text-decoration: none; }\n  h2 { font-size: 1.4rem; margin: 44px 0 8px; padding-top: 8px; }\n  h3 { font-size: 1.15rem; margin: 30px 0 8px; color:#000; }\n  p { margin: 0 0 16px; }\n  a { color: var(--accent); }\n  ul, ol { margin: 0 0 16px; padding-left: 22px; }\n  li { margin-bottom: 8px; }\n  blockquote { margin: 16px 0; padding: 8px 18px; border-left:3px solid var(--line);\n    color:#333; font-style: italic; }\n  hr { border: none; border-top: 1px solid var(--line); margin: 40px 0; }\n  code { background: var(--code-bg); padding: 2px 6px; border-radius: 4px;\n    font-family: \"SF Mono\", Menlo, Consolas, monospace; font-size: 0.88em; }\n  figure { margin: 24px 0; }\n  figure img { width: 100%; height: auto; border:1px solid var(--line); border-radius: 8px;\n    background:#fff; }\n  figure.hero img { border:none; max-width: 210px; display:block; margin: 0 auto 8px; }\n  figcaption { color: var(--muted); font-size: 0.85rem; text-align: center;\n    margin-top: 10px; line-height: 1.5; }\n  figcaption a { color: var(--accent); }\n  .video { position: relative; width: 100%; padding-top: 56.25%; margin: 24px 0 8px;\n    border-radius: 8px; overflow: hidden; background:#000; }\n  .video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }\n  .callout { background:#faf6f4; border-left:3px solid var(--accent);\n    padding: 12px 16px; border-radius: 0 6px 6px 0; margin: 16px 0; }\n  .callout strong { color: var(--accent); }\n  .lede { color:#333; font-size: 1.05rem; }\n  footer { margin-top: 64px; padding-top: 20px; border-top:1px solid var(--line);\n    color: var(--muted); font-size: 0.82rem; }\n  .testimonial { margin: 28px 0; padding: 18px 20px; border:1px solid var(--line); border-radius: 8px; }\n  .testimonial img { height: 30px; width: auto; max-width: 180px; display:block; margin-bottom: 12px; }\n  .testimonial blockquote { margin: 0 0 10px; padding: 0; border:none; }\n  .testimonial .who { color: var(--muted); font-size: 0.88rem; margin: 0; }"
+has_markdown: false
+markdown_length: 0
+html_length: 4354
+---
+
+<!-- rendered HTML -->
+<header>
+  <h1>IDC, Quanta를 Claude에 도입하고 회사 전체에 Claude를 채택하다</h1>
+  <div class="meta">
+    2026년 10월 28일
+    · 카테고리: <a href="https://claude.com/resources/product-announcements">Announcements</a>
+    · 제품: Claude Cowork, Claude Code, Claude Enterprise
+    <span class="orig">원문:
+      <a href="https://claude.com/resources/articles/idc-brings-quanta-into-claude-and-adopts-claude-across-the-company">IDC brings Quanta into Claude and adopts Claude across the company</a>
+      (한글 번역본)</span>
+  </div>
+</header>
+
+<p class="lede">IDC는 Quanta 플랫폼의 일부로 Claude를 통합했으며, 자사 비즈니스 전반에도 Claude를 도입했다.</p>
+
+<p>60년 넘게 기술 인텔리전스 분야를 이끌어 온 글로벌 리더 IDC Research(IDC)는 Anthropic과 협력해 IDC Quanta를 Claude에 도입했으며, 이는 오늘부터 IDC 고객이 이용할 수 있다. IDC Quanta는 고객에게 IDC의 신뢰할 수 있고 검증된 전망치, 시장 데이터, 리서치 등을 제공하는데, 이제 고객은 Claude에 질문해 IDC의 인사이트로 보강된 답을 몇 분 만에 얻을 수 있다. IDC는 또한 회사 전체에 Claude를 도입했고, 팀들이 매일 이를 사용하고 있다.</p>
+
+<p>시장 조사를 활용한다는 것은 전통적으로, 벤더 후보 목록(shortlist)이나 경쟁 분석 브리프처럼 고객에게 필요한 답에 이르기 위해 긴 보고서를 읽어 내려가야 한다는 뜻이었다. 이제 IDC 고객은 자신이 다루고 있는 시장, 전략, 구매 건을 설명하기만 하면 되고, Claude용 IDC Quanta MCP 커넥터(connector)가 IDC의 신뢰할 수 있는 전망치와 데이터를 바탕으로 한 완성된 분석을 돌려준다.</p>
+
+<h2>고객이 Claude에서 IDC Quanta로 할 수 있는 일</h2>
+
+<p>IDC Quanta는 IDC의 독자적인 데이터와 리서치에서 나온 신뢰할 수 있고 검증된 인텔리전스로 고객이 더 나은 일을 더 빠르게 하도록 돕는 AI 기반 기술 인텔리전스 플랫폼이다. Claude 안에서 IDC Quanta를 쓰면 고객은 성과를 벤치마킹하고, 시장 규모를 추정하고, 벤더를 선택하고, 전략을 세울 수 있다. 고객이 지금 다루고 있는 질문을 설명하면 Claude가 IDC의 인텔리전스를 활용해 답하는, 그만큼 간단한 방식이다.</p>
+
+<p>사용자가 하는 질문은 역할에 따라 다르지만, 대체로 다음과 같은 모습이다.</p>
+
+<ul>
+  <li><strong>경쟁 분석 브리프:</strong> 기업 전략 책임자가 Claude에 경쟁사 브리프를 요청한다. Claude는 경쟁사의 포지셔닝, 시장 점유율, 제품 역량, 최근 인수 내역을 IDC 리서치를 인용해 돌려준다. 예전에는 하루치 리서치가 들던 일이 몇 분 만에 끝난다.</li>
+  <li><strong>벤더 후보 목록:</strong> 구매(procurement) 소프트웨어를 평가하는 CIO가 자신의 기존 아키텍처와 고유한 비즈니스 요구 사항에 비추어 어떤 벤더가 가장 적합한지 Claude에 묻는다. Claude는 IDC의 구매 데이터베이스와 MarketScape 리서치에 따른 상위 3곳을 Excel 스코어카드로 돌려주며, 평가팀은 이를 바로 활용할 수 있다.</li>
+  <li><strong>자사 수치 분석:</strong> CFO가 내년 IT 예산을 업로드하고 IDC 전망과 어떻게 비교되는지 묻는다. Claude는 둘이 어디서, 얼마나 다른지 돌려주며, 업로드한 데이터는 고객만 볼 수 있도록 비공개로 유지된다.</li>
+</ul>
+
+<p>IDC Quanta는 데스크톱과 모바일의 Claude 앱, Cowork, Microsoft Office 애드인(add-in) 등 고객이 이미 Claude를 쓰고 있는 곳이라면 어디서든 동작한다. IDC Quanta는 Claude에 IDC 애널리스트가 쓰는 것과 같은 데이터와 정의를 제공하므로, 시장 점유율이나 성장률이 IDC가 발표할 수치와 일치하며, 각 답변은 그 출처가 된 IDC 문서나 데이터셋을 인용한다.</p>
+
+<h2>IDC가 내부에서 Claude를 쓰는 방법</h2>
+
+<p>IDC는 또한 회사 전반에 Claude를 투입했으며, 엔지니어링·제품·마케팅·영업 팀이 매일 Claude를 사용해 만들고, 계획하고, 판매한다. Claude가 만들어 내는 차이를 잘 보여 주는 예가 엔지니어링이다. IDC 엔지니어들은 애널리스트들이 리서치에 쓰는 내부 데이터 저장소를 예상 기간 3개월 대신 3주 만에 다시 구축했고, 테스트에 Claude Code를 쓰기 시작한 이후 배포하는 코드의 버그가 크게 줄었다.</p>
+
+<p>엔지니어링이 가장 먼저 Claude를 도입했고, 나머지 회사가 그 뒤를 따랐다. 이들이 Claude를 쓰는 방식은 다음과 같다.</p>
+
+<ul>
+  <li><strong>소프트웨어 구축과 테스트:</strong> 프로덕트 매니저들은 엔지니어링이 시작되기 전에 Claude Code로 동작하는 프로토타입을 만들며, 이로써 기능이 엔지니어링 단계에 이르기까지 걸리는 시간이 몇 달에서 몇 주로 줄었다. 엔지니어들은 Claude Code로 테스트를 병렬로 돌리며, 예전에는 5일이 꼬박 걸리던 코드 리뷰가 약 30분 만에 끝난다.</li>
+  <li><strong>기획과 전략:</strong> 제품 팀은 Cowork에 자신들의 리서치와 내부 파일을 건네고, Cowork는 계획의 초안을 작성한다. 3주가 걸리던 기획 스프린트가 이제 3일이면 끝난다. 코드가 제대로 동작하는지 확인하는 새 테스트를 작성하는 데는 며칠이 걸리던 것이 이제 약 20분이면 된다.</li>
+  <li><strong>영업 최적화:</strong> IDC 영업 팀은 회사 CRM에서 내보낸 데이터를 읽는, Claude로 만든 도구를 쓴다. 이 도구는 몇 분 만에 각 영업 담당자에게 그들의 거래 중 어떤 것이 정체됐고 어떤 것이 추진할 가치가 있는지 알려 준다.</li>
+  <li><strong>마케팅 콘텐츠 제작:</strong> IDC 콘텐츠 마케팅 팀은 마케팅 콘텐츠의 상당 부분 초안을 작성하는 어시스턴트를 Claude에 만들었다. 이 어시스턴트는 검색 및 AI 답변 엔진에 맞게 콘텐츠를 최적화(SEO/AEO)하고, 구매자 페르소나와 IDC 자체 리서치에 비추어 콘텐츠를 점검한다. 그 다음 팀이 편집·교정·게시를 맡으며, 팀 혼자서 할 때보다 더 빠르게 콘텐츠를 발행하고 있다.</li>
+</ul>
+
+<blockquote>“경쟁사 인수가 미칠 영향을 평가하려면 예전에는 시장 인텔리전스 전문가가 몇 시간 동안 여러 보고서를 끌어모으고, 결과를 종합하고, 이를 경영진에게 보고할 수 있는 브리프로 만들어야 했습니다. 이제는 Claude를 열고 그 인수가 자기 비즈니스에 어떤 의미인지 물으면, IDC의 리서치와 150억 개가 넘는 데이터 포인트에 근거한 이사회 보고 수준의 분석을 몇 분 만에 얻을 수 있습니다.” IDC CEO Lorenzo Larini의 말이다. “우리가 IDC Quanta를 Claude에 도입한 것은 그곳이 이미 많은 고객이 일하는 곳이기 때문이며, 이로써 고객은 IDC의 신뢰할 수 있는 데이터와 리서치를 더 빠르고 직관적으로 활용할 수 있게 됩니다.”</blockquote>
+
+<blockquote>“IDC는 60년 동안 리더들이 더 나은 기술 의사결정을 내리도록 도와 왔고, 이제 Claude를 활용해 팀이 일하는 방식과 고객에게 가치를 전달하는 방식을 새롭게 생각하고 있습니다.” Anthropic 최고 상업 책임자(Chief Commercial Officer) Paul Smith의 말이다.</blockquote>
+
+<h2>시작하기</h2>
+
+<p>Claude를 사용하는 IDC Quanta 고객은 Claude 안에서 IDC Quanta 커넥터를 추가할 수 있다. 그 밖의 분들은 IDC에 문의하거나 <a href="https://idc.com/quanta/book-a-demo">데모를 예약</a>할 수 있다. Claude for Enterprise에 대해 더 알아보려면 anthropic.com/enterprise를 방문하자.</p>
+
+<footer>
+  이 글은 Claude 공식 블로그 원문을 한국어로 옮긴 비공식 번역본입니다.
+  내용의 정확한 의미는 위 원문 링크를 함께 참고하세요.
+</footer>
