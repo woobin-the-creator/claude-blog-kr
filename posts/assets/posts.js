@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "idc-brings-quanta-into-claude-and-adopts-claude-across-the-company.html", date: "2026-10-28", main: "Claude blog", cat: "Announcements",
+      title: "IDC, Quanta를 Claude에 도입하고 회사 전체에 Claude를 채택하다", nav: "IDC Quanta × Claude · MCP 커넥터로 경쟁 브리프·벤더 후보·예산 비교, 사내 도입(코드 리뷰 5일→30분, 기획 3주→3일)" },
     { file: "how-to-manage-costs-and-demonstrate-roi-for-claude-code-on-google-cloud.html", date: "2026-10-27", main: "Claude blog", cat: "Best practices",
       title: "Google Cloud에서 Claude Code 비용을 관리하고 ROI를 입증하는 방법", nav: "Google Cloud의 Claude Code 비용·ROI · 통제→추적→입증, gateway 지출 상한·모델 기본값, OTel 대시보드, 영향 지표" },
     { file: "expanding-claude-for-nonprofits.html", date: "2026-10-26", main: "Claude blog", cat: "Announcements",
