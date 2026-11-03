@@ -2,8 +2,9 @@
 """Print posts not yet translated, one per line as "<url>\t<category>".
 
 Sources:
-- claude.com/blog: slugs on the index page that are not in seen.json. The
-  category is left empty; the translator reads it from the page.
+- claude.com articles: slugs on the index page that are not in seen.json. The
+  category is left empty; the translator reads it from the page. claude.com/blog
+  308-redirects here since late Oct 2026 and links became /resources/articles/<slug>.
 - claude.dev: posts in its RSS feed whose slug is not in the catalog
   (posts/assets/posts.js). seen.json was seeded with claude.com slugs that were
   never translated, and some of those match claude.dev slugs, so it can't be
@@ -19,7 +20,7 @@ import xml.etree.ElementTree as ET
 HERE = os.path.dirname(os.path.abspath(__file__))
 SEEN = os.path.join(HERE, "seen.json")
 CATALOG = os.path.join(HERE, "..", "posts", "assets", "posts.js")
-BLOG_INDEX = "https://claude.com/blog"
+BLOG_INDEX = "https://claude.com/resources/articles"
 DEV_RSS = "https://claude.dev/rss.xml"
 
 
@@ -31,7 +32,11 @@ def fetch(url):
 
 def claude_blog(seen):
     html = fetch(BLOG_INDEX)
-    slugs = sorted(set(re.findall(r'href="/blog/([a-z0-9][a-z0-9-]+)"', html)))
+    slugs = sorted(set(re.findall(
+        r'href="/(?:blog|resources/articles)/([a-z0-9][a-z0-9-]+)"', html)))
+    # An empty index means the page layout changed, not that nothing was posted.
+    if not slugs:
+        raise RuntimeError(f"no article links found on {BLOG_INDEX}")
     return [(f"{BLOG_INDEX}/{s}", "") for s in slugs
             if not s.startswith("category") and s not in seen]
 
@@ -57,7 +62,7 @@ def main():
     # category), and the claude.com copy of the same slug is dropped.
     printed = set()
     for name, source, arg in (("claude.dev", claude_dev, catalog),
-                              ("claude.com/blog", claude_blog, seen)):
+                              ("claude.com articles", claude_blog, seen)):
         try:
             for url, cat in source(arg):
                 slug = url.rsplit("/", 1)[-1]
