@@ -13,6 +13,8 @@
   window.CBK_POSTS = [
     { file: "message-threads.html", date: "2026-11-02", main: "Claude blog", cat: "Announcements",
       title: "메시지 스레드로 장시간 실행 에이전트를 더 빠르게", nav: "메시지 스레드 · Messages API thread 파라미터로 새 메시지만 전송, 50만~100만 토큰 TTFT 중앙값 약 35%↓, 퍼블릭 베타" },
+    { file: "smart-reports-surveys-pooled-budgets.html", date: "2026-10-28", main: "Claude blog", cat: "Announcements",
+      title: "Claude Enterprise용 스마트 리포트, 설문, 그룹 공동 예산", nav: "Enterprise 스마트 리포트·설문·공동 예산 · 팀별 워크스트림·지출·마찰 분석과 권장 사항, 가치 중심 인앱 설문, 그룹 공유 월간 예산, GA" },
     { file: "introducing-artifacts-for-legal-work.html", date: "2026-10-28", main: "Claude blog", cat: "Announcements",
       title: "법률 업무용 아티팩트를 소개합니다", nav: "법률 업무용 아티팩트 · Claude for Legal 갤러리(인용 검증·사건 보드·규제 스캔), 60+ 법률 커넥터, 로펌·리걸테크 파트너, 사법 접근성" },
     { file: "idc-brings-quanta-into-claude-and-adopts-claude-across-the-company.html", date: "2026-10-28", main: "Claude blog", cat: "Announcements",
