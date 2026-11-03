@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "building-agents-when-to-fold-subagents-into-your-main-agent-loop.html", date: "2026-10-22", main: "Claude blog", cat: "Best practices",
+      title: "에이전트 만들기: 서브에이전트를 메인 에이전트 루프로 합쳐야 할 때", nav: "서브에이전트를 메인 루프로 합치기 · 점진적 공개(스킬·도구 검색), 작업 완수 eval, 하나씩 합치고 비교, 팀은 스킬·도구를 소유" },
     { file: "solving-code-review-at-anthropic.html", date: "2026-10-15", main: "claude.dev", cat: "Engineering",
       title: "Claude Code 팀은 코드 리뷰를 어떻게 하는가", nav: "Claude Code 팀의 코드 리뷰 · 7겹 검사, 위험 비례 승인, 장애를 eval로, 리뷰 라운드 수렴, 사람이 결정하는 5곳" },
     { file: "building-effective-agent-automations.html", date: "2026-10-08", main: "claude.dev", cat: "Agents",
