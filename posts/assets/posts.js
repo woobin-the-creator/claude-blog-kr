@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "how-to-manage-costs-and-demonstrate-roi-for-claude-code-on-google-cloud.html", date: "2026-10-27", main: "Claude blog", cat: "Best practices",
+      title: "Google Cloud에서 Claude Code 비용을 관리하고 ROI를 입증하는 방법", nav: "Google Cloud의 Claude Code 비용·ROI · 통제→추적→입증, gateway 지출 상한·모델 기본값, OTel 대시보드, 영향 지표" },
     { file: "expanding-claude-for-nonprofits.html", date: "2026-10-26", main: "Claude blog", cat: "Announcements",
       title: "비영리 단체를 위한 Claude 확대", nav: "Claude for Nonprofits 플러그인 · 팀 확장(마케팅·채용·이사회), 조직 지도·AI 정책, 모금 전 주기, Claude Corps·Taproot" },
     { file: "claude-duet-safety-privacy-and-security.html", date: "2026-10-23", main: "Claude blog", cat: "Announcements",
