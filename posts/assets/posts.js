@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "new-agents-and-products-claude-marketplace.html", date: "2026-11-04", main: "Claude blog", cat: "Product announcements",
+      title: "Claude Marketplace에 보안·생산성·크리에이티브 작업을 위한 새 에이전트와 제품 추가", nav: "Claude Marketplace 신규 파트너 · Chainguard·Checkmarx·Datadog·Netlify·Runway·Asana·Zoom 등 14개 추가, 약정 지출 적용, 25개+ 파트너" },
     { file: "message-threads.html", date: "2026-11-02", main: "Claude blog", cat: "Announcements",
       title: "메시지 스레드로 장시간 실행 에이전트를 더 빠르게", nav: "메시지 스레드 · Messages API thread 파라미터로 새 메시지만 전송, 50만~100만 토큰 TTFT 중앙값 약 35%↓, 퍼블릭 베타" },
     { file: "smart-reports-surveys-pooled-budgets.html", date: "2026-10-28", main: "Claude blog", cat: "Announcements",
