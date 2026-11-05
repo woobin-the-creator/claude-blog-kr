@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "claude-enterprise-security-updates.html", date: "2026-11-05", main: "Claude blog", cat: "Product updates",
+      title: "보안 팀을 위해 Claude Enterprise의 가시성과 제어 강화", nav: "Claude Enterprise 보안 업데이트 · 보안 센터(베타), 추론 훅 GA, admin.claude.com 중앙 관리, Admin API 로그아웃·IP 허용 목록, Cowork VM EDR" },
     { file: "new-agents-and-products-claude-marketplace.html", date: "2026-11-04", main: "Claude blog", cat: "Product announcements",
       title: "Claude Marketplace에 보안·생산성·크리에이티브 작업을 위한 새 에이전트와 제품 추가", nav: "Claude Marketplace 신규 파트너 · Chainguard·Checkmarx·Datadog·Netlify·Runway·Asana·Zoom 등 14개 추가, 약정 지출 적용, 25개+ 파트너" },
     { file: "message-threads.html", date: "2026-11-02", main: "Claude blog", cat: "Announcements",
