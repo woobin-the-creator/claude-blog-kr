@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "introducing-personal-finance-in-claude.html", date: "2026-11-05", main: "Claude blog", cat: "Product updates",
+      title: "Claude의 개인 금융(Personal Finance) 기능을 소개합니다", nav: "Claude Personal Finance · Plaid로 은행·카드 계좌 읽기 전용 연결, 지출 분류·월급날까지 잔액·이상 결제 탐지, 미국 Pro·Max·Ultra 베타" },
     { file: "claude-enterprise-security-updates.html", date: "2026-11-05", main: "Claude blog", cat: "Product updates",
       title: "보안 팀을 위해 Claude Enterprise의 가시성과 제어 강화", nav: "Claude Enterprise 보안 업데이트 · 보안 센터(베타), 추론 훅 GA, admin.claude.com 중앙 관리, Admin API 로그아웃·IP 허용 목록, Cowork VM EDR" },
     { file: "new-agents-and-products-claude-marketplace.html", date: "2026-11-04", main: "Claude blog", cat: "Product announcements",
