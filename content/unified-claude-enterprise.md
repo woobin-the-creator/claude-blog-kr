@@ -1,0 +1,87 @@
+---
+slug: "unified-claude-enterprise"
+title: "Enterprise에서 Claude Cowork와 채팅이 하나로"
+nav: "Enterprise 통합 Claude · 채팅·Cowork 단일 경험 GA, 클라우드 VM 격리·egress 기본 차단, 효율 모드·모델 권한·지출 한도·공동 예산"
+main: "Claude blog"
+cat: "Announcements"
+date: "2026-10-23"
+author: "ai"
+rev: 1
+style_css: ":root { --fg:#1a1a1a; --muted:#666; --line:#e5e5e5; --accent:#c96442; --code-bg:#f6f6f4; }\n  * { box-sizing: border-box; }\n  body {\n    font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", \"Apple SD Gothic Neo\",\n      \"Malgun Gothic\", sans-serif;\n    color: var(--fg); line-height: 1.75; max-width: 760px;\n    margin: 0 auto; padding: 48px 24px 96px; background:#fff;\n  }\n  header { border-bottom: 2px solid var(--line); padding-bottom: 24px; margin-bottom: 32px; }\n  h1 { font-size: 1.9rem; line-height: 1.35; margin: 0 0 12px; }\n  .meta { color: var(--muted); font-size: 0.9rem; }\n  .meta .orig { display:block; margin-top:6px; }\n  .meta a { color: var(--accent); text-decoration: none; }\n  h2 { font-size: 1.4rem; margin: 44px 0 8px; padding-top: 8px; }\n  h3 { font-size: 1.15rem; margin: 30px 0 8px; color:#000; }\n  p { margin: 0 0 16px; }\n  a { color: var(--accent); }\n  ul, ol { margin: 0 0 16px; padding-left: 22px; }\n  li { margin-bottom: 8px; }\n  blockquote { margin: 16px 0; padding: 8px 18px; border-left:3px solid var(--line);\n    color:#333; font-style: italic; }\n  hr { border: none; border-top: 1px solid var(--line); margin: 40px 0; }\n  code { background: var(--code-bg); padding: 2px 6px; border-radius: 4px;\n    font-family: \"SF Mono\", Menlo, Consolas, monospace; font-size: 0.88em; }\n  figure { margin: 24px 0; }\n  figure img { width: 100%; height: auto; border:1px solid var(--line); border-radius: 8px;\n    background:#fff; }\n  figure video { width: 100%; height: auto; border:1px solid var(--line); border-radius: 8px; display:block; }\n  figure.hero img { border:none; max-width: 210px; display:block; margin: 0 auto 8px; }\n  figcaption { color: var(--muted); font-size: 0.85rem; text-align: center;\n    margin-top: 10px; line-height: 1.5; }\n  figcaption a { color: var(--accent); }\n  .video { position: relative; width: 100%; padding-top: 56.25%; margin: 24px 0 8px;\n    border-radius: 8px; overflow: hidden; background:#000; }\n  .video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }\n  .callout { background:#faf6f4; border-left:3px solid var(--accent);\n    padding: 12px 16px; border-radius: 0 6px 6px 0; margin: 16px 0; }\n  .callout strong { color: var(--accent); }\n  .lede { color:#333; font-size: 1.05rem; }\n  footer { margin-top: 64px; padding-top: 20px; border-top:1px solid var(--line);\n    color: var(--muted); font-size: 0.82rem; }\n  .testimonial { margin: 28px 0; padding: 18px 20px; border:1px solid var(--line); border-radius: 8px; }\n  .testimonial img { height: 30px; width: auto; max-width: 180px; display:block; margin-bottom: 12px; }\n  .testimonial blockquote { margin: 0 0 10px; padding: 0; border:none; }\n  .testimonial .who { color: var(--muted); font-size: 0.88rem; margin: 0; }"
+has_markdown: false
+markdown_length: 0
+html_length: 5168
+---
+
+<!-- rendered HTML -->
+<header>
+  <h1>Enterprise에서 Claude Cowork와 채팅이 하나로</h1>
+  <div class="meta">
+    2026년 10월 23일
+    · 카테고리: <a href="https://claude.com/resources/product-announcements">Announcements</a>
+    · 제품: Claude Enterprise
+    · 읽는 시간 2분
+    <span class="orig">원문:
+      <a href="https://claude.com/resources/articles/unified-claude-enterprise">Claude Cowork and chat come together for Enterprise</a>
+      (한글 번역본)</span>
+  </div>
+</header>
+
+<div class="callout"><strong>편집자 주:</strong> 2026년 10월 30일 이전에 작성된 이 글에서 Max를 언급한 부분은 현재의 Max 플랜과 Ultra 플랜을 모두 포함합니다.</div>
+
+<p class="lede">채팅과 Cowork는 9월에 Pro·Max 플랜에서 먼저 <a href="https://claude.com/resources/articles/cowork-is-now-claude">하나로 합쳐졌습니다</a>. 이제 같은 통합 Claude 경험이 Claude Enterprise 플랜에서도 정식 출시(GA)되었습니다.</p>
+
+<p>이제 웹, 데스크톱, 모바일에서 채팅과 Cowork는 하나의 Claude이므로, 팀은 같은 대화 안에서 간단한 질문을 하거나 프로젝트 전체를 맡길 수 있습니다. 에이전트 작업(agentic work)은 Anthropic이 관리하는 클라우드 환경에서 실행되며, <a href="https://claude.com/resources/webinars/unified-claude-what-it-means-for-admins">Claude Enterprise 관리자</a>는 역할별로 접근 권한을 제어하고 새로운 효율 모드(Efficient mode)로 사용량을 관리할 수 있습니다.</p>
+
+<h2>모든 작업을 위한 하나의 Claude</h2>
+
+<p>팀원들은 이제 Claude와 일을 시작하기 전에 채팅과 Cowork 중 하나를 고를 필요가 없습니다. 대화는 채팅으로 시작되며, 간단한 질문에는 여전히 빠른 답이 돌아옵니다. 작업에 코드 실행이나 파일 작업이 필요하면 Claude가 클라우드에서 이어서 작업한 뒤 완성된 문서, 분석, 또는 발표 자료(deck)를 돌려줍니다. 작업이 클라우드에서 실행되기 때문에 노트북을 덮은 뒤에도 계속 진행되고, 웹·데스크톱·모바일 어디서든 이어서 볼 수 있습니다. 채팅, 프로젝트, 커넥터(connector), 스킬(skill), 플러그인(plugin)은 새 통합 경험으로 그대로 이어집니다.</p>
+
+<p>여러 조직이 이미 팀 전반에서 통합 Claude 경험의 가치를 확인하고 있습니다.</p>
+
+<div class="testimonial">
+  <img src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/unified-claude-enterprise/dxc.svg" alt="DXC">
+  <blockquote>“채팅과 Cowork 기능이 통합되기 전에는 따로 사용하고 따로 관리해야 하는 별개의 경험이었습니다. 둘을 합치고 나니 사용자와 관리자 모두에게 모든 것이 더 단순해졌습니다. 전환은 매끄러웠고, 커넥터나 스킬, MCP 어느 것도 망가지지 않았으며, 더 넓게 배포할 자신이 생겼습니다.”</blockquote>
+  <p class="who">Daniel Padilla, CTO of LabX</p>
+</div>
+
+<div class="testimonial">
+  <img src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/unified-claude-enterprise/lifemoves.png" alt="LifeMoves">
+  <blockquote>“이제 채팅과 Cowork 중에서 고를 필요가 없습니다. 10분도 안 되는 프롬프트 작업으로 Claude는 카운티·주·연방 예산과 공청회 문서 더미를 검토하고, 자금 흐름이 어떻게 연결되는지 정리한 뒤, 우리 팀이라면 몇 주가 걸렸을 종합 보고서를 만들어 냈습니다. 어느 단계에 어떤 도구를 써야 할지 고민할 일이 한 번도 없었습니다. 그 보고서는 우리의 전략 계획과 다가오는 예산 수립 과정의 방향을 잡게 될 것입니다.”</blockquote>
+  <p class="who">Paul Simpson, CFO and Head of Technology</p>
+</div>
+
+<div class="testimonial">
+  <img src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/unified-claude-enterprise/quantium.svg" alt="Quantium">
+  <blockquote>“채팅과 Cowork를 하나로 합친 것은 고객들이 계속 묻던 질문, 즉 ‘어떤 Claude를 써야 하나요’와 ‘어느 쪽이 무엇을 하나요’에 대한 답입니다. 모바일, 데스크톱, 브라우저 어디서든 일하는 방식과 장소에 맞춰 줍니다. Quantium에서는 우리 자체의 AI 목표를 키우고, 고객을 위해 할 수 있는 일을 넓히는 데 도움이 되고 있습니다.”</blockquote>
+  <p class="who">Harley Barnes, Executive Manager, AI Technology</p>
+</div>
+
+<div class="testimonial">
+  <img src="https://woobin-the-creator.github.io/claude-blog-kr/posts/assets/unified-claude-enterprise/carvana.svg" alt="Carvana">
+  <blockquote>“Carvana의 업무는 책상 앞에서만 일어나지 않습니다. 통합 Claude 경험 덕분에 직원들은 컴퓨터에서 작업을 시작하고 휴대폰에서 이어 갈 수 있으며, Claude가 결과를 냈거나 입력이 필요할 때 알림을 받습니다. 책상 앞에 있든 현장을 방문 중이든, 우리 팀이 일하는 방식에 잘 맞습니다.”</blockquote>
+  <p class="who">Charles Sellers, Senior Director, Engineering</p>
+</div>
+
+<h2>보안 유지</h2>
+
+<p>조직에서 이미 Claude 채팅을 승인했다면, 이번 변화는 싱글 사인온(SSO)과 Compliance API를 포함해 이미 쓰고 있는 엔터프라이즈 제어 기능 위에 그대로 얹힙니다. Anthropic은 여전히 전송 중인 데이터와 저장된 데이터를 암호화하며, 기본적으로 데이터를 모델 학습에 사용하지 않습니다.</p>
+
+<p>Claude는 에이전트 작업을 클라우드 세션에서 수행합니다. 각 세션은 독립된 가상 머신(VM)에서 실행되며, Claude Enterprise에서는 네트워크 외부 송신(egress)이 기본적으로 꺼져 있고 커넥터 자격 증명(credential)은 샌드박스 밖에 보관됩니다. 이 작업이 Anthropic이 관리하는 하나의 환경에서 실행되기 때문에 보안 팀은 이를 중앙에서 파악하고 제어할 수 있습니다. 전체 아키텍처는 Anthropic Trust Center의 <a href="https://trust.anthropic.com/resources?s=3puokpm2aa1nn24nbcp0l&amp;name=unified-claude-security-best-practices">보안 모범 사례 가이드</a>에서 다룹니다.</p>
+
+<h2>비용 관리</h2>
+
+<p>Claude Enterprise 가격 정책은 계속 사용량 기반입니다. 최신 Claude 모델은 이전 모델보다 효율적입니다. 사용량 기준으로 과금할 때 일반적인 워크로드에서 Claude Opus 5.5는 Claude Opus 5보다 <a href="https://claude.dev/blog/what-a-task-costs-on-opus-5-5/">실행 비용이 40% 적게 들고</a>, Claude Sonnet 5.5는 대부분의 작업에서 Claude Sonnet 5보다 최대 30% 적게 듭니다.</p>
+
+<p>작업에 따라 에이전트 작업은 간단한 채팅보다 토큰을 더 많이 쓸 수 있습니다. Claude Enterprise 관리자에게는 이 사용량을 관리할 수 있는 네 가지 제어 수단이 있습니다. 효율 모드(Efficient mode)는 통합 Claude 경험을 Sonnet과 Haiku 모델로 유지하는 새 설정입니다. 모델 사용 권한(model entitlements)은 역할마다 어떤 모델을 쓸 수 있는지 정합니다. <a href="https://claude.com/resources/articles/giving-admins-more-visibility-and-control-over-claude-usage-and-spend">지출 한도(spend limit)</a>는 조직, 그룹, 구성원 수준에서 적용되며, 그룹 공동 예산(pooled group budgets)은 그룹이 함께 꺼내 쓸 하나의 공유 월간 예산을 부여합니다.</p>
+
+<h2>시작하기</h2>
+
+<p>통합 Claude 경험은 오늘부터 Claude Enterprise 플랜에서 정식으로 사용할 수 있습니다. 관리자는 조직 설정(Organization settings)에서 배포를 관리할 수 있습니다. Claude Code에 데이터 무보존(zero data retention)을 쓰거나, HIPAA 대응 구성을 쓰거나, 고객 관리 암호화 키(customer-managed encryption keys)를 쓰는 조직은 현재 구성을 그대로 유지합니다.</p>
+
+<p>자세한 내용은 <a href="https://support.claude.com/en/articles/17444462">관리자 설정 가이드</a>를 참고하세요. 기존 Claude Enterprise 고객이라면 조직의 배포에 관한 이메일을 받게 됩니다.</p>
+
+<footer>
+  이 글은 Claude 공식 블로그 원문을 한국어로 옮긴 비공식 번역본입니다.
+  내용의 정확한 의미는 위 원문 링크를 함께 참고하세요.
+</footer>
