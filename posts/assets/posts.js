@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "which-claude-model-should-you-build-with.html", date: "2026-11-09", main: "claude.dev", cat: "Playbooks",
+      title: "어떤 Claude 모델로 만들어야 할까? Fable, Opus, Sonnet, Haiku", nav: "Claude 모델 고르기 · Opus 5.5 medium에서 시작, 작업별 모델·effort 표, 비용·지연·컨텍스트 트레이드오프, 서브에이전트·advisor로 섞어 쓰기, 마이그레이션 호환성" },
     { file: "introducing-personal-finance-in-claude.html", date: "2026-11-05", main: "Claude blog", cat: "Product updates",
       title: "Claude의 개인 금융(Personal Finance) 기능을 소개합니다", nav: "Claude Personal Finance · Plaid로 은행·카드 계좌 읽기 전용 연결, 지출 분류·월급날까지 잔액·이상 결제 탐지, 미국 Pro·Max·Ultra 베타" },
     { file: "claude-enterprise-security-updates.html", date: "2026-11-05", main: "Claude blog", cat: "Product updates",
