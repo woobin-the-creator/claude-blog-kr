@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "safely-scaling-multi-agent-teams-with-fable-5-2.html", date: "2026-11-09", main: "claude.dev", cat: "Agents",
+      title: "Claude Fable 5.2로 멀티 에이전트 팀을 안전하게 확장하기", nav: "Fable 5.2 에이전트 1,000개 팀 · 페르마의 마지막 정리 Lean 증명 28.7시간 재현, 공유 Postgres로 자기 조율(리드·헬퍼·작업 트리), 샌드박스·실시간 분류기·오프라인 모니터" },
     { file: "which-claude-model-should-you-build-with.html", date: "2026-11-09", main: "claude.dev", cat: "Playbooks",
       title: "어떤 Claude 모델로 만들어야 할까? Fable, Opus, Sonnet, Haiku", nav: "Claude 모델 고르기 · Opus 5.5 medium에서 시작, 작업별 모델·effort 표, 비용·지연·컨텍스트 트레이드오프, 서브에이전트·advisor로 섞어 쓰기, 마이그레이션 호환성" },
     { file: "introducing-personal-finance-in-claude.html", date: "2026-11-05", main: "Claude blog", cat: "Product updates",
