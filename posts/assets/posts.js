@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "more-ways-to-work-with-claude-sheets-whiteboards-and-interactive-connectors.html", date: "2026-11-10", main: "Claude blog", cat: "Product updates",
+      title: "Claude와 일하는 더 많은 방법: Sheets, Whiteboards, 인터랙티브 커넥터", nav: "Claude Sheets·Whiteboards·Data · 새 아티팩트 유형, 인터랙티브 커넥터 업그레이드, Claude Meetings 예고, 고객 사례(Datadog·Gusto·HubSpot), 자동 연결·커넥터 권한 제한" },
     { file: "interactive-connectors-full-tool.html", date: "2026-11-10", main: "Claude blog", cat: "Product updates",
       title: "Claude에서 앱을 열고 함께 작업하세요", nav: "인터랙티브 커넥터 전체 도구 · 대화 옆·전체 화면으로 도구 열기, Claude가 열린 도구에서 직접 편집, 도구 고정, Adobe·Confluence·Box·HubSpot·Notion, MCP Apps 퍼블릭 프리뷰" },
     { file: "how-curative-is-building-a-national-provider-network-with-agents-on-claude.html", date: "2026-11-10", main: "Claude blog", cat: "Best practices",
