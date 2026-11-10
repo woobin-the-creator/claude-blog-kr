@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "interactive-connectors-full-tool.html", date: "2026-11-10", main: "Claude blog", cat: "Product updates",
+      title: "Claude에서 앱을 열고 함께 작업하세요", nav: "인터랙티브 커넥터 전체 도구 · 대화 옆·전체 화면으로 도구 열기, Claude가 열린 도구에서 직접 편집, 도구 고정, Adobe·Confluence·Box·HubSpot·Notion, MCP Apps 퍼블릭 프리뷰" },
     { file: "how-curative-is-building-a-national-provider-network-with-agents-on-claude.html", date: "2026-11-10", main: "Claude blog", cat: "Best practices",
       title: "Curative는 Claude 위의 에이전트로 어떻게 전국 의료 공급자 네트워크를 만들고 있나", nav: "Curative 계약 에이전트 Gwen · 주 2,000건+ 공급자 계약(작년 대비 약 50배), Opus 협상·Sonnet 요율 검토·Haiku 판정, Python 도구 하나·팩스·실행 격리·Claude Code 개선 루프" },
     { file: "safely-scaling-multi-agent-teams-with-fable-5-2.html", date: "2026-11-09", main: "claude.dev", cat: "Agents",
