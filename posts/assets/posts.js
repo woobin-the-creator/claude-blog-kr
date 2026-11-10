@@ -15,6 +15,8 @@
       title: "Claude에서 앱을 열고 함께 작업하세요", nav: "인터랙티브 커넥터 전체 도구 · 대화 옆·전체 화면으로 도구 열기, Claude가 열린 도구에서 직접 편집, 도구 고정, Adobe·Confluence·Box·HubSpot·Notion, MCP Apps 퍼블릭 프리뷰" },
     { file: "how-curative-is-building-a-national-provider-network-with-agents-on-claude.html", date: "2026-11-10", main: "Claude blog", cat: "Best practices",
       title: "Curative는 Claude 위의 에이전트로 어떻게 전국 의료 공급자 네트워크를 만들고 있나", nav: "Curative 계약 에이전트 Gwen · 주 2,000건+ 공급자 계약(작년 대비 약 50배), Opus 협상·Sonnet 요율 검토·Haiku 판정, Python 도구 하나·팩스·실행 격리·Claude Code 개선 루프" },
+    { file: "jpmorganchase-expands-claude-code.html", date: "2026-11-09", main: "Claude blog", cat: "Enterprise",
+      title: "JPMorganChase, 더 많은 직원에게 Claude Code 확대", nav: "JPMorganChase Claude Code 확대 · 엔지니어 넘어 전사 배포, PR 리뷰·자가 복구 에이전트, 제품 팀·자산관리, Devspace 격리·승인 게이트로 Claude 자기 승인 차단" },
     { file: "safely-scaling-multi-agent-teams-with-fable-5-2.html", date: "2026-11-09", main: "claude.dev", cat: "Agents",
       title: "Claude Fable 5.2로 멀티 에이전트 팀을 안전하게 확장하기", nav: "Fable 5.2 에이전트 1,000개 팀 · 페르마의 마지막 정리 Lean 증명 28.7시간 재현, 공유 Postgres로 자기 조율(리드·헬퍼·작업 트리), 샌드박스·실시간 분류기·오프라인 모니터" },
     { file: "which-claude-model-should-you-build-with.html", date: "2026-11-09", main: "claude.dev", cat: "Playbooks",
