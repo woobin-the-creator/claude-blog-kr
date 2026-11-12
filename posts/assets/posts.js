@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "claude-for-manufacturing.html", date: "2026-11-12", main: "Claude blog", cat: "Product updates",
+      title: "Claude for Manufacturing을 소개합니다", nav: "Claude for Manufacturing · 17개 스킬(견적·검사 불합격 조사·고장 진단·조달·설계 비교·생산 보고), Fusion·Infor·M365·NetSuite 커넥터, Infor 자체 플러그인, 사람 검토로 끝나는 설계" },
     { file: "sheets-whiteboards-data.html", date: "2026-11-10", main: "Claude blog", cat: "Product updates",
       title: "Claude Whiteboards, Claude Sheets, Claude Data를 소개합니다", nav: "Claude Whiteboards·Sheets·Data · 공유 화이트보드·스프레드시트 베타, Dashboards→Claude Data 정식 출시(인증 쿼리·실시간 공유·데이터 스토리·캐싱), 관리자 기본값" },
     { file: "more-ways-to-work-with-claude-sheets-whiteboards-and-interactive-connectors.html", date: "2026-11-10", main: "Claude blog", cat: "Product updates",
