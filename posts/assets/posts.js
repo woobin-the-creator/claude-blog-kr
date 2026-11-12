@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "self-hosted-claude-managed-agents.html", date: "2026-11-12", main: "Claude blog", cat: "Product updates",
+      title: "보안 경계 안에서 Claude Managed Agents를 운영하세요", nav: "셀프 호스팅 Managed Agents · 비공개 베타, 하네스·샌드박스·자격 증명·세션 기록을 자체 클라우드/온프레미스에서, 모델 요청 경로 선택(Anthropic·Bedrock·Foundry·게이트웨이), 보안 원칙 4가지" },
     { file: "j-crew-style-advisor-with-claude.html", date: "2026-11-12", main: "Claude blog", cat: "Enterprise",
       title: "J.Crew, Claude로 시그니처 스타일링 방식을 구현하다", nav: "J.Crew Style Advisor · 완성된 룩 단위로 쇼핑하는 AI 스타일리스트, Fable 5.1 설계·Opus 5.5 프로토타입(Claude Code)·Sonnet 5.5 스타일리스트·Haiku 5.5 빠른 작업, 자체 화보 룩 기반 추천" },
     { file: "claude-tag-guide-for-startups.html", date: "2026-11-12", main: "Claude blog", cat: "Best practices",
