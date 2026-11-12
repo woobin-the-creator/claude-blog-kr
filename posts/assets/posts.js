@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "using-claude-opus-5-5-as-your-daily-driver-for-knowledge-work.html", date: "2026-11-12", main: "Claude blog", cat: "Best practices",
+      title: "Claude Opus 5.5를 지식 업무의 기본 모델로 쓰기", nav: "Opus 5.5 일상 모델 가이드 · Pro·Max·Ultra·Team 기본 모델, Haiku·Sonnet·Opus 5.5·Fable 5.2 비교표, 문서·리서치·재무·차트 강점, 먼저 시도할 작업 4가지·바꿀 프롬프트 습관 7가지(Medium 노력 수준부터), 소매 매출 둔화 데모" },
     { file: "self-hosted-claude-managed-agents.html", date: "2026-11-12", main: "Claude blog", cat: "Product updates",
       title: "보안 경계 안에서 Claude Managed Agents를 운영하세요", nav: "셀프 호스팅 Managed Agents · 비공개 베타, 하네스·샌드박스·자격 증명·세션 기록을 자체 클라우드/온프레미스에서, 모델 요청 경로 선택(Anthropic·Bedrock·Foundry·게이트웨이), 보안 원칙 4가지" },
     { file: "j-crew-style-advisor-with-claude.html", date: "2026-11-12", main: "Claude blog", cat: "Enterprise",
