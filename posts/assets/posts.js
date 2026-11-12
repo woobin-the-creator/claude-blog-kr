@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "claude-tag-guide-for-startups.html", date: "2026-11-12", main: "Claude blog", cat: "Best practices",
+      title: "Anthropic이 정리한 스타트업을 위한 Claude Tag 가이드", nav: "스타트업용 Claude Tag 가이드 · 8개 스타트업 사례, 먼저 태그할 채널 5종(온콜·스레드→PR·회사의 두뇌·셀프서비스 데이터·리포팅), 채널별 시작 지시문, 출시 전·배포 체크리스트" },
     { file: "claude-meetings.html", date: "2026-11-12", main: "Claude blog", cat: "Product updates",
       title: "Claude Meetings를 소개합니다", nav: "Claude Meetings · 화상 회의에 Claude 참석(베타, Google Meet), 말·채팅 질문 응답, 회의 중 문서·화이트보드 작성, 메모·할 일 자동 정리, 외부 참석자 기본 차단·도구 사용 승인" },
     { file: "claude-for-manufacturing.html", date: "2026-11-12", main: "Claude blog", cat: "Product updates",
