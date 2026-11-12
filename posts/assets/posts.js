@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "j-crew-style-advisor-with-claude.html", date: "2026-11-12", main: "Claude blog", cat: "Enterprise",
+      title: "J.Crew, Claude로 시그니처 스타일링 방식을 구현하다", nav: "J.Crew Style Advisor · 완성된 룩 단위로 쇼핑하는 AI 스타일리스트, Fable 5.1 설계·Opus 5.5 프로토타입(Claude Code)·Sonnet 5.5 스타일리스트·Haiku 5.5 빠른 작업, 자체 화보 룩 기반 추천" },
     { file: "claude-tag-guide-for-startups.html", date: "2026-11-12", main: "Claude blog", cat: "Best practices",
       title: "Anthropic이 정리한 스타트업을 위한 Claude Tag 가이드", nav: "스타트업용 Claude Tag 가이드 · 8개 스타트업 사례, 먼저 태그할 채널 5종(온콜·스레드→PR·회사의 두뇌·셀프서비스 데이터·리포팅), 채널별 시작 지시문, 출시 전·배포 체크리스트" },
     { file: "claude-meetings.html", date: "2026-11-12", main: "Claude blog", cat: "Product updates",
