@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "claude-meetings.html", date: "2026-11-12", main: "Claude blog", cat: "Product updates",
+      title: "Claude Meetings를 소개합니다", nav: "Claude Meetings · 화상 회의에 Claude 참석(베타, Google Meet), 말·채팅 질문 응답, 회의 중 문서·화이트보드 작성, 메모·할 일 자동 정리, 외부 참석자 기본 차단·도구 사용 승인" },
     { file: "claude-for-manufacturing.html", date: "2026-11-12", main: "Claude blog", cat: "Product updates",
       title: "Claude for Manufacturing을 소개합니다", nav: "Claude for Manufacturing · 17개 스킬(견적·검사 불합격 조사·고장 진단·조달·설계 비교·생산 보고), Fusion·Infor·M365·NetSuite 커넥터, Infor 자체 플러그인, 사람 검토로 끝나는 설계" },
     { file: "sheets-whiteboards-data.html", date: "2026-11-10", main: "Claude blog", cat: "Product updates",
