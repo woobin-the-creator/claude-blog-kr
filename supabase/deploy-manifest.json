@@ -20,6 +20,10 @@
     {
       "id": "20260911000000_authoring_review",
       "path": "supabase/migrations/20260911000000_authoring_review.sql"
+    },
+    {
+      "id": "20261113000000_fix_smart_reports_body",
+      "path": "supabase/migrations/20261113000000_fix_smart_reports_body.sql"
     }
   ]
 }
