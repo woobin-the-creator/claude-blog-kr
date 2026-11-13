@@ -1,0 +1,36 @@
+name: Notify workflow failure
+# main에서 배포·테스트 workflow가 실패하면 텔레그램으로 알린다.
+# 11월 3일부터 Deploy Supabase가 조용히 실패하는 바람에 새 글 9개가 메인 화면에서 빠졌던 일 때문에 만들었다.
+on:
+  workflow_run:
+    workflows: [Tests, Deploy Supabase, Nightly post snapshot, Deploy static site to Pages]
+    types: [completed]
+    branches: [main]
+permissions: {}
+jobs:
+  notify:
+    if: github.event.workflow_run.conclusion == 'failure'
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Send Telegram message
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          WORKFLOW: ${{ github.event.workflow_run.name }}
+          COMMIT: ${{ github.event.workflow_run.head_commit.message }}
+          SHA: ${{ github.event.workflow_run.head_sha }}
+          RUN_URL: ${{ github.event.workflow_run.html_url }}
+        run: |
+          if [ -z "$TELEGRAM_BOT_TOKEN" ] || [ -z "$TELEGRAM_CHAT_ID" ]; then
+            echo "::warning::TELEGRAM_BOT_TOKEN/TELEGRAM_CHAT_ID secret이 없어 알림을 보내지 못했습니다"
+            exit 0
+          fi
+          text="❌ claude-blog-kr: ${WORKFLOW} 실패
+          commit ${SHA:0:7}: ${COMMIT%%$'\n'*}
+          Deploy Supabase가 실패하면 새 글이 메인 화면에 안 나와요.
+          ${RUN_URL}"
+          curl -sS --fail -o /dev/null "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+            --data-urlencode "chat_id=${TELEGRAM_CHAT_ID}" \
+            --data-urlencode "text=${text}" \
+            -d disable_web_page_preview=true
