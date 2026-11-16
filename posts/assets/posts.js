@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "how-the-claude-code-team-thinks-about-verification.html", date: "2026-11-16", main: "claude.dev", cat: "Engineering",
+      title: "Claude Code 팀은 검증을 어떻게 생각하는가", nav: "Claude Code 팀의 검증 방식 · 투자할 테스트 3종(E2E·속성·차분), verify 스킬로 변경 실행, 3회 실패 시 사람 호출, diff 발동 신뢰성 체크리스트 39개, 변경이 자기 검사 수정 금지, 커밋 게이트 관찰→강제 모드, 리뷰어 평가·놓친 것을 규칙으로" },
     { file: "building-always-on-agents.html", date: "2026-11-13", main: "Claude blog", cat: "Best practices",
       title: "상시 가동 에이전트 만들기", nav: "상시 가동 에이전트 만들기 · 잠들었다 깨는 실행(run)·세션 사이클, 5대 기본 요소(이벤트 인박스·타이머·메모리·권한·아웃박스), 워커 1개·이벤트 배치, 메모리 4종, 자격 증명 프록시·지연된 도구 호출" },
     { file: "using-claude-opus-5-5-as-your-daily-driver-for-knowledge-work.html", date: "2026-11-12", main: "Claude blog", cat: "Best practices",
