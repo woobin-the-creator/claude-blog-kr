@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "linked-billing-on-claude-platform.html", date: "2026-11-17", main: "Claude blog", cat: "Product updates",
+      title: "Claude Platform의 연결 결제(Linked billing)", nav: "Claude Platform 연결 결제 · 베타, API 키 공유 없이 고객 조직에 Claude API 사용료 직접 청구, 플랫폼은 결제·계량 구축 불필요·요청별 지불 주체 선택, 고객은 플랫폼별 월 한도·언제든 해제, 19개 지원 플랫폼·고객 추천사 16개" },
     { file: "how-the-claude-code-team-thinks-about-verification.html", date: "2026-11-16", main: "claude.dev", cat: "Engineering",
       title: "Claude Code 팀은 검증을 어떻게 생각하는가", nav: "Claude Code 팀의 검증 방식 · 투자할 테스트 3종(E2E·속성·차분), verify 스킬로 변경 실행, 3회 실패 시 사람 호출, diff 발동 신뢰성 체크리스트 39개, 변경이 자기 검사 수정 금지, 커밋 게이트 관찰→강제 모드, 리뷰어 평가·놓친 것을 규칙으로" },
     { file: "building-always-on-agents.html", date: "2026-11-13", main: "Claude blog", cat: "Best practices",
