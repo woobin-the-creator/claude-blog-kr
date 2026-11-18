@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "chaos-loop-claude-docs-launch.html", date: "2026-11-17", main: "claude.dev", cat: "Engineering",
+      title: "“카오스 루프”로 Claude Docs 출시를 단단하게 만들기: 수십억 건 요청 중 서버 오류 60건", nav: "Claude Docs 카오스 루프 · 출시 2주 전 스테이징에서 Claude가 부하·장애 주입하며 2주간 자율 수정(서브에이전트 최대 30개), 되돌리기 어려운 결정만 사람 승인, 불변 조건 2개, Rust·최소 의존성으로 텔레메트리 가독성, 메모리 3GB→180MB·pod 500→50, 오류 60건/20억 요청, 비용 약 12.5만 달러" },
     { file: "linked-billing-on-claude-platform.html", date: "2026-11-17", main: "Claude blog", cat: "Product updates",
       title: "Claude Platform의 연결 결제(Linked billing)", nav: "Claude Platform 연결 결제 · 베타, API 키 공유 없이 고객 조직에 Claude API 사용료 직접 청구, 플랫폼은 결제·계량 구축 불필요·요청별 지불 주체 선택, 고객은 플랫폼별 월 한도·언제든 해제, 19개 지원 플랫폼·고객 추천사 16개" },
     { file: "how-the-claude-code-team-thinks-about-verification.html", date: "2026-11-16", main: "claude.dev", cat: "Engineering",
