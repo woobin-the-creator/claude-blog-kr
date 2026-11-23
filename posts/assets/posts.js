@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "zero-data-retention-with-enterprise-frontier-safeguards.html", date: "2026-11-23", main: "Claude blog", cat: "Product updates",
+      title: "Enterprise Frontier Safeguards와 함께하는 제로 데이터 보존(ZDR), 이제 베타로 제공", nav: "EFS 제로 데이터 보존 공개 베타 · 100곳 이상 고객과 개발(Fortune 100의 1/4), 실시간 분류기+자동 안전 모니터링(여러 요청에 나뉜 공격 탐지)·안전 케이스(입출력 미포함, SIEM 연동), 고객 자체 스토리지(S3·GCS)·자체 키, 사람 검토·학습 없음, Claude Platform·AWS·Bedrock·Google Cloud 지원(Foundry 예정)" },
     { file: "kpmg-todd-lohr-on-ai-when-your-data-is-also-your-clients-data.html", date: "2026-11-23", main: "Claude blog", cat: "Perspectives",
       title: "KPMG 토드 로어가 말하는, 우리 데이터가 곧 고객의 데이터일 때의 AI", nav: "KPMG 토드 로어 인터뷰 · 고객 데이터 수탁자로서의 프런티어 AI 도입, Digital Gateway Powered by Claude(세무), Trusted AI 프레임워크, Enterprise Frontier Safeguards(자체 클라우드에 데이터 보존·자동 오용 검토, ZDR 호환), Claude Mythos로 취약점 탐지, 도입과 보안을 동시에" },
     { file: "introducing-claude-ship.html", date: "2026-11-23", main: "Claude blog", cat: "Product updates",
