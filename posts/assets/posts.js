@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "enterprise-guide-to-securing-coding-agents.html", date: "2026-11-23", main: "Claude blog", cat: "Best practices",
+      title: "코딩 에이전트 보안을 위한 엔터프라이즈 가이드", nav: "코딩 에이전트 보안 엔터프라이즈 가이드 · 평가 질문 6가지·AI 제공업체 SaaS 기준, 위험 4종(자격 증명·의존성·데이터 유출·프롬프트 인젝션), 판단 계층(정렬 학습·인젝션 프로브·auto 모드 분류기 89% vs 사람 13.6%), 고정 경계(권한 규칙 deny→ask→allow·Bash 파싱·훅·샌드박스·클라우드 VM), 관리형 설정 기준/잠금 표, 2주 파일럿 체크리스트" },
     { file: "chaos-loop-claude-docs-launch.html", date: "2026-11-17", main: "claude.dev", cat: "Engineering",
       title: "“카오스 루프”로 Claude Docs 출시를 단단하게 만들기: 수십억 건 요청 중 서버 오류 60건", nav: "Claude Docs 카오스 루프 · 출시 2주 전 스테이징에서 Claude가 부하·장애 주입하며 2주간 자율 수정(서브에이전트 최대 30개), 되돌리기 어려운 결정만 사람 승인, 불변 조건 2개, Rust·최소 의존성으로 텔레메트리 가독성, 메모리 3GB→180MB·pod 500→50, 오류 60건/20억 요청, 비용 약 12.5만 달러" },
     { file: "linked-billing-on-claude-platform.html", date: "2026-11-17", main: "Claude blog", cat: "Product updates",
