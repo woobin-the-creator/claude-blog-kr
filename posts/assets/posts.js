@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "introducing-claude-ship.html", date: "2026-11-23", main: "Claude blog", cat: "Product updates",
+      title: "Claude Ship을 소개합니다", nav: "Claude Ship · PR 리뷰·수정·승인 자동화(베타), Code Review(정식·Quick/Standard/Deep)+PR Steward(CI·충돌·피드백 수정, 승인·머지 안 함)+Claude Approvals(저장소 정책 파일, 관찰 모드 권장), Claude Code /ship 명령, 저장소별 관리자 설정·지출 한도, TELUS·Carvana 사례, 토큰 과금" },
     { file: "enterprise-guide-to-securing-coding-agents.html", date: "2026-11-23", main: "Claude blog", cat: "Best practices",
       title: "코딩 에이전트 보안을 위한 엔터프라이즈 가이드", nav: "코딩 에이전트 보안 엔터프라이즈 가이드 · 평가 질문 6가지·AI 제공업체 SaaS 기준, 위험 4종(자격 증명·의존성·데이터 유출·프롬프트 인젝션), 판단 계층(정렬 학습·인젝션 프로브·auto 모드 분류기 89% vs 사람 13.6%), 고정 경계(권한 규칙 deny→ask→allow·Bash 파싱·훅·샌드박스·클라우드 VM), 관리형 설정 기준/잠금 표, 2주 파일럿 체크리스트" },
     { file: "chaos-loop-claude-docs-launch.html", date: "2026-11-17", main: "claude.dev", cat: "Engineering",
