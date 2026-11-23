@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KPMG 토드 로어가 말하는, 우리 데이터가 곧 고객의 데이터일 때의 AI</title>
+<style>
+  :root { --fg:#1a1a1a; --muted:#666; --line:#e5e5e5; --accent:#c96442; --code-bg:#f6f6f4; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo",
+      "Malgun Gothic", sans-serif;
+    color: var(--fg); line-height: 1.75; max-width: 760px;
+    margin: 0 auto; padding: 48px 24px 96px; background:#fff;
+  }
+  header { border-bottom: 2px solid var(--line); padding-bottom: 24px; margin-bottom: 32px; }
+  h1 { font-size: 1.9rem; line-height: 1.35; margin: 0 0 12px; }
+  .meta { color: var(--muted); font-size: 0.9rem; }
+  .meta .orig { display:block; margin-top:6px; }
+  .meta a { color: var(--accent); text-decoration: none; }
+  h2 { font-size: 1.4rem; margin: 44px 0 8px; padding-top: 8px; }
+  h2 .num { color: var(--accent); font-size: 0.85em; margin-right: 8px; }
+  h3 { font-size: 1.15rem; margin: 30px 0 8px; color:#000; }
+  p { margin: 0 0 16px; }
+  a { color: var(--accent); }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  blockquote { margin: 16px 0; padding: 8px 18px; border-left:3px solid var(--line);
+    color:#333; font-style: italic; }
+  hr { border: none; border-top: 1px solid var(--line); margin: 40px 0; }
+  code { background: var(--code-bg); padding: 2px 6px; border-radius: 4px;
+    font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 0.88em; }
+  figure { margin: 24px 0; }
+  figure img { width: 100%; height: auto; border:1px solid var(--line); border-radius: 8px;
+    background:#fff; }
+  figcaption { color: var(--muted); font-size: 0.85rem; text-align: center;
+    margin-top: 10px; line-height: 1.5; }
+  figcaption a { color: var(--accent); }
+  .video { position: relative; width: 100%; padding-top: 56.25%; margin: 24px 0 8px;
+    border-radius: 8px; overflow: hidden; background:#000; }
+  .video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .video-title { color: var(--muted); font-size: 0.85rem; text-align: center; margin: 0 0 24px; }
+  .callout { background:#faf6f4; border-left:3px solid var(--accent);
+    padding: 12px 16px; border-radius: 0 6px 6px 0; margin: 16px 0; }
+  .callout strong { color: var(--accent); }
+  .callout h4 { margin: 4px 0 6px; font-size: 1rem; }
+  .callout p:last-child { margin-bottom: 0; }
+  .logos { display:flex; flex-wrap:wrap; gap:10px; margin:16px 0 24px; padding:0; list-style:none; }
+  .logos li { margin:0; }
+  .logos img { height:44px; width:auto; border:1px solid var(--line); border-radius:6px;
+    background:#fff; padding:8px 10px; display:block; }
+  table { border-collapse: collapse; width: 100%; margin: 16px 0 24px; font-size: 0.88rem; }
+  th, td { border: 1px solid var(--line); padding: 6px 8px; text-align: center; }
+  th { background: #faf8f6; font-weight: 600; }
+  td:first-child { text-align: left; font-weight: 600; }
+  .stats { display:grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap:12px; margin: 20px 0 24px; }
+  .stat { border:1px solid var(--line); border-radius:8px; padding:14px 16px; }
+  .stat img { height:22px; width:auto; display:block; margin-bottom:10px; }
+  .stat b { display:block; font-size:1.5rem; color:var(--accent); line-height:1.3; }
+  .stat span { color:var(--muted); font-size:0.86rem; }
+  .toc { border:1px solid var(--line); border-radius:8px; padding:14px 18px; margin: 16px 0 24px; }
+  .toc p { margin:0 0 6px; font-weight:600; }
+  .toc ol { margin:0; }
+  .setup { border:1px solid var(--line); border-radius:10px; padding:16px 18px; margin: 16px 0 24px; background:#fcfcfb; }
+  .setup > p:first-child { font-weight:600; margin-bottom:10px; }
+  .setup dl { margin:0; }
+  .setup dt { font-weight:600; font-size:0.9rem; color:var(--accent); margin-top:10px; }
+  .setup dd { margin: 2px 0 0; }
+  .setup dd.instr { background:#fff; border:1px solid var(--line); border-radius:6px; padding:10px 12px; font-size:0.92rem; }
+  .setup details { margin-top:8px; font-size:0.85rem; color:var(--muted); }
+  .setup details p { margin:6px 0 0; font-family: "SF Mono", Menlo, Consolas, monospace; font-size:0.8rem; line-height:1.55; }
+  .q { display:flex; gap:14px; align-items:flex-start; margin: 22px 0;
+    background:#fafafa; border:1px solid var(--line); border-radius:10px; padding:16px 18px; }
+  .q img { width:52px; height:52px; border-radius:50%; object-fit:cover; flex:0 0 52px;
+    border:1px solid var(--line); }
+  .q blockquote { margin:0 0 8px; padding:0; border:none; color:#222; }
+  .q .who { margin:0; font-size:0.86rem; color:var(--muted); }
+  .checklist { list-style:none; padding-left:0; }
+  .checklist li { position:relative; padding-left:30px; margin-bottom:14px; }
+  .checklist li::before { content:"☐"; position:absolute; left:0; top:0; color:var(--accent); font-size:1.1rem; }
+  .checklist li > strong { display:block; }
+  .checklist li p { margin: 4px 0 8px; }
+  .phase { font-weight:700; margin: 24px 0 8px; color:#000; }
+  footer { margin-top: 64px; padding-top: 20px; border-top:1px solid var(--line);
+    color: var(--muted); font-size: 0.82rem; }
+  .tbl { overflow-x:auto; margin: 16px 0 24px; }
+  .tbl table { margin:0; }
+  .tbl th, .tbl td { text-align:left; vertical-align:top; min-width:140px; }
+  .eyebrow { display:block; color:var(--accent); font-size:0.8rem; font-weight:700; letter-spacing:0.02em; margin-bottom:2px; }
+  .cta { display:inline-block; margin: 4px 0 16px; padding:8px 14px; border:1px solid var(--accent); border-radius:6px; text-decoration:none; }
+  .cust { margin: 22px 0; background:#fafafa; border:1px solid var(--line); border-radius:10px; padding:16px 18px; }
+  .cust img { height:26px; width:auto; display:block; margin-bottom:12px; }
+  .cust blockquote { margin:0 0 8px; padding:0; border:none; color:#222; }
+  .cust .who { margin:0; font-size:0.86rem; color:var(--muted); }
+</style>
+<link rel="stylesheet" href="assets/nav.css">
+</head>
+<body>
+<header>
+  <h1>KPMG 토드 로어(Todd Lohr)가 말하는, 우리 데이터가 곧 고객의 데이터일 때의 AI</h1>
+  <div class="meta">
+    2026년 11월 23일
+    · 카테고리: Perspectives
+    · 제품: Claude Enterprise
+    · 읽는 시간 9분
+    <span class="orig">원문:
+      <a href="https://claude.com/resources/articles/kpmg-todd-lohr-on-ai-when-your-data-is-also-your-clients-data">KPMG's Todd Lohr on AI when your data is also your clients' data by Anthropic</a>
+      (한글 번역본)</span>
+  </div>
+</header>
+
+<p>KPMG는 세계 최대 규모의 전문 서비스 기업 가운데 하나로, 27만 6,000명이 넘는 직원이 138개 국가와 지역에서 감사, 세무, 자문 서비스를 제공합니다. KPMG US 부회장이자 Client Technology &amp; Innovation 책임자인 토드 로어(Todd Lohr)는 제품과 플랫폼을 통해 고객에게 AI를 전하는 일에 집중하고 있습니다. 그는 10년 넘게 KPMG의 AI 역량을 다뤄 왔습니다.</p>
+<p>KPMG가 다루는 데이터의 상당수는 고객의 것이며, 고도로 규제되는 산업의 데이터인 경우가 많습니다. 로어는 이것이 프런티어 AI 도입에 어떤 의미인지, 엔터프라이즈 보호 장치(safeguards)를 내장하면 어떻게 AI 역량을 열고 책임 있는 배포를 앞당길 수 있는지, 그리고 Enterprise Frontier Safeguards가 그 안에서 어떤 자리를 차지할지에 대해 이야기를 나눠 주었습니다.</p>
+
+<figure>
+  <video controls playsinline preload="metadata"
+    src="assets/kpmg-todd-lohr-on-ai-when-your-data-is-also-your-clients-data/todd-lohr-interview.mp4"
+    poster="assets/kpmg-todd-lohr-on-ai-when-your-data-is-also-your-clients-data/todd-lohr-interview-poster.jpg"
+    style="width:100%;height:auto;border-radius:8px;background:#000;"
+    aria-label="KPMG US 부회장이자 Client Technology &amp; Innovation 책임자인 토드 로어가 엔터프라이즈 프런티어 보호 장치에 대해 이야기하는 영상"></video>
+  <figcaption>KPMG US 부회장이자 Client Technology &amp; Innovation 책임자인 토드 로어가 엔터프라이즈 프런티어 보호 장치에 대해 이야기합니다. (<a href="https://assets.claude.com/c05a38a826766c8feb4012d04ee30865b6d79d22.mp4">원본 영상</a>)</figcaption>
+</figure>
+
+<h2 id="why-did-kpmg-decide-to-work-with-anthropic">KPMG는 왜 Anthropic과 함께 일하기로 했나요?</h2>
+<p>저희는 Anthropic이 설립될 때부터 아주 가까이에서 지켜봐 왔고, 많은 가치를 공유하고 있기 때문에 파트너십 관점에서 그 미션이 흥미로웠습니다.</p>
+<p>KPMG에서 신뢰는 토대입니다. 감사, 세무, 자문이라는 저희 핵심 사업 전반에서 고객이 저희에게 기대하는 것이 신뢰이고, 자본 시장에 대한 확신을 떠받치는 것도 신뢰입니다.</p>
+
+<h2 id="what-are-frontier-models-changing-about-your-business-right-now">프런티어 모델은 지금 사업의 무엇을 바꾸고 있나요?</h2>
+<p>10년 전 저희는 예측 분석, 머신러닝, 그리고 고객에게 아주 맞춤형인 LLM 활용을 제공하는 데 집중했습니다. 지난 3년은 범용 지능(general intelligence)을 고객과 KPMG 인력 모두에게 가져다준 시기였습니다. 이제 저희는 또 하나의 전환점에 있고, 세무와 법률 같은 산업·도메인 지식을 AI 플랫폼과 제품에 녹여 넣는 것이 저희 전략입니다. Anthropic 같은 파트너와 함께, 고객이 자기 산업을 혁신하도록 돕는 방법뿐 아니라 전문 서비스 업계 전반을 혁신하는 방법도 함께 고민하고 있습니다.</p>
+<p>저희 세무 사업은 <a href="https://kpmg.com/xx/en/our-insights/ai-and-technology/kpmg-digital-gateway.html">Digital Gateway</a> 위에서 돌아가는데, 저희는 이것을 서비스를 제공하는 방식에서 시장을 선도하는 플랫폼으로 보고 있습니다. 이제 Claude가 이 플랫폼에 통합되면서 <a href="https://www.anthropic.com/news/anthropic-kpmg">Digital Gateway Powered by Claude</a>를 선보였고, 이를 통해 프런티어 AI를 저희가 일하고 고객에게 서비스하는 방식에 직접 들여와 더 높은 지능, 속도, 규모를 갖추게 됐습니다.</p>
+
+<h2 id="more-capability-means-more-value-but-also-more-potential-for-misuse-how-do-you-weigh-the-two">역량이 커지면 가치도 커지지만, 오용될 가능성도 커집니다. 둘을 어떻게 저울질하시나요?</h2>
+<p>저는 AI가 인류와 기업에 가져다줄 것에 대해 낙관적입니다. 의료와 수명 연장에서 농업까지요. 저희는 이미 AI가 모든 산업에서 고객에게 서비스하는 완전히 새로운 방식을 만들어 내는 것을 보고 있습니다.</p>
+<p>의료가 좋은 예입니다. 앰비언트 리스닝(ambient listening) 같은 새로운 역량은 환자와의 대화에서 바로 임상 기록을 생성할 수 있고, 의사들은 이런 도구가 하루에 몇 시간씩을 되돌려 줄 수 있다고 말합니다. 임상의는 여전히 확고하게 과정에 참여하며(in the loop), 시스템 대신 환자와 보내는 한 시간 한 시간이 진료를 개선할 수 있는 시간입니다.</p>
+<p>그렇긴 하지만, 같은 기술이 보안과 안전 문제를 만들 수도 있습니다. 나쁜 목적으로 쓰는 사람들이 있을 것입니다. 업계 전체가 이를 이해하고, 실제로 어떻게 쓰이고 있는지 솔직하게 들여다보며, 이런 기술을 배포하는 방식에 대해 책임 있고 안전하며 보안이 확보된 프레임워크를 만드는 것이 매우 중요합니다.</p>
+<p>그래서 저희의 <a href="https://kpmg.com/au/en/services/ai-services/trusted-ai-framework.html">Trusted AI 프레임워크</a>는 KPMG가 혁신하는 방식의 토대입니다. 전문 서비스 기업으로서, 저희는 조직이 AI의 가치를 안전하고 보안이 확보된 방식으로(safely and securely) 실현하면서 다음에 올 것에 대비하도록 돕는 책임을 진지하게 받아들입니다. 여기에는 AI 시스템이 투명하고 신뢰할 수 있으며 의도한 목적에 부합하도록 돕기 위한 엄격한 테스트, 지속적인 모니터링, 사람의 감독, 독립적인 검증(independent assurance)이 포함됩니다.</p>
+<p>또한 저희는 Claude Mythos로 시스템 취약점을 찾아내고, 더 넓게는 사이버 AI로 그 취약점을 방어하고 있습니다. 이 분야는 저희가 Anthropic 같은 파트너와 함께 많이 투자하고 있는 영역입니다.</p>
+
+<h2 id="kpmg-had-an-early-look-at-enterprise-frontier-safeguards-what-was-your-reaction">KPMG는 <a href="https://claude.com/resources/articles/zero-data-retention-with-enterprise-frontier-safeguards">Enterprise Frontier Safeguards</a>를 미리 살펴봤습니다. 반응이 어땠나요?</h2>
+<p>Anthropic이 보호 장치에, 그리고 이 프로그램에서 파트너와 협업하는 데 얼마나 많은 고민과 의도를 담았는지 보게 되어 긍정적이었습니다. 특히 눈에 띈 것은 데이터 보존(data retention)이었습니다. 데이터를 조직 안에 둔 채로도 프런티어 모델을 쓸 수 있게 된다는 점이요.</p>
+<p>이는 KPMG 같은 기업에 매우 중요합니다. 저희는 가장 민감하고 규제가 심한 환경 일부에서 고객 데이터의 수탁자이기 때문입니다. 저희는 고객과 저희 회사가 그 데이터와 AI의 강력한 조합에서 이익을 얻기를 바라지만, 언제나 고객이 저희가 그들의 데이터를 어떻게 쓰기를 원하는지, 그리고 그 데이터를 어디에 쓸 수 있는지를 고려하면서 해야 합니다.</p>
+
+<h2 id="what-will-enterprise-frontier-safeguards-let-you-do-that-you-couldn-t-before">Enterprise Frontier Safeguards로 예전에는 못 하던 무엇을 할 수 있게 되나요?</h2>
+<p>Enterprise Frontier Safeguards 덕분에 저희는 AI를 어떻게, 어디에 쓸 수 있는지에 대해 확신을 갖고 더 빠르게 움직일 수 있을 것입니다. 이 보호 장치 아키텍처의 핵심 원칙 하나는 저희가 통제하는 클라우드 인프라 안에 데이터를 보존할 수 있다는 점이 될 것입니다.</p>
+<p>규제 대상이거나 매우 민감한 데이터가 있는 곳에서 이런 보호 장치가 내장되어 있으면, 고도로 규제되고 민감한 고객 업무 전반에서 AI 배포를 자신 있게 가속할 수 있을 것입니다.</p>
+
+<h2 id="how-will-the-automated-misuse-review-in-enterprise-frontier-safeguards-fit-with-kpmg-s-own-trusted-ai-program-and-risk-processes">Enterprise Frontier Safeguards의 자동 오용 검토(automated misuse review)는 KPMG 자체의 Trusted AI 프로그램 및 리스크 프로세스와 어떻게 맞물리나요?</h2>
+<p>AI 역량이 더 강력하고 자율적이 될수록, 조직에는 수작업 프로세스로는 도저히 감당할 수 없는 규모로 잠재적 오용, 새로 생기는 리스크, 의도치 않은 결과를 식별하는 능력이 필요합니다. 자동 오용 검토는 AI 시스템이 어떻게 쓰이고 있는지 지속적으로 평가하고 심각한 오용의 징후를 저희 팀이 검토하도록 표시해 줌으로써, 그런 추가적인 감독 계층을 제공하는 데 도움이 됩니다.</p>
+<p>저희는 자동 오용 검토를 Trusted AI 접근 방식의 자연스러운 확장이자 기존 리스크 관리 프로세스의 강화로 봅니다. 자동 모니터링, KPMG의 사람 감독, 거버넌스 통제, 독립적인 검증을 결합하면 어느 한 가지 접근 방식만 쓸 때보다 더 강하고 회복력 있는 프레임워크가 만들어집니다.</p>
+
+<h2 id="what-do-you-expect-from-ai-vendors-when-it-comes-to-safeguards">보호 장치와 관련해 AI 공급업체에 무엇을 기대하나요?</h2>
+<p>신뢰는 저희 브랜드에서 무엇보다 중요합니다. 말 그대로 저희의 비즈니스 모델입니다. 저희는 AI 역량과 신뢰 사이에서 하나를 포기하는 선택을 하지 않을 것입니다. 둘 다 기대합니다.</p>
+<p>AI 모델의 역량이 커질수록 그런 보호 장치는 더 중요해지고, 강력한 가드레일이 있어야 조직이 강력한 AI를 대규모로 활용할 자신감을 얻습니다. 저희는 모든 공급업체에, 안전, 보안, AI 사용을 둘러싼 보호 장치, 그리고 저희의 Trusted AI 신념과 프로그램에 대한 부합이 함께 일하는 방식의 중심이 되어야 한다고 기대합니다.</p>
+<p>저희는 사업의 모든 측면에서, 그리고 당연히 AI 사용에서도 보호 장치를 강하게 우선시해야 합니다.</p>
+
+<h2 id="what-would-you-tell-other-leaders-weighing-frontier-models-right-now">지금 프런티어 모델 도입을 고민하는 다른 리더들에게 무슨 말을 해 주시겠어요?</h2>
+<p>이 모델들을 써야 합니다. AI로 인해 어느 정도의 혁신적 변화(disruption)를 겪지 않을 사업이나 산업은 떠오르지 않습니다. "지켜보자"는 대부분의 조직에게 지속 가능한 답이 되기 어렵습니다.</p>
+<p>그러니 도입과 보안을 동시에 해야 합니다. 안전과 보안 측면을 깊이 생각하고, 가드레일을 정의하고, 그것을 갖춰 두어야 전사적으로 더 빠르게 움직일 수 있습니다. 대부분의 조직은 이 모델들을 배포하지 않아도 되는 여유를 누리지 못할 것입니다. 하지만 사업 전략과 목표에 맞는 방식으로, 그리고 안전하고 보안이 확보된 방식으로 해야 할 것입니다.</p>
+
+<h2 id="what-are-you-building-with-claude-next">다음으로 Claude와 함께 무엇을 만들 계획인가요?</h2>
+<p>저희는 이미 Claude를 활용해 사업, 특히 세무와 사모펀드(private equity) 분야에서 AI 네이티브한 일하는 방식을 만들기 시작했습니다. 또한 프런티어 AI 사이버 보안 서비스도 구축했고, Claude Mythos로 전사의 취약점을 살펴본 다음 AI로 빠르게 패치하고 그 취약점으로부터 조직을 보호하고 있습니다.</p>
+<p>앞으로 몇 달 동안 보게 될 것은 가속 효과입니다. AI 덕분에 조직이 취약점과 리스크를 더 빨리 찾아내게 되면, 그와 같은 속도로 대응하는 데에도 AI가 점점 더 중요해질 것입니다.</p>
+
+<p><em>Anthropic의 <a href="https://claude.com/resources/articles/zero-data-retention-with-enterprise-frontier-safeguards">Enterprise Frontier Safeguards(EFS)</a>에 대해 더 알아보세요.</em> 현재 공개 베타입니다. <em>EFS는 제로 데이터 보존(ZDR, zero data retention)과 호환되면서도 정교한 오용을 최첨단 수준으로 탐지합니다. Anthropic도, 어떤 클라우드 제공업체도 기업의 데이터를 보존하지 않습니다.</em></p>
+
+<footer>
+  이 글은 Claude 공식 블로그 원문을 한국어로 옮긴 비공식 번역본입니다.
+  내용의 정확한 의미는 위 원문 링크를 함께 참고하세요.
+</footer>
+<script src="assets/store.js"></script>
+<script src="assets/posts.js"></script>
+<script src="assets/nav.js"></script>
+</body>
+</html>

@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "kpmg-todd-lohr-on-ai-when-your-data-is-also-your-clients-data.html", date: "2026-11-23", main: "Claude blog", cat: "Perspectives",
+      title: "KPMG 토드 로어가 말하는, 우리 데이터가 곧 고객의 데이터일 때의 AI", nav: "KPMG 토드 로어 인터뷰 · 고객 데이터 수탁자로서의 프런티어 AI 도입, Digital Gateway Powered by Claude(세무), Trusted AI 프레임워크, Enterprise Frontier Safeguards(자체 클라우드에 데이터 보존·자동 오용 검토, ZDR 호환), Claude Mythos로 취약점 탐지, 도입과 보안을 동시에" },
     { file: "introducing-claude-ship.html", date: "2026-11-23", main: "Claude blog", cat: "Product updates",
       title: "Claude Ship을 소개합니다", nav: "Claude Ship · PR 리뷰·수정·승인 자동화(베타), Code Review(정식·Quick/Standard/Deep)+PR Steward(CI·충돌·피드백 수정, 승인·머지 안 함)+Claude Approvals(저장소 정책 파일, 관찰 모드 권장), Claude Code /ship 명령, 저장소별 관리자 설정·지출 한도, TELUS·Carvana 사례, 토큰 과금" },
     { file: "enterprise-guide-to-securing-coding-agents.html", date: "2026-11-23", main: "Claude blog", cat: "Best practices",
