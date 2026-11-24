@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "skills-over-mcp-tasks-and-more.html", date: "2026-11-24", main: "Claude blog", cat: "Product updates",
+      title: "이제 MCP 서버가 Claude와 함께 스킬을 제공하고, 작업을 실행하는 등 더 많은 일을 할 수 있습니다", nav: "Skills over MCP·Tasks·Elicitation · 서버가 도구와 함께 스킬 제공(공개 베타, 필요할 때만 로드·서버와 함께 업데이트, Shopify·HubSpot·Atlassian·Carta), Tasks(오래 걸리는 작업 백그라운드 위임, ZoomInfo)·Elicitation(호출 중 사용자 확인, Supabase·Railway·GitHub) 정식 출시, File Uploads 곧 출시, SDK 월 7억 다운로드·커넥터 1만 개+, 도구 검색 컨텍스트 85%+ 절감" },
     { file: "install-as-app.html", date: "2026-11-24", main: "Claude blog", cat: "Product updates",
       title: "아티팩트를 Mac·Windows 앱으로 만들기", nav: "아티팩트를 데스크톱 앱으로 설치(베타) · 자체 아이콘·별도 창, Claude·커넥터 사용, 아티팩트 수정 시 자동 업데이트, 알림·메뉴 막대/트레이, 권한 3단계(기본·앱 권한·전체 접근, 업데이트마다 재확인), 데모 앱 Linnet·Phosphor·Sift·Tern·Vitals, Team 기본 켜짐·Enterprise 소유자가 켬, 공유 메뉴에서 설치" },
     { file: "the-work-after-you-open-a-pr.html", date: "2026-11-24", main: "claude.dev", cat: "Playbooks",
