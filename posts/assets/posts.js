@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "install-as-app.html", date: "2026-11-24", main: "Claude blog", cat: "Product updates",
+      title: "아티팩트를 Mac·Windows 앱으로 만들기", nav: "아티팩트를 데스크톱 앱으로 설치(베타) · 자체 아이콘·별도 창, Claude·커넥터 사용, 아티팩트 수정 시 자동 업데이트, 알림·메뉴 막대/트레이, 권한 3단계(기본·앱 권한·전체 접근, 업데이트마다 재확인), 데모 앱 Linnet·Phosphor·Sift·Tern·Vitals, Team 기본 켜짐·Enterprise 소유자가 켬, 공유 메뉴에서 설치" },
     { file: "the-work-after-you-open-a-pr.html", date: "2026-11-24", main: "claude.dev", cat: "Playbooks",
       title: "Claude Code로 출시까지: 실전 가이드", nav: "PR 이후 작업을 /ship으로 · /code-review(effort low~max·--fix·ultra), /ship(커밋·PR·리뷰·최대 7일 watch, 규칙 파일·공개 저장소는 커밋 안 함), /steward로 기존 PR 돌보기, 신뢰하는 저장소에서만 watch, 같은 문제 3회 실패 시 작성자에게, CLAUDE.md·REVIEW.md·verify·steward 스킬, approvals.yml observe 모드→강제 전환" },
     { file: "zero-data-retention-with-enterprise-frontier-safeguards.html", date: "2026-11-23", main: "Claude blog", cat: "Product updates",
