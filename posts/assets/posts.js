@@ -11,6 +11,8 @@
  */
 (function () {
   window.CBK_POSTS = [
+    { file: "the-work-after-you-open-a-pr.html", date: "2026-11-24", main: "claude.dev", cat: "Playbooks",
+      title: "Claude Code로 출시까지: 실전 가이드", nav: "PR 이후 작업을 /ship으로 · /code-review(effort low~max·--fix·ultra), /ship(커밋·PR·리뷰·최대 7일 watch, 규칙 파일·공개 저장소는 커밋 안 함), /steward로 기존 PR 돌보기, 신뢰하는 저장소에서만 watch, 같은 문제 3회 실패 시 작성자에게, CLAUDE.md·REVIEW.md·verify·steward 스킬, approvals.yml observe 모드→강제 전환" },
     { file: "zero-data-retention-with-enterprise-frontier-safeguards.html", date: "2026-11-23", main: "Claude blog", cat: "Product updates",
       title: "Enterprise Frontier Safeguards와 함께하는 제로 데이터 보존(ZDR), 이제 베타로 제공", nav: "EFS 제로 데이터 보존 공개 베타 · 100곳 이상 고객과 개발(Fortune 100의 1/4), 실시간 분류기+자동 안전 모니터링(여러 요청에 나뉜 공격 탐지)·안전 케이스(입출력 미포함, SIEM 연동), 고객 자체 스토리지(S3·GCS)·자체 키, 사람 검토·학습 없음, Claude Platform·AWS·Bedrock·Google Cloud 지원(Foundry 예정)" },
     { file: "kpmg-todd-lohr-on-ai-when-your-data-is-also-your-clients-data.html", date: "2026-11-23", main: "Claude blog", cat: "Perspectives",
