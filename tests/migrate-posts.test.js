@@ -84,6 +84,9 @@ function ok(n, c) { if (c) pass++; else { fail++; console.log("  ✗ FAIL:", n);
   const preserved = (await db.query('select body_html, review_status from cbk_posts')).rows[0];
   ok("repeat import preserves body edits and review state",
     preserved.body_html === 'edited in DB' && preserved.review_status === 'pending');
+  const many = [1, 2, 3].map(i => Object.assign({}, row, { slug: row.slug + "-" + i, body_html: "x".repeat(300) }));
+  ok("batchBySize splits large payloads", mod.batchBySize(many, 500).length === 3);
+  ok("missing posts import across batches", await mod.importMissingPosts(query, many.concat(row)) === 3);
   await db.close();
 
   console.log("migrate-posts: " + pass + " passed, " + fail + " failed");

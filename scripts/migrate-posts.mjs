@@ -86,9 +86,43 @@ export async function main() {
   console.error("완료: " + inserted + "건 추가, " + (rows.length - inserted) + "건 기존 DB 내용 유지");
 }
 
+// Management API는 요청 본문이 크면 413을 낸다(2026-11: 글 156개 ≈ 수 MB).
+// 그래서 DB에 없는 글만 골라 이 크기 이하로 나눠 보낸다.
+export const MAX_BATCH_BYTES = 512 * 1024;
+
+export function batchBySize(posts, maxBytes = MAX_BATCH_BYTES) {
+  const batches = [];
+  let cur = [], size = 0;
+  for (const p of posts) {
+    const n = Buffer.byteLength(JSON.stringify(p));
+    if (cur.length && size + n > maxBytes) { batches.push(cur); cur = []; size = 0; }
+    cur.push(p); size += n;
+  }
+  if (cur.length) batches.push(cur);
+  return batches;
+}
+
 // 재실행·동시 발행 시에도 DB의 본문, 판본, 첨삭 상태를 덮어쓰지 않는다.
 // 최초 삽입과 done 상태 기록은 한 문장으로 처리한다.
 export async function importMissingPosts(query, posts) {
+  const existing = rowsOf(await query(
+    "select slug from public.cbk_posts where slug = any($1::text[])",
+    [posts.map(p => p.slug)]));
+  const have = new Set(existing.map(r => r.slug));
+  let inserted = 0;
+  for (const batch of batchBySize(posts.filter(p => !have.has(p.slug)))) {
+    inserted += await insertBatch(query, batch);
+  }
+  return inserted;
+}
+
+function rowsOf(result) {
+  const rows = Array.isArray(result) ? result : (result?.result || result?.data);
+  if (!Array.isArray(rows)) throw new Error("이관 결과 형식이 올바르지 않습니다");
+  return rows;
+}
+
+async function insertBatch(query, posts) {
   const result = await query(`
     insert into public.cbk_posts
       (slug, title, nav, main, cat, date, body_html, body_md, style_css, author, review_status)
@@ -99,9 +133,7 @@ export async function importMissingPosts(query, posts) {
     on conflict (slug) do nothing
     returning slug
   `, [JSON.stringify(posts)]);
-  const inserted = Array.isArray(result) ? result : (result?.result || result?.data);
-  if (!Array.isArray(inserted)) throw new Error("이관 결과 형식이 올바르지 않습니다");
-  return inserted.length;
+  return rowsOf(result).length;
 }
 
 if (process.argv[1] && process.argv[1].endsWith("migrate-posts.mjs")) {
